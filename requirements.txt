@@ -1,0 +1,2 @@
+python-dotenv # For .env file support
+google-genai # Google GenAI API client
