@@ -1,0 +1,28 @@
+name: Task
+description: A new task
+body:
+  - type: markdown
+    attributes:
+      value: |
+        To avoid confusions please describe the task in a clear and concise manner.
+  - type: textarea
+    id: description
+    attributes:
+      label: "📝 Description:"
+      description: "Clearly and concisely describe the task."
+      placeholder: |
+        Create a function that accepts the string "Hello" as an input and outputs "Hello World!"
+    validations:
+      required: true
+  - type: textarea
+    id: todos
+    attributes:
+      label: "✅ TODOS:"
+      description: "Break down the task into a list of `TODOS` using markdown checklist syntax. E.g., `- [] Implement validation for the input string `"
+      placeholder: |
+        - [ ] TODO 1
+        - [ ] TODO 2
+        - [ ] TODO 3
+      value: "- [ ] "
+    validations:
+      required: false
