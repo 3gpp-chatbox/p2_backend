@@ -1,0 +1,52 @@
+name: Bug Report
+description: A bug or unexpected behaviour 
+title: "[BUG]: "
+labels: [ "bug" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please provide as much detail as possible to help us reproduce and fix the issue.
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce the bug? Be as specific as possible.
+      placeholder: |
+       1. Run main.py 
+       2. Provide the string "world"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: The program should print "Hello, World!"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: The Program prints "Goodbye Cruel World!"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: Please provide any relevant log output or error messages.  Use code blocks (```) to format the output.
+      placeholder: |
+        ```
+        [ERROR] ...
+        ```
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Acknowledge
+      description: Please confirm that you have read and understood the following.
+      options:
+        - label: I have provided all the necessary information for reproduction.
+          required: true
