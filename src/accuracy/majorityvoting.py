@@ -24,6 +24,16 @@ def is_valid(value: Any, all_versions: List[Any]) -> bool:
     # Check if the value is consistent across all versions (e.g., descriptions, types, properties)
     return all(v == value for v in all_versions)
 
+def natural_sort_key(node_id):
+    """Helper function to sort node IDs naturally, handling both strings and numbers."""
+    if str(node_id).isdigit():
+        return (0, int(node_id))  # Numbers come first
+    elif node_id == "start":
+        return (-1, node_id)  # Start comes before numbers
+    elif node_id == "finish":
+        return (2, node_id)  # Finish comes after numbers
+    else:
+        return (1, str(node_id))  # Other strings come between numbers and finish
 
 def compare_procedures(datasets: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Compares multiple versions of the procedure and performs majority voting."""
@@ -38,8 +48,8 @@ def compare_procedures(datasets: List[Dict[str, Any]]) -> Dict[str, Any]:
         if dataset and "graph" in dataset and "nodes" in dataset["graph"]:
             node_ids.update(str(node["id"]) for node in dataset["graph"]["nodes"])
 
-    # Compare nodes
-    for node_id in sorted(node_ids, key=lambda x: int(x) if str(x).isdigit() else x):
+    # Compare nodes using natural sort order
+    for node_id in sorted(node_ids, key=natural_sort_key):
         node_data = {
             "id": node_id,
             "descriptions": [],

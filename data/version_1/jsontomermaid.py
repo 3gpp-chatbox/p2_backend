@@ -1,7 +1,6 @@
-
 import os
 from dotenv import load_dotenv
-from google import genai
+import google.generativeai as genai
 import json
 
 load_dotenv()
@@ -19,59 +18,59 @@ if not api_key:
         "GOOGLE_API_KEY not found in environment variables. Please set it in your .env file."
     )
 
-client = genai.Client(api_key=api_key)
+# Configure the API key
+genai.configure(api_key=api_key)
+
+# Initialize model
+model = genai.GenerativeModel(flash_model)
 
 def extract_procedural_info_from_text(section_name, text):
     prompt = f"""
-convert the provided JSON code to Mermaid syntax for a flow property graph.
+Convert the provided JSON code to Mermaid flowchart syntax. Use this exact format:
 
-I need the flow property graph to include detailed relationships between nodes. A flow property graph should highlight state transitions, events, and properties involved in the procedure. This includes metadata like conditions, actions, timers, etc.
+```mermaid
+flowchart TD
+    start([Start]) --> ...
+    ... other nodes and connections ...
+    ... --> finish([End])
+```
 
-### Here’s what I need:
+Rules for valid Mermaid syntax:
+1. Each node must have a unique ID (not using reserved words like 'end')
+2. Use proper node declarations:
+   - ([text]) for rounded boxes (start/end)
+   - [text] for regular boxes
+   - {{text}} for curved boxes
+   - (text) for circles
+   - >text] for flags
+3. Connections must use proper arrows:
+   - --> for normal flow
+   - -.-> for dashed lines
+   - ==> for thick lines
+4. Add labels to edges using |text| syntax
+5. For decision nodes, use diamond shape: {{{{text}}}}
 
-**Nodes:**
-- Represent entities (e.g., states, processes, timers, or decisions).
-- For example: UE, AMF, T3510 timers, etc.
+Please convert my provided JSON code to a valid Mermaid flowchart following these rules.
 
-**Edges:**
-- Represent transitions between nodes.
-- Each edge should include properties such as:
-  - Event triggers
-  - Conditions
-  - Actions or events causing the transition
-  - Type of transition (sequential, conditional, retry)
-
-**Flow Properties:**
-- Include additional metadata like state changes, conditions, timers, retries, etc.
-
-**Simplify the Nodes:**
-- Each node should have the name of the process or entity (not all details).
-- Detailed descriptions can be shown on the edges or tooltips.
-
-**Clarify the Edges:**
-- Each edge should contain information about the transition, conditions, retry logic, or timer usage.
-
-### Example Output Format: (output in Mermaid syntax)
-
-Please convert my provided JSON code to a flow property graph in the following Mermaid format.
-
-My provided JSON code:
+Input JSON:
 {text}
 """
 
-
-    
     model_to_use = flash_model  # or pro_model depending on your requirement
-    response = client.models.generate_content(
-        model=model_to_use,
+    response = model.generate_content(
         contents=prompt,
-        config={
+        generation_config={
             "temperature": 0,
         },
     )
 
     # Extract the text content from the response
     procedural_info = response.text.strip() if hasattr(response, 'text') else str(response)
+    
+    # Clean up the response to ensure it only contains the Mermaid diagram
+    if "```mermaid" in procedural_info:
+        procedural_info = procedural_info[procedural_info.find("```mermaid"):].strip()
+        procedural_info = procedural_info.replace("```mermaid", "").replace("```", "").strip()
 
     return procedural_info
 
@@ -88,9 +87,13 @@ def read_text_file(file_path):
         return None
 
 def save_procedural_info_to_md(procedural_info, file_path):
+    """Saves the Mermaid diagram to a markdown file with proper formatting."""
     with open(file_path, "w", encoding='utf-8') as file:
-        file.write(procedural_info)
-    print(f"Procedural info saved to {file_path}")
+        file.write("# Registration Procedure Flow\n\n")  # Add a title
+        file.write("```mermaid\n")  # Start Mermaid code block
+        file.write(procedural_info.strip())  # Write the diagram
+        file.write("\n```\n")  # End Mermaid code block
+    print(f"Mermaid diagram saved to {file_path}")
 
 def process_text_file(input_file_path, section_name):
     """Processes content from a text file instead of database."""
@@ -102,7 +105,7 @@ def process_text_file(input_file_path, section_name):
     return procedural_info
 
 # Example usage: Processing a text file
-input_file_path = "v01-step3.json"  # Path to your input text file
+input_file_path = "step3.json"  # Path to your input text file
 section_name = "Registration procedure for initial registration"  # Name of the section/procedure
 
 procedural_info = process_text_file(input_file_path, section_name)

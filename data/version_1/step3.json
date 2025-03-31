@@ -5,18 +5,19 @@
       {
         "id": "start",
         "type": "start",
-        "description": "Procedure starts",
-        "properties": {}
+        "description": "Procedure starts - UE in 5GMM-DEREGISTERED state",
+        "properties": {
+          "initial_state": "5GMM-DEREGISTERED"
+        }
       },
       {
         "id": "1",
         "type": "process",
-        "description": "UE sends REGISTRATION REQUEST to AMF",
+        "description": "UE sends REGISTRATION REQUEST message to AMF",
         "properties": {
-          "state_before": "5GMM-DEREGISTERED",
           "entity": "UE",
           "messages": ["REGISTRATION REQUEST"],
-          "target_entity": "AMF"
+          "state_change": "N/A"
         }
       },
       {
@@ -24,27 +25,26 @@
         "type": "timer",
         "description": "UE starts timer T3510",
         "properties": {
-          "action": "start",
-          "timeout": "Unspecified, implementation dependent",
           "entity": "UE",
-          "timer_name": "T3510"
+          "timer_name": "T3510",
+          "action": "start"
         }
       },
       {
         "id": "3",
         "type": "decision",
-        "description": "Decision based on initial registration request acceptance",
+        "description": "AMF decides to accept or reject the REGISTRATION REQUEST",
         "properties": {
-          "condition": "AMF accepts REGISTRATION REQUEST",
+          "condition": "initial registration request is accepted by the network",
           "outcomes": [
             {
-              "outcome": "Registration Accepted",
+              "outcome": "Accept",
               "next_step": "4",
               "outcome_type": "positive"
             },
             {
-              "outcome": "Registration Rejected",
-              "next_step": "reject_handling",
+              "outcome": "Reject",
+              "next_step": "reject",
               "outcome_type": "negative"
             }
           ]
@@ -53,41 +53,49 @@
       {
         "id": "4",
         "type": "process",
-        "description": "AMF sends REGISTRATION ACCEPT to UE. AMF may start T3550 and enter 5GMM-COMMON-PROCEDURE-INITIATED if 5G-GUTI or SOR transparent container IE is included.",
+        "description": "AMF sends REGISTRATION ACCEPT message to UE. AMF starts timer T3550 if conditions are met",
         "properties": {
-          "state_before": "AMF processing REGISTRATION REQUEST",
           "entity": "AMF",
           "messages": ["REGISTRATION ACCEPT"],
-          "timer_start_conditional": "T3550 if 5G-GUTI or SOR transparent container IE is included",
-          "state_change": "5GMM-COMMON-PROCEDURE-INITIATED (conditional)",
-          "target_entity": "UE"
+          "state_change": "5GMM-COMMON-PROCEDURE-INITIATED (if 5G-GUTI or SOR transparent container IE is included)"
         }
       },
       {
         "id": "5",
-        "type": "process",
-        "description": "UE receives REGISTRATION ACCEPT and enters 5GMM-REGISTERED, resets registration attempt counter, sets 5GS update status to 5U1 UPDATED",
+        "type": "timer",
+        "description": "AMF starts timer T3550 if a 5G-GUTI or the SOR transparent container IE is included in the REGISTRATION ACCEPT message",
         "properties": {
-          "state_before": "UE is waiting for REGISTRATION ACCEPT",
-          "entity": "UE",
-          "state_change": "5GMM-REGISTERED",
-          "action": "Reset registration attempt counter, set 5GS update status to 5U1 UPDATED"
+          "entity": "AMF",
+          "timer_name": "T3550",
+          "action": "start",
+          "condition": "5G-GUTI or SOR transparent container IE is included in REGISTRATION ACCEPT"
         }
       },
       {
         "id": "6",
-        "type": "decision",
-        "description": "Decision: UE sends REGISTRATION COMPLETE based on content of REGISTRATION ACCEPT",
+        "type": "process",
+        "description": "UE receives REGISTRATION ACCEPT, resets registration attempt counter, enters state 5GMM-REGISTERED and sets 5GS update status to 5U1 UPDATED",
         "properties": {
-          "condition": "REGISTRATION ACCEPT contains service-level-AA pending indication (and UE sent Service-level device ID), Network slicing subscription change indication, CAG information list IE (and UE set CAG bit), Negotiated PEIPS assistance information IE (and UE set RCMAP bit), UE radio capability ID IE or UE radio capability ID deletion indication IE",
+          "entity": "UE",
+          "state_change": "5GMM-REGISTERED",
+          "update_status": "5U1 UPDATED",
+          "action": "reset registration attempt counter"
+        }
+      },
+      {
+        "id": "7",
+        "type": "decision",
+        "description": "Check conditions for REGISTRATION COMPLETE message (Service-level AA, Network slicing, CAG, RCMAP, UE radio capability ID)",
+        "properties": {
+          "condition": "REGISTRATION ACCEPT message contains service-level AA, network slicing, CAG, RCMAP or UE radio capability information",
           "outcomes": [
             {
-              "outcome": "Send REGISTRATION COMPLETE",
-              "next_step": "7",
+              "outcome": "REGISTRATION COMPLETE needed",
+              "next_step": "8",
               "outcome_type": "positive"
             },
             {
-              "outcome": "Do not send REGISTRATION COMPLETE",
+              "outcome": "REGISTRATION COMPLETE not needed",
               "next_step": "end",
               "outcome_type": "negative"
             }
@@ -95,25 +103,32 @@
         }
       },
       {
-        "id": "7",
+        "id": "8",
         "type": "process",
-        "description": "UE sends REGISTRATION COMPLETE to AMF",
+        "description": "UE sends REGISTRATION COMPLETE message to AMF",
         "properties": {
           "entity": "UE",
-          "messages": ["REGISTRATION COMPLETE"],
-          "target_entity": "AMF"
+          "messages": ["REGISTRATION COMPLETE"]
         }
       },
       {
-        "id": "8",
+        "id": "9",
         "type": "process",
-        "description": "AMF receives REGISTRATION COMPLETE, stops T3550, and enters 5GMM-REGISTERED",
+        "description": "AMF receives REGISTRATION COMPLETE and stops timer T3550, remains in state 5GMM-REGISTERED",
         "properties": {
-          "state_before": "AMF in 5GMM-COMMON-PROCEDURE-INITIATED",
           "entity": "AMF",
-          "state_change": "5GMM-REGISTERED",
-          "timer_action": "Stop T3550",
-          "timer_name": "T3550"
+          "action": "stop T3550",
+          "timer_name": "T3550",
+          "state": "5GMM-REGISTERED"
+        }
+      },
+      {
+        "id": "reject",
+        "type": "process",
+        "description": "AMF sends REGISTRATION REJECT",
+        "properties": {
+          "entity": "AMF",
+          "messages": ["REGISTRATION REJECT"]
         }
       },
       {
@@ -121,15 +136,6 @@
         "type": "end",
         "description": "Procedure ends",
         "properties": {}
-      },
-       {
-        "id": "reject_handling",
-        "type": "process",
-        "description": "UE Behavior on Rejection - based on 5GMM Cause Code in REGISTRATION REJECT",
-        "properties": {
-          "entity": "UE",
-          "action": "Based on 5GMM cause code (see UE_Behavior_on_Rejection data), perform appropriate actions (e.g., set 5GS update status, delete GUTI, enter specific 5GMM state, start timers, etc.)"
-        }
       }
     ],
     "edges": [
@@ -138,7 +144,7 @@
         "to": "1",
         "type": "sequential",
         "properties": {
-          "trigger": "UE initiates registration"
+          "trigger": "UE in 5GMM-DEREGISTERED state"
         }
       },
       {
@@ -153,80 +159,94 @@
         "from": "2",
         "to": "3",
         "type": "sequential",
-        "properties": {}
+        "properties": {
+          "trigger": "Timer T3510 running"
+        }
       },
       {
         "from": "3",
         "to": "4",
         "type": "conditional",
         "properties": {
-          "condition": "Registration Accepted",
-          "outcome_type": "positive"
+          "condition": "initial registration request is accepted by the network",
+          "outcome": "Accept"
         }
       },
       {
         "from": "3",
-        "to": "reject_handling",
+        "to": "reject",
         "type": "conditional",
         "properties": {
-          "condition": "Registration Rejected",
-          "outcome_type": "negative",
-          "trigger": "REGISTRATION REJECT is sent from AMF"
+          "condition": "initial registration request cannot be accepted by the network",
+          "outcome": "Reject"
         }
       },
       {
         "from": "4",
         "to": "5",
+        "type": "conditional",
+        "properties": {
+          "condition": "5G-GUTI or SOR transparent container IE is included in REGISTRATION ACCEPT",
+          "outcome": "Timer needs to be started"
+        }
+      },
+      {
+        "from": "4",
+        "to": "6",
         "type": "sequential",
         "properties": {
-          "trigger": "REGISTRATION ACCEPT received"
+          "trigger": "REGISTRATION ACCEPT sent"
         }
       },
       {
         "from": "5",
         "to": "6",
         "type": "sequential",
-        "properties": {}
-      },
-      {
-        "from": "6",
-        "to": "7",
-        "type": "conditional",
         "properties": {
-          "condition": "REGISTRATION ACCEPT contains specific information",
-          "outcome_type": "positive",
-          "trigger": "UE determines REGISTRATION COMPLETE needs to be sent"
+          "trigger": "Timer T3550 is started"
         }
       },
       {
         "from": "6",
-        "to": "end",
-        "type": "conditional",
+        "to": "7",
+        "type": "sequential",
         "properties": {
-          "condition": "REGISTRATION ACCEPT does not contains specific information",
-          "outcome_type": "negative",
-          "trigger": "UE determines REGISTRATION COMPLETE does not need to be sent"
+          "trigger": "Registration Accept was received"
         }
       },
       {
         "from": "7",
         "to": "8",
-        "type": "sequential",
+        "type": "conditional",
         "properties": {
-          "trigger": "REGISTRATION COMPLETE sent"
+          "condition": "REGISTRATION ACCEPT message contains service-level AA, network slicing, CAG, RCMAP or UE radio capability information",
+          "outcome": "REGISTRATION COMPLETE needed"
+        }
+      },
+      {
+        "from": "7",
+        "to": "end",
+        "type": "conditional",
+        "properties": {
+          "condition": "REGISTRATION ACCEPT message does not contain service-level AA, network slicing, CAG, RCMAP or UE radio capability information",
+          "outcome": "REGISTRATION COMPLETE not needed"
         }
       },
       {
         "from": "8",
-        "to": "end",
+        "to": "9",
         "type": "sequential",
-        "properties": {}
+        "properties": {
+          "trigger": "UE sends Registration Complete message"
+        }
       },
       {
-        "from": "reject_handling",
+        "from": "9",
         "to": "end",
         "type": "sequential",
-        "properties": {}
+        "properties": {
+          "trigger": "AMF Receives Registration Complete Message"
+        }
       }
     ]
   }
