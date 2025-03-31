@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "step_description_1": "UE in 5GMM-DEREGISTERED state sends REGISTRATION REQUEST message to AMF",
+        "step_description_2": "UE in 5GMM-DEREGISTERED state sends a REGISTRATION REQUEST message to the AMF to initiate initial registration.",
+        "cosine_similarity": 0.83462109499583,
+        "valid": 1
+    },
+    {
+        "id": 2,
+        "step_description_1": "UE handles the 5GS mobile identity IE in the following order",
+        "step_description_2": "AMF may initiate 5GMM common procedures, such as identification, authentication, and security mode control, based on the information in the REGISTRATION REQUEST.",
+        "cosine_similarity": 0.0,
+        "valid": 0
+    },
+    {
+        "id": 3,
+        "step_description_1": "If SUCI is included and T3519 is not running, start T3519 and store SUCI value",
+        "step_description_2": "If the initial registration request is accepted, the AMF sends a REGISTRATION ACCEPT message to the UE. It assigns a TAI list to the UE.",
+        "cosine_similarity": 0.0,
+        "valid": 0
+    },
+    {
+        "id": 4,
+        "step_description_1": "Include UE status IE if operating in dual-registration mode and in EMM-REGISTERED state",
+        "step_description_2": "Upon receipt of the REGISTRATION ACCEPT message, the UE enters the 5GMM-REGISTERED state and sets the 5GS update status to 5U1 UPDATED.",
+        "cosine_similarity": 0.2605556710562624,
+        "valid": 0
+    },
+    {
+        "id": 5,
+        "step_description_1": "Include last visited registered TAI if available",
+        "step_description_2": "The UE sends a REGISTRATION COMPLETE message to the AMF to acknowledge the successful update of the network slicing information, if certain conditions are met.",
+        "cosine_similarity": 0.0,
+        "valid": 0
+    },
+    {
+        "id": 6,
+        "step_description_1": "Include 5GS update type IE if SMS over NAS is requested, otherwise include 5GS update type IE",
+        "step_description_2": "AMF stops timer T3550, set itself to 5GMM-REGISTERED after receiving REGISTRATION COMPLETE",
+        "cosine_similarity": 0.0,
+        "valid": 0
+    }
+]

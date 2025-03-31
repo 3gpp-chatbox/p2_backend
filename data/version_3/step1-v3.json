@@ -1,0 +1,83 @@
+{
+  "procedure_name": "Registration procedure for initial registration",
+  "steps": [
+    {
+      "id": 1,
+      "description": "UE, in 5GMM-DEREGISTERED state, initiates initial registration by sending a REGISTRATION REQUEST message to the AMF; T3510 starts and T3502 and T3511 (if running) are stopped.",
+      "entities": "UE, AMF",
+      "state_changes": "UE transitions from 5GMM-DEREGISTERED to a state awaiting response.  If T3502 or T3511 were running, they are stopped.",
+      "messages": [
+        {
+          "name": "REGISTRATION REQUEST",
+          "from": "UE",
+          "to": "AMF"
+        }
+      ],
+      "trigger": "UE needs to register for 5GS services, emergency services, SMS over NAS, or after mobility events (GERAN/UTRAN to NG-RAN), onboarding services in SNPN, disaster roaming services, or to resume normal services after unavailability period.",
+      "conditions": "UE is in 5GMM-DEREGISTERED state.",
+      "side_effects": "UE starts timer T3510 and stops timer T3502 and timer T3511 if they are running."
+    },
+    {
+      "id": 2,
+      "description": "The network may initiate 5GMM common procedures, such as identification, authentication, and security procedures based on the REGISTRATION REQUEST message contents.",
+      "entities": "AMF, UE",
+      "state_changes": "AMF and UE may change states based on the initiated 5GMM common procedures (e.g., identification, authentication, security mode control).",
+      "messages": [],
+      "trigger": "Receipt of REGISTRATION REQUEST message by AMF.",
+      "conditions": "Information in the REGISTRATION REQUEST message necessitates additional procedures.",
+      "side_effects": "Initiation of 5GMM common procedures."
+    },
+    {
+      "id": 3,
+      "description": "If the initial registration request is accepted by the network, the AMF sends a REGISTRATION ACCEPT message to the UE.",
+      "entities": "AMF, UE",
+      "state_changes": "AMF may enter 5GMM-COMMON-PROCEDURE-INITIATED. UE may enter 5GMM-REGISTERED.",
+      "messages": [
+        {
+          "name": "REGISTRATION ACCEPT",
+          "from": "AMF",
+          "to": "UE"
+        }
+      ],
+      "trigger": "The AMF accepts the initial registration request.",
+      "conditions": "The AMF validates the UE's request and authorizes registration.",
+      "side_effects": "AMF assigns and includes a TAI list in the REGISTRATION ACCEPT message. AMF may include various information elements like equivalent PLMNs, MICO indication, T3324, T3512, LADN information, etc."
+    },
+    {
+      "id": 4,
+      "description": "If the Negotiated PEIPS assistance information IE, Ciphering key data IE, UE radio capability ID IE,UE radio capability ID deletion indication IE, Network slicing indication IE, Alternative NSSAI IE, S-NSSAI location validity information IE, On-demand NSSAI IE, S-NSSAI time validity information IE, the Operator-defined access category definitions IE, the Extended emergency number list IE, the CAG information list IE, the Extended CAG information list IE, or the Truncated 5G-S-TMSI configuration IE are included in the REGISTRATION ACCEPT message, the AMF starts timer T3550 and enters state 5GMM-COMMON-PROCEDURE-INITIATED.",
+      "entities": "AMF",
+      "state_changes": "AMF enters state 5GMM-COMMON-PROCEDURE-INITIATED",
+      "messages": [],
+      "trigger": "The AMF needs to update the UE with UE radio capability ID, PEIPS assistance information, new network slicing information, alternative S-NSSAI information, UE radio capability ID Deletion, Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list or Truncated 5G-S-TMSI configuration",
+      "conditions": "The AMF has assigned a new 5G-GUTI or a SOR transparent container or if Operator-defined access category definitions, Extended emergency number list, CAG information list, Extended CAG information list, UE radio capability ID or PEIPS assistance information are to be sent in the REGISTRATION ACCEPT message.",
+      "side_effects": "AMF starts timer T3550."
+    },
+    {
+      "id": 5,
+      "description": "Upon receiving the REGISTRATION ACCEPT message, the UE resets the registration attempt counter, enters state 5GMM-REGISTERED, and sets the 5GS update status to 5U1 UPDATED.",
+      "entities": "UE",
+      "state_changes": "UE transitions to 5GMM-REGISTERED and sets 5GS update status to 5U1 UPDATED.",
+      "messages": [],
+      "trigger": "Receipt of REGISTRATION ACCEPT message by the UE.",
+      "conditions": "Successful registration.",
+      "side_effects": "UE deletes old TAI list and stores the received TAI list. UE may store equivalent PLMNs, LADN information, etc. UE starts using timer values included in the message."
+    },
+    {
+      "id": 6,
+      "description": "If the UE needs to acknowledge the reception of updated network slicing information, Truncated 5G-S-TMSI configuration IE, UE radio capability ID IE, PEIPS assistance information, new NSAG information or receive Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list the UE returns a REGISTRATION COMPLETE message to the AMF.",
+      "entities": "UE, AMF",
+      "state_changes": "AMF stops T3550 and transitions to 5GMM-REGISTERED.",
+      "messages": [
+        {
+          "name": "REGISTRATION COMPLETE",
+          "from": "UE",
+          "to": "AMF"
+        }
+      ],
+      "trigger": "UE receives an registration accept message that contains update for network slicing information, Truncated 5G-S-TMSI configuration IE, UE radio capability ID IE, PEIPS assistance information, new NSAG information or Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list",
+      "conditions": "UE receives the REGISTRATION ACCEPT message.",
+      "side_effects": "UE sends the REGISTRATION COMPLETE, the AMF will stop the T3550"
+    }
+  ]
+}

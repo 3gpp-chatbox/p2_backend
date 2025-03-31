@@ -1,0 +1,315 @@
+
+{
+  "graph": {
+    "nodes": [
+      {
+        "id": 1,
+        "type": "process",
+        "description": "UE, in 5GMM-DEREGISTERED state, initiates initial registration by sending a REGISTRATION REQUEST message to the AMF; T3510 starts and T3502 and T3511 (if running) are stopped.",
+        "properties": {
+          "entities": "UE, AMF",
+          "state_changes": "UE transitions from 5GMM-DEREGISTERED to a state awaiting response. If T3502 or T3511 were running, they are stopped.",
+          "trigger": "UE needs to register for 5GS services, emergency services, SMS over NAS, or after mobility events (GERAN/UTRAN to NG-RAN), onboarding services in SNPN, disaster roaming services, or to resume normal services after unavailability period.",
+          "conditions": "UE is in 5GMM-DEREGISTERED state.",
+          "side_effects": "UE starts timer T3510 and stops timer T3502 and timer T3511 if they are running.",
+          "messages": [
+            "REGISTRATION REQUEST (UE -> AMF)"
+          ]
+        }
+      },
+      {
+        "id": 2,
+        "type": "process",
+        "description": "The network may initiate 5GMM common procedures, such as identification, authentication, and security procedures based on the REGISTRATION REQUEST message contents.",
+        "properties": {
+          "entities": "AMF, UE",
+          "state_changes": "AMF and UE may change states based on the initiated 5GMM common procedures (e.g., identification, authentication, security mode control).",
+          "trigger": "Receipt of REGISTRATION REQUEST message by AMF.",
+          "conditions": "Information in the REGISTRATION REQUEST message necessitates additional procedures.",
+          "side_effects": "Initiation of 5GMM common procedures.",
+          "messages": []
+        }
+      },
+      {
+        "id": 3,
+        "type": "process",
+        "description": "If the initial registration request is accepted by the network, the AMF sends a REGISTRATION ACCEPT message to the UE.",
+        "properties": {
+          "entities": "AMF, UE",
+          "state_changes": "AMF may enter 5GMM-COMMON-PROCEDURE-INITIATED. UE may enter 5GMM-REGISTERED.",
+          "trigger": "The AMF accepts the initial registration request.",
+          "conditions": "The AMF validates the UE's request and authorizes registration.",
+          "side_effects": "AMF assigns and includes a TAI list in the REGISTRATION ACCEPT message. AMF may include various information elements like equivalent PLMNs, MICO indication, T3324, T3512, LADN information, etc.",
+          "messages": [
+            "REGISTRATION ACCEPT (AMF -> UE)"
+          ]
+        }
+      },
+      {
+        "id": 4,
+        "type": "process",
+        "description": "If the Negotiated PEIPS assistance information IE, Ciphering key data IE, UE radio capability ID IE,UE radio capability ID deletion indication IE, Network slicing indication IE, Alternative NSSAI IE, S-NSSAI location validity information IE, On-demand NSSAI IE, S-NSSAI time validity information IE, the Operator-defined access category definitions IE, the Extended emergency number list IE, the CAG information list IE, the Extended CAG information list IE, or the Truncated 5G-S-TMSI configuration IE are included in the REGISTRATION ACCEPT message, the AMF starts timer T3550 and enters state 5GMM-COMMON-PROCEDURE-INITIATED.",
+        "properties": {
+          "entities": "AMF",
+          "state_changes": "AMF enters state 5GMM-COMMON-PROCEDURE-INITIATED",
+          "trigger": "The AMF needs to update the UE with UE radio capability ID, PEIPS assistance information, new network slicing information, alternative S-NSSAI information, UE radio capability ID Deletion, Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list or Truncated 5G-S-TMSI configuration",
+          "conditions": "The AMF has assigned a new 5G-GUTI or a SOR transparent container or if Operator-defined access category definitions, Extended emergency number list, CAG information list, Extended CAG information list, UE radio capability ID or PEIPS assistance information are to be sent in the REGISTRATION ACCEPT message.",
+          "side_effects": "AMF starts timer T3550.",
+          "messages": []
+        }
+      },
+      {
+        "id": 5,
+        "type": "process",
+        "description": "Upon receiving the REGISTRATION ACCEPT message, the UE resets the registration attempt counter, enters state 5GMM-REGISTERED, and sets the 5GS update status to 5U1 UPDATED.",
+        "properties": {
+          "entities": "UE",
+          "state_changes": "UE transitions to 5GMM-REGISTERED and sets 5GS update status to 5U1 UPDATED.",
+          "trigger": "Receipt of REGISTRATION ACCEPT message by the UE.",
+          "conditions": "Successful registration.",
+          "side_effects": "UE deletes old TAI list and stores the received TAI list. UE may store equivalent PLMNs, LADN information, etc. UE starts using timer values included in the message.",
+          "messages": []
+        }
+      },
+      {
+        "id": 6,
+        "type": "process",
+        "description": "If the UE needs to acknowledge the reception of updated network slicing information, Truncated 5G-S-TMSI configuration IE, UE radio capability ID IE, PEIPS assistance information, new NSAG information or receive Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list the UE returns a REGISTRATION COMPLETE message to the AMF.",
+        "properties": {
+          "entities": "UE, AMF",
+          "state_changes": "AMF stops T3550 and transitions to 5GMM-REGISTERED.",
+          "trigger": "UE receives an registration accept message that contains update for network slicing information, Truncated 5G-S-TMSI configuration IE, UE radio capability ID IE, PEIPS assistance information, new NSAG information or Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list",
+          "conditions": "UE receives the REGISTRATION ACCEPT message.",
+          "side_effects": "UE sends the REGISTRATION COMPLETE, the AMF will stop the T3550",
+          "messages": [
+            "REGISTRATION COMPLETE (UE -> AMF)"
+          ]
+        }
+      },
+      {
+        "id": 7,
+        "type": "process",
+        "description": "UE initiates authentication by sending an Authentication Request to the network.",
+        "properties": {
+          "entities": "UE",
+          "state_changes": "UE transitions to AUTH_REQUESTED state.",
+          "messages": [
+            "Authentication Request (UE -> Network)"
+          ],
+          "trigger": "User requests network access or network requests authentication.",
+          "conditions": [],
+          "side_effects": "Starts timer for authentication response."
+        }
+      },
+      {
+        "id": 8,
+        "type": "process",
+        "description": "The network receives the Authentication Request and validates the UE's identity and capabilities. It then generates a random challenge (RAND) and retrieves authentication vector(s) from the HSS/AUSF.",
+        "properties": {
+          "entities": "Network, HSS/AUSF",
+          "state_changes": "Network stores UE's capabilities and RAND. Network transitions to AUTH_CHALLENGE_SENT state.",
+          "messages": [
+            "Authentication Vector Request (Network -> HSS/AUSF)",
+            "Authentication Vector Response (HSS/AUSF -> Network)"
+          ],
+          "trigger": "Reception of Authentication Request from UE.",
+          "conditions": [],
+          "side_effects": "Network selects an appropriate authentication vector (RAND, AUTN, XRES, KASME)."
+        }
+      },
+      {
+        "id": 9,
+        "type": "process",
+        "description": "The network sends an Authentication Challenge containing the RAND and AUTN to the UE.",
+        "properties": {
+          "entities": "Network, UE",
+          "state_changes": "None",
+          "messages": [
+            "Authentication Challenge (Network -> UE)"
+          ],
+          "trigger": "Successful retrieval of authentication vectors from HSS/AUSF.",
+          "conditions": [],
+          "side_effects": "Starts timer for Authentication Response from UE."
+        }
+      },
+      {
+        "id": 10,
+        "type": "decision",
+        "description": "UE verifies the AUTN in the Authentication Challenge. If AUTN is valid, the UE calculates RES and KASME. If AUTN is invalid, the UE sends an Authentication Failure message.",
+        "properties": {
+          "entities": "UE",
+          "state_changes": "If AUTN is valid, UE calculates RES and KASME and transitions to AUTH_CHALLENGE_VERIFIED state. Otherwise, UE transitions to AUTH_FAILED state.",
+          "messages": [
+            "Authentication Failure (UE -> Network)"
+          ],
+          "trigger": "Reception of Authentication Challenge from the network.",
+          "conditions": "Reception of Authentication Challenge.",
+          "side_effects": "UE checks if AUTN is within the acceptable sequence number range. If not, synchronization failure procedure is triggered (not detailed here)."
+        }
+      },
+      {
+        "id": 11,
+        "type": "process",
+        "description": "The UE sends an Authentication Response containing the RES to the network.",
+        "properties": {
+          "entities": "UE, Network",
+          "state_changes": "None",
+          "messages": [
+            "Authentication Response (UE -> Network)"
+          ],
+          "trigger": "Successful AUTN verification.",
+          "conditions": [],
+          "side_effects": "None"
+        }
+      },
+      {
+        "id": 12,
+        "type": "decision",
+        "description": "The network compares the received RES with the expected XRES. If they match, the authentication is successful. The network derives the session key KASME. The network sends Authentication Result to the UE.",
+        "properties": {
+          "entities": "Network",
+          "state_changes": "If RES matches XRES, the network authenticates the UE and derives KASME. Network transitions to AUTH_SUCCESS state.",
+          "messages": [
+            "Authentication Result (Network -> UE)"
+          ],
+          "trigger": "Reception of Authentication Response from UE.",
+          "conditions": "Reception of Authentication Response.",
+          "side_effects": "Network selects the security algorithm to be used."
+        }
+      },
+      {
+        "id": 13,
+        "type": "process",
+        "description": "Authentication Failure: The UE or network sends an Authentication Failure message indicating the reason for failure. The procedure ends.",
+        "properties": {
+          "entities": "UE, Network",
+          "state_changes": "UE and Network transition to AUTH_FAILED state.",
+          "messages": [
+            "Authentication Failure (UE/Network -> Network/UE)"
+          ],
+          "trigger": "AUTN verification failure or RES mismatch.",
+          "conditions": [],
+          "side_effects": "UE or Network may log the failure event."
+        }
+      },
+      {
+        "id": 14,
+        "type": "process",
+        "description": "The UE receives the Authentication Result from the network and verifies the success. If successful, the UE derives the session key KASME.",
+        "properties": {
+          "entities": "UE",
+          "state_changes": "UE derives KASME and transitions to AUTH_SUCCESS state.",
+          "messages": [],
+          "trigger": "Reception of Authentication Result from the network.",
+          "conditions": [],
+          "side_effects": "UE is now mutually authenticated with the network."
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": 1,
+        "to": 2,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 2,
+        "to": 7,
+        "type": "sequential",
+        "properties": {
+          "condition": "Information in the REGISTRATION REQUEST message necessitates authentication procedures."
+        }
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "type": "sequential",
+        "properties": {
+          "condition": "No security procedure started"
+        }
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 9,
+        "to": 10,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 10,
+        "to": 11,
+        "type": "conditional",
+        "properties": {
+          "condition": "AUTN is valid"
+        }
+      },
+      {
+        "from": 10,
+        "to": 13,
+        "type": "conditional",
+        "properties": {
+          "condition": "AUTN is invalid"
+        }
+      },
+      {
+        "from": 11,
+        "to": 12,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 12,
+        "to": 14,
+        "type": "conditional",
+        "properties": {
+          "condition": "RES matches XRES"
+        }
+      },
+       {
+        "from": 12,
+        "to": 13,
+        "type": "conditional",
+        "properties": {
+          "condition": "RES does not match XRES"
+        }
+      },
+      {
+        "from": 14,
+        "to": 3,
+        "type": "sequential",
+        "properties": {
+        }
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "type": "sequential",
+        "properties": {}
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+
+{
+  "procedure_name": "Registration procedure for initial registration",
+  "steps": [
+    {"id": 1, "step": "UE in 5GMM-DEREGISTERED state sends a REGISTRATION REQUEST message to the AMF to initiate initial registration.", "state_required": "5GMM-DEREGISTERED", "entity": "UE"},
+    {"id": 2, "step": "AMF may initiate 5GMM common procedures, such as identification, authentication, and security mode control, based on the information in the REGISTRATION REQUEST.", "state_required": "AMF receives REGISTRATION REQUEST", "entity": "AMF"},
+    {"id": 3, "step": "If the initial registration request is accepted, the AMF sends a REGISTRATION ACCEPT message to the UE. It assigns a TAI list to the UE.", "state_required": "AMF accepts the registration request", "entity": "AMF"},
+    {"id": 4, "step": "Upon receipt of the REGISTRATION ACCEPT message, the UE enters the 5GMM-REGISTERED state and sets the 5GS update status to 5U1 UPDATED.", "state_required": "UE receives REGISTRATION ACCEPT", "entity": "UE"},
+    {"id": 5, "step": "The UE sends a REGISTRATION COMPLETE message to the AMF to acknowledge the successful update of the network slicing information, if certain conditions are met.", "state_required": "5GMM-REGISTERED and certain information elements are present in REGISTRATION ACCEPT", "entity": "UE"},
+    {"id": 6, "step": "AMF stops timer T3550, set itself to 5GMM-REGISTERED after receiving REGISTRATION COMPLETE", "state_required": "AMF receives REGISTRATION COMPLETE", "entity": "AMF"}
+  ],
+  "messages": [
+    {"name": "REGISTRATION REQUEST", "from": "UE", "to": "AMF"},
+    {"name": "REGISTRATION ACCEPT", "from": "AMF", "to": "UE"},
+    {"name": "REGISTRATION COMPLETE", "from": "UE", "to": "AMF"},
+    {"name": "REGISTRATION REJECT", "from": "AMF", "to": "UE"}
+  ],
+  "timers":[
+      {"name":"T3510", "action":"start", "step_id": 1},
+      {"name":"T3502", "action":"stop", "step_id": 1},
+      {"name":"T3511", "action":"stop", "step_id": 1},
+      {"name":"T3519", "action":"start", "step_id": 1},
+      {"name":"T3550", "action":"start", "step_id": 3},
+      {"name":"T3550", "action":"stop", "step_id": 6}
+  ]
+}

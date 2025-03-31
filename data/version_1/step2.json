@@ -1,0 +1,160 @@
+
+{
+  "decision_points": [
+    {
+      "step": "Initial Registration Initiation",
+      "condition": "UE in 5GMM-DEREGISTERED state initiates registration procedure",
+      "outcomes": [
+        {
+          "outcome": "Success - REGISTRATION REQUEST sent, timers started",
+          "next_step": "5GMM Common Procedure Initiation (Network may initiate identification, authentication and security procedures)",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5GMM Common Procedure Initiation",
+      "condition": "During a registration procedure with 5GS registration type IE set to 'emergency registration', if the AMF is configured to support emergency registration for unauthenticated SUCIs, the AMF may choose to skip the authentication procedure even if no 5G NAS security context is available",
+      "outcomes": [
+        {
+          "outcome": "Authentication procedure is skipped",
+          "next_step": "Security mode control procedure",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "Authentication procedure is not skipped",
+          "next_step": "Authentication procedure",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "AMF Receives REGISTRATION REQUEST and initial registration request is accepted",
+      "condition": "initial registration request is accepted by the network",
+      "outcomes": [
+        {
+          "outcome": "Registration Accepted",
+          "next_step": "AMF sends REGISTRATION ACCEPT",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "AMF Receives REGISTRATION REQUEST and initial registration request cannot be accepted",
+      "condition": "initial registration request cannot be accepted by the network",
+      "outcomes": [
+        {
+          "outcome": "Registration Rejected",
+          "next_step": "AMF sends REGISTRATION REJECT with appropriate 5GMM cause value",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+{
+      "step": "Upon receipt of the REGISTRATION ACCEPT message, the UE shall reset the registration attempt counter, enter state 5GMM-REGISTERED and set the 5GS update status to 5U1 UPDATED.",
+      "condition": "A Reg Accept message was received.",
+      "outcomes": [
+        {
+          "outcome": "The UE shall reset the registration attempt counter, enter state 5GMM-REGISTERED and set the 5GS update status to 5U1 UPDATED.",
+          "next_step": "END.",
+          "outcome_type": "positive"
+        }
+      ]
+    }
+  ],
+  "dependencies": [],
+   "UE_Behavior_on_Rejection": [
+    {
+      "5GMM_Cause": "#3 (Illegal UE); or #6 (Illegal ME).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete any 5G-GUTI, last visited registered TAI, TAI list and ngKSI.For PLMN, the UE shall consider the USIM as invalid for 5GS services until switching off, the UICC containing the USIM is removed or the timer T3245 expires as described in subclause 5.3.19A.1;For SNPN, if the UE is not performing initial registration for onboarding services in SNPN and the UE does not support access to an SNPN using credentials from a credentials holder and does not support equivalent SNPNs, the UE shall consider the selected entry of the 'list of subscriber data' with the SNPN identity of the current SNPN as invalid until the UE is switched off, the entry is updated or the timer T3245 expires as described in subclause 5.3.19A.2. If the UE is performing initial registration for onboarding services in SNPN, the UE shall reset the registration attempt counter, store the SNPN identity in the 'permanently forbidden SNPNs for onboarding services in SNPN' list, enter state 5GMM-DEREGISTERED.PLMN-SEARCH, and perform an SNPN selection or an SNPN selection for onboarding services according to 3GPP TS 23.122 [5]."
+    },
+    {
+      "5GMM_Cause": "#7 (5GS services not allowed).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete any 5G-GUTI, last visited registered TAI, TAI list and ngKSI. For PLMN, the UE shall consider the USIM as invalid for 5GS services until switching off, the UICC containing the USIM is removed or the timer T3245 expires as described in subclause 5.3.19A.1;For SNPN, if the UE is not performing initial registration for onboarding services in SNPN and the UE does not support access to an SNPN using credentials from a credentials holder and does not support equivalent SNPNs, the UE shall consider the selected entry of the 'list of subscriber data' with the SNPN identity of the current SNPN as invalid for 5GS services until the UE is switched off, the entry is updated or the timer T3245 expires as described in subclause 5.3.19A.2. If the UE is performing initial registration for onboarding services in SNPN, the UE shall reset the registration attempt counter, store the SNPN identity in the 'permanently forbidden SNPNs for onboarding services in SNPN' list, enter state 5GMM-DEREGISTERED.PLMN-SEARCH, and perform an SNPN selection or an SNPN selection for onboarding services according to 3GPP TS 23.122 [5]."
+    },
+    {
+      "5GMM_Cause": "#10 (Implicitly de-registered).",
+      "UE_Action": "5GMM cause #10 is only applicable when received from a wireline access network by the 5G-RG acting on behalf of the AUN3 device. When received over wireline access network, the 5G-RG acting on behalf of the AUN3 device shall abort the initial registration procedure that was initiated on behalf of the AUN3 device. The 5G-RG shall set its 5GS update status to 5U2 NOT UPDATED (and shall store it according to subclause 5.1.3.2.2), shall delete its 5G-GUTI, last visited registered TAI, TAI list, ngKSI, and shall reset its registration attempt counter, and shall enter the state 5GMM-DEREGISTERED."
+    },
+    {
+      "5GMM_Cause": "#11 (PLMN not allowed).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete any 5G-GUTI, last visited registered TAI, TAI list and ngKSI. The UE shall delete the list of equivalent PLMNs and reset the registration attempt counter and store the PLMN identity in the forbidden PLMN list as specified in subclause 5.3.13A and if the UE is configured to use timer T3245 then the UE shall start timer T3245 and proceed as described in subclause 5.3.19A.1. The UE shall enter state 5GMM-DEREGISTERED.PLMN-SEARCH and perform a PLMN selection according to 3GPP TS 23.122 [5]."
+    },
+    {
+      "5GMM_Cause": "#12 (Tracking area not allowed).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete last visited registered TAI and TAI list. The UE shall store the current TAI in the list of '5GS forbidden tracking areas for regional provision of service' and enter the state 5GMM-DEREGISTERED.LIMITED-SERVICE."
+    },
+    {
+      "5GMM_Cause": "#13 (Roaming not allowed in this tracking area).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete last visited registered TAI and TAI list. The UE shall store the current TAI in the list of '5GS forbidden tracking areas for roaming' and enter the state 5GMM-DEREGISTERED.LIMITED-SERVICE or optionally 5GMM-DEREGISTERED.PLMN-SEARCH. For 3GPP access, the UE shall perform a PLMN selection or SNPN selection according to 3GPP TS 23.122 [5]. For non-3GPP access, the UE shall perform network selection as defined in 3GPP TS 24.502 [18]."
+    },
+    {
+      "5GMM_Cause": "#15 (No suitable cells in tracking area).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete any last visited registered TAI and TAI list. The UE shall store the current TAI in the list of '5GS forbidden tracking areas for roaming' and enter the state 5GMM-DEREGISTERED.LIMITED-SERVICE. The UE shall search for a suitable cell in another tracking area according to 3GPP TS 38.304 [28] or 3GPP TS 36.304 [25C]."
+    },
+    {
+      "5GMM_Cause": "#22 (Congestion).",
+      "UE_Action": "The UE shall abort the initial registration procedure, set the 5GS update status to 5U2 NOT UPDATED, reset the registration attempt counter and enter state 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION. The UE shall stop timer T3346 if it is running. If the REGISTRATION REJECT message is integrity protected, the UE shall start timer T3346 with the value provided in the T3346 value IE. The UE stays in the current serving cell and applies the normal cell reselection process. The initial registration procedure is started if still needed when timer T3346 expires or is stopped."
+    },
+    {
+      "5GMM_Cause": "#27 (N1 mode not allowed).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete any 5G-GUTI, last visited registered TAI, TAI list and ngKSI. The UE shall reset the registration attempt counter and shall enter the state 5GMM-DEREGISTERED.LIMITED-SERVICE. The UE shall disable the N1 mode capability for the specific access type for which the message was received (see subclause 4.9)."
+    },
+    {
+      "5GMM_Cause": "#31 (Redirection to EPC required).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete any 5G-GUTI, last visited registered TAI, TAI list and ngKSI. The UE shall reset the registration attempt counter. The UE shall enable the E-UTRA capability if it was disabled, disable the N1 mode capability for 3GPP access (see subclause 4.9.2) and enter the 5GMM-DEREGISTERED.NO-CELL-AVAILABLE."
+    },
+    {
+      "5GMM_Cause": "#36 (IAB-node operation not authorized).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete any 5G-GUTI, last visited registered TAI, TAI list and ngKSI.The UE shall delete the list of equivalent PLMNs and reset the registration attempt counter and store the PLMN identity in the forbidden PLMN list as specified in subclause 5.3.13A. The UE shall enter state 5GMM-DEREGISTERED.PLMN-SEARCH and perform a PLMN selection according to 3GPP TS 23.122 [5]."
+    },
+    {
+      "5GMM_Cause": "#62 (No network slices available).",
+      "UE_Action": "The UE shall abort the initial registration procedure, set the 5GS update status to 5U2 NOT UPDATED and enter state 5GMM-DEREGISTERED. ATTEMPTING-REGISTRATION or 5GMM-DEREGISTERED.PLMN-SEARCH. Additionally, the UE shall reset the registration attempt counter.The UE receiving the rejected NSSAI in the REGISTRATION REJECT message takes the following actions based on the rejection cause in the rejected S-NSSAI(s):"
+    },
+    {
+      "5GMM_Cause": "#72 (Non-3GPP access to 5GCN not allowed).",
+      "UE_Action": "When received over non-3GPP access the UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete last visited registered TAI and TAI list. The UE shall reset the registration attempt counter and enter the state 5GMM-DEREGISTERED. The UE shall disable the N1 mode capability for non-3GPP access (see subclause 4.9.3). As an implementation option, the UE may enter the state 5GMM-DEREGISTERED.PLMN-SEARCH in order to perform a PLMN selection according to 3GPP TS 23.122 [5]."
+    },
+    {
+      "5GMM_Cause": "#73 (Serving network not authorized).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete any 5G-GUTI, last visited registered TAI, TAI list and ngKSI. The UE shall delete the list of equivalent PLMNs, reset the registration attempt counter, store the PLMN identity in the forbidden PLMN list as specified in subclause 5.3.13A. For 3GPP access the UE shall enter state 5GMM-DEREGISTERED.PLMN-SEARCH in order to perform a PLMN selection according to 3GPP TS 23.122 [5], and for non-3GPP access the UE shall enter state 5GMM-DEREGISTERED.LIMITED-SERVICE and perform network selection as defined in 3GPP TS 24.502 [18]."
+    },
+    {
+      "5GMM_Cause": "#74 (Temporarily not authorized for this SNPN).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete any 5G-GUTI, last visited registered TAI, TAI list, ngKSI and the list of equivalent SNPNs (if available). The UE shall reset the registration attempt counter and store the SNPN identity in the 'temporarily forbidden SNPNs' list for the specific access type for which the message was received. For 3GPP access the UE shall enter state 5GMM-DEREGISTERED.PLMN-SEARCH and perform an SNPN selection according to 3GPP TS 23.122 [5] and for non-3GPP access the UE shall enter state 5GMM-DEREGISTERED.LIMITED-SERVICE and perform network selection as defined in 3GPP TS 24.502 [18]."
+    },
+    {
+      "5GMM_Cause": "#75 (Permanently not authorized for this SNPN).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete any 5G-GUTI, last visited registered TAI, TAI list ngKSI and the list of equivalent SNPNs (if available). The UE shall reset the registration attempt counter and store the SNPN identity in the 'permanently forbidden SNPNs' list for the specific access type for which the message was received. For 3GPP access the UE shall enter state 5GMM-DEREGISTERED.PLMN-SEARCH and perform an SNPN selection according to 3GPP TS 23.122 [5] and for non-3GPP access the UE shall enter state 5GMM-DEREGISTERED.LIMITED-SERVICE and perform network selection as defined in 3GPP TS 24.502 [18]."
+    },
+    {
+      "5GMM_Cause": "#76 (Not authorized for this CAG or authorized for CAG cells only).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED, store the 5GS update status according to subclause 5.1.3.2.2, and reset the registration attempt counter. The UE shall enter the state 5GMM-DEREGISTERED.LIMITED-SERVICE and shall search for a suitable cell according to 3GPP TS 38.304 [28] or 3GPP TS 36.304 [25C]."
+    },
+    {
+      "5GMM_Cause": "#77 (Wireline access area not allowed).",
+      "UE_Action": "The 5G-RG and the W-AGF acting on behalf of the FN-CRG shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2), shall delete 5G-GUTI, last visited registered TAI, TAI list and ngKSI, shall reset the registration attempt counter, shall enter the state 5GMM-DEREGISTERED and shall act as specified in subclause 5.3.23."
+    },
+    {
+      "5GMM_Cause": "#78 (PLMN not allowed to operate at the present UE location).",
+      "UE_Action": "The UE shall set the 5GS update status to 5U3 ROAMING NOT ALLOWED (and shall store it according to subclause 5.1.3.2.2) and shall delete last visited registered TAI and TAI list.The UE shall store the PLMN identity and, if it is known, the current geographical location in the list of 'PLMNs not allowed to operate at the present UE location' and shall start a corresponding timer instance (see subclause 4.23.2). The UE shall enter state 5GMM-DEREGISTERED.PLMN-SEARCH and perform a PLMN selection according to 3GPP TS 23.122 [5]."
+    },
+    {
+      "5GMM_Cause": "#79 (UAS services not allowed).",
+      "UE_Action": "The UE shall abort the initial registration procedure, set the 5GS update status to 5U2 NOT UPDATED and enter state 5GMM-DEREGISTERED. ATTEMPTING-REGISTRATION or 5GMM-DEREGISTERED.PLMN-SEARCH. Additionally, the UE shall reset the registration attempt counter."
+    },
+    {
+      "5GMM_Cause": "#80 (Disaster roaming for the determined PLMN with disaster condition not allowed).",
+      "UE_Action": "The UE shall abort the initial registration procedure, set the 5GS update status to 5U2 NOT UPDATED, enter state 5GMM-DEREGISTERED. PLMN-SEARCH and shall delete any 5G-GUTI, last visited registered TAI, TAI list and ngKSI. The UE shall not attempt to register for disaster roaming services on this PLMN for the UE determined PLMN with disaster condition for a period in the range of 12 to 24 hours. The UE shall perform PLMN selection as described in 3GPP TS 23.122 [6]."
+    },
+    {
+      "5GMM_Cause": "#81 (Selected N3IWF is not compatible with the allowed NSSAI).",
+      "UE_Action": "The UE shall abort the initial registration procedure, set the 5GS update status to 5U2 NOT UPDATED and enter state 5GMM-DEREGISTERED. ATTEMPTING-REGISTRATION or 5GMM-DEREGISTERED.PLMN-SEARCH. Additionally, the UE shall reset the registration attempt counter."
+    },
+    {
+      "5GMM_Cause": "#82 (Selected TNGF is not compatible with the allowed NSSAI).",
+      "UE_Action": "The UE shall abort the initial registration procedure, set the 5GS update status to 5U2 NOT UPDATED and enter state 5GMM-DEREGISTERED. ATTEMPTING-REGISTRATION or 5GMM-DEREGISTERED.PLMN-SEARCH. Additionally, the UE shall reset the registration attempt counter."
+    }
+  ]
+}

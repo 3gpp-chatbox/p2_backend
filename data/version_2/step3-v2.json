@@ -1,0 +1,306 @@
+
+{
+  "graph": {
+    "nodes": [
+      {
+        "id": 1,
+        "type": "start",
+        "description": "UE initiates initial registration by sending a REGISTRATION REQUEST message to the AMF.",
+        "properties": {
+          "entity": "UE",
+          "state_required": "5GMM-DEREGISTERED",
+          "message_sent": "REGISTRATION REQUEST"
+        }
+      },
+      {
+        "id": 2,
+        "type": "decision",
+        "description": "5GMM common procedures may be initiated based on the information in REGISTRATION REQUEST.",
+        "properties": {
+          "entity": "AMF",
+          "condition": "Information in REGISTRATION REQUEST requires authentication, identification or security mode control."
+        }
+      },
+      {
+        "id": 3,
+        "type": "process",
+        "description": "AMF performs 5GMM common procedures (identification, authentication, security mode control).",
+        "properties": {
+          "entity": "AMF",
+          "state_change": "Potential security context update"
+        }
+      },
+      {
+        "id": 4,
+        "type": "decision",
+        "description": "AMF accepts the initial registration request?",
+        "properties": {
+          "entity": "AMF",
+          "condition": "Initial registration request is accepted by the AMF."
+        }
+      },
+      {
+        "id": 5,
+        "type": "process",
+        "description": "AMF sends a REGISTRATION ACCEPT message to the UE and assigns a TAI list to the UE.",
+        "properties": {
+          "entity": "AMF",
+          "state_change": "None",
+          "message_sent": "REGISTRATION ACCEPT"
+        }
+      },
+      {
+        "id": 6,
+        "type": "process",
+        "description": "UE enters 5GMM-REGISTERED state and sets 5GS update status to 5U1 UPDATED.",
+        "properties": {
+          "entity": "UE",
+          "state_change": "5GMM-REGISTERED, 5GS update status: 5U1 UPDATED",
+          "state_required": "UE receives REGISTRATION ACCEPT"
+        }
+      },
+      {
+        "id": 7,
+        "type": "decision",
+        "description": "Are certain information elements present in REGISTRATION ACCEPT?",
+        "properties": {
+          "entity": "UE",
+          "condition": "Certain information elements are present in REGISTRATION ACCEPT and the UE is 5GMM-REGISTERED"
+        }
+      },
+      {
+        "id": 8,
+        "type": "process",
+        "description": "UE sends a REGISTRATION COMPLETE message to the AMF.",
+        "properties": {
+          "entity": "UE",
+          "state_change": "None",
+          "message_sent": "REGISTRATION COMPLETE"
+        }
+      },
+      {
+        "id": 9,
+        "type": "process",
+        "description": "AMF stops timer T3550 and sets itself to 5GMM-REGISTERED.",
+        "properties": {
+          "entity": "AMF",
+          "state_change": "5GMM-REGISTERED",
+          "state_required": "AMF receives REGISTRATION COMPLETE"
+        }
+      },
+      {
+        "id": 10,
+        "type": "decision",
+        "description": "AMF rejects the initial registration request?",
+        "properties": {
+          "entity": "AMF",
+          "condition": "Initial registration request is rejected by the AMF."
+        }
+      },
+      {
+        "id": 11,
+        "type": "process",
+        "description": "AMF sends a REGISTRATION REJECT message to the UE.",
+        "properties": {
+          "entity": "AMF",
+          "message_sent": "REGISTRATION REJECT",
+          "state_change": "None"
+        }
+      },
+      {
+        "id": 12,
+        "type": "end",
+        "description": "Registration procedure complete (Successful).",
+        "properties": {}
+      },
+       {
+        "id": 13,
+        "type": "end",
+        "description": "Registration procedure complete (Rejected).",
+        "properties": {}
+      },
+      {
+          "id": 14,
+          "type": "timer",
+          "description": "T3550",
+          "properties": {
+              "action": "start"
+          }
+      },
+        {
+          "id": 15,
+          "type": "timer",
+          "description": "T3550",
+          "properties": {
+              "action": "stop"
+          }
+      },
+        {
+          "id": 16,
+          "type": "timer",
+          "description": "T3510",
+          "properties": {
+              "action": "start"
+          }
+      },
+        {
+          "id": 17,
+          "type": "timer",
+          "description": "T3502",
+          "properties": {
+              "action": "stop"
+          }
+      },
+        {
+          "id": 18,
+          "type": "timer",
+          "description": "T3511",
+          "properties": {
+              "action": "stop"
+          }
+      },
+        {
+          "id": 19,
+          "type": "timer",
+          "description": "T3519",
+          "properties": {
+              "action": "start"
+          }
+      }
+    ],
+    "edges": [
+      {
+        "from": 1,
+        "to": 2,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "type": "conditional",
+        "properties": {
+          "condition": "AMF determines 5GMM common procedures are required."
+        }
+      },
+      {
+        "from": 2,
+        "to": 4,
+        "type": "conditional",
+        "properties": {
+          "condition": "AMF determines 5GMM common procedures are NOT required."
+        }
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "type": "conditional",
+        "properties": {
+          "condition": "Request accepted"
+        }
+      },
+       {
+        "from": 4,
+        "to": 10,
+        "type": "conditional",
+        "properties": {
+          "condition": "Request rejected"
+        }
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "type": "conditional",
+        "properties": {
+          "condition": "Certain conditions related to network slicing information are met."
+        }
+      },
+      {
+        "from": 7,
+        "to": 12,
+        "type": "conditional",
+        "properties": {
+          "condition": "Conditions related to network slicing information are not met."
+        }
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 9,
+        "to": 12,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 10,
+        "to": 11,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 11,
+        "to": 13,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 5,
+        "to": 14,
+        "type": "sequential",
+        "properties": {}
+      },
+      {
+        "from": 9,
+        "to": 15,
+        "type": "sequential",
+        "properties": {}
+      },
+        {
+        "from": 1,
+        "to": 16,
+        "type": "sequential",
+        "properties": {}
+      },
+        {
+        "from": 1,
+        "to": 17,
+        "type": "sequential",
+        "properties": {}
+      },
+        {
+        "from": 1,
+        "to": 18,
+        "type": "sequential",
+        "properties": {}
+      },
+        {
+        "from": 1,
+        "to": 19,
+        "type": "sequential",
+        "properties": {}
+      }
+    ]
+  }
+}

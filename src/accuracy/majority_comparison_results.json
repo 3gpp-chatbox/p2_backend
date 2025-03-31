@@ -1,0 +1,560 @@
+{
+    "nodes": [
+        {
+            "id": "1",
+            "description_majority": "Initial Registration Initiation: Determine registration type (initial, emergency, SNPN onboarding, disaster roaming)",
+            "type_majority": "start",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "1",
+                "descriptions": [
+                    "Initial Registration Initiation: Determine registration type (initial, emergency, SNPN onboarding, disaster roaming)",
+                    "UE initiates initial registration by sending a REGISTRATION REQUEST message to the AMF.",
+                    "UE, in 5GMM-DEREGISTERED state, initiates initial registration by sending a REGISTRATION REQUEST message to the AMF; T3510 starts and T3502 and T3511 (if running) are stopped."
+                ],
+                "types": [
+                    "start",
+                    "start",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{'entity': 'UE', 'state_required': '5GMM-DEREGISTERED', 'message_sent': 'REGISTRATION REQUEST'}",
+                    "{'entities': 'UE, AMF', 'state_changes': 'UE transitions from 5GMM-DEREGISTERED to a state awaiting response. If T3502 or T3511 were running, they are stopped.', 'trigger': 'UE needs to register for 5GS services, emergency services, SMS over NAS, or after mobility events (GERAN/UTRAN to NG-RAN), onboarding services in SNPN, disaster roaming services, or to resume normal services after unavailability period.', 'conditions': 'UE is in 5GMM-DEREGISTERED state.', 'side_effects': 'UE starts timer T3510 and stops timer T3502 and timer T3511 if they are running.', 'messages': ['REGISTRATION REQUEST (UE -> AMF)']}"
+                ]
+            }
+        },
+        {
+            "id": "2",
+            "description_majority": "Construct REGISTRATION REQUEST message",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "2",
+                "descriptions": [
+                    "Construct REGISTRATION REQUEST message",
+                    "5GMM common procedures may be initiated based on the information in REGISTRATION REQUEST.",
+                    "The network may initiate 5GMM common procedures, such as identification, authentication, and security procedures based on the REGISTRATION REQUEST message contents."
+                ],
+                "types": [
+                    "process",
+                    "decision",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{'entity': 'AMF', 'condition': 'Information in REGISTRATION REQUEST requires authentication, identification or security mode control.'}",
+                    "{'entities': 'AMF, UE', 'state_changes': 'AMF and UE may change states based on the initiated 5GMM common procedures (e.g., identification, authentication, security mode control).', 'trigger': 'Receipt of REGISTRATION REQUEST message by AMF.', 'conditions': 'Information in the REGISTRATION REQUEST message necessitates additional procedures.', 'side_effects': 'Initiation of 5GMM common procedures.', 'messages': []}"
+                ]
+            }
+        },
+        {
+            "id": "3",
+            "description_majority": "Send REGISTRATION REQUEST message to AMF",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "3",
+                "descriptions": [
+                    "Send REGISTRATION REQUEST message to AMF",
+                    "AMF performs 5GMM common procedures (identification, authentication, security mode control).",
+                    "If the initial registration request is accepted by the network, the AMF sends a REGISTRATION ACCEPT message to the UE."
+                ],
+                "types": [
+                    "process",
+                    "process",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{'entity': 'AMF', 'state_change': 'Potential security context update'}",
+                    "{'entities': 'AMF, UE', 'state_changes': 'AMF may enter 5GMM-COMMON-PROCEDURE-INITIATED. UE may enter 5GMM-REGISTERED.', 'trigger': 'The AMF accepts the initial registration request.', 'conditions': \"The AMF validates the UE's request and authorizes registration.\", 'side_effects': 'AMF assigns and includes a TAI list in the REGISTRATION ACCEPT message. AMF may include various information elements like equivalent PLMNs, MICO indication, T3324, T3512, LADN information, etc.', 'messages': ['REGISTRATION ACCEPT (AMF -> UE)']}"
+                ]
+            }
+        },
+        {
+            "id": "4",
+            "description_majority": "AMF initiates 5GMM common procedures (e.g., identification, authentication, security)",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "4",
+                "descriptions": [
+                    "AMF initiates 5GMM common procedures (e.g., identification, authentication, security)",
+                    "AMF accepts the initial registration request?",
+                    "If the Negotiated PEIPS assistance information IE, Ciphering key data IE, UE radio capability ID IE,UE radio capability ID deletion indication IE, Network slicing indication IE, Alternative NSSAI IE, S-NSSAI location validity information IE, On-demand NSSAI IE, S-NSSAI time validity information IE, the Operator-defined access category definitions IE, the Extended emergency number list IE, the CAG information list IE, the Extended CAG information list IE, or the Truncated 5G-S-TMSI configuration IE are included in the REGISTRATION ACCEPT message, the AMF starts timer T3550 and enters state 5GMM-COMMON-PROCEDURE-INITIATED."
+                ],
+                "types": [
+                    "process",
+                    "decision",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{'entity': 'AMF', 'condition': 'Initial registration request is accepted by the AMF.'}",
+                    "{'entities': 'AMF', 'state_changes': 'AMF enters state 5GMM-COMMON-PROCEDURE-INITIATED', 'trigger': 'The AMF needs to update the UE with UE radio capability ID, PEIPS assistance information, new network slicing information, alternative S-NSSAI information, UE radio capability ID Deletion, Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list or Truncated 5G-S-TMSI configuration', 'conditions': 'The AMF has assigned a new 5G-GUTI or a SOR transparent container or if Operator-defined access category definitions, Extended emergency number list, CAG information list, Extended CAG information list, UE radio capability ID or PEIPS assistance information are to be sent in the REGISTRATION ACCEPT message.', 'side_effects': 'AMF starts timer T3550.', 'messages': []}"
+                ]
+            }
+        },
+        {
+            "id": "5",
+            "description_majority": "Initial registration request accepted by the network?",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "5",
+                "descriptions": [
+                    "Initial registration request accepted by the network?",
+                    "AMF sends a REGISTRATION ACCEPT message to the UE and assigns a TAI list to the UE.",
+                    "Upon receiving the REGISTRATION ACCEPT message, the UE resets the registration attempt counter, enters state 5GMM-REGISTERED, and sets the 5GS update status to 5U1 UPDATED."
+                ],
+                "types": [
+                    "decision",
+                    "process",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{'entity': 'AMF', 'state_change': 'None', 'message_sent': 'REGISTRATION ACCEPT'}",
+                    "{'entities': 'UE', 'state_changes': 'UE transitions to 5GMM-REGISTERED and sets 5GS update status to 5U1 UPDATED.', 'trigger': 'Receipt of REGISTRATION ACCEPT message by the UE.', 'conditions': 'Successful registration.', 'side_effects': 'UE deletes old TAI list and stores the received TAI list. UE may store equivalent PLMNs, LADN information, etc. UE starts using timer values included in the message.', 'messages': []}"
+                ]
+            }
+        },
+        {
+            "id": "6",
+            "description_majority": "Send REGISTRATION ACCEPT message to UE",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "6",
+                "descriptions": [
+                    "Send REGISTRATION ACCEPT message to UE",
+                    "UE enters 5GMM-REGISTERED state and sets 5GS update status to 5U1 UPDATED.",
+                    "If the UE needs to acknowledge the reception of updated network slicing information, Truncated 5G-S-TMSI configuration IE, UE radio capability ID IE, PEIPS assistance information, new NSAG information or receive Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list the UE returns a REGISTRATION COMPLETE message to the AMF."
+                ],
+                "types": [
+                    "process",
+                    "process",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{'entity': 'UE', 'state_change': '5GMM-REGISTERED, 5GS update status: 5U1 UPDATED', 'state_required': 'UE receives REGISTRATION ACCEPT'}",
+                    "{'entities': 'UE, AMF', 'state_changes': 'AMF stops T3550 and transitions to 5GMM-REGISTERED.', 'trigger': 'UE receives an registration accept message that contains update for network slicing information, Truncated 5G-S-TMSI configuration IE, UE radio capability ID IE, PEIPS assistance information, new NSAG information or Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list', 'conditions': 'UE receives the REGISTRATION ACCEPT message.', 'side_effects': 'UE sends the REGISTRATION COMPLETE, the AMF will stop the T3550', 'messages': ['REGISTRATION COMPLETE (UE -> AMF)']}"
+                ]
+            }
+        },
+        {
+            "id": "7",
+            "description_majority": "Initialise timers and states based on conditions met",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "7",
+                "descriptions": [
+                    "Initialise timers and states based on conditions met",
+                    "Are certain information elements present in REGISTRATION ACCEPT?",
+                    "UE initiates authentication by sending an Authentication Request to the network."
+                ],
+                "types": [
+                    "process",
+                    "decision",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{'entity': 'UE', 'condition': 'Certain information elements are present in REGISTRATION ACCEPT and the UE is 5GMM-REGISTERED'}",
+                    "{'entities': 'UE', 'state_changes': 'UE transitions to AUTH_REQUESTED state.', 'messages': ['Authentication Request (UE -> Network)'], 'trigger': 'User requests network access or network requests authentication.', 'conditions': [], 'side_effects': 'Starts timer for authentication response.'}"
+                ]
+            }
+        },
+        {
+            "id": "8",
+            "description_majority": "UE supports equivalent SNPNs?",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "8",
+                "descriptions": [
+                    "UE supports equivalent SNPNs?",
+                    "UE sends a REGISTRATION COMPLETE message to the AMF.",
+                    "The network receives the Authentication Request and validates the UE's identity and capabilities. It then generates a random challenge (RAND) and retrieves authentication vector(s) from the HSS/AUSF."
+                ],
+                "types": [
+                    "decision",
+                    "process",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{'entity': 'UE', 'state_change': 'None', 'message_sent': 'REGISTRATION COMPLETE'}",
+                    "{'entities': 'Network, HSS/AUSF', 'state_changes': \"Network stores UE's capabilities and RAND. Network transitions to AUTH_CHALLENGE_SENT state.\", 'messages': ['Authentication Vector Request (Network -> HSS/AUSF)', 'Authentication Vector Response (HSS/AUSF -> Network)'], 'trigger': 'Reception of Authentication Request from UE.', 'conditions': [], 'side_effects': 'Network selects an appropriate authentication vector (RAND, AUTN, XRES, KASME).'}"
+                ]
+            }
+        },
+        {
+            "id": "9",
+            "description_majority": "Send REGISTRATION COMPLETE message to AMF",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "9",
+                "descriptions": [
+                    "Send REGISTRATION COMPLETE message to AMF",
+                    "AMF stops timer T3550 and sets itself to 5GMM-REGISTERED.",
+                    "The network sends an Authentication Challenge containing the RAND and AUTN to the UE."
+                ],
+                "types": [
+                    "process",
+                    "process",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{'entity': 'AMF', 'state_change': '5GMM-REGISTERED', 'state_required': 'AMF receives REGISTRATION COMPLETE'}",
+                    "{'entities': 'Network, UE', 'state_changes': 'None', 'messages': ['Authentication Challenge (Network -> UE)'], 'trigger': 'Successful retrieval of authentication vectors from HSS/AUSF.', 'conditions': [], 'side_effects': 'Starts timer for Authentication Response from UE.'}"
+                ]
+            }
+        },
+        {
+            "id": "10",
+            "description_majority": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED",
+            "type_majority": "decision",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "10",
+                "descriptions": [
+                    "AMF stops timer T3550 and changes to state 5GMM-REGISTERED",
+                    "AMF rejects the initial registration request?",
+                    "UE verifies the AUTN in the Authentication Challenge. If AUTN is valid, the UE calculates RES and KASME. If AUTN is invalid, the UE sends an Authentication Failure message."
+                ],
+                "types": [
+                    "process",
+                    "decision",
+                    "decision"
+                ],
+                "properties": [
+                    "{}",
+                    "{'entity': 'AMF', 'condition': 'Initial registration request is rejected by the AMF.'}",
+                    "{'entities': 'UE', 'state_changes': 'If AUTN is valid, UE calculates RES and KASME and transitions to AUTH_CHALLENGE_VERIFIED state. Otherwise, UE transitions to AUTH_FAILED state.', 'messages': ['Authentication Failure (UE -> Network)'], 'trigger': 'Reception of Authentication Challenge from the network.', 'conditions': 'Reception of Authentication Challenge.', 'side_effects': 'UE checks if AUTN is within the acceptable sequence number range. If not, synchronization failure procedure is triggered (not detailed here).'}"
+                ]
+            }
+        },
+        {
+            "id": "11",
+            "description_majority": "Registration Successful",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "11",
+                "descriptions": [
+                    "Registration Successful",
+                    "AMF sends a REGISTRATION REJECT message to the UE.",
+                    "The UE sends an Authentication Response containing the RES to the network."
+                ],
+                "types": [
+                    "end",
+                    "process",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{'entity': 'AMF', 'message_sent': 'REGISTRATION REJECT', 'state_change': 'None'}",
+                    "{'entities': 'UE, Network', 'state_changes': 'None', 'messages': ['Authentication Response (UE -> Network)'], 'trigger': 'Successful AUTN verification.', 'conditions': [], 'side_effects': 'None'}"
+                ]
+            }
+        },
+        {
+            "id": "12",
+            "description_majority": "Send REGISTRATION REJECT message to UE with an appropriate 5GMM cause value",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "12",
+                "descriptions": [
+                    "Send REGISTRATION REJECT message to UE with an appropriate 5GMM cause value",
+                    "Registration procedure complete (Successful).",
+                    "The network compares the received RES with the expected XRES. If they match, the authentication is successful. The network derives the session key KASME. The network sends Authentication Result to the UE."
+                ],
+                "types": [
+                    "process",
+                    "end",
+                    "decision"
+                ],
+                "properties": [
+                    "{}",
+                    "{}",
+                    "{'entities': 'Network', 'state_changes': 'If RES matches XRES, the network authenticates the UE and derives KASME. Network transitions to AUTH_SUCCESS state.', 'messages': ['Authentication Result (Network -> UE)'], 'trigger': 'Reception of Authentication Response from UE.', 'conditions': 'Reception of Authentication Response.', 'side_effects': 'Network selects the security algorithm to be used.'}"
+                ]
+            }
+        },
+        {
+            "id": "13",
+            "description_majority": "Registration Failed",
+            "type_majority": "end",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "13",
+                "descriptions": [
+                    "Registration Failed",
+                    "Registration procedure complete (Rejected).",
+                    "Authentication Failure: The UE or network sends an Authentication Failure message indicating the reason for failure. The procedure ends."
+                ],
+                "types": [
+                    "end",
+                    "end",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{}",
+                    "{'entities': 'UE, Network', 'state_changes': 'UE and Network transition to AUTH_FAILED state.', 'messages': ['Authentication Failure (UE/Network -> Network/UE)'], 'trigger': 'AUTN verification failure or RES mismatch.', 'conditions': [], 'side_effects': 'UE or Network may log the failure event.'}"
+                ]
+            }
+        },
+        {
+            "id": "14",
+            "description_majority": "T3510 Timeout",
+            "type_majority": "timer",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "14",
+                "descriptions": [
+                    "T3510 Timeout",
+                    "T3550",
+                    "The UE receives the Authentication Result from the network and verifies the success. If successful, the UE derives the session key KASME."
+                ],
+                "types": [
+                    "timer",
+                    "timer",
+                    "process"
+                ],
+                "properties": [
+                    "{}",
+                    "{'action': 'start'}",
+                    "{'entities': 'UE', 'state_changes': 'UE derives KASME and transitions to AUTH_SUCCESS state.', 'messages': [], 'trigger': 'Reception of Authentication Result from the network.', 'conditions': [], 'side_effects': 'UE is now mutually authenticated with the network.'}"
+                ]
+            }
+        },
+        {
+            "id": "15",
+            "description_majority": "T3511 Timeout",
+            "type_majority": "timer",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "15",
+                "descriptions": [
+                    "T3511 Timeout",
+                    "T3550"
+                ],
+                "types": [
+                    "timer",
+                    "timer"
+                ],
+                "properties": [
+                    "{}",
+                    "{'action': 'stop'}"
+                ]
+            }
+        },
+        {
+            "id": "16",
+            "description_majority": "Registration attempt counter < 5?",
+            "type_majority": "decision",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "16",
+                "descriptions": [
+                    "Registration attempt counter < 5?",
+                    "T3510"
+                ],
+                "types": [
+                    "decision",
+                    "timer"
+                ],
+                "properties": [
+                    "{}",
+                    "{'action': 'start'}"
+                ]
+            }
+        },
+        {
+            "id": "17",
+            "description_majority": "Start T3511, State: 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "17",
+                "descriptions": [
+                    "Start T3511, State: 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION",
+                    "T3502"
+                ],
+                "types": [
+                    "process",
+                    "timer"
+                ],
+                "properties": [
+                    "{}",
+                    "{'action': 'stop'}"
+                ]
+            }
+        },
+        {
+            "id": "18",
+            "description_majority": "Delete TAI list, last visited registered TAI, Start T3502, State: 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION or 5GMM-DEREGISTERED.PLMN-SEARCH",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "18",
+                "descriptions": [
+                    "Delete TAI list, last visited registered TAI, Start T3502, State: 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION or 5GMM-DEREGISTERED.PLMN-SEARCH",
+                    "T3511"
+                ],
+                "types": [
+                    "process",
+                    "timer"
+                ],
+                "properties": [
+                    "{}",
+                    "{'action': 'stop'}"
+                ]
+            }
+        },
+        {
+            "id": "19",
+            "description_majority": "Abort the registration procedure and the NAS signalling connection",
+            "type_majority": "end",
+            "properties_majority": "{}",
+            "valid": false,
+            "all_versions": {
+                "id": "19",
+                "descriptions": [
+                    "Abort the registration procedure and the NAS signalling connection",
+                    "T3519"
+                ],
+                "types": [
+                    "end",
+                    "timer"
+                ],
+                "properties": [
+                    "{}",
+                    "{'action': 'start'}"
+                ]
+            }
+        },
+        {
+            "id": "20",
+            "description_majority": "Received REGISTRATION REJECT message with cause #22?",
+            "type_majority": "decision",
+            "properties_majority": "{}",
+            "valid": true,
+            "all_versions": {
+                "id": "20",
+                "descriptions": [
+                    "Received REGISTRATION REJECT message with cause #22?"
+                ],
+                "types": [
+                    "decision"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "id": "21",
+            "description_majority": "T3346 running?",
+            "type_majority": "timer",
+            "properties_majority": "{}",
+            "valid": true,
+            "all_versions": {
+                "id": "21",
+                "descriptions": [
+                    "T3346 running?"
+                ],
+                "types": [
+                    "timer"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "id": "22",
+            "description_majority": "Retry Registration",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": true,
+            "all_versions": {
+                "id": "22",
+                "descriptions": [
+                    "Retry Registration"
+                ],
+                "types": [
+                    "process"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "id": "23",
+            "description_majority": "Retransmit T3550 timer expires 5 times?",
+            "type_majority": "decision",
+            "properties_majority": "{}",
+            "valid": true,
+            "all_versions": {
+                "id": "23",
+                "descriptions": [
+                    "Retransmit T3550 timer expires 5 times?"
+                ],
+                "types": [
+                    "decision"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "id": "24",
+            "description_majority": "Retransmit the REGISTRATION ACCEPT message, reset and restart timer T3550 ",
+            "type_majority": "process",
+            "properties_majority": "{}",
+            "valid": true,
+            "all_versions": {
+                "id": "24",
+                "descriptions": [
+                    "Retransmit the REGISTRATION ACCEPT message, reset and restart timer T3550 "
+                ],
+                "types": [
+                    "process"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        }
+    ],
+    "edges": []
+}

@@ -1,0 +1,198 @@
+{
+  "decision_points": [
+    {
+      "step": "5.5.1.2.2",
+      "condition": "Different initial registration types (5GS services, emergency, SMS over NAS, onboarding SNPN, disaster roaming services) cause the UE to include different information in the REGISTRATION REQUEST message, such as the 5GS registration type IE set to a different value."
+    },
+     {
+      "step": "5.5.1.2.2",
+      "condition": "Handling the 5GS mobile identity IE has multiple conditions (a,b,c,d,e,f,g) to consider which one to use in the Reg Request."
+    },
+    {
+      "step": "5.5.1.2.2",
+      "condition": "Whether or not to include the UE status IE depends on if the UE is operating in dual-registration mode and is in EMM state EMM-REGISTERED."
+    },
+    {
+      "step": "5.5.1.2.2",
+      "condition": "Inclusion of MICO indication IE depends on whether the UE supports and requests MICO mode."
+    },
+    {
+      "step": "5.5.1.2.2",
+      "condition": "Inclusion of the requested NSSAI IE depends on several factors, including the presence of allowed, configured, or default configured NSSAI and whether all S-NSSAIs are in the pending NSSAI."
+    },
+    {
+      "step": "5.5.1.2.2",
+      "condition": "Setting the S1 mode bit and including the S1 UE network capability IE depends on whether the UE supports S1 mode, hasn't disabled its E-UTRA capability and the 5GS registration type IE is not set to \"disaster roaming initial registration\"."
+    },
+    {
+      "step": "5.5.1.2.2",
+      "condition": "Inclusion of the NAS message container IE depends on whether the UE has a valid 5G NAS security context and needs to send non-cleartext IEs."
+    },
+     {
+      "step": "5.5.1.2.2",
+      "condition": "The inclusion of service-level device ID in the Service-level-AA container IE of the REGISTRATION REQUEST message depends on whether the UE supporting UAS services initiates an initial registration for UAS services"
+    },
+     {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF receives the initial registration request over non-3GPP access and detects that the N3IWF used by the UE is compatible with only part of the allowed NSSAI and the UE has not indicated its support for slice-based N3IWF selection in the REGISTRATION REQUEST message, the AMF accepts the initial registration request."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "Based on LADN indication IE and other parameters, the AMF determines which LADN DNNs to include in the LADN information IE."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "Whether to include the MICO indication IE in the REGISTRATION ACCEPT message depends on whether the MICO indication IE was included in the REGISTRATION REQUEST message and the AMF supports and accepts the use of MICO mode."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "Setting the MPS indicator and MCS indicator bits depends on whether the UE is operating in SNPN access operation mode, operator policies, and subscription context."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "The AMF may include the T3447 value IE set to the service gap time value in the REGISTRATION ACCEPT message based on specific conditions."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "The inclusion of the Negotiated extended DRX parameters IE in the REGISTRATION ACCEPT message depends on whether the Requested extended DRX parameters IE was included in the REGISTRATION REQUEST message, and the AMF supports and accepts the use of eDRX."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "The UE enters different states (5GMM-REGISTERED.LIMITED-SERVICE or 5GMM-REGISTERED.PLMN-SEARCH) based on whether it receives the REGISTRATION ACCEPT message via a CAG cell or a non-CAG cell and the contents of the \"CAG information list\"."
+    },
+     {
+      "step": "5.5.1.2.4",
+      "condition": "Whether the MPS indicator bit of the 5GS network feature support IE is set to \"Access identity 1 valid\" or not based on operator policy in the REGISTRATION ACCEPT message."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "The AMF sets the RestrictEC bit based on whether to restrict the use of enhanced coverage."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "The inclusion of the Feature authorization indication IE in the REGISTRATION ACCEPT message based on the mobile IAB-indication."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "Whether the MINT parameters \"list of PLMN(s) to be used in disaster condition\", the value of the disaster roaming wait range and the value of the disaster return wait range should be included in the REGISTRATION ACCEPT message is based on if the UE supports MINT"
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "The 5GS registration result IE indicates different values (\"3GPP access\", \"Non-3GPP access\", \"3GPP access and non-3GPP access\"), leading to different actions by the UE regarding which access type to consider as registered to."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "Actions taken when receiving the rejected NSSAI in the REGISTRATION ACCEPT message depend on the rejection cause in the rejected S-NSSAI(s)."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "UE behavior based on which type of RAT is received in REGISTRATION ACCEPT message"
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "Inclusion of Operator-defined access category definitions IE,Extended emergency number list IE,the CAG information list IE or the Extended CAG information list IE are based on the support and the need of the AMF."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "The UE actions depend on whether the Unavailability configuration IE with a value of the unavailability period duration and/or the start of the unavailability period in the REGISTRATION ACCEPT message is received, and implementation behavior."
+    },
+      {
+      "step": "5.5.1.2.4",
+      "condition": "Determining the PLMN with disaster condition based on various factors when the 5GS registration type IE is set to disaster roaming initial registration."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "Whether disaster roaming services are allowed based on the PLMN with disaster condition and subscription."
+    },
+    {
+      "step": "5.5.1.2.5",
+      "condition": "Actions taken by the UE based on the 5GMM cause value received in the REGISTRATION REJECT message."
+    }
+  ],
+  "dependencies": [
+    {
+      "step": "5.5.1.2.2",
+      "depends_on": "5GMM-DEREGISTERED state",
+      "type": "hard",
+      "condition": "The UE must be in 5GMM-DEREGISTERED state to initiate the initial registration procedure."
+    },
+    {
+      "step": "5.5.1.2.2",
+      "depends_on": "stopping timer T3502 and T3511",
+      "type": "conditional",
+      "condition": "If timer T3502 or T3511 is currently running, the UE shall stop them before sending the REGISTRATION REQUEST message."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "depends_on": "Successful initial registration request",
+      "type": "hard",
+      "condition": "The REGISTRATION ACCEPT message is sent only if the initial registration request is accepted by the network."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "depends_on": "Including the MICO indication IE in REGISTRATION REQUEST message",
+      "type": "conditional",
+      "condition": "The AMF shall include the MICO indication IE in the REGISTRATION ACCEPT message only if the MICO indication IE was included in the REGISTRATION REQUEST message, the AMF supports and accepts the use of MICO mode."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "depends_on": "Including the Service-level-AA container IE in REGISTRATION REQUEST message",
+      "type": "conditional",
+      "condition": "The AMF includes a service-level-AA pending indication in the Service-level-AA container IE of the REGISTRATION ACCEPT message only if the UE has included the service-level device ID set to the CAA-level UAV ID in the Service-level-AA container IE of the REGISTRATION REQUEST message"
+    },
+    {
+      "step": "5.5.1.2.4",
+      "depends_on": "Inclusion of the Negotiated DRX parameters IE in the REGISTRATION ACCEPT message",
+      "type": "conditional",
+      "condition": "The AMF shall include the Negotiated DRX parameters IE in the REGISTRATION ACCEPT message only if the Requested DRX parameters IE was included in the REGISTRATION REQUEST message"
+    },
+     {
+      "step": "5.5.1.2.4",
+      "depends_on": "Inclusion of UE radio capability ID IE or UE radio capability ID deletion indication IE",
+      "type": "conditional",
+      "condition": "AMF shall start timer T3550 and enter state 5GMM-COMMON-PROCEDURE-INITIATED if UE radio capability ID IE or UE radio capability ID deletion indication IE are included."
+    },
+    {
+      "step": "5.5.1.2.5",
+      "depends_on": "Non-acceptance of initial registration request",
+      "type": "hard",
+      "condition": "The REGISTRATION REJECT message is sent only if the initial registration request cannot be accepted by the network."
+    },
+    {
+      "step": "5.5.1.2.5",
+      "depends_on": "The inclusion of the rejected S-NSSAI(s) to the REGISTRATION REJECT message.",
+      "type": "conditional",
+      "condition": "In the rejection cases, If UE has set the ER-NSSAI bit to \"Extended rejected NSSAI supported\", the rejected S-NSSAI(s) shall be included in the Extended rejected NSSAI IE of the REGISTRATION REJECT message. Otherwise, the rejected S-NSSAI(s) shall be included in the Rejected NSSAI IE of the REGISTRATION REJECT message."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "depends_on": "Successful UUAA result (if applicable)",
+      "type": "conditional",
+      "condition": "AMF includes a service-level-AA response in the Service-level-AA container IE of the REGISTRATION ACCEPT message if there is a valid successful UUAA result for the UE in the UE 5GMM context."
+    },
+    {
+      "step": "5.5.1.2.4",
+      "depends_on": "Reception of Truncated 5G-S-TMSI configuration IE",
+      "type": "conditional",
+      "condition": "If the REGISTRATION ACCEPT message contains the Truncated 5G-S-TMSI configuration IE, then the UE shall store the included truncated 5G-S-TMSI configuration and return a REGISTRATION COMPLETE message"
+    },
+    {
+      "step": "5.5.1.2.4",
+      "depends_on": "AMF determining a disaster condition applies and the UE is allowed",
+      "type": "conditional",
+      "condition": "AMF sets the Disaster roaming registration result value bit based on determining disaster conditions and UE permissions."
+    },
+    {
+      "step": "5.5.1.2.7",
+      "depends_on": "Lower layer failure or release of the NAS signalling connection",
+      "type": "hard",
+      "condition": "Actions are taken to clear the registration procedure and handle timer T3510 if there is a Lower layer failure or release of the NAS signalling connection received from lower layers before the REGISTRATION ACCEPT or REGISTRATION REJECT message is received."
+    },
+    {
+      "step": "5.5.1.2.7",
+      "depends_on": "Transmission failure of REGISTRATION COMPLETE message indication with change in the current TAI",
+      "type": "conditional",
+      "condition": "The UE is required to either resends the REGISTRATION COMPLETE message to the network or abort the registration procedure for initial registration and the registration procedure for mobility registration update shall be initiated."
+    }
+  ]
+}
