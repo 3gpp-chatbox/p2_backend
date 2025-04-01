@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 def clean_heading(text):
     """
     Clean a heading by removing leading numbers and spaces.
-    
+     
     Args:
         text (str): The heading text.
     
@@ -126,27 +126,43 @@ def extract_filtered_content(paragraphs, exclude_sections):
 
 def extract_excluded_content(paragraphs, exclude_sections):
     """
-    Extracts content from excluded sections.
+    Extracts content from excluded sections, maintaining proper heading formatting.
+    Captures all excluded content from the start of the document.
     """
     excluded_content = []
-    exclude_section = False
+    exclude_section = True  
     current_section = []
+    found_first_heading = False
 
     for para in paragraphs:
         text = para["text"]
         is_heading = para["style"].startswith("Heading")
 
-        # Start of excluded section
+        # Handle first heading case
+        if is_heading and not found_first_heading:
+            found_first_heading = True
+            # If first heading is not excluded, add previous content and stop excluding
+            if not is_excluded_heading(text, exclude_sections):
+                if current_section:
+                    excluded_content.extend(current_section)
+                    current_section = []
+                exclude_section = False
+                continue
+
+        # Handle excluded section start
         if is_heading and is_excluded_heading(text, exclude_sections):
+            # Add previous section if exists
+            if current_section:
+                excluded_content.extend(current_section)
             exclude_section = True
-            # Add the heading to start new section
-            current_section = [text]
+            # Format heading with proper level
+            level = para["level"] or 2
+            current_section = [f"{'#' * level} {text}"]
             continue
 
-        # End of excluded section
+        # Handle non-excluded heading
         if is_heading and not is_excluded_heading(text, exclude_sections):
-            if exclude_section:
-                # Add accumulated content to excluded_content
+            if exclude_section and current_section:
                 excluded_content.extend(current_section)
                 current_section = []
             exclude_section = False
@@ -154,7 +170,10 @@ def extract_excluded_content(paragraphs, exclude_sections):
 
         # Collect content while in excluded section
         if exclude_section:
-            current_section.append(text)
+            if para["style"] == "Table":
+                current_section.append(text)  # Tables are already formatted
+            else:
+                current_section.append(text)
 
     # Add any remaining excluded content
     if current_section:
