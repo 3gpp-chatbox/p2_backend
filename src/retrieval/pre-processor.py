@@ -3,7 +3,7 @@ import sys
 import re
 from docx import Document
 from pathlib import Path
-# Add parent directory to Python path
+
 sys.path.append(os.path.abspath(os.path.join(os.path.join(os.path.dirname(__file__), "../.."))))
 
 from src.library.logger import get_logger
