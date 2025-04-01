@@ -4,9 +4,9 @@ import re
 from docx import Document
 from pathlib import Path
 # Add parent directory to Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.join(os.path.dirname(__file__), "../.."))))
 
-from src.lib.logger import get_logger
+from src.library.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -38,63 +38,75 @@ def is_excluded_heading(text, exclude_sections):
 
 def extract_paragraphs(doc):
     """
-    Extract paragraphs from the document with their styles.
-
-    Args:
-        doc (Document): The loaded document object.
-
-    Returns:
-        List[Dict]: List of paragraphs, each containing:
-            - text (str): The paragraph text.
-            - style (str): The paragraph style name.
-            - level (int): The heading level (if applicable).
+    Extract paragraphs and tables from the document in their natural order.
     """
     paragraphs = []
-    inside_contents_section = False  # Track if we're inside "Contents"
+    inside_contents_section = False  
 
     for para in doc.paragraphs:
         text = para.text.strip()
-        if not text:
-            continue
-
-        style = para.style.name
-        level = int(style[-1]) if style.startswith("Heading") and style[-1].isdigit() else None
-
-        # If "Contents" appears (not a heading), start skipping lines
+        
+        # Handle Contents section
         if text.lower() == "contents":
             inside_contents_section = True
-            logger.info("Skipping 'Contents' section")
             continue
-
-        # If a heading appears, stop skipping "Contents"
-        if style.startswith("Heading") and inside_contents_section:
+        if inside_contents_section and para.style.name.startswith("Heading"):
             inside_contents_section = False
-
-        # Skip all paragraphs under "Contents"
         if inside_contents_section:
             continue
 
-        paragraphs.append({"text": text, "style": style, "level": level})
+        # Get paragraph style and level
+        style = para.style.name
+        level = int(style[-1]) if style.startswith("Heading") and style[-1].isdigit() else None
+
+        # Check for table after this paragraph
+        if hasattr(para._element, "getnext") and para._element.getnext() is not None:
+            next_elem = para._element.getnext()
+            if next_elem.tag.endswith('tbl'):
+                # Convert table to markdown directly using the table element
+                markdown_table = []
+                for row in next_elem.tr_lst:  # Access table rows
+                    cells = []
+                    for cell in row.tc_lst:  # Access cells in each row
+                        # Get text content from cell
+                        cell_text = ''.join(t.text.strip() for t in cell.xpath('.//w:t'))
+                        cells.append(cell_text.replace('\n', ' '))
+                    markdown_table.append('| ' + ' | '.join(cells) + ' |')
+                    if len(markdown_table) == 1:  # After header row
+                        markdown_table.append('|' + '|'.join(['---' for _ in cells]) + '|')
+                
+                # Add paragraph if not empty
+                if text:
+                    paragraphs.append({"text": text, "style": style, "level": level})
+                # Add table
+                paragraphs.append({"text": '\n'.join(markdown_table), "style": "Table", "level": None})
+                continue
+
+        # Add regular paragraph if not empty
+        if text:
+            paragraphs.append({"text": text, "style": style, "level": level})
 
     return paragraphs
 
 def extract_filtered_content(paragraphs, exclude_sections):
     """
-    Extracts main content, excluding predefined sections.
-
-    Args:
-        paragraphs (list): List of paragraph dictionaries.
-        exclude_sections (set): Sections to be excluded.
-
-    Returns:
-        list: Filtered content.
+    Extracts main content with tables in their natural position.
     """
     filtered_content = []
     exclude_section = False
+    found_first_heading = False
 
     for para in paragraphs:
         text = para["text"]
         is_heading = para["style"].startswith("Heading")
+
+        # Mark first heading found
+        if is_heading:
+            found_first_heading = True
+
+        # Skip content until we find first heading
+        if not found_first_heading:
+            continue
 
         if is_heading and is_excluded_heading(text, exclude_sections):
             exclude_section = True
@@ -115,26 +127,38 @@ def extract_filtered_content(paragraphs, exclude_sections):
 def extract_excluded_content(paragraphs, exclude_sections):
     """
     Extracts content from excluded sections.
-
-    Args:
-        paragraphs (list): List of paragraph dictionaries.
-        exclude_sections (set): Sections to be excluded.
-
-    Returns:
-        list: Excluded content.
     """
     excluded_content = []
     exclude_section = False
+    current_section = []
 
     for para in paragraphs:
         text = para["text"]
         is_heading = para["style"].startswith("Heading")
 
+        # Start of excluded section
         if is_heading and is_excluded_heading(text, exclude_sections):
             exclude_section = True
+            # Add the heading to start new section
+            current_section = [text]
+            continue
 
+        # End of excluded section
+        if is_heading and not is_excluded_heading(text, exclude_sections):
+            if exclude_section:
+                # Add accumulated content to excluded_content
+                excluded_content.extend(current_section)
+                current_section = []
+            exclude_section = False
+            continue
+
+        # Collect content while in excluded section
         if exclude_section:
-            excluded_content.append(text)
+            current_section.append(text)
+
+    # Add any remaining excluded content
+    if current_section:
+        excluded_content.extend(current_section)
 
     return excluded_content
 
@@ -212,7 +236,7 @@ def docx_to_markdown(file_path, save_markdown=False, output_folder="../../data/m
         }
 
         filtered_content = extract_filtered_content(paragraphs, exclude_sections)
-        excluded_content = extract_excluded_content(paragraphs, exclude_sections)
+        excluded_content = extract_excluded_content(paragraphs,exclude_sections)
         toc_content = extract_toc(paragraphs)
 
         if save_markdown:
