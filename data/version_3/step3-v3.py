@@ -1,15 +1,24 @@
 import os
 import json
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
 
 load_dotenv()
 
-# Configure API key
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+flash_model = "gemini-2.0-flash"
+pro_model = "gemini-2.0-pro-exp-02-05"
 
-# Initialize Gemini model
-model = genai.GenerativeModel('gemini-2.0-flash')
+# Load the Google API Key from the .env file
+load_dotenv(override=True)
+
+# Get API key from environment
+api_key = os.getenv("GOOGLE_API_KEY")
+if not api_key:
+    raise ValueError(
+        "GOOGLE_API_KEY not found in environment variables. Please set it in your .env file."
+    )
+
+client = genai.Client(api_key=api_key)
 
 def read_json_file(file_path):
     """Reads content from a JSON file and returns the parsed JSON object."""
@@ -30,16 +39,125 @@ def extract_procedural_info(section_name, step1_data, step2_data):
     """Generates a structured **flow property graph** using data from step1.json and step2.json"""
     
     prompt = f"""
-You are a graph generation tool. Construct a structured flow property graph for the procedure "{section_name}" based on the provided steps and decision logic.
+You are a **graph generation tool**. Using your knowledge of 3GPP procedures but strictly based on the provided input data, construct a **structured flow property graph** for the procedure **"{section_name}"**.
 
-Represent:
+---
 
--   The sequence of steps as nodes, including their descriptions and any relevant properties (e.g., state changes, involved entities).
--   The flow between steps as edges, including their types (sequential, conditional, retry) and any associated conditions.
--   Decision points and timers as specific node types, with their conditions and properties.
--   Dependencies and conditions as edge properties.
+## ** Graph Representation Rules**
+**Nodes** represent:  
+✔ **Procedural Steps** (e.g., UE sends request, AMF processes message).  
+✔ **Decision Points** (e.g., conditions leading to different paths).  
+✔ **Timers** (started/stopped due to events).  
 
-Create a graph that is easy to understand, showing the main flow and any alternative paths, with detailed properties for each node and edge.
+**Edges** represent:  
+✔ **Flow transitions** (sequential, conditional, retry, fallback).  
+✔ **Decision paths** (if-else branches, error handling, alternative flows).  
+✔ **Dependencies** (where one step is dependent on another).  
+
+ **Strict Rule**: Extract information **only from the provided input data**. Do **not** infer or add missing details.
+
+---
+
+## ** Output Format (Structured JSON)**
+The extracted graph must be in the following format:
+
+```json
+{{
+  "graph": {{
+    "nodes": [
+      {{
+        "id": "start",
+        "type": "start",
+        "description": "Procedure starts",
+        "properties": {{}}
+      }},
+      {{
+        "id": "1",
+        "type": "process",
+        "description": "UE sends REGISTRATION REQUEST",
+        "properties": {{
+          "state_change": "N/A",
+          "entity": "UE",
+          "messages": ["REGISTRATION REQUEST"]
+        }}
+      }},
+      {{
+        "id": "2",
+        "type": "timer",
+        "description": "Timer T3510 starts",
+        "properties": {{
+          "action": "start",
+          "timeout": "5 seconds"
+        }}
+      }},
+      {{
+        "id": "3",
+        "type": "decision",
+        "description": "Decision based on timer expiration",
+        "properties": {{
+          "condition": "Timer T3510 expires",
+          "outcomes": [
+            {{
+              "outcome": "Success",
+              "next_step": 4
+            }},
+            {{
+              "outcome": "Failure - Retry",
+              "next_step": 2,
+              "reason": "Timeout"
+            }}
+          ]
+        }}
+      }},
+      {{
+        "id": "4",
+        "type": "process",
+        "description": "AMF processes REGISTRATION REQUEST",
+        "properties": {{
+          "state_change": "5GMM-DEREGISTERED → 5GMM-REGISTERED",
+          "entity": "AMF",
+          "messages": ["REGISTRATION ACCEPT"]
+        }}
+      }}
+    ],
+    "edges": [
+      {{
+        "from": "start",
+        "to": "1",
+        "type": "sequential",
+        "properties": {{
+          "trigger": "UE sends REGISTRATION REQUEST"
+        }}
+      }},
+      {{
+        "from": "1",
+        "to": "2",
+        "type": "sequential",
+        "properties": {{
+          "trigger": "Timer T3510 starts"
+        }}
+      }},
+      {{
+        "from": "2",
+        "to": "3",
+        "type": "conditional",
+        "properties": {{
+          "condition": "Timer T3510 expires",
+          "error_type": "Timeout",
+          "retry_count": 3
+        }}
+      }},
+      {{
+        "from": "3",
+        "to": "4",
+        "type": "sequential",
+        "properties": {{
+          "trigger": "AMF sends REGISTRATION ACCEPT"
+        }}
+      }}
+    ]
+  }}
+}}
 
 ### Input Data:
 #### Extracted Procedure Steps:
@@ -48,75 +166,24 @@ Create a graph that is easy to understand, showing the main flow and any alterna
 #### Decision Points & Dependencies:
 {json.dumps(step2_data, indent=2)}
 
-### example Output Format:
-{{
-  "graph": {{
-    "nodes": [
-      {{
-        "id": Node ID,
-        "type": "start",
-        "description": "Description of start",
-        "properties": {{}}
-      }},
-      {{
-        "id": Node ID,
-        "type": "process",
-        "description": "Description of process",
-        "properties": {{ "state_change": "UE state changes", "entity":"AMF or UE" }}
-      }},
-      {{
-        "id": Node ID,
-        "type": "decision",
-        "description": "Description of decision",
-        "properties": {{ "condition": "the condition" }}
-      }},
-      {{
-        "id": Node ID,
-        "type": "timer",
-        "description": "the timer name",
-        "properties": {{ "action": "start or stop" }}
-      }}
-      // ... more nodes ...
-    ],
-    "edges": [
-      {{
-        "from": Node ID,
-        "to": Node ID,
-        "type": "sequential" or "conditional" or "retry",
-        "properties": {{ "condition": "Condition (if applicable)" }}
-      }},
-      // ... more edges ...
-    ]
-  }}
-}}
+
+
 """
 
-    try:
-        response = model.generate_content(prompt)
-        if not response or not response.text:
-            print("Error: Empty response from model")
-            return None
-            
-        response_text = response.text.strip()
-        
-        # Clean the response
-        if response_text.startswith("```"):
-            response_text = response_text.replace("```json", "").replace("```", "")
-        
-        # Remove any comments
-        response_text = '\n'.join(line for line in response_text.split('\n') if not line.strip().startswith('//'))
-        
-        # Parse and validate JSON
-        parsed_json = json.loads(response_text)
-        return json.dumps(parsed_json, indent=2)
-        
-    except json.JSONDecodeError as e:
-        print(f"Error parsing JSON: {e}")
-        print("Raw response:", response_text)
-        return None
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        return None
+
+    model_to_use = flash_model  # or pro_model depending on your requirement
+    response = client.models.generate_content(
+        model=model_to_use,
+        contents=prompt,
+        config={
+            "temperature": 0,
+        },
+    )
+
+    # Extract the text content from the response
+    procedural_info = response.text.strip() if hasattr(response, 'text') else str(response)
+
+    return procedural_info
 
 def save_to_json(data, file_path):
     """Saves procedural info to a JSON file."""
@@ -125,13 +192,13 @@ def save_to_json(data, file_path):
     print(f"Procedural info saved to {file_path}")
 
 def process_procedure(section_name):
-    """Processes the procedure using step1-v3.json and step2-v3.json as input."""
+    """Processes the procedure using step1.json and step2.json as input."""
     
-    step1_data = read_json_file("step1-v3.json")
-    step2_data = read_json_file("step2-v3.json")
+    step1_data = read_json_file("v03-step1.json")
+    step2_data = read_json_file("v03-step2.json")
 
     if step1_data is None or step2_data is None:
-        print("Failed to load step1-v3.json or step2-v3.json")
+        print("Failed to load step1.json or step2.json")
         return None
 
     procedural_info = extract_procedural_info(section_name, step1_data, step2_data)
@@ -143,6 +210,6 @@ section_name = "Registration procedure for initial registration"
 procedural_info = process_procedure(section_name)
 
 if procedural_info:
-    save_to_json(procedural_info, "step3-v3.json")
+    save_to_json(procedural_info, "v03-step3.json")
 else:
     print("Failed to extract procedural information")

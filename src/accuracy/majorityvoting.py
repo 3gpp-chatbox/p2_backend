@@ -42,13 +42,13 @@ def compare_procedures(datasets: List[Dict[str, Any]]) -> Dict[str, Any]:
         "edges": []
     }
 
-    # Get all node IDs across datasets and convert to strings
+    # Extract all node IDs across datasets
     node_ids = set()
     for dataset in datasets:
         if dataset and "graph" in dataset and "nodes" in dataset["graph"]:
             node_ids.update(str(node["id"]) for node in dataset["graph"]["nodes"])
 
-    # Compare nodes using natural sort order
+    # Process nodes using majority voting
     for node_id in sorted(node_ids, key=natural_sort_key):
         node_data = {
             "id": node_id,
@@ -56,30 +56,27 @@ def compare_procedures(datasets: List[Dict[str, Any]]) -> Dict[str, Any]:
             "types": [],
             "properties": []
         }
-        
+
         for dataset in datasets:
             if dataset and "graph" in dataset and "nodes" in dataset["graph"]:
                 for node in dataset["graph"]["nodes"]:
-                    # Convert node id to string for comparison
                     if str(node["id"]) == node_id:
                         node_data["descriptions"].append(node.get("description", ""))
                         node_data["types"].append(node.get("type", ""))
                         node_data["properties"].append(str(node.get("properties", {})))
 
-        # Apply majority voting for each field
+        # Apply majority voting
         description_majority = majority_vote(node_data["descriptions"])
         type_majority = majority_vote(node_data["types"])
         properties_majority = majority_vote(node_data["properties"])
 
-        # Validate if the extracted data is valid (considering consistency)
-        is_node_valid_description = is_valid(description_majority, node_data["descriptions"])
-        is_node_valid_type = is_valid(type_majority, node_data["types"])
-        is_node_valid_properties = is_valid(properties_majority, node_data["properties"])
+        # Validate data consistency
+        is_node_valid = (
+            is_valid(description_majority, node_data["descriptions"]) and
+            is_valid(type_majority, node_data["types"]) and
+            is_valid(properties_majority, node_data["properties"])
+        )
 
-        # Combine validity checks for description, type, and properties
-        is_node_valid = is_node_valid_description and is_node_valid_type and is_node_valid_properties
-
-        # Add results for this node
         results["nodes"].append({
             "id": node_id,
             "description_majority": description_majority,
@@ -89,7 +86,60 @@ def compare_procedures(datasets: List[Dict[str, Any]]) -> Dict[str, Any]:
             "all_versions": node_data
         })
 
+    # Extract all unique edges across datasets
+    edge_signatures = set()  # Store edges uniquely based on (source, target, type)
+    
+    for dataset in datasets:
+        if dataset and "graph" in dataset and "edges" in dataset["graph"]:
+            for edge in dataset["graph"]["edges"]:
+                from_node = str(edge["from"])
+                to_node = str(edge["to"])
+                edge_type = edge.get("type", "unknown")
+                edge_signatures.add((from_node, to_node, edge_type))
+
+    # Process edges using majority voting
+    for from_node, to_node, edge_type in sorted(edge_signatures):
+        edge_data = {
+            "from": [],
+            "to": [],
+            "type": [],
+            "properties": []
+        }
+
+        for dataset in datasets:
+            if dataset and "graph" in dataset and "edges" in dataset["graph"]:
+                for edge in dataset["graph"]["edges"]:
+                    if str(edge["from"]) == from_node and str(edge["to"]) == to_node:
+                        edge_data["from"].append(edge["from"])
+                        edge_data["to"].append(edge["to"])
+                        edge_data["type"].append(edge.get("type", "unknown"))
+                        edge_data["properties"].append(str(edge.get("properties", {})))
+
+        # Apply majority voting for edges
+        from_majority = majority_vote(edge_data["from"])
+        to_majority = majority_vote(edge_data["to"])
+        type_majority = majority_vote(edge_data["type"])
+        properties_majority = majority_vote(edge_data["properties"])
+
+        # Validate edge consistency
+        is_edge_valid = (
+            is_valid(from_majority, edge_data["from"]) and
+            is_valid(to_majority, edge_data["to"]) and
+            is_valid(type_majority, edge_data["type"]) and
+            is_valid(properties_majority, edge_data["properties"])
+        )
+
+        results["edges"].append({
+            "from": from_majority,
+            "to": to_majority,
+            "type": type_majority,
+            "properties": properties_majority,
+            "valid": is_edge_valid,
+            "all_versions": edge_data
+        })
+
     return results
+
 
 def save_results(results: Dict[str, Any], output_path: str):
     """Saves the comparison results to a JSON file."""

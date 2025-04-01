@@ -6,8 +6,7 @@ import json
 
 load_dotenv()
 
-new_model = "gemini-2.5-pro-exp-03-25"
-flash_model = "gemini-1.5-flash"
+flash_model = "gemini-2.0-flash"
 pro_model = "gemini-2.0-pro-exp-02-05"
 
 # Load the Google API Key from the .env file
@@ -22,67 +21,73 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
+
+
 def extract_procedural_info_from_text(section_name, text):
     prompt = f"""
-You are a **3GPP procedure extraction tool**. Using your knowledge of 3GPP procedures but **strictly based on the provided text**, extract the **decision logic, dependencies, and fallback conditions** for the procedure **"{section_name}"**.
+You are a **3GPP procedure extraction tool**. Using your knowledge of 3GPP procedures, but strictly based on the provided text, **extract the high-level flow and key properties** of the procedure **"{section_name}"**.
 
 ---
 
-## **What to Extract (Fixed Scope)**
-Extract the following key decision-related elements:  
-- **Decision Points**: Where the procedure takes different paths based on conditions.  
-- **Dependencies**: Steps that are dependent on the success or failure of prior steps.  
-- **Fallback Conditions**: Failure-handling mechanisms (e.g., retries, alternative flows).  
+## **🔹 What to Extract (Fixed Scope)**
+Extract the following **essential elements** while preserving the cause-effect structure:  
+- **Steps**: Actions performed by the **UE, AMF, or other entities**.
+- **Messages**: Key messages exchanged (**e.g., REGISTRATION REQUEST, REGISTRATION ACCEPT**).
+- **State Changes**: The **main state transitions** of the UE (**e.g., 5GMM-DEREGISTERED → 5GMM-REGISTERED**).
+- **Timers**: Important timers started or stopped.
+- **Entities**: The entity performing each step (**UE, AMF, etc.**).
 
- **Strict Rule**: Do **not** make assumptions or infer missing information. Extract only what is explicitly mentioned in the text.  
-
----
-
-## **How to Extract (Refinable Method)**
-When extracting decision logic, follow these principles:  
-- Identify **explicit conditions** that cause a branch in the procedure.  
-- Capture **all possible outcomes**, not just success/failure.  
-- Recognize **timeout or retry mechanisms** that affect procedure flow.  
-- Preserve cause-effect relationships between steps.  
-
+🚨 **Strict Rule**: Do **not** make assumptions or introduce information beyond the provided text.  
 
 ---
 
-## **Output Format (Consistent JSON)**
-Ensure the extracted data follows this structured format:
+## **🔹 How to Extract (Refinable Method)**
+ 
+
+Follow these key principles when extracting data:  
+- Identify the **main sequence of steps** in the procedure.  
+- Capture how **messages influence state changes** or **start timers**.  
+- Preserve the **exact cause-effect relationships** mentioned in the text.  
+
+
+---
+
+
+Output the information in the following JSON format:
+
+
 {{
-  "decision_points": [
+  "procedure_name": "{section_name}",
+  "steps": [
     {{
-      "step": Step number,
-      "condition": "Main decision condition",
-      "outcomes": [
-        {{
-          "outcome": "Success",
-          "next_step": X,
-          "outcome_type": "positive"
-        }},
-        {{
-          "outcome": "Failure - Retry",
-          "next_step": Y,
-          "reason": "Timer expiry",
-          "outcome_type": "retry"
-        }},
-        {{
-          "outcome": "Failure - Reject",
-          "next_step": Z,
-          "reason": "Authentication failure",
-          "outcome_type": "negative"
-        }}
-      ]
-    }}
+      "id": 1,
+      "step": "Description of the first main step",
+      "state_before": "Initial UE state",
+      "entity": "UE or AMF"
+    }},
+    {{
+      "id": 2,
+      "step": "Description of the second main step",
+      "state_after": "State after step 1",
+      "entity": "UE or AMF"
+    }},
+    // ... more steps ...
   ],
-  "dependencies": [
+  "messages": [
     {{
-      "step": X,
-      "depends_on": ["Step Y", "Step Z"],
-      "type": "hard",
-      "reason": "Dependency explanation"
-    }}
+      "name": "Message name",
+      "from": "UE or AMF",
+      "to": "UE or AMF"
+    }},
+    // ... more messages ...
+  ],
+  "timers": [
+    {{
+      "name": "Timer name",
+      "action": "start or stop",
+      "step_id": 1
+    }},
+    // ... more timers ...
   ]
 }}
 
@@ -90,7 +95,10 @@ Provided Context:
 {text}
 """
 
-    model_to_use = new_model  # or pro_model depending on your requirement
+
+
+
+    model_to_use = flash_model  # or pro_model depending on your requirement
     response = client.models.generate_content(
         model=model_to_use,
         contents=prompt,
@@ -137,6 +145,6 @@ section_name = "Registration procedure for initial registration"  # Name of the 
 procedural_info = process_text_file(input_file_path, section_name)
 
 if procedural_info:
-    save_procedural_info_to_json(procedural_info, "v02-step2.json")
+    save_procedural_info_to_json(procedural_info, "v04-step1.json")
 else:
     print("Failed to extract procedural information")

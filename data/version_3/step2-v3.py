@@ -1,104 +1,110 @@
+# Primary authentication and key agreement procedure - TXT file version
 import os
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
 import json
 
 load_dotenv()
 
-# Configure API key
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+flash_model = "gemini-2.0-flash"
+new_model = "gemini-2.5-pro-exp-03-25"
+pro_model = "gemini-2.0-pro-exp-02-05"
 
-# Initialize Gemini model
-model = genai.GenerativeModel('gemini-2.0-flash')
+# Load the Google API Key from the .env file
+load_dotenv(override=True)
 
-def extract_procedural_info_from_text_v3(section_name, text):
+# Get API key from environment
+api_key = os.getenv("GOOGLE_API_KEY")
+if not api_key:
+    raise ValueError(
+        "GOOGLE_API_KEY not found in environment variables. Please set it in your .env file."
+    )
+
+client = genai.Client(api_key=api_key)
+
+def extract_procedural_info_from_text(section_name, text):
     prompt = f"""
-You are a 3GPP specification expert. Enhance the extracted procedure "{section_name}" by adding:
-- **Decision points** (where the procedure branches based on conditions)
-- **Fallback paths** (e.g., retries, failures, timeouts)
-- **Dependencies** (which steps depend on others)
-- **State transitions** (what changes in each step)
+You are a **3GPP procedure extraction tool**. Using your knowledge of 3GPP procedures but **strictly based on the provided text**, extract the **decision logic, dependencies, and fallback conditions** for the procedure **"{section_name}"**.
 
-The updated output format:
+---
+
+## **🔹 What to Extract (Fixed Scope)**
+Extract the following key decision-related elements:
+- **Decision Points**: Where the procedure takes different paths based on conditions (e.g., timer expiry, state changes).
+- **Dependencies**: Steps that depend on the success or failure of prior steps (e.g., Step 5 cannot proceed unless Step 3 succeeds).
+- **Fallback Conditions**: Failure-handling mechanisms (e.g., retries, alternative flows, timeouts).
+
+🚨 **Strict Rule**: Do **not** make assumptions or infer missing information. Extract only what is **explicitly** mentioned in the text.
+
+---
+
+## **🔹 How to Extract (Refinable Method)**
+
+
+When extracting decision logic, follow these principles:
+- Identify **explicit conditions** that cause a branch in the procedure (e.g., Timer expiry, state change).
+- Capture **all possible outcomes** for each decision point, not just success/failure. Examples of outcomes include retry, reject, success with extra steps, etc.
+- Recognize **timeout or retry mechanisms** that affect procedure flow (e.g., retries after a failed authentication).
+- Preserve **cause-effect relationships** between steps (e.g., Step 3 depends on Step 2 being successful).
+- For retries, include the **retry count** and any **max retry limits**.
+
+---
+
+## **🔹 Output Format (Consistent JSON)**
+Ensure the extracted data follows this structured format:
 {{
-  "procedure_name": string,
-  "steps": [
+  "decision_points": [
     {{
-      "id": number,
-      "description": string,
-      "entities": string,
-      "state_changes": string,
-      "messages": [
+      "step": Step number,
+      "condition": "Main decision condition",
+      "outcomes": [
         {{
-          "name": string,
-          "from": string,
-          "to": string
-        }}
-      ],
-      "trigger": string,
-      "conditions": [
+          "outcome": "Success",
+          "next_step": X,
+          "outcome_type": "positive"
+        }},
         {{
-          "if": string,
-          "then": number,
-          "else": number,
-          "timeout": string
-        }}
-      ],
-      "dependencies": [
+          "outcome": "Failure - Retry",
+          "next_step": Y,
+          "reason": "Timer expiry",
+          "outcome_type": "retry"
+        }},
         {{
-          "step": number,
-          "depends_on": number,
-          "type": "hard" | "soft" | "retry",
-          "condition": string
+          "outcome": "Failure - Reject",
+          "next_step": Z,
+          "reason": "Authentication failure",
+          "outcome_type": "negative"
         }}
-      ],
-      "alternative_paths": [
-        {{
-          "condition": string,
-          "next_step": number
-        }}
-      ],
-      "side_effects": string
+      ]
+    }}
+  ],
+  "dependencies": [
+    {{
+      "step": X,
+      "depends_on": ["Step Y", "Step Z"],
+      "type": "hard",
+      "reason": "Dependency explanation"
     }}
   ]
 }}
 
-Enhance this extracted JSON by adding **alternative paths, decisions, and dependencies**:
-
+Provided Context:
+{text}
 """
 
-    try:
-        response = model.generate_content(prompt)
-        
-        if not response or not response.text:
-            print("Error: Empty response from Gemini model")
-            return None
-            
-        response_text = response.text.strip()
-        print("\nRaw response from model:")
-        print(response_text[:500] + "..." if len(response_text) > 500 else response_text)
+    model_to_use = new_model  # or pro_model depending on your requirement
+    response = client.models.generate_content(
+        model=model_to_use,
+        contents=prompt,
+        config={
+            "temperature": 0,
+        },
+    )
 
-        if response_text.startswith("```json"):
-            response_text = response_text.replace("```json", "").replace("```", "").strip()
+    # Extract the text content from the response
+    procedural_info = response.text.strip() if hasattr(response, 'text') else str(response)
 
-        response_text = response_text.replace(",]", "]").replace(",}", "}")
-
-        if not response_text:
-            print("Error: Empty response after cleaning")
-            return None
-
-        parsed_response = json.loads(response_text)
-        return parsed_response
-        
-    except json.JSONDecodeError as e:
-        print(f"\nError parsing JSON response: {e}")
-        print("\nFull raw response:")
-        print(response_text if 'response_text' in locals() else "No response text available")
-        return None
-    except Exception as e:
-        print(f"\nUnexpected error: {type(e).__name__}: {str(e)}")
-        return None
-
+    return procedural_info
 
 def read_text_file(file_path):
     """Reads content from a text file."""
@@ -114,8 +120,7 @@ def read_text_file(file_path):
 
 def save_procedural_info_to_json(procedural_info, file_path):
     with open(file_path, "w", encoding='utf-8') as file:
-        # Ensure that the procedural_info is properly formatted as JSON
-        json.dump(procedural_info, file, indent=2)
+        file.write(procedural_info)
     print(f"Procedural info saved to {file_path}")
 
 def process_text_file(input_file_path, section_name):
@@ -124,16 +129,16 @@ def process_text_file(input_file_path, section_name):
     if text_content is None:
         return None
         
-    procedural_info = extract_procedural_info_from_text_v3(section_name, text_content)
+    procedural_info = extract_procedural_info_from_text(section_name, text_content)
     return procedural_info
 
 # Example usage: Processing a text file
 input_file_path = "5.5.1.2.txt"  # Path to your input text file
-section_name = "Primary authentication and key agreement procedure"  # Name of the section/procedure
+section_name = "Registration procedure for initial registration"  # Name of the section/procedure
 
 procedural_info = process_text_file(input_file_path, section_name)
 
 if procedural_info:
-    save_procedural_info_to_json(procedural_info, "step2-v3.json")
+    save_procedural_info_to_json(procedural_info, "v03-step2.json")
 else:
     print("Failed to extract procedural information")

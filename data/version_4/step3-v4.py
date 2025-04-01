@@ -194,8 +194,8 @@ def save_to_json(data, file_path):
 def process_procedure(section_name):
     """Processes the procedure using step1.json and step2.json as input."""
     
-    step1_data = read_json_file("v02-step1.json")
-    step2_data = read_json_file("v02-step2.json")
+    step1_data = read_json_file("v04-step1.json")
+    step2_data = read_json_file("v04-step2.json")
 
     if step1_data is None or step2_data is None:
         print("Failed to load step1.json or step2.json")
@@ -210,6 +210,6 @@ section_name = "Registration procedure for initial registration"
 procedural_info = process_procedure(section_name)
 
 if procedural_info:
-    save_to_json(procedural_info, "v02-step3.json")
+    save_to_json(procedural_info, "v04-step3.json")
 else:
     print("Failed to extract procedural information")

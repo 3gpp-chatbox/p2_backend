@@ -29,7 +29,7 @@ You are a **3GPP procedure extraction tool**. Using your knowledge of 3GPP proce
 ---
 
 ## **What to Extract (Fixed Scope)**
-Extract the following key decision-related elements:  
+Extract the following key decision-related elements, while focusing on **conciseness**:  
 - **Decision Points**: Where the procedure takes different paths based on conditions.  
 - **Dependencies**: Steps that are dependent on the success or failure of prior steps.  
 - **Fallback Conditions**: Failure-handling mechanisms (e.g., retries, alternative flows).  
@@ -40,11 +40,12 @@ Extract the following key decision-related elements:
 
 ## **How to Extract (Refinable Method)**
 When extracting decision logic, follow these principles:  
-- Identify **explicit conditions** that cause a branch in the procedure.  
-- Capture **all possible outcomes**, not just success/failure.  
-- Recognize **timeout or retry mechanisms** that affect procedure flow.  
-- Preserve cause-effect relationships between steps.  
-
+- Identify **explicit conditions** that cause a branch in the procedure.
+- **Condense lengthy conditions** into high-level summaries that still retain the essence of the decision point. Avoid including long strings or references to external specs.
+- Capture **all possible outcomes**, not just success/failure.
+- Identify **retry or fallback mechanisms** affecting the procedure flow.
+- **Use short labels** for actions or events leading to the next step (e.g., "Release connection" instead of full descriptions).
+- Preserve cause-effect relationships between steps, but do not repeat similar conditions or steps if the outcomes are identical.
 
 ---
 
@@ -54,10 +55,10 @@ Ensure the extracted data follows this structured format:
   "decision_points": [
     {{
       "step": Step number,
-      "condition": "Main decision condition",
+      "condition": "Condensed condition description (short summary)",
       "outcomes": [
         {{
-          "outcome": "Success",
+          "outcome":"Brief description of the outcome (e.g., 'Success: Proceed to next step')",
           "next_step": X,
           "outcome_type": "positive"
         }},
@@ -90,7 +91,7 @@ Provided Context:
 {text}
 """
 
-    model_to_use = new_model  # or pro_model depending on your requirement
+    model_to_use = flash_model  # or pro_model depending on your requirement
     response = client.models.generate_content(
         model=model_to_use,
         contents=prompt,
@@ -137,6 +138,6 @@ section_name = "Registration procedure for initial registration"  # Name of the 
 procedural_info = process_text_file(input_file_path, section_name)
 
 if procedural_info:
-    save_procedural_info_to_json(procedural_info, "v02-step2.json")
+    save_procedural_info_to_json(procedural_info, "v04-step2.json")
 else:
     print("Failed to extract procedural information")

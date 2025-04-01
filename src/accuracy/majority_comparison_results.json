@@ -488,5 +488,883 @@
             }
         }
     ],
-    "edges": []
+    "edges": [
+        {
+            "from": 1,
+            "to": 16,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    1
+                ],
+                "to": [
+                    16
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 1,
+            "to": 17,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    1
+                ],
+                "to": [
+                    17
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 1,
+            "to": 18,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    1
+                ],
+                "to": [
+                    18
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 1,
+            "to": 19,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    1
+                ],
+                "to": [
+                    19
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 1,
+            "to": 2,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "1",
+                    1,
+                    1
+                ],
+                "to": [
+                    "2",
+                    2,
+                    2
+                ],
+                "type": [
+                    "sequential",
+                    "sequential",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'trigger': 'REGISTRATION REQUEST sent'}",
+                    "{}",
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 10,
+            "to": 11,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    10,
+                    10
+                ],
+                "to": [
+                    11,
+                    11
+                ],
+                "type": [
+                    "sequential",
+                    "conditional"
+                ],
+                "properties": [
+                    "{}",
+                    "{'condition': 'AUTN is valid'}"
+                ]
+            }
+        },
+        {
+            "from": 10,
+            "to": 11,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    10,
+                    10
+                ],
+                "to": [
+                    11,
+                    11
+                ],
+                "type": [
+                    "sequential",
+                    "conditional"
+                ],
+                "properties": [
+                    "{}",
+                    "{'condition': 'AUTN is valid'}"
+                ]
+            }
+        },
+        {
+            "from": 10,
+            "to": 13,
+            "type": "conditional",
+            "properties": "{'condition': 'AUTN is invalid'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    10
+                ],
+                "to": [
+                    13
+                ],
+                "type": [
+                    "conditional"
+                ],
+                "properties": [
+                    "{'condition': 'AUTN is invalid'}"
+                ]
+            }
+        },
+        {
+            "from": 11,
+            "to": 12,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    11
+                ],
+                "to": [
+                    12
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 11,
+            "to": 13,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    11
+                ],
+                "to": [
+                    13
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 12,
+            "to": 13,
+            "type": "conditional",
+            "properties": "{'condition': 'RES does not match XRES'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    12
+                ],
+                "to": [
+                    13
+                ],
+                "type": [
+                    "conditional"
+                ],
+                "properties": [
+                    "{'condition': 'RES does not match XRES'}"
+                ]
+            }
+        },
+        {
+            "from": 12,
+            "to": 14,
+            "type": "conditional",
+            "properties": "{'condition': 'RES matches XRES'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    12
+                ],
+                "to": [
+                    14
+                ],
+                "type": [
+                    "conditional"
+                ],
+                "properties": [
+                    "{'condition': 'RES matches XRES'}"
+                ]
+            }
+        },
+        {
+            "from": 14,
+            "to": 3,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    14
+                ],
+                "to": [
+                    3
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 2,
+            "to": 3,
+            "type": "sequential",
+            "properties": "{'trigger': 'Timer T3510 running'}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "2",
+                    2,
+                    2
+                ],
+                "to": [
+                    "3",
+                    3,
+                    3
+                ],
+                "type": [
+                    "sequential",
+                    "conditional",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'trigger': 'Timer T3510 running'}",
+                    "{'condition': 'AMF determines 5GMM common procedures are required.'}",
+                    "{'condition': 'No security procedure started'}"
+                ]
+            }
+        },
+        {
+            "from": 2,
+            "to": 3,
+            "type": "sequential",
+            "properties": "{'trigger': 'Timer T3510 running'}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "2",
+                    2,
+                    2
+                ],
+                "to": [
+                    "3",
+                    3,
+                    3
+                ],
+                "type": [
+                    "sequential",
+                    "conditional",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'trigger': 'Timer T3510 running'}",
+                    "{'condition': 'AMF determines 5GMM common procedures are required.'}",
+                    "{'condition': 'No security procedure started'}"
+                ]
+            }
+        },
+        {
+            "from": 2,
+            "to": 4,
+            "type": "conditional",
+            "properties": "{'condition': 'AMF determines 5GMM common procedures are NOT required.'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    2
+                ],
+                "to": [
+                    4
+                ],
+                "type": [
+                    "conditional"
+                ],
+                "properties": [
+                    "{'condition': 'AMF determines 5GMM common procedures are NOT required.'}"
+                ]
+            }
+        },
+        {
+            "from": 2,
+            "to": 7,
+            "type": "sequential",
+            "properties": "{'condition': 'Information in the REGISTRATION REQUEST message necessitates authentication procedures.'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    2
+                ],
+                "to": [
+                    7
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{'condition': 'Information in the REGISTRATION REQUEST message necessitates authentication procedures.'}"
+                ]
+            }
+        },
+        {
+            "from": 3,
+            "to": 4,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "3",
+                    3,
+                    3
+                ],
+                "to": [
+                    "4",
+                    4,
+                    4
+                ],
+                "type": [
+                    "conditional",
+                    "sequential",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'condition': 'initial registration request is accepted by the network', 'outcome': 'Accept'}",
+                    "{}",
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 3,
+            "to": 4,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "3",
+                    3,
+                    3
+                ],
+                "to": [
+                    "4",
+                    4,
+                    4
+                ],
+                "type": [
+                    "conditional",
+                    "sequential",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'condition': 'initial registration request is accepted by the network', 'outcome': 'Accept'}",
+                    "{}",
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": "3",
+            "to": "reject",
+            "type": "conditional",
+            "properties": "{'condition': 'initial registration request cannot be accepted by the network', 'outcome': 'Reject'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    "3"
+                ],
+                "to": [
+                    "reject"
+                ],
+                "type": [
+                    "conditional"
+                ],
+                "properties": [
+                    "{'condition': 'initial registration request cannot be accepted by the network', 'outcome': 'Reject'}"
+                ]
+            }
+        },
+        {
+            "from": 4,
+            "to": 10,
+            "type": "conditional",
+            "properties": "{'condition': 'Request rejected'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    4
+                ],
+                "to": [
+                    10
+                ],
+                "type": [
+                    "conditional"
+                ],
+                "properties": [
+                    "{'condition': 'Request rejected'}"
+                ]
+            }
+        },
+        {
+            "from": 4,
+            "to": 5,
+            "type": "conditional",
+            "properties": "{'condition': '5G-GUTI or SOR transparent container IE is included in REGISTRATION ACCEPT', 'outcome': 'Timer needs to be started'}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "4",
+                    4,
+                    4
+                ],
+                "to": [
+                    "5",
+                    5,
+                    5
+                ],
+                "type": [
+                    "conditional",
+                    "conditional",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'condition': '5G-GUTI or SOR transparent container IE is included in REGISTRATION ACCEPT', 'outcome': 'Timer needs to be started'}",
+                    "{'condition': 'Request accepted'}",
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 4,
+            "to": 5,
+            "type": "conditional",
+            "properties": "{'condition': '5G-GUTI or SOR transparent container IE is included in REGISTRATION ACCEPT', 'outcome': 'Timer needs to be started'}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "4",
+                    4,
+                    4
+                ],
+                "to": [
+                    "5",
+                    5,
+                    5
+                ],
+                "type": [
+                    "conditional",
+                    "conditional",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'condition': '5G-GUTI or SOR transparent container IE is included in REGISTRATION ACCEPT', 'outcome': 'Timer needs to be started'}",
+                    "{'condition': 'Request accepted'}",
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": "4",
+            "to": "6",
+            "type": "sequential",
+            "properties": "{'trigger': 'REGISTRATION ACCEPT sent'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    "4"
+                ],
+                "to": [
+                    "6"
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{'trigger': 'REGISTRATION ACCEPT sent'}"
+                ]
+            }
+        },
+        {
+            "from": 5,
+            "to": 14,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    5
+                ],
+                "to": [
+                    14
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 5,
+            "to": 6,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "5",
+                    5,
+                    5
+                ],
+                "to": [
+                    "6",
+                    6,
+                    6
+                ],
+                "type": [
+                    "sequential",
+                    "sequential",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'trigger': 'Timer T3550 is started'}",
+                    "{}",
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": "6",
+            "to": "7",
+            "type": "sequential",
+            "properties": "{'trigger': 'Registration Accept was received'}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "6",
+                    6
+                ],
+                "to": [
+                    "7",
+                    7
+                ],
+                "type": [
+                    "sequential",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'trigger': 'Registration Accept was received'}",
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 7,
+            "to": 12,
+            "type": "conditional",
+            "properties": "{'condition': 'Conditions related to network slicing information are not met.'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    7
+                ],
+                "to": [
+                    12
+                ],
+                "type": [
+                    "conditional"
+                ],
+                "properties": [
+                    "{'condition': 'Conditions related to network slicing information are not met.'}"
+                ]
+            }
+        },
+        {
+            "from": 7,
+            "to": 8,
+            "type": "conditional",
+            "properties": "{'condition': 'REGISTRATION ACCEPT message contains service-level AA, network slicing, CAG, RCMAP or UE radio capability information', 'outcome': 'REGISTRATION COMPLETE needed'}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "7",
+                    7,
+                    7
+                ],
+                "to": [
+                    "8",
+                    8,
+                    8
+                ],
+                "type": [
+                    "conditional",
+                    "conditional",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'condition': 'REGISTRATION ACCEPT message contains service-level AA, network slicing, CAG, RCMAP or UE radio capability information', 'outcome': 'REGISTRATION COMPLETE needed'}",
+                    "{'condition': 'Certain conditions related to network slicing information are met.'}",
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 7,
+            "to": 8,
+            "type": "conditional",
+            "properties": "{'condition': 'REGISTRATION ACCEPT message contains service-level AA, network slicing, CAG, RCMAP or UE radio capability information', 'outcome': 'REGISTRATION COMPLETE needed'}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "7",
+                    7,
+                    7
+                ],
+                "to": [
+                    "8",
+                    8,
+                    8
+                ],
+                "type": [
+                    "conditional",
+                    "conditional",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'condition': 'REGISTRATION ACCEPT message contains service-level AA, network slicing, CAG, RCMAP or UE radio capability information', 'outcome': 'REGISTRATION COMPLETE needed'}",
+                    "{'condition': 'Certain conditions related to network slicing information are met.'}",
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": "7",
+            "to": "end",
+            "type": "conditional",
+            "properties": "{'condition': 'REGISTRATION ACCEPT message does not contain service-level AA, network slicing, CAG, RCMAP or UE radio capability information', 'outcome': 'REGISTRATION COMPLETE not needed'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    "7"
+                ],
+                "to": [
+                    "end"
+                ],
+                "type": [
+                    "conditional"
+                ],
+                "properties": [
+                    "{'condition': 'REGISTRATION ACCEPT message does not contain service-level AA, network slicing, CAG, RCMAP or UE radio capability information', 'outcome': 'REGISTRATION COMPLETE not needed'}"
+                ]
+            }
+        },
+        {
+            "from": 8,
+            "to": 9,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": false,
+            "all_versions": {
+                "from": [
+                    "8",
+                    8,
+                    8
+                ],
+                "to": [
+                    "9",
+                    9,
+                    9
+                ],
+                "type": [
+                    "sequential",
+                    "sequential",
+                    "sequential"
+                ],
+                "properties": [
+                    "{'trigger': 'UE sends Registration Complete message'}",
+                    "{}",
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 9,
+            "to": 10,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    9
+                ],
+                "to": [
+                    10
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 9,
+            "to": 12,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    9
+                ],
+                "to": [
+                    12
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": 9,
+            "to": 15,
+            "type": "sequential",
+            "properties": "{}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    9
+                ],
+                "to": [
+                    15
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{}"
+                ]
+            }
+        },
+        {
+            "from": "9",
+            "to": "end",
+            "type": "sequential",
+            "properties": "{'trigger': 'AMF Receives Registration Complete Message'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    "9"
+                ],
+                "to": [
+                    "end"
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{'trigger': 'AMF Receives Registration Complete Message'}"
+                ]
+            }
+        },
+        {
+            "from": "start",
+            "to": "1",
+            "type": "sequential",
+            "properties": "{'trigger': 'UE in 5GMM-DEREGISTERED state'}",
+            "valid": true,
+            "all_versions": {
+                "from": [
+                    "start"
+                ],
+                "to": [
+                    "1"
+                ],
+                "type": [
+                    "sequential"
+                ],
+                "properties": [
+                    "{'trigger': 'UE in 5GMM-DEREGISTERED state'}"
+                ]
+            }
+        }
+    ]
 }
