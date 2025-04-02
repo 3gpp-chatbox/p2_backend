@@ -105,16 +105,18 @@ class DatabaseHandler:
         if not self.conn:
             self.connect()
 
+        cursor = None
         try:
             cursor = self.conn.cursor()
             yield cursor
+        except Error as e:
+            logger.error(f"Error while getting cursor: {str(e)}")
+            raise e
         except Exception as e:
             logger.error(f"Error while getting cursor: {str(e)}")
-            if isinstance(e, Error):
-                raise e
-            raise ProgrammingError(f"Cursor operation failed: {str(e)}")
+            raise  # Re-raise the original exception
         finally:
-            if "cursor" in locals():
+            if cursor:
                 cursor.close()
 
     def execute_query(
@@ -143,9 +145,11 @@ class DatabaseHandler:
                 if fetch:
                     results = cursor.fetchall()
                     self.conn.commit()
+                    logger.info("Query executed successfully with results")
                     return results
 
                 self.conn.commit()
+                logger.info("Query executed successfully")
                 return None
 
         except Exception as e:

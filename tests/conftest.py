@@ -1,7 +1,7 @@
 """Test configuration and shared fixtures for database handler tests."""
 
 import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, PropertyMock
 from psycopg import Connection, Cursor
 from psycopg.rows import dict_row
 
@@ -35,17 +35,19 @@ def mock_connection():
     Returns:
         MagicMock: A mock connection object with required attributes and methods
     """
+    # Create cursor mock with proper defaults
     cursor = MagicMock(spec=Cursor)
     cursor.fetchall.return_value = []
     cursor.close.return_value = None
+    type(cursor).closed = PropertyMock(return_value=False)
     
+    # Create connection mock
     conn = MagicMock(spec=Connection)
-    conn.closed = False
+    type(conn).closed = PropertyMock(return_value=False)
     conn.cursor.return_value = cursor
     conn.commit.return_value = None
     conn.rollback.return_value = None
     conn.close.return_value = None
-    # Set row factory to dict_row to match actual implementation
     conn.row_factory = dict_row
     return conn
 

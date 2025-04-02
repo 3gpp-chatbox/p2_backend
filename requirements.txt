@@ -4,3 +4,4 @@ python-docx # For DOCX file support
 psycopg[binary] # PostgreSQL database adapter for Python
 pytest # For testing
 pytest-mock # For mocking in tests
+pytest-cov # For test coverage reporting

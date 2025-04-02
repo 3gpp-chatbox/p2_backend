@@ -39,3 +39,5 @@ env/
 *.log
 logs/
 
+# Coverage
+.coverage
