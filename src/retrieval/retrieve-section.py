@@ -1,13 +1,15 @@
 import re
 from typing import List, Set
+from docx import Document
+from pre_processor import extract_paragraphs, extract_toc
 
 def is_descendant(section: str, potential_parent: str) -> bool:
     """
     Check if a section is a descendant of another section.
     
     Args:
-        section (str): Section number to check (e.g., "3.2.1.4")
-        potential_parent (str): Potential parent section (e.g., "3.2.1")
+        section (str): Section number to check 
+        potential_parent (str): Potential parent section 
         
     Returns:
         bool: True if section is a descendant of potential_parent
@@ -31,7 +33,7 @@ def extract_section_number(line: str) -> str:
     Extract section number from a TOC line.
     
     Args:
-        line (str): Line from TOC (e.g., "3.2.1 Registration procedure")
+        line (str): Line from TOC 
         
     Returns:
         str: Section number or empty string if not found
@@ -66,10 +68,10 @@ def filter_top_level_sections(sections: List[str]) -> List[str]:
     Filter out descendant sections, keeping only top-level ones.
     
     Args:
-        sections (List[str]): List of section numbers (e.g., ["3.2.1", "3.2.1.4", "3.2.1.2"])
+        sections (List[str]): List of section numbers 
         
     Returns:
-        List[str]: List of top-level section numbers (e.g., ["3.2.1"])
+        List[str]: List of top-level section numbers 
     """
     top_level_sections = []
     
@@ -119,14 +121,13 @@ def get_procedure_sections(toc_content: str, procedure_name: str) -> List[str]:
 
 # Example usage
 if __name__ == "__main__":
-    sample_toc = """
-    3.2 Mobility Management procedures
-    3.2.1 Registration procedure
-    3.2.1.1 General
-    3.2.1.2 Initial Registration
-    3.2.1.4 Registration procedure steps
-    3.4 Other procedures
-    """
+    # Load document and extract paragraphs
+    doc = Document("../../data/raw/24501-j11.docx")
+    paragraphs = extract_paragraphs(doc)
     
-    result = get_procedure_sections(sample_toc, "Registration")
-    print(f"Top-level sections: {result}")  # Should print: ['3.2.1']
+    # Extract TOC
+    toc_content = extract_toc(paragraphs)
+    
+    # Get procedure sections
+    result = get_procedure_sections("\n".join(toc_content), "registration procedure")
+    print(f"Top-level sections: {result}")  
