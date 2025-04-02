@@ -89,6 +89,150 @@
     },
     {
         "id_1": "1",
+        "description_1": "UE sends REGISTRATION REQUEST to AMF Type: process Properties: {'state_before': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
+        "id_2": "1",
+        "description_2": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
+        "cosine_similarity": 0.8827568292617798,
+        "valid": true
+    },
+    {
+        "id_1": "2",
+        "description_1": "UE starts timer T3510, stops timer T3502 (if running), and stops timer T3511 (if running). Type: process Properties: {'state_after': '5GMM-REGISTERED-INITIATED (Implicit)', 'entity': 'UE', 'timers': ['T3510 (start)', 'T3502 (stop)', 'T3511 (stop)']}",
+        "id_2": "3",
+        "description_2": "UE stops timer T3502, if it is running Type: process Properties: {'action': 'stop', 'name': 'T3502', 'entity': 'UE'}",
+        "cosine_similarity": 0.8707523345947266,
+        "valid": true
+    },
+    {
+        "id_1": "3",
+        "description_1": "Network initiates 5GMM common procedures Type: decision Properties: {'entity': 'AMF', 'condition': 'Network determines if common procedures are needed based on REGISTRATION REQUEST', 'outcomes': [{'outcome': 'Initiate Identification, Authentication, and Security procedures', 'next_step': '4'}, {'outcome': 'Skip Authentication and proceed to Security Mode Control (for emergency registration with unauthenticated SUCIs)', 'next_step': '4'}, {'outcome': 'Proceed without initiating common procedures', 'next_step': '4'}]}",
+        "id_2": "6",
+        "description_2": "The network may initiate 5GMM common procedures, e.g. the identification, authentication and security procedures during the registration procedure, depending on the information received in the REGISTRATION REQUEST message. Type: process Properties: {'entity': 'AMF'}",
+        "cosine_similarity": 0.8001065254211426,
+        "valid": true
+    },
+    {
+        "id_1": "5",
+        "description_1": "AMF sends REGISTRATION ACCEPT to UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
+        "id_2": "7",
+        "description_2": "If the initial registration request is accepted by the network, the AMF shall send a REGISTRATION ACCEPT message to the UE. Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
+        "cosine_similarity": 0.919133186340332,
+        "valid": true
+    },
+    {
+        "id_1": "6",
+        "description_1": "UE receives REGISTRATION ACCEPT, resets registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED. Type: process Properties: {'state_after': '5GMM-REGISTERED', 'entity': 'UE', 'update_status': '5U1 UPDATED'}",
+        "id_2": "14",
+        "description_2": "Upon receipt of the REGISTRATION ACCEPT message, the UE shall reset the registration attempt counter, enter state 5GMM-REGISTERED and set the 5GS update status to 5U1 UPDATED. Type: process Properties: {'entity': 'UE', 'state_change': '5GMM-REGISTERED'}",
+        "cosine_similarity": 0.936331033706665,
+        "valid": true
+    },
+    {
+        "id_1": "9",
+        "description_1": "AMF sends REGISTRATION REJECT to UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
+        "id_2": "22",
+        "description_2": "If the initial registration request cannot be accepted by the network, the AMF shall send a REGISTRATION REJECT message to the UE including an appropriate 5GMM cause value. Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
+        "cosine_similarity": 0.8552764654159546,
+        "valid": true
+    },
+    {
+        "id_1": "10",
+        "description_1": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'entity': 'AMF', 'timers': ['T3550 (stop)'], 'state_after': '5GMM-REGISTERED'}",
+        "id_2": "21",
+        "description_2": "Upon receiving a REGISTRATION COMPLETE message, the AMF shall stop timer T3550 and change to state 5GMM-REGISTERED. Type: process Properties: {'entity': 'AMF', 'action': 'stop', 'name': 'T3550', 'state_change': '5GMM-REGISTERED'}",
+        "cosine_similarity": 0.9130618572235107,
+        "valid": true
+    },
+    {
+        "id_1": "5G_GUTI",
+        "description_1": "If a 5G-GUTI or the SOR transparent container IE is included in the REGISTRATION ACCEPT message, the AMF shall start timer T3550 and enter state 5GMM-COMMON-PROCEDURE-INITIATED. Type: process Properties: {'entity': 'AMF', 'timers': ['T3550 (start)']}",
+        "id_2": "10",
+        "description_2": "If a 5G-GUTI or the SOR transparent container IE is included in the REGISTRATION ACCEPT message, the AMF shall start timer T3550 and enter state 5GMM-COMMON-PROCEDURE-INITIATED. Type: process Properties: {'entity': 'AMF', 'state_change': '5GMM-COMMON-PROCEDURE-INITIATED'}",
+        "cosine_similarity": 0.9803295731544495,
+        "valid": true
+    },
+    {
+        "id_1": "start",
+        "description_1": "Procedure starts Type: start Properties: {}",
+        "id_2": "start",
+        "description_2": "Procedure starts Type: start Properties: {}",
+        "cosine_similarity": 1.0000001192092896,
+        "valid": true
+    },
+    {
+        "id_1": "2",
+        "description_1": "UE starts timer T3510, stops timer T3502 (if running), and stops timer T3511 (if running). Type: process Properties: {'state_after': '5GMM-REGISTERED-INITIATED (Implicit)', 'entity': 'UE', 'timers': ['T3510 (start)', 'T3502 (stop)', 'T3511 (stop)']}",
+        "id_2": "2",
+        "description_2": "UE starts timer T3510 Type: timer Properties: {'action': 'start', 'name': 'T3510'}",
+        "cosine_similarity": 0.8081579208374023,
+        "valid": true
+    },
+    {
+        "id_1": "4",
+        "description_1": "Initial registration accepted by the network Type: decision Properties: {'entity': 'AMF', 'condition': 'Network accepts the initial registration request', 'outcomes': [{'outcome': 'Send REGISTRATION ACCEPT message to the UE', 'next_step': '5'}, {'outcome': 'Send REGISTRATION REJECT message to the UE', 'next_step': '9'}]}",
+        "id_2": "7",
+        "description_2": "Decision based on whether the initial registration request is accepted Type: decision Properties: {'condition': 'Initial registration request is accepted', 'outcomes': [{'outcome': 'Success: Send REGISTRATION ACCEPT', 'next_step': '8'}, {'outcome': 'Failure: Send REGISTRATION REJECT', 'next_step': '22'}]}",
+        "cosine_similarity": 0.8146746158599854,
+        "valid": true
+    },
+    {
+        "id_1": "5",
+        "description_1": "AMF sends REGISTRATION ACCEPT to UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
+        "id_2": "8",
+        "description_2": "AMF sends a REGISTRATION ACCEPT message to the UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
+        "cosine_similarity": 0.9884519577026367,
+        "valid": true
+    },
+    {
+        "id_1": "6",
+        "description_1": "UE receives REGISTRATION ACCEPT, resets registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED. Type: process Properties: {'state_after': '5GMM-REGISTERED', 'entity': 'UE', 'update_status': '5U1 UPDATED'}",
+        "id_2": "14",
+        "description_2": "UE receives REGISTRATION ACCEPT message, resets registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED Type: process Properties: {'entity': 'UE', 'state_change': '5GMM-REGISTERED'}",
+        "cosine_similarity": 0.9769158959388733,
+        "valid": true
+    },
+    {
+        "id_1": "8",
+        "description_1": "UE sends REGISTRATION COMPLETE to AMF Type: process Properties: {'entity': 'UE', 'messages': ['REGISTRATION COMPLETE']}",
+        "id_2": "15a",
+        "description_2": "UE returns a REGISTRATION COMPLETE message to the AMF Type: process Properties: {'entity': 'UE', 'messages': ['REGISTRATION COMPLETE']}",
+        "cosine_similarity": 0.9690465927124023,
+        "valid": true
+    },
+    {
+        "id_1": "9",
+        "description_1": "AMF sends REGISTRATION REJECT to UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
+        "id_2": "22",
+        "description_2": "AMF sends a REGISTRATION REJECT message to the UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
+        "cosine_similarity": 0.9926302433013916,
+        "valid": true
+    },
+    {
+        "id_1": "10",
+        "description_1": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'entity': 'AMF', 'timers': ['T3550 (stop)'], 'state_after': '5GMM-REGISTERED'}",
+        "id_2": "21",
+        "description_2": "AMF receives REGISTRATION COMPLETE message, stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'entity': 'AMF', 'state_change': '5GMM-REGISTERED'}",
+        "cosine_similarity": 0.924453854560852,
+        "valid": true
+    },
+    {
+        "id_1": "end_success",
+        "description_1": "Procedure ends successfully Type: end Properties: {}",
+        "id_2": "end",
+        "description_2": "Procedure ends Type: end Properties: {}",
+        "cosine_similarity": 0.9534753561019897,
+        "valid": true
+    },
+    {
+        "id_1": "start",
+        "description_1": "Procedure starts Type: start Properties: {}",
+        "id_2": "start",
+        "description_2": "Procedure starts Type: start Properties: {}",
+        "cosine_similarity": 0.9999998807907104,
+        "valid": true
+    },
+    {
+        "id_1": "1",
         "description_1": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
         "id_2": "1",
         "description_2": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
@@ -165,6 +309,78 @@
         "id_2": "22",
         "description_2": "If the initial registration request cannot be accepted by the network, the AMF shall send a REGISTRATION REJECT message to the UE including an appropriate 5GMM cause value. Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
         "cosine_similarity": 0.8921045064926147,
+        "valid": true
+    },
+    {
+        "id_1": "start",
+        "description_1": "Procedure starts Type: start Properties: {}",
+        "id_2": "start",
+        "description_2": "Procedure starts Type: start Properties: {}",
+        "cosine_similarity": 1.0000001192092896,
+        "valid": true
+    },
+    {
+        "id_1": "1",
+        "description_1": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
+        "id_2": "1",
+        "description_2": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
+        "cosine_similarity": 1.0,
+        "valid": true
+    },
+    {
+        "id_1": "2",
+        "description_1": "UE starts timer T3510 Type: timer Properties: {'action': 'start', 'name': 'T3510'}",
+        "id_2": "2",
+        "description_2": "UE starts timer T3510 Type: timer Properties: {'action': 'start', 'name': 'T3510'}",
+        "cosine_similarity": 1.000000238418579,
+        "valid": true
+    },
+    {
+        "id_1": "3",
+        "description_1": "Initial registration request is accepted by the network Type: decision Properties: {'condition': 'Initial registration request is accepted by the network', 'outcomes': [{'outcome': 'AMF sends REGISTRATION ACCEPT', 'next_step': '4'}, {'outcome': 'Initial registration request cannot be accepted by the network', 'next_step': '13'}]}",
+        "id_2": "7",
+        "description_2": "Decision based on whether the initial registration request is accepted Type: decision Properties: {'condition': 'Initial registration request is accepted', 'outcomes': [{'outcome': 'Success: Send REGISTRATION ACCEPT', 'next_step': '8'}, {'outcome': 'Failure: Send REGISTRATION REJECT', 'next_step': '22'}]}",
+        "cosine_similarity": 0.7994958162307739,
+        "valid": true
+    },
+    {
+        "id_1": "4",
+        "description_1": "AMF sends REGISTRATION ACCEPT Type: process Properties: {'state_change': 'N/A', 'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
+        "id_2": "8",
+        "description_2": "AMF sends a REGISTRATION ACCEPT message to the UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
+        "cosine_similarity": 0.8985298871994019,
+        "valid": true
+    },
+    {
+        "id_1": "7",
+        "description_1": "UE resets the registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED Type: process Properties: {'state_change': '5GMM-REGISTERED', 'entity': 'UE'}",
+        "id_2": "14",
+        "description_2": "UE receives REGISTRATION ACCEPT message, resets registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED Type: process Properties: {'entity': 'UE', 'state_change': '5GMM-REGISTERED'}",
+        "cosine_similarity": 0.9765414595603943,
+        "valid": true
+    },
+    {
+        "id_1": "12",
+        "description_1": "Upon receiving a REGISTRATION COMPLETE message, the AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'state_change': '5GMM-REGISTERED', 'entity': 'AMF', 'messages': ['REGISTRATION COMPLETE']}",
+        "id_2": "21",
+        "description_2": "AMF receives REGISTRATION COMPLETE message, stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'entity': 'AMF', 'state_change': '5GMM-REGISTERED'}",
+        "cosine_similarity": 0.9752875566482544,
+        "valid": true
+    },
+    {
+        "id_1": "13",
+        "description_1": "The AMF sends a REGISTRATION REJECT message to the UE including an appropriate 5GMM cause value Type: process Properties: {'state_change': 'N/A', 'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
+        "id_2": "22",
+        "description_2": "AMF sends a REGISTRATION REJECT message to the UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
+        "cosine_similarity": 0.8775409460067749,
+        "valid": true
+    },
+    {
+        "id_1": "end",
+        "description_1": "Procedure ends Type: end Properties: {}",
+        "id_2": "end",
+        "description_2": "Procedure ends Type: end Properties: {}",
+        "cosine_similarity": 1.0,
         "valid": true
     },
     {

@@ -1,17 +1,7 @@
 import json
-import os
-from pathlib import Path
-from dotenv import load_dotenv
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import List, Dict
-
-# Get the absolute path to p2_backend directory
-p2_backend_dir = Path(__file__).resolve().parents[2]
-env_path = p2_backend_dir / '.env'
-
-# Load environment variables from .env file
-load_dotenv(env_path)
 
 def load_dataset(file_path: str) -> Dict[str, any]:
     """Loads a JSON dataset from a file."""
@@ -42,7 +32,6 @@ def compare_nodes(dataset1: Dict[str, any], dataset2: Dict[str, any], dataset3: 
     
     # Ensure all datasets have the same number of nodes
     for node1, node2, node3 in zip(nodes1, nodes2, nodes3):
-        # Convert numpy float32 to native Python float
         similarity_12 = float(compute_cosine_similarity(node1["description"], node2["description"]))
         similarity_13 = float(compute_cosine_similarity(node1["description"], node3["description"]))
         similarity_23 = float(compute_cosine_similarity(node2["description"], node3["description"]))
@@ -55,16 +44,16 @@ def compare_nodes(dataset1: Dict[str, any], dataset2: Dict[str, any], dataset3: 
         ])
         
         valid = 1 if valid_count >= 2 else 0  # Majority agreement
-        
+
         results.append({
             "id": node1.get("id"),
             "description_1": node1["description"],
             "description_2": node2["description"],
             "description_3": node3["description"],
-            "cosine_similarity_12": float(similarity_12),  # Ensure float conversion
-            "cosine_similarity_13": float(similarity_13),  # Ensure float conversion
-            "cosine_similarity_23": float(similarity_23),  # Ensure float conversion
-            "valid": valid
+            "cosine_similarity_12": similarity_12,
+            "cosine_similarity_13": similarity_13,
+            "cosine_similarity_23": similarity_23,
+            "valid": valid  # 1 if at least 2/3 comparisons are valid
         })
     
     return results
