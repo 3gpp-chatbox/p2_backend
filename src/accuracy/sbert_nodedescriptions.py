@@ -25,7 +25,7 @@ def extract_node_descriptions(dataset: Dict[str, Any], dataset_name: str) -> Lis
             nodes.append({
                 "id": node["id"],
                 "description": description + metadata,
-                "dataset": dataset_name
+                "dataset": dataset_name  # Store the source dataset name
             })
     return nodes
 
@@ -59,8 +59,10 @@ def find_best_matches(node_set_1: List[Dict[str, Any]], node_set_2: List[Dict[st
             matched_pairs.append({
                 "id_1": node_1["id"],
                 "description_1": node_1["description"],
+                "dataset_1": node_1["dataset"],  # Store the source dataset for description_1
                 "id_2": node_set_2[best_match_idx_1]["id"],
                 "description_2": node_set_2[best_match_idx_1]["description"],
+                "dataset_2": node_set_2[best_match_idx_1]["dataset"],  # Store the source dataset for description_2
                 "cosine_similarity": best_match_score_1,
                 "valid": best_match_score_1 >= fixed_threshold
             })
@@ -104,10 +106,10 @@ def save_results(results: List[Dict[str, Any]], output_path: str):
 
 if __name__ == "__main__":
     dataset_files = {
-        "v1": "../../data/consolidated_step3/v01-step3.json",
-        "v2": "../../data/consolidated_step3/v02-step3.json",
-        "v3": "../../data/consolidated_step3/v03-step3.json",
-        "v4": "../../data/consolidated_step3/v04-step3.json"
+        "v1": "data/consolidated_step3/v01-step3.json",
+        "v2": "data/consolidated_step3/v02-step3.json",
+        "v3": "data/consolidated_step3/v03-step3.json",
+        "v4": "data/consolidated_step3/v04-step3.json"
     }
     
     print("Loading datasets...")
@@ -116,5 +118,5 @@ if __name__ == "__main__":
     print("Comparing node descriptions using SBERT...")
     comparison_results = compare_datasets(datasets)
 
-    output_file = "../../src/accuracy/sbert_comparison_results.json"
+    output_file = "src/accuracy/sbert_comparison_results.json"
     save_results(comparison_results, output_file)
