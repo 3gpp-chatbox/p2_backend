@@ -4,10 +4,9 @@ import re
 from docx import Document
 from pathlib import Path
 # Add parent directory to Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.join(os.path.dirname(__file__), "../.."))))
+sys.path.append(str(Path(__file__).parents[2].resolve()))
 
-from src.library.logger import get_logger
-
+from src.lib.logger import get_logger
 logger = get_logger(__name__)
 
 def clean_heading(text):
@@ -226,7 +225,7 @@ def save_markdown_files(main_content, excluded_content, toc_content, output_fold
         except Exception as e:
             logger.error(f"Error saving {filename}: {e}")
 
-def docx_to_markdown(file_path, save_markdown=False, output_folder="../../data/markdown"):
+def docx_to_markdown(file_path, save_markdown=False, output_folder="data/markdown"):
     """
     Main function to process DOCX file and extract structured content.
 
@@ -268,4 +267,5 @@ def docx_to_markdown(file_path, save_markdown=False, output_folder="../../data/m
 
 # Example usage
 if __name__ == "__main__":
-    markdown_text = docx_to_markdown("../../data/raw/24501-j11.docx", save_markdown=True)
+    file_path = "data/raw/24501-j11.docx"
+    markdown_text = docx_to_markdown(file_path, save_markdown=True)
