@@ -29,128 +29,39 @@ def read_json_file(file_path):
 def extract_procedural_info(section_name, step1_data, step2_data):
     """Generates a structured **flow property graph** using data from step1.json and step2.json"""
     
-    prompt = f"""
-You are a graph generation tool. Using your knowledge of 3GPP procedures but based on the provided input data, construct a structured **flow property graph** for the procedure "{section_name}".
+    # Create the structured JSON-like string manually
+    prompt = (
+        f"You are an expert in telecom procedures and standards, particularly in 3GPP specifications. "
+        f"Your task is to extract the **Initial Registration Procedure** based on the TS 24.501 specification. "
+        f"The procedure should be structured in the following way:\n\n"
+        f"1. **States (Nodes)**: Represent different stages in the process (e.g., 'UE Registered', 'Authentication Successful').\n"
+        f"   - For each state, provide a **unique identifier**, **description**, and **type** (either 'state' or 'event').\n"
+        f"   - Example: {{'id': 'state1', 'type': 'state', 'description': 'UE Registered'}}\n\n"
+        f"2. **Triggers and Conditions (Edges)**: Represent the relationships between states.\n"
+        f"   - For each edge, provide the **starting node** (from_node), **target node** (to), **type** (either 'trigger' or 'condition'), "
+        f"and a **description** of the trigger or condition.\n"
+        f"   - Example: {{'from': 'state1', 'to': 'state2', 'type': 'trigger', 'description': 'Authentication Success'}}\n\n"
+        f"Please format your output as a structured JSON-like object with the following format:\n\n"
+        f"{{\n"
+        f"  'graph': {{\n"
+        f"    'nodes': [\n"
+        f"      {{'id': 'state1', 'type': 'state', 'description': 'UE Registered'}},\n"
+        f"      {{'id': 'event1', 'type': 'event', 'description': 'UE Sends Registration Request'}}\n"
+        f"    ],\n"
+        f"    'edges': [\n"
+        f"      {{'from': 'state1', 'to': 'event1', 'type': 'trigger', 'description': 'Power On'}},\n"
+        f"      {{'from': 'event1', 'to': 'state2', 'type': 'condition', 'description': 'Authentication Success'}}\n"
+        f"    ]\n"
+        f"  }}\n"
+        f"}}\n\n"
+        f"### Input Data:\n"
+        f"#### Extracted Procedure Steps:\n"
+        f"{json.dumps(step1_data, indent=2)}\n\n"
+        f"#### Decision Points & Dependencies:\n"
+        f"{json.dumps(step2_data, indent=2)}\n"
+    )
 
-### Represent:
-- The sequence of steps as nodes, including their descriptions and any relevant properties (e.g., state changes, involved entities, triggers).
-- The flow between steps as edges, including their types (sequential, conditional, retry) and any associated conditions.
-- Decision points and timers as specific node types, with their conditions, properties, and multiple outcomes if applicable.
-- Dependencies, retry conditions, and fallback paths as edge properties.
-
-Ensure the graph:
-- Clearly shows the main flow and alternative paths.
-- Includes detailed properties for each node and edge, such as conditions, outcomes, retries, and reasons for transitions.
-- Captures retry counts, error types, timeouts, and fallback paths where applicable.
-
-### Example Output Format:
-
-{{
-  "graph": {{
-    "nodes": [
-      {{
-        "id": "start",
-        "type": "start",
-        "description": "Procedure starts",
-        "properties": {{}}
-      }},
-      {{
-        "id": "1",
-        "type": "process",
-        "description": "UE sends REGISTRATION REQUEST",
-        "properties": {{
-          "state_change": "N/A",
-          "entity": "UE",
-          "messages": ["REGISTRATION REQUEST"]
-        }}
-      }},
-      {{
-        "id": "2",
-        "type": "timer",
-        "description": "Timer T3510 starts",
-        "properties": {{
-          "action": "start",
-          "timeout": "5 seconds"
-        }}
-      }},
-      {{
-        "id": "3",
-        "type": "decision",
-        "description": "Decision based on timer expiration",
-        "properties": {{
-          "condition": "Timer T3510 expires",
-          "outcomes": [
-            {{
-              "outcome": "Success",
-              "next_step": 4
-            }},
-            {{
-              "outcome": "Failure - Retry",
-              "next_step": 2,
-              "reason": "Timeout"
-            }}
-          ]
-        }}
-      }},
-      {{
-        "id": "4",
-        "type": "process",
-        "description": "AMF processes REGISTRATION REQUEST",
-        "properties": {{
-          "state_change": "5GMM-DEREGISTERED → 5GMM-REGISTERED",
-          "entity": "AMF",
-          "messages": ["REGISTRATION ACCEPT"]
-        }}
-      }}
-    ],
-    "edges": [
-      {{
-        "from": "start",
-        "to": "1",
-        "type": "sequential",
-        "properties": {{
-          "trigger": "UE sends REGISTRATION REQUEST"
-        }}
-      }},
-      {{
-        "from": "1",
-        "to": "2",
-        "type": "sequential",
-        "properties": {{
-          "trigger": "Timer T3510 starts"
-        }}
-      }},
-      {{
-        "from": "2",
-        "to": "3",
-        "type": "conditional",
-        "properties": {{
-          "condition": "Timer T3510 expires",
-          "error_type": "Timeout",
-          "retry_count": 3
-        }}
-      }},
-      {{
-        "from": "3",
-        "to": "4",
-        "type": "sequential",
-        "properties": {{
-          "trigger": "AMF sends REGISTRATION ACCEPT"
-        }}
-      }}
-    ]
-  }}
-}}
-
-
-### Input Data:
-#### Extracted Procedure Steps:
-{json.dumps(step1_data, indent=2)}
-
-#### Decision Points & Dependencies:
-{json.dumps(step2_data, indent=2)}
-"""
-
+    # Generate content using the model
     response = model.generate_content(prompt).text.strip()
     return response
 

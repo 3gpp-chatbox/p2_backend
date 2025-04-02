@@ -105,7 +105,7 @@ def process_text_file(input_file_path, section_name):
     return procedural_info
 
 # Example usage: Processing a text file
-input_file_path = "data/consolidated_step3/v01-step3.json"  # Path to your input text file
+input_file_path = "step3.json"  # Path to your input text file
 section_name = "Registration procedure for initial registration"  # Name of the section/procedure
 
 procedural_info = process_text_file(input_file_path, section_name)
