@@ -1,8 +1,10 @@
 """Tests for DatabaseHandler query execution functionality."""
 
 import logging
+
 import pytest
-from psycopg import Error, ProgrammingError, OperationalError
+from psycopg import Error, OperationalError, ProgrammingError
+
 from src.db.db_handler import DatabaseHandler
 
 

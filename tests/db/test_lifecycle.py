@@ -6,6 +6,7 @@ lifecycle of the handler.
 """
 
 import logging
+
 import pytest
 from psycopg import Error
 from pytest_mock import MockerFixture

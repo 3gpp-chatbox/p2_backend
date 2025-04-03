@@ -4,17 +4,17 @@ This module provides a DatabaseHandler class that manages database connections,
 transactions, and CRUD operations with proper resource management and error handling.
 """
 
-import os
 import logging
+import os
 from contextlib import contextmanager
-from typing import Any, Dict, List, Optional, Generator
+from typing import Any, Dict, Generator, List, Optional
 
-from dotenv import load_dotenv
 import psycopg
-from psycopg import OperationalError, ProgrammingError, Error
-from psycopg.rows import dict_row
+from dotenv import load_dotenv
+from psycopg import Error, OperationalError, ProgrammingError
 from psycopg.connection import Connection
 from psycopg.cursor import Cursor
+from psycopg.rows import dict_row
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

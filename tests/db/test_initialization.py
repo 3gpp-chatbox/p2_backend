@@ -1,6 +1,7 @@
 """Tests for DatabaseHandler initialization and configuration validation."""
 
 import pytest
+
 from src.db.db_handler import DatabaseHandler
 
 
