@@ -5,92 +5,79 @@
       {
         "id": "5GMM-DEREGISTERED",
         "type": "state",
-        "description": "UE is in 5GMM-DEREGISTERED state"
+        "description": "UE is in 5GMM-DEREGISTERED state",
+        "message": null
       },
       {
         "id": "REGISTRATION_REQUEST_SENT",
         "type": "event",
-        "description": "UE sends REGISTRATION REQUEST to AMF",
+        "description": "UE sends REGISTRATION REQUEST message to AMF",
         "message": "REGISTRATION REQUEST"
       },
       {
         "id": "T3510_STARTED",
         "type": "event",
         "description": "UE starts timer T3510",
-        "message": "T3510"
+        "message": null
       },
       {
         "id": "AMF_PROCESSING_REG_REQ",
         "type": "state",
-        "description": "AMF is processing the REGISTRATION REQUEST"
+        "description": "AMF is processing the REGISTRATION REQUEST",
+        "message": null
       },
       {
         "id": "REGISTRATION_ACCEPTED",
         "type": "event",
-        "description": "AMF sends REGISTRATION ACCEPT to UE",
+        "description": "Initial registration request is accepted by the network",
         "message": "REGISTRATION ACCEPT"
       },
       {
         "id": "T3550_STARTED",
         "type": "event",
         "description": "AMF starts timer T3550",
-        "message": "T3550"
+        "message": null
       },
       {
-        "id": "5GMM_COMMON_PROC_INITIATED",
+        "id": "5GMM-COMMON-PROCEDURE-INITIATED",
         "type": "state",
-        "description": "AMF in 5GMM-COMMON-PROCEDURE-INITIATED state"
+        "description": "AMF enters state 5GMM-COMMON-PROCEDURE-INITIATED",
+        "message": null
       },
       {
         "id": "UE_WAITING_REG_ACCEPT",
         "type": "state",
-        "description": "UE is waiting for REGISTRATION ACCEPT"
+        "description": "UE is waiting for REGISTRATION ACCEPT message",
+        "message": null
       },
       {
-        "id": "5GMM_REGISTERED",
+        "id": "5GMM-REGISTERED",
         "type": "state",
-        "description": "UE is in 5GMM-REGISTERED state"
+        "description": "UE enters state 5GMM-REGISTERED and sets 5GS update status to 5U1 UPDATED",
+        "message": null
       },
       {
-        "id": "REGISTRATION_COMPLETE_SENT_CAA",
+        "id": "REGISTRATION_COMPLETE_SENT",
         "type": "event",
-        "description": "UE sends REGISTRATION COMPLETE for CAA-level UAV ID",
-        "message": "REGISTRATION COMPLETE"
-      },
-       {
-        "id": "REGISTRATION_COMPLETE_SENT_SLICING",
-        "type": "event",
-        "description": "UE sends REGISTRATION COMPLETE to acknowledge network slicing info",
-        "message": "REGISTRATION COMPLETE"
-      },
-      {
-        "id": "REGISTRATION_COMPLETE_SENT_CAG",
-        "type": "event",
-        "description": "UE sends REGISTRATION COMPLETE to acknowledge CAG info",
-        "message": "REGISTRATION COMPLETE"
-      },
-      {
-        "id": "REGISTRATION_COMPLETE_SENT_PEIPS",
-        "type": "event",
-        "description": "UE sends REGISTRATION COMPLETE to acknowledge PEIPS info",
-        "message": "REGISTRATION COMPLETE"
-      },
-      {
-        "id": "REGISTRATION_COMPLETE_SENT_UE_CAPABILITY_ID",
-        "type": "event",
-        "description": "UE sends REGISTRATION COMPLETE to acknowledge UE capability ID",
+        "description": "UE sends REGISTRATION COMPLETE message to AMF",
         "message": "REGISTRATION COMPLETE"
       },
       {
         "id": "T3550_STOPPED",
         "type": "event",
-        "description": "AMF stops T3550 after receiving REGISTRATION COMPLETE",
-        "message": "T3550"
+        "description": "AMF stops timer T3550",
+        "message": null
+      },
+      {
+        "id": "AMF_REGISTERED",
+        "type": "state",
+        "description": "AMF changes to state 5GMM-REGISTERED",
+        "message": null
       },
       {
         "id": "REGISTRATION_REJECTED",
         "type": "event",
-        "description": "AMF sends REGISTRATION REJECT",
+        "description": "Initial registration request is rejected by the network",
         "message": "REGISTRATION REJECT"
       }
     ],
@@ -99,7 +86,7 @@
         "from": "5GMM-DEREGISTERED",
         "to": "REGISTRATION_REQUEST_SENT",
         "type": "trigger",
-        "description": "UE initiates initial registration"
+        "description": "UE initiates registration procedure"
       },
       {
         "from": "5GMM-DEREGISTERED",
@@ -117,77 +104,53 @@
         "from": "AMF_PROCESSING_REG_REQ",
         "to": "REGISTRATION_ACCEPTED",
         "type": "condition",
-        "description": "Initial registration request accepted"
+        "description": "Initial registration request is accepted by the network"
       },
       {
         "from": "AMF_PROCESSING_REG_REQ",
         "to": "REGISTRATION_REJECTED",
         "type": "condition",
-        "description": "Initial registration request cannot be accepted"
+        "description": "Initial registration request is not accepted by the network"
       },
-       {
-        "from": "AMF_PROCESSING_REG_REQ",
+      {
+        "from": "REGISTRATION_ACCEPTED",
         "to": "T3550_STARTED",
         "type": "trigger",
         "description": "AMF starts timer T3550 if 5G-GUTI or SOR transparent container IE is included in REGISTRATION ACCEPT"
       },
       {
-        "from": "AMF_PROCESSING_REG_REQ",
-        "to": "5GMM_COMMON_PROC_INITIATED",
+        "from": "T3550_STARTED",
+        "to": "5GMM-COMMON-PROCEDURE-INITIATED",
         "type": "trigger",
-        "description": "AMF enters 5GMM-COMMON-PROCEDURE-INITIATED if 5G-GUTI or SOR transparent container IE is included in REGISTRATION ACCEPT"
+        "description": "AMF enters state 5GMM-COMMON-PROCEDURE-INITIATED"
+      },
+      {
+        "from": "AMF_PROCESSING_REG_REQ",
+        "to": "UE_WAITING_REG_ACCEPT",
+        "type": "trigger",
+        "description": "AMF sends REGISTRATION ACCEPT message"
       },
       {
         "from": "UE_WAITING_REG_ACCEPT",
-        "to": "5GMM_REGISTERED",
+        "to": "5GMM-REGISTERED",
         "type": "trigger",
-        "description": "Upon receipt of REGISTRATION ACCEPT, UE resets registration attempt counter, enter 5GMM-REGISTERED and sets 5GS update status"
+        "description": "UE receives REGISTRATION ACCEPT message"
       },
       {
-        "from": "REGISTRATION_ACCEPTED",
-        "to": "UE_WAITING_REG_ACCEPT",
-        "type": "trigger",
-        "description": "AMF sends REGISTRATION ACCEPT"
-      },
-      {
-        "from": "5GMM_REGISTERED",
-        "to": "REGISTRATION_COMPLETE_SENT_CAA",
+        "from": "5GMM-REGISTERED",
+        "to": "REGISTRATION_COMPLETE_SENT",
         "type": "condition",
-        "description": "UE sent CAA-level UAV ID and AMF included service-level-AA pending indication"
-      },
-       {
-        "from": "5GMM_REGISTERED",
-        "to": "REGISTRATION_COMPLETE_SENT_SLICING",
-        "type": "condition",
-        "description": "REGISTRATION ACCEPT contains network slicing changed indication"
+        "description": "UE sends REGISTRATION COMPLETE message based on conditions (service-level device ID, Network slicing indication, CAG information, PEIPS parameters, UE radio capability ID)"
       },
       {
-        "from": "5GMM_REGISTERED",
-        "to": "REGISTRATION_COMPLETE_SENT_CAG",
-        "type": "condition",
-        "description": "REGISTRATION ACCEPT contains CAG information and UE supported CAG"
-      },
-      {
-        "from": "5GMM_REGISTERED",
-        "to": "REGISTRATION_COMPLETE_SENT_PEIPS",
-        "type": "condition",
-        "description": "REGISTRATION ACCEPT contains Negotiated PEIPS assistance information and UE supported PEIPS"
-      },
-      {
-        "from": "5GMM_REGISTERED",
-        "to": "REGISTRATION_COMPLETE_SENT_UE_CAPABILITY_ID",
-        "type": "condition",
-        "description": "REGISTRATION ACCEPT contains UE radio capability ID"
-      },
-      {
-        "from": "5GMM_COMMON_PROC_INITIATED",
+        "from": "5GMM-COMMON-PROCEDURE-INITIATED",
         "to": "T3550_STOPPED",
         "type": "trigger",
-        "description": "AMF receives REGISTRATION COMPLETE"
+        "description": "AMF receives REGISTRATION COMPLETE message"
       },
       {
         "from": "T3550_STOPPED",
-        "to": "5GMM_REGISTERED",
+        "to": "AMF_REGISTERED",
         "type": "trigger",
         "description": "AMF changes to state 5GMM-REGISTERED"
       }

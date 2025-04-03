@@ -2,6 +2,12 @@ import os
 import json
 from dotenv import load_dotenv
 import google.generativeai as genai
+from pydantic import ValidationError
+import sys
+
+# Add p2_backend/src to Python path
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "src"))
+from accuracy.schema_validation import Graph, Node, Edge, validate_data  # Import the Pydantic models and validation function
 
 load_dotenv()
 
@@ -45,7 +51,7 @@ def extract_procedural_info(section_name, step1_data, step2_data):
         f"{{\n"
         f"  'graph': {{\n"
         f"    'nodes': [\n"
-        f"      {{'id': 'state1', 'type': 'state', 'description': 'UE Registered'}},\n"
+        f"      {{'id': 'state1', 'type': 'state', 'description': 'UE Registered', 'message': 'REGISTRATION REQUEST'}},\n"
         f"      {{'id': 'event1', 'type': 'event', 'description': 'UE Sends Registration Request'}}\n"
         f"    ],\n"
         f"    'edges': [\n"
@@ -61,14 +67,39 @@ def extract_procedural_info(section_name, step1_data, step2_data):
         f"{json.dumps(step2_data, indent=2)}\n"
     )
 
-    # Generate content using the model
-    response = model.generate_content(prompt).text.strip()
-    return response
+    # Generate content using Gemini model
+    response = model.generate_content(
+        contents=prompt,
+        generation_config={
+            "temperature": 0,
+        },
+    )
+
+    # Print the raw response to inspect its structure
+    print(f"Raw response from model:\n{response.text}")
+
+    # Check if response is empty
+    if not response.text:
+        print("Error: Empty response received.")
+        return None
+
+    # Try to parse the JSON response
+    try:
+        parsed_response = json.loads(response.text)
+        # Validate the parsed response using Pydantic models
+        if validate_data(parsed_response):
+            return parsed_response
+        else:
+            print("Error: Validation failed.")
+            return None
+    except json.JSONDecodeError as e:
+        print(f"✗ Failed to decode JSON from the extracted data: {e}")
+        return None
 
 def save_to_json(data, file_path):
     """Saves procedural info to a JSON file."""
     with open(file_path, "w", encoding='utf-8') as file:
-        file.write(data)
+        json.dump(data, file, indent=2, ensure_ascii=False)
     print(f"Procedural info saved to {file_path}")
 
 def process_procedure(section_name):
