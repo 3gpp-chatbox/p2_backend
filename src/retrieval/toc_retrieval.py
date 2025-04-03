@@ -145,7 +145,7 @@ if __name__ == "__main__":
         logger.info("Extracting table of contents...")
         toc_content = extract_toc(paragraphs)
         
-        procedure_name = "mobility and periodic registration update"
+        procedure_name = "initial registration"
         logger.info(f"Searching for sections related to '{procedure_name}'")
         result = get_procedure_sections("\n".join(toc_content), procedure_name)
         
