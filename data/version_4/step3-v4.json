@@ -1,0 +1,118 @@
+{
+  "graph": {
+    "nodes": [
+      {
+        "id": "state_deregistered",
+        "type": "state",
+        "description": "UE in 5GMM-DEREGISTERED state"
+      },
+      {
+        "id": "event_reg_req",
+        "type": "event",
+        "description": "UE sends REGISTRATION REQUEST message to AMF"
+      },
+      {
+        "id": "state_t3510_running",
+        "type": "state",
+        "description": "UE with T3510 running"
+      },
+      {
+        "id": "event_network_procedures",
+        "type": "event",
+        "description": "Network initiates 5GMM common procedures (e.g., identification, authentication, security)"
+      },
+      {
+        "id": "state_amf_processing",
+        "type": "state",
+        "description": "AMF processing Registration Request"
+      },
+      {
+        "id": "event_reg_accept",
+        "type": "event",
+        "description": "AMF sends REGISTRATION ACCEPT message to UE"
+      },
+      {
+        "id": "state_registered",
+        "type": "state",
+        "description": "UE in 5GMM-REGISTERED state"
+      },
+      {
+        "id": "event_reg_complete",
+        "type": "event",
+        "description": "UE sends REGISTRATION COMPLETE message to AMF"
+      },
+      {
+        "id": "state_amf_registered",
+        "type": "state",
+        "description": "AMF in 5GMM-REGISTERED state"
+      },
+      {
+        "id": "event_reg_reject",
+        "type": "event",
+        "description": "AMF sends REGISTRATION REJECT message to UE"
+      }
+    ],
+    "edges": [
+      {
+        "from": "state_deregistered",
+        "to": "event_reg_req",
+        "type": "trigger",
+        "description": "UE initiates registration"
+      },
+      {
+        "from": "event_reg_req",
+        "to": "state_t3510_running",
+        "type": "trigger",
+        "description": "UE starts timer T3510"
+      },
+      {
+        "from": "state_t3510_running",
+        "to": "state_amf_processing",
+        "type": "trigger",
+        "description": "REGISTRATION REQUEST received by AMF"
+      },
+      {
+        "from": "state_amf_processing",
+        "to": "event_network_procedures",
+        "type": "trigger",
+        "description": "AMF may initiate network procedures"
+      },
+      {
+        "from": "state_amf_processing",
+        "to": "event_reg_accept",
+        "type": "condition",
+        "description": "Initial registration request accepted by network"
+      },
+      {
+        "from": "state_amf_processing",
+        "to": "event_reg_reject",
+        "type": "condition",
+        "description": "Initial registration request cannot be accepted by network"
+      },
+      {
+        "from": "event_reg_accept",
+        "to": "state_registered",
+        "type": "trigger",
+        "description": "UE receives REGISTRATION ACCEPT message"
+      },
+      {
+        "from": "state_registered",
+        "to": "event_reg_complete",
+        "type": "condition",
+        "description": "Conditions met to send REGISTRATION COMPLETE (e.g., Network slicing indication changed)"
+      },
+      {
+        "from": "event_reg_complete",
+        "to": "state_amf_registered",
+        "type": "trigger",
+        "description": "AMF receives REGISTRATION COMPLETE message"
+      },
+      {
+        "from": "event_reg_reject",
+        "to": "state_deregistered",
+        "type": "trigger",
+        "description": "UE receives REGISTRATION REJECT message"
+      }
+    ]
+  }
+}

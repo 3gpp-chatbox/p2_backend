@@ -1,0 +1,538 @@
+
+{
+  "decision_points": [
+    {
+      "step": "5.5.1.2.3",
+      "condition": "During a registration procedure with 5GS registration type IE set to \"emergency registration\", if the AMF is configured to support emergency registration for unauthenticated SUCIs",
+      "outcomes": [
+        {
+          "outcome": "AMF may choose to skip the authentication procedure",
+          "next_step": "Security mode control procedure",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "AMF does not skip the authentication procedure",
+          "next_step": "Authentication procedure",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF receives the initial registration request over non-3GPP access and detects that the N3IWF used by the UE is compatible with only part of the allowed NSSAI and the UE has not indicated its support for slice-based N3IWF selection in the REGISTRATION REQUEST message",
+      "outcomes": [
+        {
+          "outcome": "AMF accepts the initial registration request",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF receives the initial registration request over non-3GPP access and detects that the TNGF used by the UE is compatible with only part of the allowed NSSAI and the UE has not indicated its support for slice-based TNGF selection in the REGISTRATION REQUEST message",
+      "outcomes": [
+        {
+          "outcome": "AMF accepts the initial registration request",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the LADN indication IE includes requested LADN DNNs, the UE subscribed DNN list includes the requested LADN DNNs or the wildcard DNN, and the LADN service area of the requested LADN DNN has an intersection with the current registration area",
+      "outcomes": [
+        {
+          "outcome": "AMF shall determine the requested LADN DNNs included in the LADN indication IE as LADN DNNs for the UE",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "if no requested LADN DNNs included in the LADN indication IE and the wildcard DNN is included in the UE subscribed DNN list",
+      "outcomes": [
+        {
+          "outcome": "AMF shall determine the LADN DNN(s) configured in the AMF whose LADN service area has an intersection with the current registration area as LADN DNNs for the UE",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "if no requested LADN DNNs included in the LADN indication IE and the wildcard DNN is not included in the UE subscribed DNN list, or if the UE subscribed DNN list does not include any of the DNN's in the LADN indication IE",
+      "outcomes": [
+        {
+          "outcome": "AMF shall determine the LADN DNN(s) included in the UE subscribed DNN list whose LADN service area has an intersection with the current registration area as LADN DNNs for the UE",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the LADN indication IE is not included in the REGISTRATION REQUEST message",
+      "outcomes": [
+        {
+          "outcome": "AMF shall determine the LADN DNN(s) included in the UE subscribed DNN list whose service area has an intersection with the current registration area as LADN DNNs for the UE, except for the wildcard DNN included in the UE subscribed DNN list",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE supports WUS assistance information and the AMF supports and accepts the use of WUS assistance information for the UE",
+      "outcomes": [
+        {
+          "outcome": "AMF shall determine the negotiated UE paging probability information for the UE, store it in the 5GMM context of the UE, and if the UE is not performing the initial registration for emergency services, the AMF shall include it in the Negotiated WUS assistance information IE in the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE sets the NR-PSSI bit to \"NR paging subgrouping supported\" in the 5GMM capability IE in the REGISTRATION REQUEST message and the AMF supports and accepts the use of PEIPS assistance information for the UE",
+      "outcomes": [
+        {
+          "outcome": "AMF shall determine the Paging subgroup ID for the UE, store it in the 5GMM context of the UE, and shall include it in the Negotiated PEIPS assistance information IE in the REGISTRATION ACCEPT message or in the Updated PEIPS assistance information IE in the CONFIGURATION UPDATE COMMAND message as part of the registration procedure",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE set the UN-PER bit to \"unavailability period supported\" in the 5GMM capability IE in the REGISTRATION REQUEST message and the AMF supports and accepts the use of unavailability period for the UE",
+      "outcomes": [
+        {
+          "outcome": "AMF shall set the UN-PER bit to \"unavailability period supported\" in the 5GS network feature support IE in the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF is able to determine an unavailability period duration for the UE based on satellite coverage availability information (see 3GPP TS 23.401 [7]) and the UE is registered over a satellite NG-RAN access",
+      "outcomes": [
+        {
+          "outcome": "AMF shall store the determined unavailability period duration and provide the determined unavailability period duration to the UE by including the unavailability period duration in the Unavailability configuration IE in the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF is able to determine the start of unavailability period based on satellite coverage availability information (see 3GPP TS 23.401 [7])",
+      "outcomes": [
+        {
+          "outcome": "AMF shall store the determined start of unavailability period and provide the determined start of unavailability period to the UE by including the start of unavailability period in the Unavailability configuration IE in the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If: a) the UE does not support LADN per DNN and S-NSSAI; b) the UE is subscribed to the LADN DNN for a single S-NSSAI only; and c) the AMF has the extended LADN information but no LADN information",
+      "outcomes": [
+        {
+          "outcome": "the AMF may decide to provide the LADN service area for that LADN DNN of the extended LADN information as the LADN information and include the LADN information in the LADN information IE of the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE does not support LADN per DNN and S-NSSAI and the AMF has neither the LADN information nor the extended LADN information",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall not provide any LADN information to the UE",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE has set the CAG bit to \"CAG supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message and the AMF needs to update the \"CAG information list\" stored in the UE",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall include the CAG information list IE or the Extended CAG information list IE in the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF supports and accepts the use of MICO mode",
+      "outcomes": [
+        {
+          "outcome": "The AMF shall include the MICO indication IE in the REGISTRATION ACCEPT message only if the MICO indication IE was included in the REGISTRATION REQUEST message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF supports and accepts the use of MICO mode",
+      "outcomes": [
+        {
+          "outcome": "the AMF may indicate \"all PLMN registration area allocated\" in the MICO indication IE in the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF supports and accepts the use of MICO, and the UE included the Requested T3512 value IE in the REGISTRATION REQUEST message",
+      "outcomes": [
+        {
+          "outcome": "then the AMF shall take into account the T3512 value requested when providing the T3512 value IE in the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE requests \"control plane CIoT 5GS optimization\" in the 5GS update type IE, indicates support of control plane CIoT 5GS optimization in the 5GMM capability IE and the AMF decides to accept the requested CIoT 5GS optimization and the registration request",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall indicate \"control plane CIoT 5GS optimization supported\" in the 5GS network feature support IE of the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If there is a running T3447 timer in the AMF and the Follow-on request indicator is set to \"Follow-on request pending\" in the REGISTRATION REQUEST message",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall ignore the flag and proceed as if the flag was not received except for the following cases: a) the UE is configured for high priority access in the selected PLMN; or b) the 5GS registration type IE in the REGISTRATION REQUEST message is set to \"emergency registration\"",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE has indicated support for the control plane CIoT 5GS optimizations, and the AMF decides to activate the congestion control for transport of user data via the control plane",
+      "outcomes": [
+        {
+          "outcome": "then the AMF shall include the T3448 value IE in the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If: a) the UE in NB-N1 mode is using control plane CIoT 5GS optimization; and b) the network is configured to provide the truncated 5G-S-TMSI configuration for control plane CIoT 5GS optimizations",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall include the Truncated 5G-S-TMSI configuration IE in the REGISTRATION ACCEPT message and set the \"Truncated AMF Set ID value\" and the \"Truncated AMF Pointer value\" in the Truncated 5G-S-TMSI configuration IE based on network policies",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE has included the service-level device ID set to the CAA-level UAV ID in the Service-level-AA container IE of the REGISTRATION REQUEST message, and if: - the UE has a valid aerial UE subscription information; - the UUAA procedure is to be performed during the registration procedure according to operator policy; - there is no valid successful UUAA result for the UE in the UE 5GMM context; and - the REGISTRATION REQUEST message was not received over non-3GPP access",
+      "outcomes": [
+        {
+          "outcome": "then the AMF shall initiate the UUAA-MM procedure with the UAS-NF as specified in 3GPP TS 23.256 [6AB] and shall include a service-level-AA pending indication in the Service-level-AA container IE of the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE has included the service-level device ID set to the CAA-level UAV ID in the Service-level-AA container IE of the REGISTRATION REQUEST message, and if: - the UE has a valid aerial UE subscription information; - the UUAA procedure is to be performed during the registration procedure according to operator policy; and - there is a valid successful UUAA result for the UE in the UE 5GMM context",
+      "outcomes": [
+        {
+          "outcome": "then the AMF shall include a service-level-AA response in the Service-level-AA container IE of the REGISTRATION ACCEPT message and set the SLAR field in the service-level-AA response to \"Service level authentication and authorization was successful\"",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF determines that the UUAA-MM procedure needs to be performed for a UE, the AMF has not received the service-level device ID set to the CAA-level UAV ID in the Service-level-AA container IE of the REGISTRATION REQUEST message from the UE and the AMF decides to accept the UE to be registered for other services than UAS services based on the user's subscription data and the operator policy",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall accept the initial registration request and shall mark in the UE's 5GMM context that the UE is not allowed to request UAS services",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF received the list of TAIs from the satellite NG-RAN as described in 3GPP TS 23.501 [8], and determines that, by UE subscription and operator's preferences, any but not all TAIs in the received list of TAIs is forbidden for roaming or for regional provision of service",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall include the TAI(s) in: a) the Forbidden TAI(s) for the list of \"5GS forbidden tracking areas for roaming\" IE; or b) the Forbidden TAI(s) for the list of \"5GS forbidden tracking areas for regional provision of service\" IE; or c) both; in the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF receives the initial registration request along with the mobile IAB-indication over N2 reference point (see TS 38.413 [31]) from UE and the UE is authorized to operate as an MBSR based on the subscription information and local policy (see 3GPP TS 23.501 [8])",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall include the Feature authorization indication IE in the REGISTRATION ACCEPT message and shall set the MBSRAI field to \"authorized to operate as MBSR\"",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the AMF receives the initial registration request along with the mobile IAB-indication over N2 reference point (see TS 38.413 [31]) from UE and the UE is not authorized to operate as an MBSR based on the subscription information and local policy but can operate as a UE",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall include the Feature authorization indication IE in the REGISTRATION ACCEPT message and shall set the MBSRAI field to \"not authorized to operate as MBSR but allowed to operate as a UE\"",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE included S1 mode supported indication in the REGISTRATION REQUEST message, the AMF supporting interworking with EPS",
+      "outcomes": [
+        {
+          "outcome": "AMF shall set the IWK N26 bit to either: a) \"interworking without N26 interface not supported\" if the AMF supports N26 interface; or b) \"interworking without N26 interface supported\" if the AMF does not support N26 interface in the 5GS network feature support IE in the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE indicates support for restriction on use of enhanced coverage in the REGISTRATION REQUEST message and: a) in WB-N1 mode, the AMF decides to restrict the use of CE mode B for the UE",
+      "outcomes": [
+        {
+          "outcome": "then the AMF shall set the RestrictEC bit to \"CE mode B is restricted\"",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE indicates support for restriction on use of enhanced coverage in the REGISTRATION REQUEST message and: b) in WB-N1 mode, the AMF decides to restrict the use of both CE mode A and CE mode B for the UE",
+      "outcomes": [
+        {
+          "outcome": "then the AMF shall set the RestrictEC bit to \" Both CE mode A and CE mode B are restricted\"",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE indicates support for restriction on use of enhanced coverage in the REGISTRATION REQUEST message and: c) in NB-N1 mode, the AMF decides to restrict the use of enhanced coverage for the UE",
+      "outcomes": [
+        {
+          "outcome": "then the AMF shall set the RestrictEC bit to \"Use of enhanced coverage is restricted\"",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE indicates support of the N1 NAS signalling connection release in the REGISTRATION REQUEST message and the network decides to accept the N1 NAS signalling connection release",
+      "outcomes": [
+        {
+          "outcome": "then the AMF shall set the N1 NAS signalling connection release bit to \"N1 NAS signalling connection release supported\" in the 5GS network feature support IE of the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE indicates support of the paging indication for voice services in the REGISTRATION REQUEST message and the network decides to accept the paging indication for voice services",
+      "outcomes": [
+        {
+          "outcome": "then the AMF shall set the paging indication for voice services bit to \"paging indication for voice services supported\" in the 5GS network feature support IE of the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE indicates support of the reject paging request in the REGISTRATION REQUEST message and the network decides to accept the reject paging request",
+      "outcomes": [
+        {
+          "outcome": "then the AMF shall set the reject paging request bit to \"reject paging request supported\" in the 5GS network feature support IE of the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE indicates support of the paging restriction in the REGISTRATION REQUEST message, and the AMF sets: - the reject paging request bit to \"reject paging request supported\"; - the N1 NAS signalling connection release bit to \"N1 NAS signalling connection release supported\"; or - both of them; in the 5GS network feature support IE of the REGISTRATION ACCEPT message, and the network decides to accept the paging restriction",
+      "outcomes": [
+        {
+          "outcome": "then the AMF shall set the paging restriction bit to \"paging restriction supported\" in the 5GS network feature support IE of the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE indicates support of ranging and sidelink positioning in the REGISTRATION REQUEST message and the network supports and accepts the use of ranging and sidelink positioning",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall set the ranging and sidelink positioning support bit to \"Ranging and sidelink positioning supported\" in the 5GS network feature support IE of the REGISTRATION ACCEPT message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE is authorized to use V2X communication over PC5 reference point based on: a) at least one of the following bits in the 5GMM capability IE of the REGISTRATION REQUEST message set by the UE, or already stored in the 5GMM context in the AMF during the previous registration procedure as follows: 1) the V2XCEPC5 bit to \"V2X communication over E-UTRA-PC5 supported\"; or 2) the V2XCNPC5 bit to \"V2X communication over NR-PC5 supported\"; and b) the user's subscription context obtained from the UDM as defined in 3GPP TS 23.287 [6C]",
+      "outcomes": [
+        {
+          "outcome": "the AMF should not immediately release the NAS signalling connection after the completion of the registration procedure",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE is authorized to use A2X communication over PC5 reference point based on: a) at least one of the following bits in the 5GMM capability IE of the REGISTRATION REQUEST message set by the UE, or already stored in the 5GMM context in the AMF during the previous registration procedure as follows: 1) the A2XEPC5 bit to \"A2X over E-UTRA-PC5 supported\"; or 2) the A2XNPC5 bit to \"A2X over NR-PC5 supported\"; and b) the user's subscription context obtained from the UDM as defined in 3GPP TS 23.256 [6C]",
+      "outcomes": [
+        {
+          "outcome": "the AMF should not immediately release the NAS signalling connection after the completion of the registration procedure",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the UE is authorized to use 5G ProSe services based on: a) at least one of the following bits in the 5GMM capability IE of the REGISTRATION REQUEST message set by the UE, or already stored in the 5GMM context in the AMF during the previous registration procedure as follows: 1) the 5G ProSe direct discovery bit to \"5G ProSe direct discovery supported\"; or 2) the 5G ProSe direct communication bit to \"5G ProSe direct communication supported\"; and b) the user's subscription context obtained from the UDM as defined in 3GPP TS 23.304 [6E]",
+      "outcomes": [
+        {
+          "outcome": "the AMF should not immediately release the NAS signalling connection after the completion of the registration procedure",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the Requested DRX parameters IE was included in the REGISTRATION REQUEST message",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall include the Negotiated DRX parameters IE in the REGISTRATION ACCEPT message and replace any stored Negotiated DRX parameter and use it for the downlink transfer of signalling and user data",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the Requested NB-N1 mode DRX parameters IE was included in the REGISTRATION REQUEST message",
+      "outcomes": [
+        {
+          "outcome": "the AMF shall include the Negotiated NB-N1 mode DRX parameters IE in the REGISTRATION ACCEPT message and replace any stored Negotiated NB-N1 mode DRX parameters and use it for the downlink transfer of signalling and user data in NB-N1 mode",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "The AMF shall include the Negotiated extended DRX parameters IE in the REGISTRATION ACCEPT message only if the Requested extended DRX parameters IE was included in the REGISTRATION REQUEST message, and the AMF supports and accepts the use of eDRX",
+      "outcomes": [
+        {
+          "outcome": "AMF may set the Negotiated extended DRX parameters IE based on the received Requested extended DRX parameters IE, operator policy, information from NG-RAN and the user's subscription context obtained from the UDM if available",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If: a) the UE's USIM is configured with indication that the UE is to receive the SOR transparent container IE, the SOR transparent container IE included in the REGISTRATION ACCEPT message does not successfully pass the integrity check (see 3GPP TS 33.501 [24]); and b) if the UE attempts obtaining service on another PLMNs as specified in 3GPP TS 23.122 [5] annex C",
+      "outcomes": [
+        {
+          "outcome": "then the UE shall locally release the established N1 NAS signalling connection after sending a REGISTRATION COMPLETE message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If: a) the UE's USIM is configured with indication that the UE is to receive the SOR transparent container IE, the SOR transparent container IE is not included in the REGISTRATION ACCEPT message; and b) the UE attempts obtaining service on another PLMNs as specified in 3GPP TS 23.122 [5] annex C",
+      "outcomes": [
+        {
+          "outcome": "then the UE shall locally release the established N1 NAS signalling connection",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If: a) the UE operates in SNPN access operation mode; b) the ME is configured to indicate that the UE shall expect to receive the steering of roaming information during initial registration procedure for the selected entry of the \"list of subscriber data\" or the selected PLMN subscription; c) the SOR transparent container IE included in the REGISTRATION ACCEPT message does not successfully pass the integrity check (see 3GPP TS 33.501 [24]); and d) the UE attempts obtaining service on another SNPN as specified in 3GPP TS 23.122 [5] annex C",
+      "outcomes": [
+        {
+          "outcome": "then the UE shall locally release the established N1 NAS signalling connection after sending a REGISTRATION COMPLETE message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If: a) the UE operates in SNPN access operation mode; b) the ME is configured to indicate that the UE shall expect to receive the steering of roaming information during initial registration procedure for the selected entry of the \"list of subscriber data\" or the selected PLMN subscription; c) the SOR transparent container IE is not included in the REGISTRATION ACCEPT message; and d) the UE attempts obtaining service on another SNPN as specified in 3GPP TS 23.122 [5] annex C",
+      "outcomes": [
+        {
+          "outcome": "then the UE shall locally release the established N1 NAS signalling connection",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    },
+    {
+      "step": "5.5.1.2.4",
+      "condition": "If the REGISTRATION ACCEPT message includes the SOR transparent container IE and the SOR transparent container IE successfully passes the integrity check (see 3GPP TS 33.501 [24])",
+      "outcomes": [
+        {
+          "outcome": "the ME shall store the received SOR counter as specified in annex C and proceed as follows: a) the UE shall proceed with the behaviour as specified in 3GPP TS 23.122 [5] annex C; and b) if the registration procedure is performed over 3GPP access and the UE attempts obtaining service on another PLMNs or SNPNs as specified in 3GPP TS 23.122 [5] annex C, then the UE may locally release the established N1 NAS signalling connection after sending a REGISTRATION COMPLETE message",
+          "next_step": "Continue with registration",
+          "outcome_type": "positive"
+        }
+      ]
+    }
+  ]
+}

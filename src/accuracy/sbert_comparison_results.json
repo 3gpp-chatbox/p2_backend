@@ -1,562 +1,1311 @@
-[
-    {
-        "id_1": "start",
-        "description_1": "Procedure starts Type: start Properties: {}",
-        "dataset_1": "v1",
-        "id_2": "start",
-        "description_2": "Procedure starts Type: start Properties: {}",
-        "dataset_2": "v2",
-        "cosine_similarity": 1.0000001192092896,
-        "valid": true
+{
+    "summary": {
+        "validity_status": "invalid",
+        "validation_reason": "There are unmatched nodes or edges",
+        "node_stats": {
+            "total": 85,
+            "matched": 39,
+            "unmatched": 46,
+            "match_percentage": 45.88235294117647
+        },
+        "edge_stats": {
+            "total": 107,
+            "matched": 26,
+            "unmatched": 81,
+            "match_percentage": 24.299065420560748
+        }
     },
-    {
-        "id_1": "1",
-        "description_1": "UE sends REGISTRATION REQUEST to AMF Type: process Properties: {'state_before': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
-        "dataset_1": "v1",
-        "id_2": "1",
-        "description_2": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
-        "dataset_2": "v2",
-        "cosine_similarity": 0.8827568888664246,
-        "valid": true
-    },
-    {
-        "id_1": "2",
-        "description_1": "UE starts timer T3510, stops timer T3502 (if running), and stops timer T3511 (if running). Type: process Properties: {'state_after': '5GMM-REGISTERED-INITIATED (Implicit)', 'entity': 'UE', 'timers': ['T3510 (start)', 'T3502 (stop)', 'T3511 (stop)']}",
-        "dataset_1": "v1",
-        "id_2": "2",
-        "description_2": "UE starts timer T3510 Type: timer Properties: {'action': 'start', 'name': 'T3510'}",
-        "dataset_2": "v2",
-        "cosine_similarity": 0.8081579208374023,
-        "valid": true
-    },
-    {
-        "id_1": "4",
-        "description_1": "Initial registration accepted by the network Type: decision Properties: {'entity': 'AMF', 'condition': 'Network accepts the initial registration request', 'outcomes': [{'outcome': 'Send REGISTRATION ACCEPT message to the UE', 'next_step': '5'}, {'outcome': 'Send REGISTRATION REJECT message to the UE', 'next_step': '9'}]}",
-        "dataset_1": "v1",
-        "id_2": "3",
-        "description_2": "Initial registration request is accepted by the network Type: decision Properties: {'condition': 'Initial registration request is accepted by the network', 'outcomes': [{'outcome': 'AMF sends REGISTRATION ACCEPT', 'next_step': '4'}, {'outcome': 'Initial registration request cannot be accepted by the network', 'next_step': '13'}]}",
-        "dataset_2": "v2",
-        "cosine_similarity": 0.9009805917739868,
-        "valid": true
-    },
-    {
-        "id_1": "5",
-        "description_1": "AMF sends REGISTRATION ACCEPT to UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_1": "v1",
-        "id_2": "4",
-        "description_2": "AMF sends REGISTRATION ACCEPT Type: process Properties: {'state_change': 'N/A', 'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_2": "v2",
-        "cosine_similarity": 0.9157140851020813,
-        "valid": true
-    },
-    {
-        "id_1": "6",
-        "description_1": "UE receives REGISTRATION ACCEPT, resets registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED. Type: process Properties: {'state_after': '5GMM-REGISTERED', 'entity': 'UE', 'update_status': '5U1 UPDATED'}",
-        "dataset_1": "v1",
-        "id_2": "7",
-        "description_2": "UE resets the registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED Type: process Properties: {'state_change': '5GMM-REGISTERED', 'entity': 'UE'}",
-        "dataset_2": "v2",
-        "cosine_similarity": 0.9653907418251038,
-        "valid": true
-    },
-    {
-        "id_1": "9",
-        "description_1": "AMF sends REGISTRATION REJECT to UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_1": "v1",
-        "id_2": "13",
-        "description_2": "The AMF sends a REGISTRATION REJECT message to the UE including an appropriate 5GMM cause value Type: process Properties: {'state_change': 'N/A', 'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_2": "v2",
-        "cosine_similarity": 0.8684366941452026,
-        "valid": true
-    },
-    {
-        "id_1": "10",
-        "description_1": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'entity': 'AMF', 'timers': ['T3550 (stop)'], 'state_after': '5GMM-REGISTERED'}",
-        "dataset_1": "v1",
-        "id_2": "12",
-        "description_2": "Upon receiving a REGISTRATION COMPLETE message, the AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'state_change': '5GMM-REGISTERED', 'entity': 'AMF', 'messages': ['REGISTRATION COMPLETE']}",
-        "dataset_2": "v2",
-        "cosine_similarity": 0.8997796177864075,
-        "valid": true
-    },
-    {
-        "id_1": "5G_GUTI",
-        "description_1": "If a 5G-GUTI or the SOR transparent container IE is included in the REGISTRATION ACCEPT message, the AMF shall start timer T3550 and enter state 5GMM-COMMON-PROCEDURE-INITIATED. Type: process Properties: {'entity': 'AMF', 'timers': ['T3550 (start)']}",
-        "dataset_1": "v1",
-        "id_2": "5",
-        "description_2": "5G-GUTI or the SOR transparent container IE is included in the REGISTRATION ACCEPT message Type: decision Properties: {'condition': '5G-GUTI or the SOR transparent container IE is included in the REGISTRATION ACCEPT message', 'outcomes': [{'outcome': 'AMF starts timer T3550 and enters state 5GMM-COMMON-PROCEDURE-INITIATED', 'next_step': '6'}, {'outcome': 'No 5G-GUTI or the SOR transparent container IE', 'next_step': '7'}]}",
-        "dataset_2": "v2",
-        "cosine_similarity": 0.8215734362602234,
-        "valid": true
-    },
-    {
-        "id_1": "end_success",
-        "description_1": "Procedure ends successfully Type: end Properties: {}",
-        "dataset_1": "v1",
-        "id_2": "end",
-        "description_2": "Procedure ends Type: end Properties: {}",
-        "dataset_2": "v2",
-        "cosine_similarity": 0.9534753561019897,
-        "valid": true
-    },
-    {
-        "id_1": "start",
-        "description_1": "Procedure starts Type: start Properties: {}",
-        "dataset_1": "v1",
-        "id_2": "start",
-        "description_2": "Procedure starts Type: start Properties: {}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.9999998807907104,
-        "valid": true
-    },
-    {
-        "id_1": "1",
-        "description_1": "UE sends REGISTRATION REQUEST to AMF Type: process Properties: {'state_before': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
-        "dataset_1": "v1",
-        "id_2": "1",
-        "description_2": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.8827568292617798,
-        "valid": true
-    },
-    {
-        "id_1": "2",
-        "description_1": "UE starts timer T3510, stops timer T3502 (if running), and stops timer T3511 (if running). Type: process Properties: {'state_after': '5GMM-REGISTERED-INITIATED (Implicit)', 'entity': 'UE', 'timers': ['T3510 (start)', 'T3502 (stop)', 'T3511 (stop)']}",
-        "dataset_1": "v1",
-        "id_2": "3",
-        "description_2": "UE stops timer T3502, if it is running Type: process Properties: {'action': 'stop', 'name': 'T3502', 'entity': 'UE'}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.8707523345947266,
-        "valid": true
-    },
-    {
-        "id_1": "3",
-        "description_1": "Network initiates 5GMM common procedures Type: decision Properties: {'entity': 'AMF', 'condition': 'Network determines if common procedures are needed based on REGISTRATION REQUEST', 'outcomes': [{'outcome': 'Initiate Identification, Authentication, and Security procedures', 'next_step': '4'}, {'outcome': 'Skip Authentication and proceed to Security Mode Control (for emergency registration with unauthenticated SUCIs)', 'next_step': '4'}, {'outcome': 'Proceed without initiating common procedures', 'next_step': '4'}]}",
-        "dataset_1": "v1",
-        "id_2": "6",
-        "description_2": "The network may initiate 5GMM common procedures, e.g. the identification, authentication and security procedures during the registration procedure, depending on the information received in the REGISTRATION REQUEST message. Type: process Properties: {'entity': 'AMF'}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.8001065254211426,
-        "valid": true
-    },
-    {
-        "id_1": "5",
-        "description_1": "AMF sends REGISTRATION ACCEPT to UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_1": "v1",
-        "id_2": "7",
-        "description_2": "If the initial registration request is accepted by the network, the AMF shall send a REGISTRATION ACCEPT message to the UE. Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.919133186340332,
-        "valid": true
-    },
-    {
-        "id_1": "6",
-        "description_1": "UE receives REGISTRATION ACCEPT, resets registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED. Type: process Properties: {'state_after': '5GMM-REGISTERED', 'entity': 'UE', 'update_status': '5U1 UPDATED'}",
-        "dataset_1": "v1",
-        "id_2": "14",
-        "description_2": "Upon receipt of the REGISTRATION ACCEPT message, the UE shall reset the registration attempt counter, enter state 5GMM-REGISTERED and set the 5GS update status to 5U1 UPDATED. Type: process Properties: {'entity': 'UE', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.936331033706665,
-        "valid": true
-    },
-    {
-        "id_1": "9",
-        "description_1": "AMF sends REGISTRATION REJECT to UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_1": "v1",
-        "id_2": "22",
-        "description_2": "If the initial registration request cannot be accepted by the network, the AMF shall send a REGISTRATION REJECT message to the UE including an appropriate 5GMM cause value. Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.8552764654159546,
-        "valid": true
-    },
-    {
-        "id_1": "10",
-        "description_1": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'entity': 'AMF', 'timers': ['T3550 (stop)'], 'state_after': '5GMM-REGISTERED'}",
-        "dataset_1": "v1",
-        "id_2": "21",
-        "description_2": "Upon receiving a REGISTRATION COMPLETE message, the AMF shall stop timer T3550 and change to state 5GMM-REGISTERED. Type: process Properties: {'entity': 'AMF', 'action': 'stop', 'name': 'T3550', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.9130618572235107,
-        "valid": true
-    },
-    {
-        "id_1": "5G_GUTI",
-        "description_1": "If a 5G-GUTI or the SOR transparent container IE is included in the REGISTRATION ACCEPT message, the AMF shall start timer T3550 and enter state 5GMM-COMMON-PROCEDURE-INITIATED. Type: process Properties: {'entity': 'AMF', 'timers': ['T3550 (start)']}",
-        "dataset_1": "v1",
-        "id_2": "10",
-        "description_2": "If a 5G-GUTI or the SOR transparent container IE is included in the REGISTRATION ACCEPT message, the AMF shall start timer T3550 and enter state 5GMM-COMMON-PROCEDURE-INITIATED. Type: process Properties: {'entity': 'AMF', 'state_change': '5GMM-COMMON-PROCEDURE-INITIATED'}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.9803295731544495,
-        "valid": true
-    },
-    {
-        "id_1": "start",
-        "description_1": "Procedure starts Type: start Properties: {}",
-        "dataset_1": "v1",
-        "id_2": "start",
-        "description_2": "Procedure starts Type: start Properties: {}",
-        "dataset_2": "v4",
-        "cosine_similarity": 1.0000001192092896,
-        "valid": true
-    },
-    {
-        "id_1": "2",
-        "description_1": "UE starts timer T3510, stops timer T3502 (if running), and stops timer T3511 (if running). Type: process Properties: {'state_after': '5GMM-REGISTERED-INITIATED (Implicit)', 'entity': 'UE', 'timers': ['T3510 (start)', 'T3502 (stop)', 'T3511 (stop)']}",
-        "dataset_1": "v1",
-        "id_2": "2",
-        "description_2": "UE starts timer T3510 Type: timer Properties: {'action': 'start', 'name': 'T3510'}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.8081579208374023,
-        "valid": true
-    },
-    {
-        "id_1": "4",
-        "description_1": "Initial registration accepted by the network Type: decision Properties: {'entity': 'AMF', 'condition': 'Network accepts the initial registration request', 'outcomes': [{'outcome': 'Send REGISTRATION ACCEPT message to the UE', 'next_step': '5'}, {'outcome': 'Send REGISTRATION REJECT message to the UE', 'next_step': '9'}]}",
-        "dataset_1": "v1",
-        "id_2": "7",
-        "description_2": "Decision based on whether the initial registration request is accepted Type: decision Properties: {'condition': 'Initial registration request is accepted', 'outcomes': [{'outcome': 'Success: Send REGISTRATION ACCEPT', 'next_step': '8'}, {'outcome': 'Failure: Send REGISTRATION REJECT', 'next_step': '22'}]}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.8146746158599854,
-        "valid": true
-    },
-    {
-        "id_1": "5",
-        "description_1": "AMF sends REGISTRATION ACCEPT to UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_1": "v1",
-        "id_2": "8",
-        "description_2": "AMF sends a REGISTRATION ACCEPT message to the UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.9884519577026367,
-        "valid": true
-    },
-    {
-        "id_1": "6",
-        "description_1": "UE receives REGISTRATION ACCEPT, resets registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED. Type: process Properties: {'state_after': '5GMM-REGISTERED', 'entity': 'UE', 'update_status': '5U1 UPDATED'}",
-        "dataset_1": "v1",
-        "id_2": "14",
-        "description_2": "UE receives REGISTRATION ACCEPT message, resets registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED Type: process Properties: {'entity': 'UE', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.9769158959388733,
-        "valid": true
-    },
-    {
-        "id_1": "8",
-        "description_1": "UE sends REGISTRATION COMPLETE to AMF Type: process Properties: {'entity': 'UE', 'messages': ['REGISTRATION COMPLETE']}",
-        "dataset_1": "v1",
-        "id_2": "15a",
-        "description_2": "UE returns a REGISTRATION COMPLETE message to the AMF Type: process Properties: {'entity': 'UE', 'messages': ['REGISTRATION COMPLETE']}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.9690465927124023,
-        "valid": true
-    },
-    {
-        "id_1": "9",
-        "description_1": "AMF sends REGISTRATION REJECT to UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_1": "v1",
-        "id_2": "22",
-        "description_2": "AMF sends a REGISTRATION REJECT message to the UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.9926302433013916,
-        "valid": true
-    },
-    {
-        "id_1": "10",
-        "description_1": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'entity': 'AMF', 'timers': ['T3550 (stop)'], 'state_after': '5GMM-REGISTERED'}",
-        "dataset_1": "v1",
-        "id_2": "21",
-        "description_2": "AMF receives REGISTRATION COMPLETE message, stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'entity': 'AMF', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.924453854560852,
-        "valid": true
-    },
-    {
-        "id_1": "end_success",
-        "description_1": "Procedure ends successfully Type: end Properties: {}",
-        "dataset_1": "v1",
-        "id_2": "end",
-        "description_2": "Procedure ends Type: end Properties: {}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.9534753561019897,
-        "valid": true
-    },
-    {
-        "id_1": "start",
-        "description_1": "Procedure starts Type: start Properties: {}",
-        "dataset_1": "v2",
-        "id_2": "start",
-        "description_2": "Procedure starts Type: start Properties: {}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.9999998807907104,
-        "valid": true
-    },
-    {
-        "id_1": "1",
-        "description_1": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
-        "dataset_1": "v2",
-        "id_2": "1",
-        "description_2": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
-        "dataset_2": "v3",
-        "cosine_similarity": 1.0000001192092896,
-        "valid": true
-    },
-    {
-        "id_1": "2",
-        "description_1": "UE starts timer T3510 Type: timer Properties: {'action': 'start', 'name': 'T3510'}",
-        "dataset_1": "v2",
-        "id_2": "2",
-        "description_2": "UE starts timer T3510 Type: timer Properties: {'action': 'start', 'name': 'T3510'}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.9999998807907104,
-        "valid": true
-    },
-    {
-        "id_1": "4",
-        "description_1": "AMF sends REGISTRATION ACCEPT Type: process Properties: {'state_change': 'N/A', 'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_1": "v2",
-        "id_2": "7",
-        "description_2": "If the initial registration request is accepted by the network, the AMF shall send a REGISTRATION ACCEPT message to the UE. Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.8232166767120361,
-        "valid": true
-    },
-    {
-        "id_1": "5",
-        "description_1": "5G-GUTI or the SOR transparent container IE is included in the REGISTRATION ACCEPT message Type: decision Properties: {'condition': '5G-GUTI or the SOR transparent container IE is included in the REGISTRATION ACCEPT message', 'outcomes': [{'outcome': 'AMF starts timer T3550 and enters state 5GMM-COMMON-PROCEDURE-INITIATED', 'next_step': '6'}, {'outcome': 'No 5G-GUTI or the SOR transparent container IE', 'next_step': '7'}]}",
-        "dataset_1": "v2",
-        "id_2": "10",
-        "description_2": "If a 5G-GUTI or the SOR transparent container IE is included in the REGISTRATION ACCEPT message, the AMF shall start timer T3550 and enter state 5GMM-COMMON-PROCEDURE-INITIATED. Type: process Properties: {'entity': 'AMF', 'state_change': '5GMM-COMMON-PROCEDURE-INITIATED'}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.834754467010498,
-        "valid": true
-    },
-    {
-        "id_1": "7",
-        "description_1": "UE resets the registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED Type: process Properties: {'state_change': '5GMM-REGISTERED', 'entity': 'UE'}",
-        "dataset_1": "v2",
-        "id_2": "14",
-        "description_2": "Upon receipt of the REGISTRATION ACCEPT message, the UE shall reset the registration attempt counter, enter state 5GMM-REGISTERED and set the 5GS update status to 5U1 UPDATED. Type: process Properties: {'entity': 'UE', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.9487844705581665,
-        "valid": true
-    },
-    {
-        "id_1": "9",
-        "description_1": "The REGISTRATION ACCEPT message contains the CAG information list IE or the Extended CAG information list IE and the UE had set the CAG bit to 'CAG supported' in the 5GMM capability IE of the REGISTRATION REQUEST message Type: decision Properties: {'condition': \"The REGISTRATION ACCEPT message contains the CAG information list IE or the Extended CAG information list IE and the UE had set the CAG bit to 'CAG supported' in the 5GMM capability IE of the REGISTRATION REQUEST message\", 'outcomes': [{'outcome': \"UE replaces the 'CAG information list' stored in the UE with the received CAG information list IE or the Extended CAG information list IE when received in the HPLMN or EHPLMN, replaces the serving VPLMN's entry of the 'CAG information list' stored in the UE with the serving VPLMN's entry of the received CAG information list IE or the Extended CAG information list IE when the UE receives the CAG information list IE or the Extended CAG information list IE in a serving PLMN other than the HPLMN or EHPLMN, or removes the serving VPLMN's entry of the 'CAG information list' stored in the UE when the UE receives the CAG information list IE or the Extended CAG information list IE in a serving PLMN other than the HPLMN or EHPLMN and the CAG information list IE or the Extended CAG information list IE does not contain the serving VPLMN's entry\", 'next_step': '10'}, {'outcome': \"The REGISTRATION ACCEPT message does not contain the CAG information list IE or the Extended CAG information list IE and the UE had not set the CAG bit to 'CAG supported' in the 5GMM capability IE of the REGISTRATION REQUEST message\", 'next_step': '10'}]}",
-        "dataset_1": "v2",
-        "id_2": "17",
-        "description_2": "If the REGISTRATION ACCEPT message contains the CAG information list IE or the Extended CAG information list IE and the UE had set the CAG bit to \"CAG supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message, the UE shall replace the \"CAG information list\" stored in the UE with the received CAG information list IE or the Extended CAG information list IE when received in the HPLMN or EHPLMN. Type: process Properties: {'entity': 'UE'}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.8339513540267944,
-        "valid": true
-    },
-    {
-        "id_1": "10",
-        "description_1": "The REGISTRATION ACCEPT message contains the Operator-defined access category definitions IE, the Extended emergency number list IE ,the CAG information list IE or the Extended CAG information list IE Type: decision Properties: {'condition': 'The REGISTRATION ACCEPT message contains the Operator-defined access category definitions IE, the Extended emergency number list IE ,the CAG information list IE or the Extended CAG information list IE', 'outcomes': [{'outcome': \"UE returns a REGISTRATION COMPLETE message to the AMF to acknowledge reception of the operator-defined access category definitions, the extended local emergency numbers list or the 'CAG information list'\", 'next_step': '12'}, {'outcome': 'The REGISTRATION ACCEPT message does not contain the Operator-defined access category definitions IE, the Extended emergency number list IE ,the CAG information list IE or the Extended CAG information list IE', 'next_step': '11'}]}",
-        "dataset_1": "v2",
-        "id_2": "18",
-        "description_2": "If the REGISTRATION ACCEPT message contains the Operator-defined access category definitions IE, the Extended emergency number list IE ,the CAG information list IE or the Extended CAG information list IE, the UE shall return a REGISTRATION COMPLETE message to the AMF to acknowledge reception of the operator-defined access category definitions, the extended local emergency numbers list or the \"CAG information list\". Type: process Properties: {'entity': 'UE', 'messages': ['REGISTRATION COMPLETE']}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.8994522094726562,
-        "valid": true
-    },
-    {
-        "id_1": "11",
-        "description_1": "The REGISTRATION ACCEPT message contains the UE radio capability ID IE or the UE radio capability ID deletion indication IE Type: decision Properties: {'condition': 'The REGISTRATION ACCEPT message contains the UE radio capability ID IE or the UE radio capability ID deletion indication IE', 'outcomes': [{'outcome': 'UE returns a REGISTRATION COMPLETE message to the AMF to acknowledge reception of the UE radio capability ID IE or the UE radio capability ID deletion indication IE', 'next_step': '12'}, {'outcome': 'The REGISTRATION ACCEPT message does not contain the UE radio capability ID IE or the UE radio capability ID deletion indication IE', 'next_step': 'end'}]}",
-        "dataset_1": "v2",
-        "id_2": "20",
-        "description_2": "If the REGISTRATION ACCEPT message contains the UE radio capability ID IE or the UE radio capability ID deletion indication IE, the UE shall return a REGISTRATION COMPLETE message to the AMF to acknowledge reception of the UE radio capability ID IE or the UE radio capability ID deletion indication IE. Type: process Properties: {'entity': 'UE', 'messages': ['REGISTRATION COMPLETE']}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.8954691886901855,
-        "valid": true
-    },
-    {
-        "id_1": "12",
-        "description_1": "Upon receiving a REGISTRATION COMPLETE message, the AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'state_change': '5GMM-REGISTERED', 'entity': 'AMF', 'messages': ['REGISTRATION COMPLETE']}",
-        "dataset_1": "v2",
-        "id_2": "21",
-        "description_2": "Upon receiving a REGISTRATION COMPLETE message, the AMF shall stop timer T3550 and change to state 5GMM-REGISTERED. Type: process Properties: {'entity': 'AMF', 'action': 'stop', 'name': 'T3550', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.952338457107544,
-        "valid": true
-    },
-    {
-        "id_1": "13",
-        "description_1": "The AMF sends a REGISTRATION REJECT message to the UE including an appropriate 5GMM cause value Type: process Properties: {'state_change': 'N/A', 'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_1": "v2",
-        "id_2": "22",
-        "description_2": "If the initial registration request cannot be accepted by the network, the AMF shall send a REGISTRATION REJECT message to the UE including an appropriate 5GMM cause value. Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_2": "v3",
-        "cosine_similarity": 0.8921045064926147,
-        "valid": true
-    },
-    {
-        "id_1": "start",
-        "description_1": "Procedure starts Type: start Properties: {}",
-        "dataset_1": "v2",
-        "id_2": "start",
-        "description_2": "Procedure starts Type: start Properties: {}",
-        "dataset_2": "v4",
-        "cosine_similarity": 1.0000001192092896,
-        "valid": true
-    },
-    {
-        "id_1": "1",
-        "description_1": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
-        "dataset_1": "v2",
-        "id_2": "1",
-        "description_2": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
-        "dataset_2": "v4",
-        "cosine_similarity": 1.0,
-        "valid": true
-    },
-    {
-        "id_1": "2",
-        "description_1": "UE starts timer T3510 Type: timer Properties: {'action': 'start', 'name': 'T3510'}",
-        "dataset_1": "v2",
-        "id_2": "2",
-        "description_2": "UE starts timer T3510 Type: timer Properties: {'action': 'start', 'name': 'T3510'}",
-        "dataset_2": "v4",
-        "cosine_similarity": 1.000000238418579,
-        "valid": true
-    },
-    {
-        "id_1": "3",
-        "description_1": "Initial registration request is accepted by the network Type: decision Properties: {'condition': 'Initial registration request is accepted by the network', 'outcomes': [{'outcome': 'AMF sends REGISTRATION ACCEPT', 'next_step': '4'}, {'outcome': 'Initial registration request cannot be accepted by the network', 'next_step': '13'}]}",
-        "dataset_1": "v2",
-        "id_2": "7",
-        "description_2": "Decision based on whether the initial registration request is accepted Type: decision Properties: {'condition': 'Initial registration request is accepted', 'outcomes': [{'outcome': 'Success: Send REGISTRATION ACCEPT', 'next_step': '8'}, {'outcome': 'Failure: Send REGISTRATION REJECT', 'next_step': '22'}]}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.7994958162307739,
-        "valid": true
-    },
-    {
-        "id_1": "4",
-        "description_1": "AMF sends REGISTRATION ACCEPT Type: process Properties: {'state_change': 'N/A', 'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_1": "v2",
-        "id_2": "8",
-        "description_2": "AMF sends a REGISTRATION ACCEPT message to the UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.8985298871994019,
-        "valid": true
-    },
-    {
-        "id_1": "7",
-        "description_1": "UE resets the registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED Type: process Properties: {'state_change': '5GMM-REGISTERED', 'entity': 'UE'}",
-        "dataset_1": "v2",
-        "id_2": "14",
-        "description_2": "UE receives REGISTRATION ACCEPT message, resets registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED Type: process Properties: {'entity': 'UE', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.9765414595603943,
-        "valid": true
-    },
-    {
-        "id_1": "12",
-        "description_1": "Upon receiving a REGISTRATION COMPLETE message, the AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'state_change': '5GMM-REGISTERED', 'entity': 'AMF', 'messages': ['REGISTRATION COMPLETE']}",
-        "dataset_1": "v2",
-        "id_2": "21",
-        "description_2": "AMF receives REGISTRATION COMPLETE message, stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'entity': 'AMF', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.9752875566482544,
-        "valid": true
-    },
-    {
-        "id_1": "13",
-        "description_1": "The AMF sends a REGISTRATION REJECT message to the UE including an appropriate 5GMM cause value Type: process Properties: {'state_change': 'N/A', 'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_1": "v2",
-        "id_2": "22",
-        "description_2": "AMF sends a REGISTRATION REJECT message to the UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.8775409460067749,
-        "valid": true
-    },
-    {
-        "id_1": "end",
-        "description_1": "Procedure ends Type: end Properties: {}",
-        "dataset_1": "v2",
-        "id_2": "end",
-        "description_2": "Procedure ends Type: end Properties: {}",
-        "dataset_2": "v4",
-        "cosine_similarity": 1.0,
-        "valid": true
-    },
-    {
-        "id_1": "start",
-        "description_1": "Procedure starts Type: start Properties: {}",
-        "dataset_1": "v3",
-        "id_2": "start",
-        "description_2": "Procedure starts Type: start Properties: {}",
-        "dataset_2": "v4",
-        "cosine_similarity": 1.0000001192092896,
-        "valid": true
-    },
-    {
-        "id_1": "1",
-        "description_1": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
-        "dataset_1": "v3",
-        "id_2": "1",
-        "description_2": "UE sends REGISTRATION REQUEST Type: process Properties: {'state_change': '5GMM-DEREGISTERED', 'entity': 'UE', 'messages': ['REGISTRATION REQUEST']}",
-        "dataset_2": "v4",
-        "cosine_similarity": 1.0,
-        "valid": true
-    },
-    {
-        "id_1": "2",
-        "description_1": "UE starts timer T3510 Type: timer Properties: {'action': 'start', 'name': 'T3510'}",
-        "dataset_1": "v3",
-        "id_2": "2",
-        "description_2": "UE starts timer T3510 Type: timer Properties: {'action': 'start', 'name': 'T3510'}",
-        "dataset_2": "v4",
-        "cosine_similarity": 1.000000238418579,
-        "valid": true
-    },
-    {
-        "id_1": "7",
-        "description_1": "If the initial registration request is accepted by the network, the AMF shall send a REGISTRATION ACCEPT message to the UE. Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_1": "v3",
-        "id_2": "8",
-        "description_2": "AMF sends a REGISTRATION ACCEPT message to the UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION ACCEPT']}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.9285281896591187,
-        "valid": true
-    },
-    {
-        "id_1": "14",
-        "description_1": "Upon receipt of the REGISTRATION ACCEPT message, the UE shall reset the registration attempt counter, enter state 5GMM-REGISTERED and set the 5GS update status to 5U1 UPDATED. Type: process Properties: {'entity': 'UE', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_1": "v3",
-        "id_2": "14",
-        "description_2": "UE receives REGISTRATION ACCEPT message, resets registration attempt counter, enters state 5GMM-REGISTERED and sets the 5GS update status to 5U1 UPDATED Type: process Properties: {'entity': 'UE', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.9549118876457214,
-        "valid": true
-    },
-    {
-        "id_1": "15",
-        "description_1": "If the REGISTRATION ACCEPT message contains the Network slicing indication IE with the Network slicing subscription change indication set to \"Network slicing subscription changed\", the UE shall return a REGISTRATION COMPLETE message to the AMF to acknowledge the successful update of the network slicing information. Type: process Properties: {'entity': 'UE', 'messages': ['REGISTRATION COMPLETE']}",
-        "dataset_1": "v3",
-        "id_2": "15",
-        "description_2": "Decision based on whether the REGISTRATION ACCEPT message contains the Network slicing indication IE with the Network slicing subscription change indication set to \"Network slicing subscription changed\" Type: decision Properties: {'condition': 'REGISTRATION ACCEPT message contains the Network slicing indication IE with the Network slicing subscription change indication set to \"Network slicing subscription changed\"', 'outcomes': [{'outcome': 'Success: UE shall return a REGISTRATION COMPLETE message to the AMF', 'next_step': '15a'}]}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.8149209022521973,
-        "valid": true
-    },
-    {
-        "id_1": "21",
-        "description_1": "Upon receiving a REGISTRATION COMPLETE message, the AMF shall stop timer T3550 and change to state 5GMM-REGISTERED. Type: process Properties: {'entity': 'AMF', 'action': 'stop', 'name': 'T3550', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_1": "v3",
-        "id_2": "21",
-        "description_2": "AMF receives REGISTRATION COMPLETE message, stops timer T3550 and changes to state 5GMM-REGISTERED Type: process Properties: {'entity': 'AMF', 'state_change': '5GMM-REGISTERED'}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.9393847584724426,
-        "valid": true
-    },
-    {
-        "id_1": "22",
-        "description_1": "If the initial registration request cannot be accepted by the network, the AMF shall send a REGISTRATION REJECT message to the UE including an appropriate 5GMM cause value. Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_1": "v3",
-        "id_2": "22",
-        "description_2": "AMF sends a REGISTRATION REJECT message to the UE Type: process Properties: {'entity': 'AMF', 'messages': ['REGISTRATION REJECT']}",
-        "dataset_2": "v4",
-        "cosine_similarity": 0.8614085912704468,
-        "valid": true
-    }
-]
+    "node_matches": [
+        {
+            "id_1": "state_deregistered",
+            "description_1": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_1": "v1",
+            "id_2": "state_deregistered",
+            "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_2": "v2",
+            "cosine_similarity": 1.0,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_req_sent",
+            "description_1": "UE sends REGISTRATION REQUEST Type: event",
+            "dataset_1": "v1",
+            "id_2": "event_reg_req",
+            "description_2": "UE sends REGISTRATION REQUEST to AMF Type: event",
+            "dataset_2": "v2",
+            "cosine_similarity": 0.8476061224937439,
+            "valid": true
+        },
+        {
+            "id_1": "timer_t3502_stop",
+            "description_1": "UE stops timer T3502 (if running) Type: event",
+            "dataset_1": "v1",
+            "id_2": "state_timers_stopped",
+            "description_2": "UE has T3502 and T3511 stopped (if running) Type: state",
+            "dataset_2": "v2",
+            "cosine_similarity": 0.7488042116165161,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_accept_sent",
+            "description_1": "AMF sends REGISTRATION ACCEPT Type: event",
+            "dataset_1": "v1",
+            "id_2": "event_reg_accept",
+            "description_2": "AMF sends REGISTRATION ACCEPT to UE Type: event",
+            "dataset_2": "v2",
+            "cosine_similarity": 0.9216248989105225,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_complete_sent",
+            "description_1": "UE sends REGISTRATION COMPLETE Type: event",
+            "dataset_1": "v1",
+            "id_2": "event_reg_complete",
+            "description_2": "UE sends REGISTRATION COMPLETE to AMF (if conditions met) Type: event",
+            "dataset_2": "v2",
+            "cosine_similarity": 0.8249678611755371,
+            "valid": true
+        },
+        {
+            "id_1": "timer_t3550_stop",
+            "description_1": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: event",
+            "dataset_1": "v1",
+            "id_2": "state_amf_registered",
+            "description_2": "AMF stops T3550 and enters 5GMM-REGISTERED state Type: state",
+            "dataset_2": "v2",
+            "cosine_similarity": 0.8467047214508057,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_reject_sent",
+            "description_1": "AMF sends REGISTRATION REJECT Type: event",
+            "dataset_1": "v1",
+            "id_2": "event_reg_reject",
+            "description_2": "AMF sends REGISTRATION REJECT to UE Type: event",
+            "dataset_2": "v2",
+            "cosine_similarity": 0.9261401891708374,
+            "valid": true
+        },
+        {
+            "id_1": "state_deregistered",
+            "description_1": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_1": "v1",
+            "id_2": "state_deregistered",
+            "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_2": "v3",
+            "cosine_similarity": 1.0,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_req_sent",
+            "description_1": "UE sends REGISTRATION REQUEST Type: event",
+            "dataset_1": "v1",
+            "id_2": "event_reg_req",
+            "description_2": "UE sends REGISTRATION REQUEST to AMF Type: event",
+            "dataset_2": "v3",
+            "cosine_similarity": 0.8476061224937439,
+            "valid": true
+        },
+        {
+            "id_1": "state_common_proc",
+            "description_1": "AMF may initiate 5GMM common procedures Type: state",
+            "dataset_1": "v1",
+            "id_2": "state_common_proc_initiated",
+            "description_2": "AMF in 5GMM-COMMON-PROCEDURE-INITIATED state Type: state",
+            "dataset_2": "v3",
+            "cosine_similarity": 0.9197993278503418,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_accept_sent",
+            "description_1": "AMF sends REGISTRATION ACCEPT Type: event",
+            "dataset_1": "v1",
+            "id_2": "event_reg_accept",
+            "description_2": "AMF sends REGISTRATION ACCEPT to UE Type: event",
+            "dataset_2": "v3",
+            "cosine_similarity": 0.9216248989105225,
+            "valid": true
+        },
+        {
+            "id_1": "state_registered",
+            "description_1": "UE enters 5GMM-REGISTERED state Type: state",
+            "dataset_1": "v1",
+            "id_2": "state_registered",
+            "description_2": "UE in 5GMM-REGISTERED state Type: state",
+            "dataset_2": "v3",
+            "cosine_similarity": 0.9708125591278076,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_complete_sent",
+            "description_1": "UE sends REGISTRATION COMPLETE Type: event",
+            "dataset_1": "v1",
+            "id_2": "event_reg_complete_needed",
+            "description_2": "UE needs to send REGISTRATION COMPLETE Type: event",
+            "dataset_2": "v3",
+            "cosine_similarity": 0.9267313480377197,
+            "valid": true
+        },
+        {
+            "id_1": "state_deregistered",
+            "description_1": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_1": "v1",
+            "id_2": "state_deregistered",
+            "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_2": "v4",
+            "cosine_similarity": 1.0,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_req_sent",
+            "description_1": "UE sends REGISTRATION REQUEST Type: event",
+            "dataset_1": "v1",
+            "id_2": "event_reg_req",
+            "description_2": "UE sends REGISTRATION REQUEST message to AMF Type: event",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.8469802141189575,
+            "valid": true
+        },
+        {
+            "id_1": "state_common_proc",
+            "description_1": "AMF may initiate 5GMM common procedures Type: state",
+            "dataset_1": "v1",
+            "id_2": "state_amf_registered",
+            "description_2": "AMF in 5GMM-REGISTERED state Type: state",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.801787257194519,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_accept_sent",
+            "description_1": "AMF sends REGISTRATION ACCEPT Type: event",
+            "dataset_1": "v1",
+            "id_2": "event_reg_accept",
+            "description_2": "AMF sends REGISTRATION ACCEPT message to UE Type: event",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9080724716186523,
+            "valid": true
+        },
+        {
+            "id_1": "state_registered",
+            "description_1": "UE enters 5GMM-REGISTERED state Type: state",
+            "dataset_1": "v1",
+            "id_2": "state_registered",
+            "description_2": "UE in 5GMM-REGISTERED state Type: state",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9708125591278076,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_complete_sent",
+            "description_1": "UE sends REGISTRATION COMPLETE Type: event",
+            "dataset_1": "v1",
+            "id_2": "event_reg_complete",
+            "description_2": "UE sends REGISTRATION COMPLETE message to AMF Type: event",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.848802387714386,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_reject_sent",
+            "description_1": "AMF sends REGISTRATION REJECT Type: event",
+            "dataset_1": "v1",
+            "id_2": "event_reg_reject",
+            "description_2": "AMF sends REGISTRATION REJECT message to UE Type: event",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9155625104904175,
+            "valid": true
+        },
+        {
+            "id_1": "state_deregistered",
+            "description_1": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_1": "v2",
+            "id_2": "state_deregistered",
+            "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_2": "v3",
+            "cosine_similarity": 1.0,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_req",
+            "description_1": "UE sends REGISTRATION REQUEST to AMF Type: event",
+            "dataset_1": "v2",
+            "id_2": "event_reg_req",
+            "description_2": "UE sends REGISTRATION REQUEST to AMF Type: event",
+            "dataset_2": "v3",
+            "cosine_similarity": 0.9999998807907104,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_accept",
+            "description_1": "AMF sends REGISTRATION ACCEPT to UE Type: event",
+            "dataset_1": "v2",
+            "id_2": "event_reg_accept",
+            "description_2": "AMF sends REGISTRATION ACCEPT to UE Type: event",
+            "dataset_2": "v3",
+            "cosine_similarity": 1.0,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_complete",
+            "description_1": "UE sends REGISTRATION COMPLETE to AMF (if conditions met) Type: event",
+            "dataset_1": "v2",
+            "id_2": "event_reg_complete",
+            "description_2": "UE sends REGISTRATION COMPLETE to AMF Type: event",
+            "dataset_2": "v3",
+            "cosine_similarity": 0.9539054036140442,
+            "valid": true
+        },
+        {
+            "id_1": "state_amf_registered",
+            "description_1": "AMF stops T3550 and enters 5GMM-REGISTERED state Type: state",
+            "dataset_1": "v2",
+            "id_2": "state_common_proc_initiated",
+            "description_2": "AMF in 5GMM-COMMON-PROCEDURE-INITIATED state Type: state",
+            "dataset_2": "v3",
+            "cosine_similarity": 0.7081564664840698,
+            "valid": true
+        },
+        {
+            "id_1": "state_deregistered",
+            "description_1": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_1": "v2",
+            "id_2": "state_deregistered",
+            "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_2": "v4",
+            "cosine_similarity": 1.0,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_req",
+            "description_1": "UE sends REGISTRATION REQUEST to AMF Type: event",
+            "dataset_1": "v2",
+            "id_2": "event_reg_req",
+            "description_2": "UE sends REGISTRATION REQUEST message to AMF Type: event",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9730929732322693,
+            "valid": true
+        },
+        {
+            "id_1": "state_t3510_running",
+            "description_1": "UE has T3510 running Type: state",
+            "dataset_1": "v2",
+            "id_2": "state_t3510_running",
+            "description_2": "UE with T3510 running Type: state",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9607345461845398,
+            "valid": true
+        },
+        {
+            "id_1": "event_auth_sec",
+            "description_1": "Network performs authentication and security procedures Type: event",
+            "dataset_1": "v2",
+            "id_2": "event_network_procedures",
+            "description_2": "Network initiates 5GMM common procedures (e.g., identification, authentication, security) Type: event",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.7099865674972534,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_accept",
+            "description_1": "AMF sends REGISTRATION ACCEPT to UE Type: event",
+            "dataset_1": "v2",
+            "id_2": "event_reg_accept",
+            "description_2": "AMF sends REGISTRATION ACCEPT message to UE Type: event",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9737899303436279,
+            "valid": true
+        },
+        {
+            "id_1": "state_amf_registered",
+            "description_1": "AMF stops T3550 and enters 5GMM-REGISTERED state Type: state",
+            "dataset_1": "v2",
+            "id_2": "state_amf_registered",
+            "description_2": "AMF in 5GMM-REGISTERED state Type: state",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.7683718204498291,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_reject",
+            "description_1": "AMF sends REGISTRATION REJECT to UE Type: event",
+            "dataset_1": "v2",
+            "id_2": "event_reg_reject",
+            "description_2": "AMF sends REGISTRATION REJECT message to UE Type: event",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9822003245353699,
+            "valid": true
+        },
+        {
+            "id_1": "state_deregistered",
+            "description_1": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_1": "v3",
+            "id_2": "state_deregistered",
+            "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
+            "dataset_2": "v4",
+            "cosine_similarity": 1.0,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_req",
+            "description_1": "UE sends REGISTRATION REQUEST to AMF Type: event",
+            "dataset_1": "v3",
+            "id_2": "event_reg_req",
+            "description_2": "UE sends REGISTRATION REQUEST message to AMF Type: event",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9730929732322693,
+            "valid": true
+        },
+        {
+            "id_1": "state_reg_accepted",
+            "description_1": "AMF accepts registration Type: state",
+            "dataset_1": "v3",
+            "id_2": "state_amf_processing",
+            "description_2": "AMF processing Registration Request Type: state",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.8704900741577148,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_accept",
+            "description_1": "AMF sends REGISTRATION ACCEPT to UE Type: event",
+            "dataset_1": "v3",
+            "id_2": "event_reg_accept",
+            "description_2": "AMF sends REGISTRATION ACCEPT message to UE Type: event",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9737899303436279,
+            "valid": true
+        },
+        {
+            "id_1": "state_common_proc_initiated",
+            "description_1": "AMF in 5GMM-COMMON-PROCEDURE-INITIATED state Type: state",
+            "dataset_1": "v3",
+            "id_2": "state_amf_registered",
+            "description_2": "AMF in 5GMM-REGISTERED state Type: state",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.8697433471679688,
+            "valid": true
+        },
+        {
+            "id_1": "state_registered",
+            "description_1": "UE in 5GMM-REGISTERED state Type: state",
+            "dataset_1": "v3",
+            "id_2": "state_registered",
+            "description_2": "UE in 5GMM-REGISTERED state Type: state",
+            "dataset_2": "v4",
+            "cosine_similarity": 1.0,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_complete",
+            "description_1": "UE sends REGISTRATION COMPLETE to AMF Type: event",
+            "dataset_1": "v3",
+            "id_2": "event_reg_complete",
+            "description_2": "UE sends REGISTRATION COMPLETE message to AMF Type: event",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.962253987789154,
+            "valid": true
+        }
+    ],
+    "edge_matches": [
+        {
+            "id_1": "state_deregistered->event_reg_req_sent",
+            "description_1": "UE initiates registration procedure Type: trigger",
+            "dataset_1": "v1",
+            "id_2": "state_deregistered->event_reg_req",
+            "description_2": "UE initiates registration Type: trigger",
+            "dataset_2": "v2",
+            "cosine_similarity": 0.9410258531570435,
+            "valid": true
+        },
+        {
+            "id_1": "state_deregistered->timer_t3510_start",
+            "description_1": "UE starts timer T3510 Type: trigger",
+            "dataset_1": "v1",
+            "id_2": "event_reg_req->state_t3510_running",
+            "description_2": "UE starts timer T3510 Type: trigger",
+            "dataset_2": "v2",
+            "cosine_similarity": 1.0000001192092896,
+            "valid": true
+        },
+        {
+            "id_1": "state_deregistered->timer_t3502_stop",
+            "description_1": "UE stops timer T3502 if running Type: trigger",
+            "dataset_1": "v1",
+            "id_2": "state_t3510_running->state_timers_stopped",
+            "description_2": "UE stops timers T3502 and T3511 (if running) Type: trigger",
+            "dataset_2": "v2",
+            "cosine_similarity": 0.9667417407035828,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_req_sent->state_common_proc",
+            "description_1": "AMF receives REGISTRATION REQUEST Type: trigger",
+            "dataset_1": "v1",
+            "id_2": "event_reg_complete->state_amf_registered",
+            "description_2": "AMF receives REGISTRATION COMPLETE Type: trigger",
+            "dataset_2": "v2",
+            "cosine_similarity": 0.917860209941864,
+            "valid": true
+        },
+        {
+            "id_1": "state_common_proc->decision_reg_accepted",
+            "description_1": "Initial registration request processing Type: condition",
+            "dataset_1": "v1",
+            "id_2": "event_auth_sec->event_reg_accept",
+            "description_2": "Initial registration request accepted by network Type: condition",
+            "dataset_2": "v2",
+            "cosine_similarity": 0.7793756723403931,
+            "valid": true
+        },
+        {
+            "id_1": "state_registered->decision_net_slice_ind",
+            "description_1": "REGISTRATION ACCEPT contains Network slicing indication IE with new network slicing information? Type: condition",
+            "dataset_1": "v1",
+            "id_2": "state_registered->event_reg_complete",
+            "description_2": "If Network slicing indication IE with Network slicing subscription change indication set to \"Network slicing subscription changed\" is included in REGISTRATION ACCEPT Type: condition",
+            "dataset_2": "v2",
+            "cosine_similarity": 0.8890154361724854,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_req_sent->state_common_proc",
+            "description_1": "AMF receives REGISTRATION REQUEST Type: trigger",
+            "dataset_1": "v1",
+            "id_2": "event_reg_req->state_auth_proc",
+            "description_2": "AMF receives REGISTRATION REQUEST Type: trigger",
+            "dataset_2": "v3",
+            "cosine_similarity": 1.0000001192092896,
+            "valid": true
+        },
+        {
+            "id_1": "decision_reg_accepted->event_reg_accept_sent",
+            "description_1": "Registration Accepted Type: condition",
+            "dataset_1": "v1",
+            "id_2": "event_reg_accept->state_common_proc_initiated",
+            "description_2": "REGISTRATION ACCEPT contains specific IEs Type: condition",
+            "dataset_2": "v3",
+            "cosine_similarity": 0.7098727226257324,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_complete_sent->timer_t3550_stop",
+            "description_1": "UE sends REGISTRATION COMPLETE Type: trigger",
+            "dataset_1": "v1",
+            "id_2": "event_reg_complete->state_reg_complete_received",
+            "description_2": "UE sends REGISTRATION COMPLETE Type: trigger",
+            "dataset_2": "v3",
+            "cosine_similarity": 1.0000001192092896,
+            "valid": true
+        },
+        {
+            "id_1": "state_deregistered->event_reg_req_sent",
+            "description_1": "UE initiates registration procedure Type: trigger",
+            "dataset_1": "v1",
+            "id_2": "state_deregistered->event_reg_req",
+            "description_2": "UE initiates registration Type: trigger",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9410258531570435,
+            "valid": true
+        },
+        {
+            "id_1": "state_deregistered->timer_t3510_start",
+            "description_1": "UE starts timer T3510 Type: trigger",
+            "dataset_1": "v1",
+            "id_2": "event_reg_req->state_t3510_running",
+            "description_2": "UE starts timer T3510 Type: trigger",
+            "dataset_2": "v4",
+            "cosine_similarity": 1.0000001192092896,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_req_sent->state_common_proc",
+            "description_1": "AMF receives REGISTRATION REQUEST Type: trigger",
+            "dataset_1": "v1",
+            "id_2": "state_t3510_running->state_amf_processing",
+            "description_2": "REGISTRATION REQUEST received by AMF Type: trigger",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9735298752784729,
+            "valid": true
+        },
+        {
+            "id_1": "state_common_proc->decision_reg_accepted",
+            "description_1": "Initial registration request processing Type: condition",
+            "dataset_1": "v1",
+            "id_2": "state_amf_processing->event_reg_accept",
+            "description_2": "Initial registration request accepted by network Type: condition",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.7793756723403931,
+            "valid": true
+        },
+        {
+            "id_1": "state_registered->decision_net_slice_ind",
+            "description_1": "REGISTRATION ACCEPT contains Network slicing indication IE with new network slicing information? Type: condition",
+            "dataset_1": "v1",
+            "id_2": "state_registered->event_reg_complete",
+            "description_2": "Conditions met to send REGISTRATION COMPLETE (e.g., Network slicing indication changed) Type: condition",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.8382900357246399,
+            "valid": true
+        },
+        {
+            "id_1": "state_deregistered->event_reg_req",
+            "description_1": "UE initiates registration Type: trigger",
+            "dataset_1": "v2",
+            "id_2": "event_reg_complete->state_reg_complete_received",
+            "description_2": "UE sends REGISTRATION COMPLETE Type: trigger",
+            "dataset_2": "v3",
+            "cosine_similarity": 0.8935622572898865,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_complete->state_amf_registered",
+            "description_1": "AMF receives REGISTRATION COMPLETE Type: trigger",
+            "dataset_1": "v2",
+            "id_2": "event_auth_success->state_reg_accepted",
+            "description_2": "AMF accepts registration Type: trigger",
+            "dataset_2": "v3",
+            "cosine_similarity": 0.9303632378578186,
+            "valid": true
+        },
+        {
+            "id_1": "state_deregistered->event_reg_req",
+            "description_1": "UE initiates registration Type: trigger",
+            "dataset_1": "v2",
+            "id_2": "state_deregistered->event_reg_req",
+            "description_2": "UE initiates registration Type: trigger",
+            "dataset_2": "v4",
+            "cosine_similarity": 1.0000001192092896,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_req->state_t3510_running",
+            "description_1": "UE starts timer T3510 Type: trigger",
+            "dataset_1": "v2",
+            "id_2": "event_reg_req->state_t3510_running",
+            "description_2": "UE starts timer T3510 Type: trigger",
+            "dataset_2": "v4",
+            "cosine_similarity": 1.0000001192092896,
+            "valid": true
+        },
+        {
+            "id_1": "event_auth_sec->event_reg_accept",
+            "description_1": "Initial registration request accepted by network Type: condition",
+            "dataset_1": "v2",
+            "id_2": "state_amf_processing->event_reg_accept",
+            "description_2": "Initial registration request accepted by network Type: condition",
+            "dataset_2": "v4",
+            "cosine_similarity": 1.0000001192092896,
+            "valid": true
+        },
+        {
+            "id_1": "event_auth_sec->event_reg_reject",
+            "description_1": "Initial registration request cannot be accepted by network Type: condition",
+            "dataset_1": "v2",
+            "id_2": "state_amf_processing->event_reg_reject",
+            "description_2": "Initial registration request cannot be accepted by network Type: condition",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9999999403953552,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_accept->state_tai_list_stored",
+            "description_1": "UE receives REGISTRATION ACCEPT Type: trigger",
+            "dataset_1": "v2",
+            "id_2": "event_reg_accept->state_registered",
+            "description_2": "UE receives REGISTRATION ACCEPT message Type: trigger",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9491708278656006,
+            "valid": true
+        },
+        {
+            "id_1": "state_registered->event_reg_complete",
+            "description_1": "If Network slicing indication IE with Network slicing subscription change indication set to \"Network slicing subscription changed\" is included in REGISTRATION ACCEPT Type: condition",
+            "dataset_1": "v2",
+            "id_2": "state_registered->event_reg_complete",
+            "description_2": "Conditions met to send REGISTRATION COMPLETE (e.g., Network slicing indication changed) Type: condition",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.734843909740448,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_complete->state_amf_registered",
+            "description_1": "AMF receives REGISTRATION COMPLETE Type: trigger",
+            "dataset_1": "v2",
+            "id_2": "event_reg_complete->state_amf_registered",
+            "description_2": "AMF receives REGISTRATION COMPLETE message Type: trigger",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9406224489212036,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_reject->state_deregistered",
+            "description_1": "UE receives REGISTRATION REJECT Type: trigger",
+            "dataset_1": "v2",
+            "id_2": "event_reg_reject->state_deregistered",
+            "description_2": "UE receives REGISTRATION REJECT message Type: trigger",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9627474546432495,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_req->state_auth_proc",
+            "description_1": "AMF receives REGISTRATION REQUEST Type: trigger",
+            "dataset_1": "v3",
+            "id_2": "state_t3510_running->state_amf_processing",
+            "description_2": "REGISTRATION REQUEST received by AMF Type: trigger",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.9735298752784729,
+            "valid": true
+        },
+        {
+            "id_1": "event_reg_complete->state_reg_complete_received",
+            "description_1": "UE sends REGISTRATION COMPLETE Type: trigger",
+            "dataset_1": "v3",
+            "id_2": "state_deregistered->event_reg_req",
+            "description_2": "UE initiates registration Type: trigger",
+            "dataset_2": "v4",
+            "cosine_similarity": 0.8935622572898865,
+            "valid": true
+        }
+    ],
+    "unmatched_nodes": [
+        {
+            "id": "timer_t3510_start",
+            "description": "UE starts timer T3510 Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3511_stop",
+            "description": "UE stops timer T3511 (if running) Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_common_proc",
+            "description": "AMF may initiate 5GMM common procedures Type: state",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_accepted",
+            "description": "Decision: Initial registration request accepted? Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3550_start",
+            "description": "AMF starts timer T3550 and enters state 5GMM-COMMON-PROCEDURE-INITIATED Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_registered",
+            "description": "UE enters 5GMM-REGISTERED state Type: state",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_net_slice_ind",
+            "description": "Decision: REGISTRATION ACCEPT contains Network slicing indication IE with new network slicing information? Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_rejected",
+            "description": "Decision: Initial registration request rejected? Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_ue_reject_action",
+            "description": "UE takes action based on 5GMM cause in REGISTRATION REJECT Type: state",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3510_start",
+            "description": "UE starts timer T3510 Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3502_stop",
+            "description": "UE stops timer T3502 (if running) Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3511_stop",
+            "description": "UE stops timer T3511 (if running) Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_accepted",
+            "description": "Decision: Initial registration request accepted? Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3550_start",
+            "description": "AMF starts timer T3550 and enters state 5GMM-COMMON-PROCEDURE-INITIATED Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_net_slice_ind",
+            "description": "Decision: REGISTRATION ACCEPT contains Network slicing indication IE with new network slicing information? Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3550_stop",
+            "description": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_rejected",
+            "description": "Decision: Initial registration request rejected? Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "event_reg_reject_sent",
+            "description": "AMF sends REGISTRATION REJECT Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_ue_reject_action",
+            "description": "UE takes action based on 5GMM cause in REGISTRATION REJECT Type: state",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3510_start",
+            "description": "UE starts timer T3510 Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3502_stop",
+            "description": "UE stops timer T3502 (if running) Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3511_stop",
+            "description": "UE stops timer T3511 (if running) Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_accepted",
+            "description": "Decision: Initial registration request accepted? Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3550_start",
+            "description": "AMF starts timer T3550 and enters state 5GMM-COMMON-PROCEDURE-INITIATED Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_net_slice_ind",
+            "description": "Decision: REGISTRATION ACCEPT contains Network slicing indication IE with new network slicing information? Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3550_stop",
+            "description": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_rejected",
+            "description": "Decision: Initial registration request rejected? Type: event",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_ue_reject_action",
+            "description": "UE takes action based on 5GMM cause in REGISTRATION REJECT Type: state",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_t3510_running",
+            "description": "UE has T3510 running Type: state",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_timers_stopped",
+            "description": "UE has T3502 and T3511 stopped (if running) Type: state",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_t3519_running",
+            "description": "UE has T3519 running (if SUCI included and T3519 not running) Type: state",
+            "dataset": "v2"
+        },
+        {
+            "id": "event_auth_sec",
+            "description": "Network performs authentication and security procedures Type: event",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored",
+            "description": "UE stores received TAI list and deletes old one Type: state",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_amf_timer_started",
+            "description": "AMF starts T3550 (if conditions met) Type: state",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_registered",
+            "description": "UE enters 5GMM-REGISTERED state, resets attempt counter, sets 5GS update status to 5U1 UPDATED Type: state",
+            "dataset": "v2"
+        },
+        {
+            "id": "event_reg_reject",
+            "description": "AMF sends REGISTRATION REJECT to UE Type: event",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_timers_stopped",
+            "description": "UE has T3502 and T3511 stopped (if running) Type: state",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_t3519_running",
+            "description": "UE has T3519 running (if SUCI included and T3519 not running) Type: state",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored",
+            "description": "UE stores received TAI list and deletes old one Type: state",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_amf_timer_started",
+            "description": "AMF starts T3550 (if conditions met) Type: state",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_registered",
+            "description": "UE enters 5GMM-REGISTERED state, resets attempt counter, sets 5GS update status to 5U1 UPDATED Type: state",
+            "dataset": "v2"
+        },
+        {
+            "id": "event_reg_complete",
+            "description": "UE sends REGISTRATION COMPLETE to AMF (if conditions met) Type: event",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_auth_proc",
+            "description": "Authentication procedure initiated Type: state",
+            "dataset": "v3"
+        },
+        {
+            "id": "event_auth_success",
+            "description": "Authentication Successful Type: event",
+            "dataset": "v3"
+        },
+        {
+            "id": "event_reg_complete_needed",
+            "description": "UE needs to send REGISTRATION COMPLETE Type: event",
+            "dataset": "v3"
+        },
+        {
+            "id": "state_reg_complete_received",
+            "description": "AMF receives REGISTRATION COMPLETE Type: state",
+            "dataset": "v3"
+        }
+    ],
+    "unmatched_edges": [
+        {
+            "id": "state_deregistered->timer_t3511_stop",
+            "description": "UE stops timer T3511 if running Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_accepted->event_reg_accept_sent",
+            "description": "Registration Accepted Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_accepted->decision_reg_rejected",
+            "description": "Registration Rejected Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "event_reg_accept_sent->timer_t3550_start",
+            "description": "AMF sends REGISTRATION ACCEPT Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3550_start->state_registered",
+            "description": "UE receives REGISTRATION ACCEPT, resets counter, enters 5GMM-REGISTERED Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_net_slice_ind->event_reg_complete_sent",
+            "description": "Network slicing indication IE present Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "event_reg_complete_sent->timer_t3550_stop",
+            "description": "UE sends REGISTRATION COMPLETE Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_net_slice_ind->timer_t3550_stop",
+            "description": "Network slicing indication IE not present Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_rejected->event_reg_reject_sent",
+            "description": "Registration Rejected Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "event_reg_reject_sent->state_ue_reject_action",
+            "description": "AMF sends REGISTRATION REJECT Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_ue_reject_action->state_deregistered",
+            "description": "UE takes action based on 5GMM cause and returns to deregistered state Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_deregistered->event_reg_req_sent",
+            "description": "UE initiates registration procedure Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_deregistered->timer_t3510_start",
+            "description": "UE starts timer T3510 Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_deregistered->timer_t3502_stop",
+            "description": "UE stops timer T3502 if running Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_deregistered->timer_t3511_stop",
+            "description": "UE stops timer T3511 if running Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_common_proc->decision_reg_accepted",
+            "description": "Initial registration request processing Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_accepted->decision_reg_rejected",
+            "description": "Registration Rejected Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "event_reg_accept_sent->timer_t3550_start",
+            "description": "AMF sends REGISTRATION ACCEPT Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3550_start->state_registered",
+            "description": "UE receives REGISTRATION ACCEPT, resets counter, enters 5GMM-REGISTERED Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_registered->decision_net_slice_ind",
+            "description": "REGISTRATION ACCEPT contains Network slicing indication IE with new network slicing information? Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_net_slice_ind->event_reg_complete_sent",
+            "description": "Network slicing indication IE present Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_net_slice_ind->timer_t3550_stop",
+            "description": "Network slicing indication IE not present Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_rejected->event_reg_reject_sent",
+            "description": "Registration Rejected Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "event_reg_reject_sent->state_ue_reject_action",
+            "description": "AMF sends REGISTRATION REJECT Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_ue_reject_action->state_deregistered",
+            "description": "UE takes action based on 5GMM cause and returns to deregistered state Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_deregistered->timer_t3502_stop",
+            "description": "UE stops timer T3502 if running Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_deregistered->timer_t3511_stop",
+            "description": "UE stops timer T3511 if running Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_accepted->event_reg_accept_sent",
+            "description": "Registration Accepted Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_accepted->decision_reg_rejected",
+            "description": "Registration Rejected Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "event_reg_accept_sent->timer_t3550_start",
+            "description": "AMF sends REGISTRATION ACCEPT Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "timer_t3550_start->state_registered",
+            "description": "UE receives REGISTRATION ACCEPT, resets counter, enters 5GMM-REGISTERED Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_net_slice_ind->event_reg_complete_sent",
+            "description": "Network slicing indication IE present Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "event_reg_complete_sent->timer_t3550_stop",
+            "description": "UE sends REGISTRATION COMPLETE Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_net_slice_ind->timer_t3550_stop",
+            "description": "Network slicing indication IE not present Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "decision_reg_rejected->event_reg_reject_sent",
+            "description": "Registration Rejected Type: condition",
+            "dataset": "v1"
+        },
+        {
+            "id": "event_reg_reject_sent->state_ue_reject_action",
+            "description": "AMF sends REGISTRATION REJECT Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "state_ue_reject_action->state_deregistered",
+            "description": "UE takes action based on 5GMM cause and returns to deregistered state Type: trigger",
+            "dataset": "v1"
+        },
+        {
+            "id": "event_reg_req->state_t3510_running",
+            "description": "UE starts timer T3510 Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_t3510_running->state_timers_stopped",
+            "description": "UE stops timers T3502 and T3511 (if running) Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_timers_stopped->state_t3519_running",
+            "description": "If SUCI included and T3519 not running, UE starts T3519 Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_timers_stopped->event_auth_sec",
+            "description": "Network may initiate authentication and security procedures Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_t3519_running->event_auth_sec",
+            "description": "Network may initiate authentication and security procedures Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "event_auth_sec->event_reg_accept",
+            "description": "Initial registration request accepted by network Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "event_auth_sec->event_reg_reject",
+            "description": "Initial registration request cannot be accepted by network Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "event_reg_accept->state_tai_list_stored",
+            "description": "UE receives REGISTRATION ACCEPT Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored->state_amf_timer_started",
+            "description": "If 5G-GUTI or SOR transparent container IE is included in REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored->state_amf_timer_started",
+            "description": "If Operator-defined access category definitions IE, the Extended emergency number list IE, the CAG information list IE or the Extended CAG information list IE are included in the REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored->state_amf_timer_started",
+            "description": "If UE set RCMAP bit and Negotiated PEIPS assistance information IE is included in REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored->state_amf_timer_started",
+            "description": "If UE is not in NB-N1 mode, UE set RACS bit and UE radio capability ID IE or UE radio capability ID deletion indication IE is included in REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored->state_registered",
+            "description": "UE receives REGISTRATION ACCEPT Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_amf_timer_started->state_registered",
+            "description": "UE receives REGISTRATION ACCEPT Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_registered->event_reg_complete",
+            "description": "If Network slicing indication IE with Network slicing subscription change indication set to \"Network slicing subscription changed\" is included in REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_registered->event_reg_complete",
+            "description": "If UE set RCMAN bit and NSAG information IE is included in REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_registered->event_reg_complete",
+            "description": "If REGISTRATION ACCEPT contains Operator-defined access category definitions IE, the Extended emergency number list IE ,the CAG information list IE or the Extended CAG information list IE Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_registered->event_reg_complete",
+            "description": "If UE set RCMAP bit and Negotiated PEIPS assistance information IE is included in REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_registered->event_reg_complete",
+            "description": "If REGISTRATION ACCEPT contains UE radio capability ID IE or UE radio capability ID deletion indication IE Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "event_reg_reject->state_deregistered",
+            "description": "UE receives REGISTRATION REJECT Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_t3510_running->state_timers_stopped",
+            "description": "UE stops timers T3502 and T3511 (if running) Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_timers_stopped->state_t3519_running",
+            "description": "If SUCI included and T3519 not running, UE starts T3519 Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_timers_stopped->event_auth_sec",
+            "description": "Network may initiate authentication and security procedures Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_t3519_running->event_auth_sec",
+            "description": "Network may initiate authentication and security procedures Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored->state_amf_timer_started",
+            "description": "If 5G-GUTI or SOR transparent container IE is included in REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored->state_amf_timer_started",
+            "description": "If Operator-defined access category definitions IE, the Extended emergency number list IE, the CAG information list IE or the Extended CAG information list IE are included in the REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored->state_amf_timer_started",
+            "description": "If UE set RCMAP bit and Negotiated PEIPS assistance information IE is included in REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored->state_amf_timer_started",
+            "description": "If UE is not in NB-N1 mode, UE set RACS bit and UE radio capability ID IE or UE radio capability ID deletion indication IE is included in REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_tai_list_stored->state_registered",
+            "description": "UE receives REGISTRATION ACCEPT Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_amf_timer_started->state_registered",
+            "description": "UE receives REGISTRATION ACCEPT Type: trigger",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_registered->event_reg_complete",
+            "description": "If UE set RCMAN bit and NSAG information IE is included in REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_registered->event_reg_complete",
+            "description": "If REGISTRATION ACCEPT contains Operator-defined access category definitions IE, the Extended emergency number list IE ,the CAG information list IE or the Extended CAG information list IE Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_registered->event_reg_complete",
+            "description": "If UE set RCMAP bit and Negotiated PEIPS assistance information IE is included in REGISTRATION ACCEPT Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_registered->event_reg_complete",
+            "description": "If REGISTRATION ACCEPT contains UE radio capability ID IE or UE radio capability ID deletion indication IE Type: condition",
+            "dataset": "v2"
+        },
+        {
+            "id": "state_deregistered->event_reg_req",
+            "description": "UE needs to register Type: trigger",
+            "dataset": "v3"
+        },
+        {
+            "id": "state_auth_proc->event_auth_success",
+            "description": "Authentication Successful Type: condition",
+            "dataset": "v3"
+        },
+        {
+            "id": "event_auth_success->state_reg_accepted",
+            "description": "AMF accepts registration Type: trigger",
+            "dataset": "v3"
+        },
+        {
+            "id": "state_reg_accepted->event_reg_accept",
+            "description": "AMF accepts the initial registration request Type: trigger",
+            "dataset": "v3"
+        },
+        {
+            "id": "event_reg_accept->state_common_proc_initiated",
+            "description": "REGISTRATION ACCEPT contains specific IEs Type: condition",
+            "dataset": "v3"
+        },
+        {
+            "id": "event_reg_accept->state_registered",
+            "description": "REGISTRATION ACCEPT does not contain specific IEs Type: condition",
+            "dataset": "v3"
+        },
+        {
+            "id": "state_common_proc_initiated->event_reg_accept",
+            "description": "AMF needs to update the UE with UE radio capability ID, PEIPS assistance information, new network slicing information, alternative S-NSSAI information, UE radio capability ID Deletion, Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list or Truncated 5G-S-TMSI configuration Type: trigger",
+            "dataset": "v3"
+        },
+        {
+            "id": "event_reg_accept->event_reg_complete_needed",
+            "description": "UE needs to acknowledge updated network slicing information, Truncated 5G-S-TMSI configuration IE, UE radio capability ID IE, PEIPS assistance information, new NSAG information or receive Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list Type: condition",
+            "dataset": "v3"
+        },
+        {
+            "id": "event_reg_complete_needed->event_reg_complete",
+            "description": "UE receives REGISTRATION ACCEPT with specific IEs Type: trigger",
+            "dataset": "v3"
+        },
+        {
+            "id": "state_registered->event_reg_complete_needed",
+            "description": "UE receives an registration accept message that contains update for network slicing information, Truncated 5G-S-TMSI configuration IE, UE radio capability ID IE, PEIPS assistance information, new NSAG information or Operator-defined access category definitions, the Extended emergency number list, the CAG information list, the Extended CAG information list Type: trigger",
+            "dataset": "v3"
+        }
+    ]
+}

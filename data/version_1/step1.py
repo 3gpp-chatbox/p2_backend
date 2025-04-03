@@ -101,12 +101,12 @@ def process_text_file(input_file_path, section_name):
     return procedural_info
 
 # Example usage: Processing a text file
-input_file_path = "5.5.1.2.txt"  # Path to your input text file
+input_file_path = "data/version_1/5.5.1.2.txt"  # Path to your input text file
 section_name = "Registration procedure for initial registration"  # Name of the section/procedure
 
 procedural_info = process_text_file(input_file_path, section_name)
 
 if procedural_info:
-    save_procedural_info_to_json(procedural_info, "step1.json")
+    save_procedural_info_to_json(procedural_info, "data/version_1/step1.json")
 else:
     print("Failed to extract procedural information")

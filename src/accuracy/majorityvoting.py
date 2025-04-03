@@ -1,165 +1,97 @@
 import json
-from collections import Counter
-from typing import List, Dict, Any
+from collections import defaultdict
+from itertools import combinations
 
-def load_dataset(file_path: str) -> Dict[str, Any]:
-    """Loads a JSON dataset from a file."""
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+# Load all four versions
+version_files = [
+    "data/version_1/step3.json",
+    "data/version_2/v02-step3.json",
+    "data/version_3/step3-v3.json",
+    "data/version_4/step3-v4.json"
+]
+versions = [json.load(open(file))["graph"] for file in version_files]
 
-def majority_vote(values: List[Any]) -> Any:
-    """Performs majority voting on a list of values."""
-    if len(values) == 0:
-        return None  # Handle empty list case
-    counter = Counter(values)
-    most_common, count = counter.most_common(1)[0]
-    return most_common
+# Extract nodes and edges from each version
+node_sets = []
+edge_sets = []
 
-def is_valid(value: Any, all_versions: List[Any]) -> bool:
-    """Check if the value is valid (non-empty and consistent across all versions)."""
-    # If the value is empty, it's invalid
-    if not bool(value):
-        return False
-    
-    # Check if the value is consistent across all versions (e.g., descriptions, types, properties)
-    return all(v == value for v in all_versions)
+for version in versions:
+    nodes = {(node["id"], node["type"], node["description"].strip().lower()) for node in version["nodes"]}
+    edges = {(edge["from"], edge["to"], edge["type"], edge["description"].strip().lower()) for edge in version["edges"]}
+    node_sets.append(nodes)
+    edge_sets.append(edges)
 
-def natural_sort_key(node_id):
-    """Helper function to sort node IDs naturally, handling both strings and numbers."""
-    if str(node_id).isdigit():
-        return (0, int(node_id))  # Numbers come first
-    elif node_id == "start":
-        return (-1, node_id)  # Start comes before numbers
-    elif node_id == "finish":
-        return (2, node_id)  # Finish comes after numbers
-    else:
-        return (1, str(node_id))  # Other strings come between numbers and finish
+# Define majority threshold (3 out of 4 datasets)
+threshold = 3
 
-def compare_procedures(datasets: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Compares multiple versions of the procedure and performs majority voting."""
-    results = {
-        "nodes": [],
-        "edges": []
-    }
+# Count occurrences of nodes and edges
+node_counts = defaultdict(int)
+edge_counts = defaultdict(int)
 
-    # Extract all node IDs across datasets
-    node_ids = set()
-    for dataset in datasets:
-        if dataset and "graph" in dataset and "nodes" in dataset["graph"]:
-            node_ids.update(str(node["id"]) for node in dataset["graph"]["nodes"])
+for nodes, edges in zip(node_sets, edge_sets):
+    for node in nodes:
+        node_counts[node] += 1
+    for edge in edges:
+        edge_counts[edge] += 1
 
-    # Process nodes using majority voting
-    for node_id in sorted(node_ids, key=natural_sort_key):
-        node_data = {
-            "id": node_id,
-            "descriptions": [],
-            "types": [],
-            "properties": []
-        }
+# Find majority agreement nodes and edges
+majority_nodes = {k for k, v in node_counts.items() if v >= threshold}
+majority_edges = {k for k, v in edge_counts.items() if v >= threshold}
 
-        for dataset in datasets:
-            if dataset and "graph" in dataset and "nodes" in dataset["graph"]:
-                for node in dataset["graph"]["nodes"]:
-                    if str(node["id"]) == node_id:
-                        node_data["descriptions"].append(node.get("description", ""))
-                        node_data["types"].append(node.get("type", ""))
-                        node_data["properties"].append(str(node.get("properties", {})))
+# Identify flagged nodes and edges (less than majority)
+flagged_nodes = {k: v for k, v in node_counts.items() if v < threshold}
+flagged_edges = {k: v for k, v in edge_counts.items() if v < threshold}
 
-        # Apply majority voting
-        description_majority = majority_vote(node_data["descriptions"])
-        type_majority = majority_vote(node_data["types"])
-        properties_majority = majority_vote(node_data["properties"])
+# Pairwise comparisons to check dataset similarity
+pairwise_similarities = {}
 
-        # Validate data consistency
-        is_node_valid = (
-            is_valid(description_majority, node_data["descriptions"]) and
-            is_valid(type_majority, node_data["types"]) and
-            is_valid(properties_majority, node_data["properties"])
-        )
+for (i, nodes_i), (j, nodes_j) in combinations(enumerate(node_sets), 2):
+    common_nodes = nodes_i & nodes_j
+    similarity_nodes = len(common_nodes) / max(len(nodes_i), len(nodes_j))  # Jaccard similarity
+    pairwise_similarities[f"Nodes V{i+1} vs V{j+1}"] = similarity_nodes
 
-        results["nodes"].append({
-            "id": node_id,
-            "description_majority": description_majority,
-            "type_majority": type_majority,
-            "properties_majority": properties_majority,
-            "valid": is_node_valid,
-            "all_versions": node_data
-        })
+for (i, edges_i), (j, edges_j) in combinations(enumerate(edge_sets), 2):
+    common_edges = edges_i & edges_j
+    similarity_edges = len(common_edges) / max(len(edges_i), len(edges_j))  # Jaccard similarity
+    pairwise_similarities[f"Edges V{i+1} vs V{j+1}"] = similarity_edges
 
-    # Extract all unique edges across datasets
-    edge_signatures = set()  # Store edges uniquely based on (source, target, type)
-    
-    for dataset in datasets:
-        if dataset and "graph" in dataset and "edges" in dataset["graph"]:
-            for edge in dataset["graph"]["edges"]:
-                from_node = str(edge["from"])
-                to_node = str(edge["to"])
-                edge_type = edge.get("type", "unknown")
-                edge_signatures.add((from_node, to_node, edge_type))
+# Compute overall accuracy metrics
+avg_extracted_nodes = sum(len(nodes) for nodes in node_sets) / len(node_sets)
+avg_extracted_edges = sum(len(edges) for edges in edge_sets) / len(edge_sets)
 
-    # Process edges using majority voting
-    for from_node, to_node, edge_type in sorted(edge_signatures):
-        edge_data = {
-            "from": [],
-            "to": [],
-            "type": [],
-            "properties": []
-        }
+accuracy_nodes = len(majority_nodes) / avg_extracted_nodes
+accuracy_edges = len(majority_edges) / avg_extracted_edges
+disagreement_rate_nodes = len(flagged_nodes) / avg_extracted_nodes
+disagreement_rate_edges = len(flagged_edges) / avg_extracted_edges
 
-        for dataset in datasets:
-            if dataset and "graph" in dataset and "edges" in dataset["graph"]:
-                for edge in dataset["graph"]["edges"]:
-                    if str(edge["from"]) == from_node and str(edge["to"]) == to_node:
-                        edge_data["from"].append(edge["from"])
-                        edge_data["to"].append(edge["to"])
-                        edge_data["type"].append(edge.get("type", "unknown"))
-                        edge_data["properties"].append(str(edge.get("properties", {})))
+# Save results
+results = {
+    "accuracy_nodes": accuracy_nodes,
+    "accuracy_edges": accuracy_edges,
+    "disagreement_rate_nodes": disagreement_rate_nodes,
+    "disagreement_rate_edges": disagreement_rate_edges,
+    "pairwise_similarities": pairwise_similarities,
+    "flagged_nodes": list(flagged_nodes.keys()),
+    "flagged_edges": list(flagged_edges.keys()),
+}
 
-        # Apply majority voting for edges
-        from_majority = majority_vote(edge_data["from"])
-        to_majority = majority_vote(edge_data["to"])
-        type_majority = majority_vote(edge_data["type"])
-        properties_majority = majority_vote(edge_data["properties"])
+with open("src/accuracy/majorityvoting.json", "w") as f:
+    json.dump(results, f, indent=4)
 
-        # Validate edge consistency
-        is_edge_valid = (
-            is_valid(from_majority, edge_data["from"]) and
-            is_valid(to_majority, edge_data["to"]) and
-            is_valid(type_majority, edge_data["type"]) and
-            is_valid(properties_majority, edge_data["properties"])
-        )
+# Print results
+print(f"✅ Node Accuracy: {accuracy_nodes:.2%}")
+print(f"✅ Edge Accuracy: {accuracy_edges:.2%}")
+print(f"⚠️ Node Disagreement Rate: {disagreement_rate_nodes:.2%}")
+print(f"⚠️ Edge Disagreement Rate: {disagreement_rate_edges:.2%}")
 
-        results["edges"].append({
-            "from": from_majority,
-            "to": to_majority,
-            "type": type_majority,
-            "properties": properties_majority,
-            "valid": is_edge_valid,
-            "all_versions": edge_data
-        })
+print("\n🔍 Pairwise Similarities:")
+for pair, score in pairwise_similarities.items():
+    print(f"{pair}: {score:.2%}")
 
-    return results
+print("\n🔍 Nodes flagged for review:")
+for node in flagged_nodes:
+    print(f"{node} (appeared in {flagged_nodes[node]} versions)")
 
-
-def save_results(results: Dict[str, Any], output_path: str):
-    """Saves the comparison results to a JSON file."""
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=4)
-    print(f"Results saved to {output_path}")
-
-if __name__ == "__main__":
-    # Load datasets (v1p1, v2p1, v3p1)
-    v1p3_file = "../../data/version_1/step3.json"
-    v2p3_file = "../../data/version_2/step3-v2.json"
-    v3p3_file = "../../data/version_3/step3-v3.json"
-    
-    print("Loading datasets...")
-    v1p3 = load_dataset(v1p3_file)
-    v2p3 = load_dataset(v2p3_file)
-    v3p3 = load_dataset(v3p3_file)
-
-    print("Comparing procedures using majority voting...")
-    comparison_results = compare_procedures([v1p3, v2p3, v3p3])
-    
-    output_file = "../../src/accuracy/majority_comparison_results.json"
-    save_results(comparison_results, output_file)
+print("\n🔍 Edges flagged for review:")
+for edge in flagged_edges:
+    print(f"{edge} (appeared in {flagged_edges[edge]} versions)")

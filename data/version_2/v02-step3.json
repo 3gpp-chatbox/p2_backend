@@ -1,0 +1,205 @@
+{
+  "graph": {
+    "nodes": [
+      {
+        "id": "state_deregistered",
+        "type": "state",
+        "description": "UE in 5GMM-DEREGISTERED state"
+      },
+      {
+        "id": "event_reg_req",
+        "type": "event",
+        "description": "UE sends REGISTRATION REQUEST to AMF"
+      },
+      {
+        "id": "state_t3510_running",
+        "type": "state",
+        "description": "UE has T3510 running"
+      },
+      {
+        "id": "state_timers_stopped",
+        "type": "state",
+        "description": "UE has T3502 and T3511 stopped (if running)"
+      },
+      {
+        "id": "state_t3519_running",
+        "type": "state",
+        "description": "UE has T3519 running (if SUCI included and T3519 not running)"
+      },
+      {
+        "id": "event_auth_sec",
+        "type": "event",
+        "description": "Network performs authentication and security procedures"
+      },
+      {
+        "id": "event_reg_accept",
+        "type": "event",
+        "description": "AMF sends REGISTRATION ACCEPT to UE"
+      },
+      {
+        "id": "state_tai_list_stored",
+        "type": "state",
+        "description": "UE stores received TAI list and deletes old one"
+      },
+      {
+        "id": "state_amf_timer_started",
+        "type": "state",
+        "description": "AMF starts T3550 (if conditions met)"
+      },
+      {
+        "id": "state_registered",
+        "type": "state",
+        "description": "UE enters 5GMM-REGISTERED state, resets attempt counter, sets 5GS update status to 5U1 UPDATED"
+      },
+      {
+        "id": "event_reg_complete",
+        "type": "event",
+        "description": "UE sends REGISTRATION COMPLETE to AMF (if conditions met)"
+      },
+      {
+        "id": "state_amf_registered",
+        "type": "state",
+        "description": "AMF stops T3550 and enters 5GMM-REGISTERED state"
+      },
+      {
+        "id": "event_reg_reject",
+        "type": "event",
+        "description": "AMF sends REGISTRATION REJECT to UE"
+      }
+    ],
+    "edges": [
+      {
+        "from": "state_deregistered",
+        "to": "event_reg_req",
+        "type": "trigger",
+        "description": "UE initiates registration"
+      },
+      {
+        "from": "event_reg_req",
+        "to": "state_t3510_running",
+        "type": "trigger",
+        "description": "UE starts timer T3510"
+      },
+      {
+        "from": "state_t3510_running",
+        "to": "state_timers_stopped",
+        "type": "trigger",
+        "description": "UE stops timers T3502 and T3511 (if running)"
+      },
+      {
+        "from": "state_timers_stopped",
+        "to": "state_t3519_running",
+        "type": "condition",
+        "description": "If SUCI included and T3519 not running, UE starts T3519"
+      },
+      {
+        "from": "state_timers_stopped",
+        "to": "event_auth_sec",
+        "type": "trigger",
+        "description": "Network may initiate authentication and security procedures"
+      },
+      {
+        "from": "state_t3519_running",
+        "to": "event_auth_sec",
+        "type": "trigger",
+        "description": "Network may initiate authentication and security procedures"
+      },
+      {
+        "from": "event_auth_sec",
+        "to": "event_reg_accept",
+        "type": "condition",
+        "description": "Initial registration request accepted by network"
+      },
+      {
+        "from": "event_auth_sec",
+        "to": "event_reg_reject",
+        "type": "condition",
+        "description": "Initial registration request cannot be accepted by network"
+      },
+      {
+        "from": "event_reg_accept",
+        "to": "state_tai_list_stored",
+        "type": "trigger",
+        "description": "UE receives REGISTRATION ACCEPT"
+      },
+      {
+        "from": "state_tai_list_stored",
+        "to": "state_amf_timer_started",
+        "type": "condition",
+        "description": "If 5G-GUTI or SOR transparent container IE is included in REGISTRATION ACCEPT"
+      },
+      {
+        "from": "state_tai_list_stored",
+        "to": "state_amf_timer_started",
+        "type": "condition",
+        "description": "If Operator-defined access category definitions IE, the Extended emergency number list IE, the CAG information list IE or the Extended CAG information list IE are included in the REGISTRATION ACCEPT"
+      },
+      {
+        "from": "state_tai_list_stored",
+        "to": "state_amf_timer_started",
+        "type": "condition",
+        "description": "If UE set RCMAP bit and Negotiated PEIPS assistance information IE is included in REGISTRATION ACCEPT"
+      },
+      {
+        "from": "state_tai_list_stored",
+        "to": "state_amf_timer_started",
+        "type": "condition",
+        "description": "If UE is not in NB-N1 mode, UE set RACS bit and UE radio capability ID IE or UE radio capability ID deletion indication IE is included in REGISTRATION ACCEPT"
+      },
+      {
+        "from": "state_tai_list_stored",
+        "to": "state_registered",
+        "type": "trigger",
+        "description": "UE receives REGISTRATION ACCEPT"
+      },
+      {
+        "from": "state_amf_timer_started",
+        "to": "state_registered",
+        "type": "trigger",
+        "description": "UE receives REGISTRATION ACCEPT"
+      },
+      {
+        "from": "state_registered",
+        "to": "event_reg_complete",
+        "type": "condition",
+        "description": "If Network slicing indication IE with Network slicing subscription change indication set to \"Network slicing subscription changed\" is included in REGISTRATION ACCEPT"
+      },
+      {
+        "from": "state_registered",
+        "to": "event_reg_complete",
+        "type": "condition",
+        "description": "If UE set RCMAN bit and NSAG information IE is included in REGISTRATION ACCEPT"
+      },
+      {
+        "from": "state_registered",
+        "to": "event_reg_complete",
+        "type": "condition",
+        "description": "If REGISTRATION ACCEPT contains Operator-defined access category definitions IE, the Extended emergency number list IE ,the CAG information list IE or the Extended CAG information list IE"
+      },
+      {
+        "from": "state_registered",
+        "to": "event_reg_complete",
+        "type": "condition",
+        "description": "If UE set RCMAP bit and Negotiated PEIPS assistance information IE is included in REGISTRATION ACCEPT"
+      },
+      {
+        "from": "state_registered",
+        "to": "event_reg_complete",
+        "type": "condition",
+        "description": "If REGISTRATION ACCEPT contains UE radio capability ID IE or UE radio capability ID deletion indication IE"
+      },
+      {
+        "from": "event_reg_complete",
+        "to": "state_amf_registered",
+        "type": "trigger",
+        "description": "AMF receives REGISTRATION COMPLETE"
+      },
+      {
+        "from": "event_reg_reject",
+        "to": "state_deregistered",
+        "type": "trigger",
+        "description": "UE receives REGISTRATION REJECT"
+      }
+    ]
+  }
+}

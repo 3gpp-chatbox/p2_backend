@@ -1,0 +1,593 @@
+{
+    "accuracy_nodes": 0.08,
+    "accuracy_edges": 0.0,
+    "disagreement_rate_nodes": 3.44,
+    "disagreement_rate_edges": 3.8688524590163933,
+    "pairwise_similarities": {
+        "Nodes V1 vs V2": 0.0625,
+        "Nodes V1 vs V3": 0.0625,
+        "Nodes V1 vs V4": 0.0625,
+        "Nodes V2 vs V3": 0.23076923076923078,
+        "Nodes V2 vs V4": 0.07692307692307693,
+        "Nodes V3 vs V4": 0.18181818181818182,
+        "Edges V1 vs V2": 0.0,
+        "Edges V1 vs V3": 0.0,
+        "Edges V1 vs V4": 0.0,
+        "Edges V2 vs V3": 0.0,
+        "Edges V2 vs V4": 0.09090909090909091,
+        "Edges V3 vs V4": 0.0
+    },
+    "flagged_nodes": [
+        [
+            "state_registered",
+            "state",
+            "ue enters 5gmm-registered state"
+        ],
+        [
+            "event_reg_complete_sent",
+            "event",
+            "ue sends registration complete"
+        ],
+        [
+            "decision_reg_accepted",
+            "event",
+            "decision: initial registration request accepted?"
+        ],
+        [
+            "event_reg_reject_sent",
+            "event",
+            "amf sends registration reject"
+        ],
+        [
+            "timer_t3550_start",
+            "event",
+            "amf starts timer t3550 and enters state 5gmm-common-procedure-initiated"
+        ],
+        [
+            "timer_t3511_stop",
+            "event",
+            "ue stops timer t3511 (if running)"
+        ],
+        [
+            "event_reg_req_sent",
+            "event",
+            "ue sends registration request"
+        ],
+        [
+            "state_ue_reject_action",
+            "state",
+            "ue takes action based on 5gmm cause in registration reject"
+        ],
+        [
+            "timer_t3510_start",
+            "event",
+            "ue starts timer t3510"
+        ],
+        [
+            "timer_t3502_stop",
+            "event",
+            "ue stops timer t3502 (if running)"
+        ],
+        [
+            "state_common_proc",
+            "state",
+            "amf may initiate 5gmm common procedures"
+        ],
+        [
+            "timer_t3550_stop",
+            "event",
+            "amf stops timer t3550 and changes to state 5gmm-registered"
+        ],
+        [
+            "decision_net_slice_ind",
+            "event",
+            "decision: registration accept contains network slicing indication ie with new network slicing information?"
+        ],
+        [
+            "decision_reg_rejected",
+            "event",
+            "decision: initial registration request rejected?"
+        ],
+        [
+            "event_reg_accept_sent",
+            "event",
+            "amf sends registration accept"
+        ],
+        [
+            "state_amf_timer_started",
+            "state",
+            "amf starts t3550 (if conditions met)"
+        ],
+        [
+            "event_reg_req",
+            "event",
+            "ue sends registration request to amf"
+        ],
+        [
+            "state_timers_stopped",
+            "state",
+            "ue has t3502 and t3511 stopped (if running)"
+        ],
+        [
+            "event_auth_sec",
+            "event",
+            "network performs authentication and security procedures"
+        ],
+        [
+            "event_reg_accept",
+            "event",
+            "amf sends registration accept to ue"
+        ],
+        [
+            "state_registered",
+            "state",
+            "ue enters 5gmm-registered state, resets attempt counter, sets 5gs update status to 5u1 updated"
+        ],
+        [
+            "state_t3510_running",
+            "state",
+            "ue has t3510 running"
+        ],
+        [
+            "event_reg_complete",
+            "event",
+            "ue sends registration complete to amf (if conditions met)"
+        ],
+        [
+            "state_amf_registered",
+            "state",
+            "amf stops t3550 and enters 5gmm-registered state"
+        ],
+        [
+            "event_reg_reject",
+            "event",
+            "amf sends registration reject to ue"
+        ],
+        [
+            "state_t3519_running",
+            "state",
+            "ue has t3519 running (if suci included and t3519 not running)"
+        ],
+        [
+            "state_tai_list_stored",
+            "state",
+            "ue stores received tai list and deletes old one"
+        ],
+        [
+            "state_auth_proc",
+            "state",
+            "authentication procedure initiated"
+        ],
+        [
+            "event_auth_success",
+            "event",
+            "authentication successful"
+        ],
+        [
+            "state_common_proc_initiated",
+            "state",
+            "amf in 5gmm-common-procedure-initiated state"
+        ],
+        [
+            "state_reg_complete_received",
+            "state",
+            "amf receives registration complete"
+        ],
+        [
+            "state_reg_accepted",
+            "state",
+            "amf accepts registration"
+        ],
+        [
+            "event_reg_complete_needed",
+            "event",
+            "ue needs to send registration complete"
+        ],
+        [
+            "event_reg_complete",
+            "event",
+            "ue sends registration complete to amf"
+        ],
+        [
+            "state_registered",
+            "state",
+            "ue in 5gmm-registered state"
+        ],
+        [
+            "event_reg_req",
+            "event",
+            "ue sends registration request message to amf"
+        ],
+        [
+            "state_amf_registered",
+            "state",
+            "amf in 5gmm-registered state"
+        ],
+        [
+            "event_reg_reject",
+            "event",
+            "amf sends registration reject message to ue"
+        ],
+        [
+            "state_amf_processing",
+            "state",
+            "amf processing registration request"
+        ],
+        [
+            "event_reg_accept",
+            "event",
+            "amf sends registration accept message to ue"
+        ],
+        [
+            "event_network_procedures",
+            "event",
+            "network initiates 5gmm common procedures (e.g., identification, authentication, security)"
+        ],
+        [
+            "event_reg_complete",
+            "event",
+            "ue sends registration complete message to amf"
+        ],
+        [
+            "state_t3510_running",
+            "state",
+            "ue with t3510 running"
+        ]
+    ],
+    "flagged_edges": [
+        [
+            "event_reg_complete_sent",
+            "timer_t3550_stop",
+            "trigger",
+            "ue sends registration complete"
+        ],
+        [
+            "state_common_proc",
+            "decision_reg_accepted",
+            "condition",
+            "initial registration request processing"
+        ],
+        [
+            "event_reg_reject_sent",
+            "state_ue_reject_action",
+            "trigger",
+            "amf sends registration reject"
+        ],
+        [
+            "timer_t3550_start",
+            "state_registered",
+            "trigger",
+            "ue receives registration accept, resets counter, enters 5gmm-registered"
+        ],
+        [
+            "decision_reg_accepted",
+            "decision_reg_rejected",
+            "condition",
+            "registration rejected"
+        ],
+        [
+            "event_reg_accept_sent",
+            "timer_t3550_start",
+            "trigger",
+            "amf sends registration accept"
+        ],
+        [
+            "event_reg_req_sent",
+            "state_common_proc",
+            "trigger",
+            "amf receives registration request"
+        ],
+        [
+            "state_deregistered",
+            "timer_t3502_stop",
+            "trigger",
+            "ue stops timer t3502 if running"
+        ],
+        [
+            "decision_net_slice_ind",
+            "event_reg_complete_sent",
+            "condition",
+            "network slicing indication ie present"
+        ],
+        [
+            "decision_net_slice_ind",
+            "timer_t3550_stop",
+            "condition",
+            "network slicing indication ie not present"
+        ],
+        [
+            "decision_reg_rejected",
+            "event_reg_reject_sent",
+            "condition",
+            "registration rejected"
+        ],
+        [
+            "state_ue_reject_action",
+            "state_deregistered",
+            "trigger",
+            "ue takes action based on 5gmm cause and returns to deregistered state"
+        ],
+        [
+            "state_registered",
+            "decision_net_slice_ind",
+            "condition",
+            "registration accept contains network slicing indication ie with new network slicing information?"
+        ],
+        [
+            "decision_reg_accepted",
+            "event_reg_accept_sent",
+            "condition",
+            "registration accepted"
+        ],
+        [
+            "state_deregistered",
+            "event_reg_req_sent",
+            "trigger",
+            "ue initiates registration procedure"
+        ],
+        [
+            "state_deregistered",
+            "timer_t3511_stop",
+            "trigger",
+            "ue stops timer t3511 if running"
+        ],
+        [
+            "state_deregistered",
+            "timer_t3510_start",
+            "trigger",
+            "ue starts timer t3510"
+        ],
+        [
+            "state_registered",
+            "event_reg_complete",
+            "condition",
+            "if network slicing indication ie with network slicing subscription change indication set to \"network slicing subscription changed\" is included in registration accept"
+        ],
+        [
+            "event_auth_sec",
+            "event_reg_accept",
+            "condition",
+            "initial registration request accepted by network"
+        ],
+        [
+            "state_deregistered",
+            "event_reg_req",
+            "trigger",
+            "ue initiates registration"
+        ],
+        [
+            "state_tai_list_stored",
+            "state_amf_timer_started",
+            "condition",
+            "if operator-defined access category definitions ie, the extended emergency number list ie, the cag information list ie or the extended cag information list ie are included in the registration accept"
+        ],
+        [
+            "state_registered",
+            "event_reg_complete",
+            "condition",
+            "if ue set rcman bit and nsag information ie is included in registration accept"
+        ],
+        [
+            "event_reg_complete",
+            "state_amf_registered",
+            "trigger",
+            "amf receives registration complete"
+        ],
+        [
+            "state_registered",
+            "event_reg_complete",
+            "condition",
+            "if registration accept contains operator-defined access category definitions ie, the extended emergency number list ie ,the cag information list ie or the extended cag information list ie"
+        ],
+        [
+            "event_reg_accept",
+            "state_tai_list_stored",
+            "trigger",
+            "ue receives registration accept"
+        ],
+        [
+            "state_tai_list_stored",
+            "state_amf_timer_started",
+            "condition",
+            "if 5g-guti or sor transparent container ie is included in registration accept"
+        ],
+        [
+            "event_reg_reject",
+            "state_deregistered",
+            "trigger",
+            "ue receives registration reject"
+        ],
+        [
+            "event_reg_req",
+            "state_t3510_running",
+            "trigger",
+            "ue starts timer t3510"
+        ],
+        [
+            "state_timers_stopped",
+            "state_t3519_running",
+            "condition",
+            "if suci included and t3519 not running, ue starts t3519"
+        ],
+        [
+            "state_amf_timer_started",
+            "state_registered",
+            "trigger",
+            "ue receives registration accept"
+        ],
+        [
+            "state_tai_list_stored",
+            "state_amf_timer_started",
+            "condition",
+            "if ue set rcmap bit and negotiated peips assistance information ie is included in registration accept"
+        ],
+        [
+            "state_t3519_running",
+            "event_auth_sec",
+            "trigger",
+            "network may initiate authentication and security procedures"
+        ],
+        [
+            "state_registered",
+            "event_reg_complete",
+            "condition",
+            "if registration accept contains ue radio capability id ie or ue radio capability id deletion indication ie"
+        ],
+        [
+            "state_tai_list_stored",
+            "state_amf_timer_started",
+            "condition",
+            "if ue is not in nb-n1 mode, ue set racs bit and ue radio capability id ie or ue radio capability id deletion indication ie is included in registration accept"
+        ],
+        [
+            "state_tai_list_stored",
+            "state_registered",
+            "trigger",
+            "ue receives registration accept"
+        ],
+        [
+            "state_t3510_running",
+            "state_timers_stopped",
+            "trigger",
+            "ue stops timers t3502 and t3511 (if running)"
+        ],
+        [
+            "state_registered",
+            "event_reg_complete",
+            "condition",
+            "if ue set rcmap bit and negotiated peips assistance information ie is included in registration accept"
+        ],
+        [
+            "state_timers_stopped",
+            "event_auth_sec",
+            "trigger",
+            "network may initiate authentication and security procedures"
+        ],
+        [
+            "event_auth_sec",
+            "event_reg_reject",
+            "condition",
+            "initial registration request cannot be accepted by network"
+        ],
+        [
+            "event_reg_complete",
+            "state_reg_complete_received",
+            "trigger",
+            "ue sends registration complete"
+        ],
+        [
+            "state_registered",
+            "event_reg_complete_needed",
+            "trigger",
+            "ue receives an registration accept message that contains update for network slicing information, truncated 5g-s-tmsi configuration ie, ue radio capability id ie, peips assistance information, new nsag information or operator-defined access category definitions, the extended emergency number list, the cag information list, the extended cag information list"
+        ],
+        [
+            "state_auth_proc",
+            "event_auth_success",
+            "condition",
+            "authentication successful"
+        ],
+        [
+            "event_reg_req",
+            "state_auth_proc",
+            "trigger",
+            "amf receives registration request"
+        ],
+        [
+            "state_deregistered",
+            "event_reg_req",
+            "trigger",
+            "ue needs to register"
+        ],
+        [
+            "state_common_proc_initiated",
+            "event_reg_accept",
+            "trigger",
+            "amf needs to update the ue with ue radio capability id, peips assistance information, new network slicing information, alternative s-nssai information, ue radio capability id deletion, operator-defined access category definitions, the extended emergency number list, the cag information list, the extended cag information list or truncated 5g-s-tmsi configuration"
+        ],
+        [
+            "event_reg_complete_needed",
+            "event_reg_complete",
+            "trigger",
+            "ue receives registration accept with specific ies"
+        ],
+        [
+            "state_reg_accepted",
+            "event_reg_accept",
+            "trigger",
+            "amf accepts the initial registration request"
+        ],
+        [
+            "event_reg_accept",
+            "event_reg_complete_needed",
+            "condition",
+            "ue needs to acknowledge updated network slicing information, truncated 5g-s-tmsi configuration ie, ue radio capability id ie, peips assistance information, new nsag information or receive operator-defined access category definitions, the extended emergency number list, the cag information list, the extended cag information list"
+        ],
+        [
+            "event_reg_accept",
+            "state_registered",
+            "condition",
+            "registration accept does not contain specific ies"
+        ],
+        [
+            "event_auth_success",
+            "state_reg_accepted",
+            "trigger",
+            "amf accepts registration"
+        ],
+        [
+            "event_reg_accept",
+            "state_common_proc_initiated",
+            "condition",
+            "registration accept contains specific ies"
+        ],
+        [
+            "event_reg_accept",
+            "state_registered",
+            "trigger",
+            "ue receives registration accept message"
+        ],
+        [
+            "event_reg_complete",
+            "state_amf_registered",
+            "trigger",
+            "amf receives registration complete message"
+        ],
+        [
+            "state_amf_processing",
+            "event_reg_reject",
+            "condition",
+            "initial registration request cannot be accepted by network"
+        ],
+        [
+            "state_amf_processing",
+            "event_network_procedures",
+            "trigger",
+            "amf may initiate network procedures"
+        ],
+        [
+            "state_registered",
+            "event_reg_complete",
+            "condition",
+            "conditions met to send registration complete (e.g., network slicing indication changed)"
+        ],
+        [
+            "state_amf_processing",
+            "event_reg_accept",
+            "condition",
+            "initial registration request accepted by network"
+        ],
+        [
+            "event_reg_reject",
+            "state_deregistered",
+            "trigger",
+            "ue receives registration reject message"
+        ],
+        [
+            "state_t3510_running",
+            "state_amf_processing",
+            "trigger",
+            "registration request received by amf"
+        ]
+    ]
+}

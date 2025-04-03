@@ -1,26 +1,19 @@
 # Primary authentication and key agreement procedure - TXT file version
 import os
 from dotenv import load_dotenv
-from google import genai
+import google.generativeai as genai
 import json
 
 load_dotenv()
 
-new_model = "gemini-2.5-pro-exp-03-25"
-flash_model = "gemini-1.5-flash"
-pro_model = "gemini-2.0-pro-exp-02-05"
+# Define the model name
+flash_model = "gemini-2.0-flash"
 
-# Load the Google API Key from the .env file
-load_dotenv(override=True)
+# Configure API key
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-# Get API key from environment
-api_key = os.getenv("GOOGLE_API_KEY")
-if not api_key:
-    raise ValueError(
-        "GOOGLE_API_KEY not found in environment variables. Please set it in your .env file."
-    )
-
-client = genai.Client(api_key=api_key)
+# Initialize Gemini model
+model = genai.GenerativeModel(flash_model)
 
 def extract_procedural_info_from_text(section_name, text):
     prompt = f"""
@@ -29,7 +22,7 @@ You are a **3GPP procedure extraction tool**. Using your knowledge of 3GPP proce
 ---
 
 ## **What to Extract (Fixed Scope)**
-Extract the following key decision-related elements, while focusing on **conciseness**:  
+Extract the following key decision-related elements:  
 - **Decision Points**: Where the procedure takes different paths based on conditions.  
 - **Dependencies**: Steps that are dependent on the success or failure of prior steps.  
 - **Fallback Conditions**: Failure-handling mechanisms (e.g., retries, alternative flows).  
@@ -40,12 +33,11 @@ Extract the following key decision-related elements, while focusing on **concise
 
 ## **How to Extract (Refinable Method)**
 When extracting decision logic, follow these principles:  
-- Identify **explicit conditions** that cause a branch in the procedure.
-- **Condense lengthy conditions** into high-level summaries that still retain the essence of the decision point. Avoid including long strings or references to external specs.
-- Capture **all possible outcomes**, not just success/failure.
-- Identify **retry or fallback mechanisms** affecting the procedure flow.
-- **Use short labels** for actions or events leading to the next step (e.g., "Release connection" instead of full descriptions).
-- Preserve cause-effect relationships between steps, but do not repeat similar conditions or steps if the outcomes are identical.
+- Identify **explicit conditions** that cause a branch in the procedure.  
+- Capture **all possible outcomes**, not just success/failure.  
+- Recognize **timeout or retry mechanisms** that affect procedure flow.  
+- Preserve cause-effect relationships between steps.  
+
 
 ---
 
@@ -55,10 +47,10 @@ Ensure the extracted data follows this structured format:
   "decision_points": [
     {{
       "step": Step number,
-      "condition": "Condensed condition description (short summary)",
+      "condition": "Main decision condition",
       "outcomes": [
         {{
-          "outcome":"Brief description of the outcome (e.g., 'Success: Proceed to next step')",
+          "outcome": "Success",
           "next_step": X,
           "outcome_type": "positive"
         }},
@@ -90,20 +82,15 @@ Ensure the extracted data follows this structured format:
 Provided Context:
 {text}
 """
-
-    model_to_use = flash_model  # or pro_model depending on your requirement
-    response = client.models.generate_content(
-        model=model_to_use,
+    # Generate content using Gemini model
+    response = model.generate_content(
         contents=prompt,
-        config={
+        generation_config={
             "temperature": 0,
-        },
+        }
     )
 
-    # Extract the text content from the response
-    procedural_info = response.text.strip() if hasattr(response, 'text') else str(response)
-
-    return procedural_info
+    return response.text.strip()
 
 def read_text_file(file_path):
     """Reads content from a text file."""
@@ -132,12 +119,12 @@ def process_text_file(input_file_path, section_name):
     return procedural_info
 
 # Example usage: Processing a text file
-input_file_path = "5.5.1.2.txt"  # Path to your input text file
+input_file_path = "data/version_4/5.5.1.2.txt"  # Path to your input text file
 section_name = "Registration procedure for initial registration"  # Name of the section/procedure
 
 procedural_info = process_text_file(input_file_path, section_name)
 
 if procedural_info:
-    save_procedural_info_to_json(procedural_info, "v04-step2.json")
+    save_procedural_info_to_json(procedural_info, "data/version_4/v04-step2.json")
 else:
     print("Failed to extract procedural information")

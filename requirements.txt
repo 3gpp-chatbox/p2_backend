@@ -1,3 +1,7 @@
 python-dotenv # For .env file support
 google-genai # Google GenAI API client
 python-docx # For DOCX file support
+pydantic # For schema validation
+json # For JSON file support
+mermaid # For Mermaid diagram generation
+

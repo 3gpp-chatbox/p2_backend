@@ -5,9 +5,9 @@ import google.generativeai as genai
 from pydantic import ValidationError
 import sys
 
-# Add p2_backend/src to Python path
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "src"))
-from accuracy.schema_validation import Graph, Node, Edge, validate_data  # Import the Pydantic models and validation function
+# Add data directory to path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from schema_validation import Graph, Node, Edge, validate_data
 
 load_dotenv()
 
@@ -35,37 +35,42 @@ def read_json_file(file_path):
 def extract_procedural_info(section_name, step1_data, step2_data):
     """Generates a structured **flow property graph** using data from step1.json and step2.json"""
     
-    # Create the structured JSON-like string manually
-    prompt = (
-        f"You are an expert in telecom procedures and standards, particularly in 3GPP specifications. "
-        f"Your task is to extract the **Initial Registration Procedure** based on the TS 24.501 specification. "
-        f"The procedure should be structured in the following way:\n\n"
-        f"1. **States (Nodes)**: Represent different stages in the process (e.g., 'UE Registered', 'Authentication Successful').\n"
-        f"   - For each state, provide a **unique identifier**, **description**, **message**, and **type** (either 'state' or 'event').\n"
-        f"   - Example: {{'id': 'state1', 'type': 'state', 'description': 'UE Registered', 'message': 'REGISTRATION REQUEST'}}\n\n"
-        f"2. **Triggers and Conditions (Edges)**: Represent the relationships between states.\n"
-        f"   - For each edge, provide the **starting node** (from_node), **target node** (to), **type** (either 'trigger' or 'condition'), "
-        f"and a **description** of the trigger or condition.\n"
-        f"   - Example: {{'from': 'state1', 'to': 'state2', 'type': 'trigger', 'description': 'Authentication Success'}}\n\n"
-        f"Please format your output as a structured JSON-like object with the following format:\n\n"
-        f"{{\n"
-        f"  'graph': {{\n"
-        f"    'nodes': [\n"
-        f"      {{'id': 'state1', 'type': 'state', 'description': 'UE Registered', 'message': 'REGISTRATION REQUEST'}},\n"
-        f"      {{'id': 'event1', 'type': 'event', 'description': 'UE Sends Registration Request'}}\n"
-        f"    ],\n"
-        f"    'edges': [\n"
-        f"      {{'from': 'state1', 'to': 'event1', 'type': 'trigger', 'description': 'Power On'}},\n"
-        f"      {{'from': 'event1', 'to': 'state2', 'type': 'condition', 'description': 'Authentication Success'}}\n"
-        f"    ]\n"
-        f"  }}\n"
-        f"}}\n\n"
-        f"### Input Data:\n"
-        f"#### Extracted Procedure Steps:\n"
-        f"{json.dumps(step1_data, indent=2)}\n\n"
-        f"#### Decision Points & Dependencies:\n"
-        f"{json.dumps(step2_data, indent=2)}\n"
-    )
+    prompt = f"""
+You are an expert in telecom procedures and standards, particularly in 3GPP specifications.
+Your task is to extract the **Initial Registration Procedure** based on the TS 24.501 specification.
+The procedure should be structured in the following way:
+
+1. **States and Events(Nodes)**: Represent different stages in the process (e.g., 'UE Registered', 'Authentication Successful').
+   - For each state, provide a **unique identifier**, **description**, and **type** (either 'state' or 'event').
+   - Example: {{'id': 'state1', 'type': 'state', 'description': 'UE Registered'}}
+
+2. **Triggers and Conditions (Edges)**: Represent the relationships between states.
+   - For each edge, provide the **starting node** (from_node), **target node** (to), **type** (either 'trigger' or 'condition'),
+     and a **description** of the trigger or condition.
+   - Example: {{'from': 'state1', 'to': 'state2', 'type': 'trigger', 'description': 'Authentication Success'}}
+
+Please format your output as a structured JSON object (without any markdown code block markers):
+
+{{
+  "graph": {{
+    "nodes": [
+      {{"id": "state1", "type": "state", "description": "UE Registered"}},
+      {{"id": "event1", "type": "event", "description": "UE Sends Registration Request"}}
+    ],
+    "edges": [
+      {{"from": "state1", "to": "event1", "type": "trigger", "description": "Power On"}},
+      {{"from": "event1", "to": "state2", "type": "condition", "description": "Authentication Success"}}
+    ]
+  }}
+}}
+
+### Input Data:
+#### Extracted Procedure Steps:
+{json.dumps(step1_data, indent=2)}
+
+#### Decision Points & Dependencies:
+{json.dumps(step2_data, indent=2)}
+"""
 
     # Generate content using Gemini model
     response = model.generate_content(
@@ -83,9 +88,18 @@ def extract_procedural_info(section_name, step1_data, step2_data):
         print("Error: Empty response received.")
         return None
 
+    # Clean up the response by removing markdown code block markers
+    cleaned_response = response.text.strip()
+    if cleaned_response.startswith("```"):
+        cleaned_response = cleaned_response.split("\n", 1)[1]  # Remove first line
+    if cleaned_response.endswith("```"):
+        cleaned_response = cleaned_response.rsplit("\n", 1)[0]  # Remove last line
+    if cleaned_response.startswith("json"):
+        cleaned_response = cleaned_response.split("\n", 1)[1]  # Remove "json" line
+
     # Try to parse the JSON response
     try:
-        parsed_response = json.loads(response.text)
+        parsed_response = json.loads(cleaned_response)
         # Validate the parsed response using Pydantic models
         if validate_data(parsed_response):
             return parsed_response
@@ -105,8 +119,8 @@ def save_to_json(data, file_path):
 def process_procedure(section_name):
     """Processes the procedure using step1.json and step2.json as input."""
     
-    step1_data = read_json_file("step1.json")
-    step2_data = read_json_file("step2.json")
+    step1_data = read_json_file("data/version_1/step1.json")
+    step2_data = read_json_file("data/version_1/step2.json")
 
     if step1_data is None or step2_data is None:
         print("Failed to load step1.json or step2.json")
@@ -121,6 +135,6 @@ section_name = "Registration procedure for initial registration"
 procedural_info = process_procedure(section_name)
 
 if procedural_info:
-    save_to_json(procedural_info, "step3.json")
+    save_to_json(procedural_info, "data/version_1/step3.json")
 else:
     print("Failed to extract procedural information")

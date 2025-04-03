@@ -1,0 +1,805 @@
+
+{
+  "decision_points": [
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE was previously registered in S1 mode before entering state EMM-DEREGISTERED; and has received an \"interworking without N26 interface not supported\" indication from the network; and EPS security context and a valid native 4G-GUTI are available",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall create a 5G-GUTI mapped from the valid native 4G-GUTI and indicate the mapped 5G-GUTI in the 5GS mobile identity IE. The UE shall include the UE status IE with the EMM registration status set to \"UE is not in EMM-REGISTERED state\" and shall include an ATTACH REQUEST message in the EPS NAS message container IE.",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is registering with a PLMN and the UE holds a valid 5G-GUTI that was previously assigned, over 3GPP access or non-3GPP access, by the same PLMN with which the UE is performing the registration",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall indicate the 5G-GUTI in the 5GS mobile identity IE",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is registering with a SNPN, the UE holds a valid 5G-GUTI that was previously assigned, over 3GPP access or non-3GPP access, by the same SNPN with which the UE is performing the registration, and the UE is not initiating the initial registration for onboarding services in SNPN",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall indicate the 5G-GUTI in the 5GS mobile identity IE",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is registering with a PLMN and the UE holds a valid 5G-GUTI that was previously assigned, over 3GPP access or non-3GPP access, by an equivalent PLMN",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall indicate the 5G-GUTI in the 5GS mobile identity IE",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is registering with an SNPN, the UE holds a valid 5G-GUTI that was previously assigned, over 3GPP access or non-3GPP access, by an equivalent SNPN identified by a globally unique SNPN identity, and the UE is not initiating the initial registration for onboarding services in SNPN",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall indicate the 5G-GUTI in the 5GS mobile identity IE and shall additionally include the NID of the equivalent SNPN in the NID IE",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is registering with a PLMN and the UE holds a valid 5G-GUTI that was previously assigned, over 3GPP access or non-3GPP access, by any other PLMN",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall indicate the 5G-GUTI in the 5GS mobile identity IE",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is registering with an SNPN, the UE holds a valid 5G-GUTI that was previously assigned, over 3GPP access or non-3GPP access, by any other SNPN identified by a globally unique SNPN identity, and the UE is not initiating the initial registration for onboarding services in SNPN",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall indicate the 5G-GUTI in the 5GS mobile identity IE and shall additionally include the NID of the other SNPN in the NID IE",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "a SUCI other than an onboarding SUCI is available, and the UE is not initiating the initial registration for onboarding services in SNPN",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall include the SUCI other than an onboarding SUCI in the 5GS mobile identity IE",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE does not hold a valid 5G-GUTI or SUCI other than an onboarding SUCI, and is initiating the initial registration for emergency services",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "PEI shall be included in the 5GS mobile identity IE",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is initiating the initial registration for onboarding services in SNPN",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "an onboarding SUCI shall be included in the 5GS mobile identity IE",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "SUCI is included in the 5GS mobile identity IE and the timer T3519 is not running",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall start timer T3519 and store the value of the SUCI sent in the REGISTRATION REQUEST message. The UE shall include the stored SUCI in the REGISTRATION REQUEST message while timer T3519 is running.",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is operating in the dual-registration mode and it is in EMM state EMM-REGISTERED",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall include the UE status IE with the EMM registration status set to \"UE is in EMM-REGISTERED state\"",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports MICO mode and requests the use of MICO mode",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall include the MICO indication IE in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE requests to use an active time value",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall include the active time value in the T3324 IE in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE includes the T3324 IE",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE may also request a particular T3512 value by including the Requested T3512 IE in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports strictly periodic registration timer",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the Strictly Periodic Registration Timer Indication bit of the MICO indication IE in the REGISTRATION REQUEST message to \"strictly periodic registration timer supported\"",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE needs to use the UE specific DRX parameters",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall include the Requested DRX parameters IE in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is in NB-N1 mode and if the UE needs to use the UE specific DRX parameters for NB-N1 mode",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall include the Requested NB-N1 mode DRX parameters IE in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports eDRX and requests the use of eDRX",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall include the Requested extended DRX parameters IE in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE needs to request LADN information for specific LADN DNN(s) or indicates a request for LADN information",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall include the LADN indication IE in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE has allowed NSSAI or configured NSSAI or both for the current PLMN or SNPN",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "requested NSSAI shall be either: the configured NSSAI for the current PLMN or SNPN, or a subset thereof; the allowed NSSAI for the current PLMN or SNPN, or a subset thereof; or the allowed NSSAI for the current PLMN or SNPN, or a subset thereof, plus the configured NSSAI for the current PLMN or SNPN, or a subset thereof.",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "both the S-NSSAI to be replaced and the alternative S-NSSAI are included in the configured NSSAI, and the UE needs to request the S-NSSAI to be replaced",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall include the S-NSSAI to be replaced in the requested NSSAI",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports the S-NSSAI time validity information, S-NSSAI time validity information is available for an S-NSSAI, and the S-NSSAI time validity information indicates that the S-NSSAI is not available",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall not include the S-NSSAI in the Requested NSSAI IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE has S-NSSAI time validity information over the other access in the same PLMN and the S-NSSAI time validity information indicates that the S-NSSAI is not available",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall not include the S-NSSAI in the Requested NSSAI IE of the REGISTRATION REQUEST message for the current access type",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE has neither allowed NSSAI for the current PLMN or SNPN nor configured NSSAI for the current PLMN or SNPN and has a default configured NSSAI",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall include the S-NSSAI(s) in the Requested NSSAI IE of the REGISTRATION REQUEST message using the default configured NSSAI; and include the Network slicing indication IE with the Default configured NSSAI indication bit set to \"Requested NSSAI created from default configured NSSAI\" in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE has no allowed NSSAI for the current PLMN or SNPN, no configured NSSAI for the current PLMN or SNPN, and no default configured NSSAI",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall not include a requested NSSAI in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "all the S-NSSAI(s) corresponding to the slice(s) to which the UE intends to register are included in the pending NSSAI",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall not include a requested NSSAI in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE initiates an initial registration for onboarding services in SNPN",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall not include the Requested NSSAI IE in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports NSAG",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the NSAG bit to \"NSAG supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports sending of REGISTRATION COMPLETE message for acknowledging the reception of NSAG information IE in the REGISTRATION ACCEPT message",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the RCMAN bit to \"Sending of REGISTRATION COMPLETE message for NSAG information supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE initiates an initial registration for emergency services or needs to prolong the established NAS signalling connection after the completion of the initial registration procedure",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the Follow-on request indicator to \"Follow-on request pending\"",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports S1 mode and the UE has not disabled its E-UTRA capability and the 5GS registration type IE in the REGISTRATION REQUEST message is not set to \"disaster roaming initial registration\"",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the S1 mode bit to \"S1 mode supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message; include the S1 UE network capability IE in the REGISTRATION REQUEST message; and if the UE supports EPS-UPIP, the UE shall set the EPS-UPIP bit to \"EPS-UPIP supported\" in the S1 UE network capability IE in the REGISTRATION REQUEST message; and if the UE supports sending an ATTACH REQUEST message containing a PDN CONNECTIVITY REQUEST message with request type set to \"handover\" to transfer a PDU session from N1 mode to S1 mode, set the HO attach bit to \"attach request message containing PDN connectivity request with request type set to handover to transfer PDU session from N1 mode to S1 mode supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports the LTE positioning protocol (LPP) in N1 mode",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the LPP bit to \"LPP in N1 mode supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports the Location Services (LCS) notification mechanisms in N1 mode",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the 5G-LCS bit to \"LCS notification mechanisms supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports the user plane positioning using LCS-UPP",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the LCS-UPP bit to \"LCS-UPP user plane positioning supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports the user plane positioning using SUPL",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the SUPL bit to \"SUPL user plane positioning supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports network verified UE location over satellite NG-RAN",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the NVL-SATNR bit to \"Network verified UE location over satellite NG-RAN supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is in NB-N1 mode",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the Control plane CIoT 5GS optimization bit to \"Control plane CIoT 5GS optimization supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is capable of NB-S1 mode",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the Control plane CIoT EPS optimization bit to \"Control plane CIoT EPS optimization supported\" in the S1 UE network capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports N3 data transfer and multiple user-plane resources in NB-N1 mode",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the Multiple user-plane resources support bit to \"Multiple user-plane resources supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports 5G-SRVCC from NG-RAN to UTRAN",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the 5G-SRVCC from NG-RAN to UTRAN capability bit to \"5G-SRVCC from NG-RAN to UTRAN supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message; and include the Mobile station classmark 2 IE and the Supported codecs IE in the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports service gap control",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the SGC bit to \"service gap control supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports the restriction on use of enhanced coverage",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the RestrictEC bit to \"Restriction on use of enhanced coverage supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports network slice-specific authentication and authorization",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the NSSAA bit to \"network slice-specific authentication and authorization supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports CAG feature",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the CAG bit to \"CAG Supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports extended CAG information list",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the Ex-CAG bit to \"Extended CAG information list supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports enhanced CAG information",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the ECI bit to \"enhanced CAG information supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports network slice replacement",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the NSR bit to \"network slice replacement supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE supports sending of REGISTRATION COMPLETE message for acknowledging the reception of Negotiated PEIPS assistance information IE in the REGISTRATION ACCEPT message",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the RCMP bit to \"Sending of REGISTRATION COMPLETE message for negotiated PEIPS assistance information supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    },
+    {
+      "step": "Initial registration initiation",
+      "condition": "UE is not in NB-N1 mode, if the UE supports RACS",
+      "outcomes": [
+        {
+          "outcome": "True",
+          "next_step": "UE shall set the RACS bit to \"RACS supported\" in the 5GMM capability IE of the REGISTRATION REQUEST message; if the UE has an applicable network-assigned UE radio capability ID for the current UE radio configuration in the selected PLMN or SNPN, include the applicable network-assigned UE radio capability ID in the UE radio capability ID IE of the REGISTRATION REQUEST message; and if the UE does not have an applicable network-assigned UE radio capability ID for the current UE radio configuration in the selected PLMN or SNPN; and has an applicable manufacturer-assigned UE radio capability ID for the current UE radio configuration, include the applicable manufacturer-assigned UE radio capability ID in the UE radio capability ID IE of the REGISTRATION REQUEST message",
+          "outcome_type": "positive"
+        },
+        {
+          "outcome": "False",
+          "next_step": "Continue to next condition",
+          "outcome_type": "negative"
+        }
+      ]
+    }
+  ]
+}

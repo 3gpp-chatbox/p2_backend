@@ -1,13 +1,13 @@
 # Primary authentication and key agreement procedure - TXT file version
 import os
 from dotenv import load_dotenv
-from google import genai
+import google.generativeai as genai
 import json
 
 load_dotenv()
 
 new_model = "gemini-2.5-pro-exp-03-25"
-flash_model = "gemini-1.5-flash"
+flash_model = "gemini-2.0-flash"
 pro_model = "gemini-2.0-pro-exp-02-05"
 
 # Load the Google API Key from the .env file
@@ -20,7 +20,11 @@ if not api_key:
         "GOOGLE_API_KEY not found in environment variables. Please set it in your .env file."
     )
 
-client = genai.Client(api_key=api_key)
+# Configure API key
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
+# Initialize Gemini model
+model = genai.GenerativeModel(flash_model)
 
 def extract_procedural_info_from_text(section_name, text):
     prompt = f"""
@@ -90,19 +94,15 @@ Provided Context:
 {text}
 """
 
-    model_to_use = new_model  # or pro_model depending on your requirement
-    response = client.models.generate_content(
-        model=model_to_use,
+    # Generate content using Gemini model
+    response = model.generate_content(
         contents=prompt,
-        config={
+        generation_config={
             "temperature": 0,
-        },
+        }
     )
 
-    # Extract the text content from the response
-    procedural_info = response.text.strip() if hasattr(response, 'text') else str(response)
-
-    return procedural_info
+    return response.text.strip()
 
 def read_text_file(file_path):
     """Reads content from a text file."""

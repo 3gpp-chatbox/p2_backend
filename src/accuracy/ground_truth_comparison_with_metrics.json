@@ -1,0 +1,60 @@
+{
+    "v2": {
+        "node_metrics": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0
+        },
+        "edge_metrics": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0
+        },
+        "validity": {
+            "validity": "invalid",
+            "explanation": [
+                "Unmatched nodes exceed the threshold: 0.38 > 0.05",
+                "Unmatched edges exceed the threshold: 0.94 > 0.05"
+            ]
+        }
+    },
+    "v3": {
+        "node_metrics": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0
+        },
+        "edge_metrics": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0
+        },
+        "validity": {
+            "validity": "invalid",
+            "explanation": [
+                "Unmatched nodes exceed the threshold: 0.31 > 0.05",
+                "Unmatched edges exceed the threshold: 0.53 > 0.05"
+            ]
+        }
+    },
+    "v4": {
+        "node_metrics": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0
+        },
+        "edge_metrics": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0
+        },
+        "validity": {
+            "validity": "invalid",
+            "explanation": [
+                "Unmatched nodes exceed the threshold: 0.19 > 0.05",
+                "Unmatched edges exceed the threshold: 0.29 > 0.05"
+            ]
+        }
+    }
+}
+
