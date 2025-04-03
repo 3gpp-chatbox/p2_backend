@@ -168,11 +168,30 @@ If the UE operates in single-registration mode, whenever the UE's usage setting 
 
 Table 4.3.3.1: Change of UE's usage setting for a UE in single-registration mode
 
+| UE's usage setting change | Procedure to execute |
+|---|---|
+| From "data centric" to "voice centric" and "IMS voice not available"overNG-RANaccessonly | Disable the N1 mode capabilityfor 3GPP access(seesubclause4.9.2), if the UE is only registered over 3GPP access(NOTE) |
+| From "data centric" to "voice centric" and "IMS voice not available"oversatellite NG-RAN | Disable thesatellite NG-RANcapability for 3GPP access (seesubclause 4.9.4). |
+| From "data centric" to "voice centric", and "IMS voice not available"overbothNG-RANaccessand non-3GPP access | Disable the N1 mode capability for 3GPP access (seesubclause 4.9.2) and non-3GPP access (see subclause 4.9.3), if the UE is registered over both 3GPP access and non-3GPP accessDisable the N1 mode capability for 3GPP access (see subclause 4.9.2), if the UE isonlyregistered over 3GPP access.Disable the N1 mode capability for non-3GPP access (see subclause 4.9.3), if the UE isonlyregistered over non-3GPP access.(NOTE) |
+| From "voice centric" to "data centric" and the N1 mode capabilityfor 3GPP access isdisabled at the UEdue to "IMS voice not available" | Re-enable the N1 mode capabilityfor 3GPP access(seesubclause4.9.2) |
+| From "voice centric" to "data centric" andsatellite NG-RAN capabilityis disabled at the UEdue to "IMS voice not available" | Re-enable thesatellite NG-RANcapability for 3GPP access (seesubclause 4.9.4). |
+| From "data centric" to "voice centric" and "IMS voice not available"overnon-3GPP accessonly | Disable the N1 mode capability for non-3GPP access (see subclause 4.9.3), if the UE is only registered over non-3GPP access |
+| From "voice centric" to "data centric", and the N1 mode capability for non-3GPP access is disabled at the UE due to "IMS voice not available" | Re-enable the N1 mode capability for non-3GPP access (see subclause 4.9.3) |
+| NOTE:If the UE is registered over 3GPP access and has a persistent PDU session, then theUEwaits until the radio bearer associated withthe persistent PDU sessionhas been released. |
+
 ### 4.3.4	Change or determination of IMS voice availability
 
 If the UE operates in single-registration mode, whenever the IMS voice availability is determined or changes, the UE shall execute procedures according to table 4.3.4.1:
 
 Table 4.3.4.1: Change of IMS voice availability for a UE in single-registration mode
+
+| Change of IMS voice available condition | Procedure to execute |
+|---|---|
+| "IMS voice not available"overNG-RANaccessonlyand the UE's usage setting is "voice centric" | Disable the N1 mode capabilityfor 3GPP access, if the UE is only registered over 3GPP access(seesubclause 4.9.2). (NOTE 2) |
+| "IMS voice not available"over satellite NG-RANand the UE's usage setting is "voice centric" | Disable thesatellite NG-RANcapability. |
+| "IMS voice not available"overnon-3GPP accessonlyand the UE's usage setting is "voice centric" | Disable the N1 mode capability for non-3GPP access (seesubclause 4.9.3), if the UE is only registered over non-3GPP access. (NOTE 2) |
+| "IMS voice not available"overbothNG-RANaccess and non-3GPP access,and the UE's usage setting is "voice centric" | Disable the N1 mode capability for 3GPP access (seesubclause 4.9.2) andnon-3GPP access (seesubclause 4.9.3), if the UE is registered over both 3GPP access and non-3GPP access.Disable the N1 mode capability for 3GPP access (see subclause4.9.2), if the UE is only registered over 3GPP accessDisable the N1 mode capability for non-3GPP access (see subclause4.9.3), if the UE is only registered over non-3GPP access.(NOTE 1, NOTE 2) |
+| NOTE 1:If the UE is registered over 3GPP access and has a persistent PDU session, then theUEwaits until the radio bearer associated withthe persistent PDU sessionhas been released.NOTE 2:If the UE determines "IMS voice not available" upon receipt of a 5GS session management reject message including a back-off timer value, and the re-attempt indicator indicates that the UE is not allowed to re-attempt the procedure in S1 modethen, upon inter-system change from N1 mode toS1 mode, the UEproceeds as specified in 3GPP TS 24.301 [15], subclause 4.3.2.4, Change or determination of IMS registration status. |
 
 ## 4.4	NAS security
 
@@ -834,6 +853,20 @@ b)	if none of the above access identities is applicable, then access identity 0 
 
 Table 4.5.2.1: Access identities
 
+| Access Identitynumber | UE configuration |
+|---|---|
+| 0 | UE is not configured with any parameters from this table |
+| 1 (NOTE 1) | UE is configured for multimedia priority service (MPS). |
+| 2(NOTE 2) | UE is configured for mission critical service (MCS). |
+| 3(NOTE 4) | UE for whicha disastercondition applies |
+| 4-10 | Reserved for future use |
+| 11(NOTE3) | Access Class 11 is configured in the UE. |
+| 12(NOTE3) | Access Class 12 is configured in the UE. |
+| 13(NOTE3) | Access Class 13 is configured in the UE. |
+| 14(NOTE3) | Access Class 14 is configured in the UE. |
+| 15(NOTE3) | Access Class 15 is configured in the UE. |
+| NOTE 1:Access identity 1 is valid when:- the USIM file EFUAC_AICindicates the UE is configured for access identity 1 and the selected PLMN, if a new PLMN is selected, or RPLMN is the HPLMN (if the EHPLMN list is not present or is empty) or EHPLMN (if the EHPLMN list is present), or a visited PLMN of the home country;- the UE receives the 5GS network feature support IE with the MPS indicator bit set to "Access identity 1 valid" from the RPLMN as described in subclause 5.5.1.2.4 and subclause 5.5.1.3.4; or- the UE receives the Priority indicator IE with the MPS indicator bit set to "Access identity 1 valid" from the RPLMN as described in subclause 5.4.4.3.NOTE 2:Access identity 2 is used by UEs configured for MCS and is valid when:- the USIM file EFUAC_AICindicates the UE is configured for access identity 2 and the selected PLMN, if a new PLMN is selected, or RPLMN is the HPLMN (if the EHPLMN list is not present or is empty) or EHPLMN (if the EHPLMN list is present), or a visited PLMN of the home country;- the UE receives the 5GS network feature support IE with the MCS indicator bit set to "Access identity 2 valid" from the RPLMN as described in subclause 5.5.1.2.4 and subclause 5.5.1.3.4;or- the UE receives the Priority indicator IE with the MCS indicator bit set to "Access identity 2 valid" from the RPLMN as described in subclause 5.4.4.3.NOTE 3:Accessidentities11 and 15are valid inHPLMN (if the EHPLMN list is not present or is empty) or EHPLMN (if the EHPLMN list is present). AccessIdentities 12, 13and14areonlyvalid inHPLMN and visited PLMNs of home country only.NOTE 4:Access Identity 3 is valid when the UE is registering or registered for disaster roaming services (see3GPP TS 23.122 [5]). |
+
 The UE uses the MPS indicator bit of the 5GS network feature support IE or the Priority indicator IE to determine if access identity 1 is valid. Processing of the MPS indicator bit of the 5GS network feature support IE in the REGISTRATION ACCEPT message is described in subclause 5.5.1.2.4 and subclause 5.5.1.3.4. Processing of the MPS indicator bit of the Priority indicator IE in the CONFIGURATION UPDATE COMMAND message is described in subclause 5.4.4.3. 
 When the UE is neither in the HPLMN (if the EHPLMN list is not present or is empty) nor in an EHPLMN (if the EHPLMN list is present) nor in a visited PLMN of the home country, and the USIM file EFUAC_AIC indicates the UE is configured for access identity 1, then the UE shall not consider access identity 1 to be valid, until the UE receives the MPS indicator bit of the 5GS network feature support IE in the REGISTRATION ACCEPT message or of the Priority indicator IE in the CONFIGURATION UPDATE COMMAND message being set to "Access identity 1 valid" from the RPLMN or from an equivalent PLMN.
 
@@ -855,6 +888,25 @@ NOTE:	The case when an access attempt matches more than one rule includes the ca
 
 Table 4.5.2.2: Mapping table for access categories
 
+| Rule # | Type of access attempt | Requirements to be met | Access Category |
+|---|---|---|---|
+| 1 | Responseto paging or NOTIFICATION over non-3GPP access;5GMM connection management procedure initiated for the purpose of transporting an LPPor SLPPmessage without an ongoing 5GC-MO-LRor SL-MO-LRprocedure;Access attempt to handover of ongoing MMTEL voice call, MMTEL video call orSMSoIPfrom non-3GPP access; orAccess attempt upon receipt of "call-pull-initiated" indication from the upper layers (see 3GPP TS 24.174 [13D]) | Access attempt is for MT access, or handover of ongoing MMTEL voice call, MMTEL video call orSMSoIPfrom non-3GPP access; orAccess attempt is made upon receipt of "call-pull-initiated" (3GPP TS 24.174 [13D]) | 0 (= MT_acc) |
+| 2 | Emergency | UE is attempting access for an emergency session (NOTE 1, NOTE 2) | 2(= emergency) |
+| 3 | Access attemptfor operator-defined access category | UEstoresoperator-defined access category definitionsvalid inthe current PLMNas specified in subclause 4.5.3, and access attempt is matching criteria of an operator-defined access categorydefinition | 32-63(= based on operator classification) |
+| 3.1 | Access attempt forMO exception data | UE is in NB-N1 mode and allowed to use exception data reporting (see the ExceptionDataReportingAllowed leaf of the NAS configuration MO in 3GPP TS 24.368 [17] or the USIM file EFNASCONFIGin 3GPP TS 31.102 [22]), and access attempt is for MO data or for MO signalling initiated upon receiving a request from upper layers to transmit user data related to an exceptional event. | 10 (= MO exception data) |
+| 4 | Access attemptfor delay tolerant service | (a)UEisconfigured forNAS signalling low priorityor UE supporting S1 mode is configured for EAB (see the "ExtendedAccessBarring" leaf of NAS configuration MO in 3GPP TS 24.368 [17] or 3GPP TS 31.102 [22]) where "EAB override" does not apply,and(b):the UE receivedone of the categories a, b or cas part of the parameters for unified access control in the broadcast system information, and the UE is a member of the broadcasted category in the selected PLMN or RPLMN/equivalent PLMN(NOTE 3, NOTE 5, NOTE 6, NOTE 7, NOTE 8) | 1 (= delay tolerant) |
+| 5 | MO MMTel voice call; orMT MMTel voice call | Access attempt is for MO MMTel voice callor MT MMTel voice callor for NAS signalling connection recovery during ongoing MO MMTel voice callor ongoing MT MMTel voice call(NOTE 2) | 4(= MO MMTel voice) |
+| 6 | MO MMTel video call; orMT MMTel video call | Access attempt is for MO MMTel video callor MT MMTel video callor for NAS signalling connection recovery during ongoing MO MMTel video callor ongoing MTSMS over SMSoIP(NOTE 2) | 5(= MO MMTel video) |
+| 7 | MO SMS over NAS or MO SMSoIP; orMT SMSoIP | Access attempt is for MO SMSover NAS (NOTE 4)orMO SMS overSMSoIP transferor MT SMS over SMSoIPor for NAS signalling connection recovery during ongoing MO SMS or SMSoIP transferor ongoing MT MMTel video call(NOTE 2) | 6(= MO SMS and SMSoIP) |
+| 7.1 | MO IMSregistration relatedsignalling | Access attempt is forMO IMS registration related signalling (e.g. IMS initial registration, re-registration, subscription refresh)or forPDU sessionestablishment procedurefor DNN = "IMS"orfor the DNN used for SMSoIP, ifthe upper layers have indicated a DNN used for SMSoIP and the indicated DNN used for SMSoIP is different from "IMS", establishing a PDU session, transferring a PDU session from non-3GPP access, or interworking a PDN connection in non-3GPP access connected to EPC to a PDU sessionorservice request proceduretriggered byPDU sessionestablishment procedurefor DNN = "IMS"orfor the DNN used for SMSoIP, ifthe upper layers have indicated a DNN used for SMSoIP and the indicated DNN used for SMSoIP is different from "IMS", establishing a PDU session, transferring a PDU session from non-3GPP access, or interworking a PDN connection in non-3GPP access connected to EPC to a PDU sessionor for NAS signalling connection recovery during ongoing procedure for MOIMS registration related signalling(NOTE 2a) | 9 (=MO IMS registration related signalling) |
+| 8 | UE NAS initiated 5GMM specific procedures | Access attempt is for MO signalling | 3 (= MO_sig) |
+| 8.1 | Mobile originated location request | Access attempt is for mobile originated location request (NOTE 9) | 3 (= MO_sig) |
+| 8.2 | Mobile originated signalling transaction towards the PCF | Access attempt is for mobile originated signalling transaction towards the PCF (NOTE 10) | 3 (= MO_sig) |
+| 8.3 | Access attempt for RAN timing synchronization | Access attempt isfor mobile originated signallingfor the reconnection to the network due to RAN timing synchronization status change | 3 (= MO_sig) |
+| 9 | UE NAS initiated 5GMM connection management procedure or 5GMM NAS transport procedure | Access attempt is for MO data | 7(= MO_data) |
+| 10 | An uplink user data packet is to be sent for a PDU session with suspended user-plane resources | No further requirement is to be met | 7(= MO_data) |
+| NOTE 1:This includes 5GMM specific procedures while the service is ongoing and 5GMM connection management procedures required to establish a PDU session with request type = "initialemergencyrequest"or "existing emergency PDU session",or to re-establishuser-plane resourcesfor such a PDU session.This further includes the service request procedure initiated with a SERVICE REQUEST message with the Service type IE set to "emergency services fallback".NOTE 2:Access for the purpose of NAS signalling connection recovery during an ongoing serviceas defined in subclause4.5.5, or for the purpose of NAS signalling connection establishment following fallbackindication from lower layersduring an ongoing serviceas defined in subclause4.5.5,is mapped to the access category of the ongoing service in order to derive an RRC establishment cause, but barring checks will be skipped for this access attempt.NOTE 2a:Access for the purpose of NAS signalling connection recovery during an ongoing procedure for MOIMS registration related signallingas defined in subclause4.5.5, or for the purpose of NAS signalling connection establishment following fallbackindication from lower layersduring an ongoing procedure for MOIMS registration related signallingas defined in subclause4.5.5, is mapped to the access category of the MOIMS registration related signallingin order to derive an RRC establishment cause, but barring checks will be skipped for this access attempt.NOTE 3:If the UE selects a new PLMN, then the selected PLMN is used to check the membership; otherwise the UE uses theRPLMNor a PLMN equivalent to the RPLMN.NOTE 4:This includes the 5GMM connection management procedures triggered by the UE-initiated NAS transport procedure for transporting the MO SMS.NOTE 5:The UE configured for NAS signalling low priority is not supported in this release of specification.If a UE supporting both S1 mode and N1 mode is configured for NAS signalling low priority in S1 mode as specified in 3GPP TS 24.368 [17] or 3GPP TS 31.102 [22], the UE shall ignore the configuration for NAS signalling low priority when in N1 mode.NOTE 6:If the access category applicable for the access attempt is 1, then the UE shall additionally determine a second access category from the range 3 to 7. If more than one access category matches, the access category of the lowest rule number shall be chosen. The UE shall use the second access category only to derive an RRC establishment cause for the access attempt.NOTE7:"EAB override" does not apply, if the UE is not configured to allow overriding EAB (see the "Override_ExtendedAccessBarring" leaf of NAS configuration MO in 3GPP TS 24.368 [17] or 3GPP TS 31.102 [22]), or if NAS has not received an indication from the upper layers to override EAB and the UE does not havea PDU session that was established with EAB override.NOTE 8:For the definition of categories a, b and c associated with access category 1, see 3GPP TS 22.261 [3]. The categories associated with access category 1 are distinct from the categories a, b and c associated with EAB(see 3GPP TS 22.011 [1A]).NOTE9:This includes:a)the UE-initiated NAS transport procedure for transporting a mobile originated locationrequest;b)the 5GMM connection management procedure triggered by a) above; andc)NAS signalling connection recovery during an ongoing 5GC-MO-LR procedure.NOTE10:This includes:a)the UE-initiated NAS transport procedure for transporting a mobile originated signallingtransaction towards the PCF;b)the 5GMM connection management procedure triggered by a) above; andc)NAS signalling connection recovery during an ongoing UE-requestedpolicy provisioningprocedureforV2XP, ProSeP or both(see 3GPP TS 24.587[19B]andsee 3GPP TS 24.554[19E]). |
+
 ### 4.5.2A	Determination of the access identities and access category associated with a request for access for UEs operating in SNPN access operation mode over 3GPP access
 
 When the UE needs to initiate an access attempt in one of the events listed in subclause 4.5.1, the UE shall determine one or more access identities from the set of standardized access identities, and one access category from the set of standardized access categories and operator-defined access categories, to be associated with that access attempt.
@@ -867,6 +919,19 @@ b)	if none of the above access identities is applicable, then access identity 0 
 
 Table 4.5.2A.1: Access identities
 
+| Access Identitynumber | UE configuration |
+|---|---|
+| 0 | UE is not configured with any parameters from this table |
+| 1 (NOTE 1) | UE is configured for multimedia priority service (MPS). |
+| 2(NOTE 2) | UE is configured for mission critical service (MCS). |
+| 3-10 | Reserved for future use |
+| 11(NOTE3) | Access Class 11 is configured in the UE. |
+| 12(NOTE3) | Access Class 12 is configured in the UE. |
+| 13(NOTE3) | Access Class 13 is configured in the UE. |
+| 14(NOTE3) | Access Class 14 is configured in the UE. |
+| 15(NOTE3) | Access Class 15 is configured in the UE. |
+| NOTE 1:Access identity 1 is valid when:- the unified access control configuration in the "list of subscriber data" stored in the ME (see 3GPP TS 23.122 [5]), if an entry of "list of subscriber data" is selected, or in the USIM (see 3GPP TS 31.102 [22]), if the PLMN subscription is selected,indicates the UE is configured for access identity 1 in the selected SNPN, if a new SNPN is selected, or RSNPN,and the selected SNPN or the RSNPN is the subscribed SNPN, an SNPN equivalent to the subscribed SNPN, or an non-subscribed SNPN of the same country as the subscribed SNPN if the MCC of the SNPN identity of the subscribed SNPN is not the MCC of value 999;- the UE receives the 5GS network feature support IE with the MPS indicator bit set to "Access identity 1 valid" from the RSNPN as described in subclause 5.5.1.2.4 and subclause 5.5.1.3.4; or- the UE receives the Priority indicator IE with the MPS indicator bit set to "Access identity 1 valid" from the RPLMN as described in subclause 5.4.4.3.NOTE 2:Access identity 2 is used by UEs configured for MCS and is valid when:- the unified access control configuration in the "list of subscriber data" stored in the ME (see 3GPP TS 23.122 [5]), if an entry of "list of subscriber data" is selected, or in the USIM (see 3GPP TS 31.102 [22]), if the PLMN subscription is selected,indicates the UE is configured for access identity 2 in the selected SNPN, if a new SNPN is selected, or RSNPN, and the selected SNPN or the RSNPN is the subscribed SNPN, or an SNPN equivalent to the subscribed SNPN, or an non-subscribed SNPN of the same country as the subscribed SNPN if the MCC of the SNPN identity of the subscribed SNPN is not the MCC of value 999; or- the UE receives the 5GS network feature support IE with the MCS indicator bit set to "Access identity 2 valid" from the RSNPN as described in subclause 5.5.1.2.4 and subclause 5.5.1.3.4.NOTE 3:Accessidentities11and15are validif indicated as configured for the UE in the unified access control configuration in the "list of subscriber data" stored in the ME (see 3GPP TS 23.122 [5]), if an entry of "list of subscriber data" is selected, or in the USIM (see 3GPP TS 31.102 [22]), if the PLMN subscription is selected,in the selected SNPN, if a new SNPN is selected, or RSNPN, and the selected SNPN or the RSNPN is the subscribed SNPN. Access identities 12, 13 and 14 are valid if indicated as configured for the UE in the unified access control configuration in the "list of subscriber data" stored in the ME (see 3GPP TS 23.122 [5]), if an entry of "list of subscriber data" is selected, or in the USIM (see 3GPP TS 31.102 [22]), if the PLMN subscription is selected, in the selected SNPN, if a new SNPN is selected, or RSNPN, and the selected SNPN or the RSNPN in the subscribed SNPN or an non-subscribed SNPN of the same country as the subscribed SNPN if the MCC of the SNPN identity of the subscribed SNPN is not the MCC of value 999. |
+
 The contents of the unified access control configuration in the "list of subscriber data" stored in the ME (see 3GPP TS 23.122 [5]), if an entry of "list of subscriber data" is selected, or in the USIM (see 3GPP TS 31.102 [22]), if the PLMN subscription is selected, and the rules specified in table 4.5.2A.1 are used to determine the applicability of access identity 1 in the SNPN. When the contents of the unified access control configuration in the "list of subscriber data" stored in the ME (see 3GPP TS 23.122 [5]), if an entry of "list of subscriber data" is selected, or in the USIM (see 3GPP TS 31.102 [22]), if the PLMN subscription is selected, do not indicate the UE is configured for access identity 1 for the SNPN, the UE uses the MPS indicator bit of the 5GS network feature support IE in the REGISTRATION ACCEPT message and the MPS indicator bit of the Priority indicator IE in the CONFIGURATION UPDATE COMMAND message to determine if access identity 1 is valid.
 
 The contents of the unified access control configuration in the "list of subscriber data" stored in the ME (see 3GPP TS 23.122 [5]), if an entry of "list of subscriber data" is selected, or in the USIM (see 3GPP TS 31.102 [22]), if the PLMN subscription is selected, and the rules specified in table 4.5.2A.1 are used to determine the applicability of access identity 2 in the SNPN. When the contents of the unified access control configuration in the "list of subscriber data" stored in the ME (see 3GPP TS 23.122 [5]), if an entry of "list of subscriber data" is selected, or in the USIM (see 3GPP TS 31.102 [22]), if the PLMN subscription is selected, do not indicate the UE is configured for access identity 2 for the SNPN, the UE uses the MCS indicator bit of the 5GS network feature support IE in the REGISTRATION ACCEPT message to determine if access identity 2 is valid.
@@ -878,6 +943,27 @@ In order to determine the access category applicable for the access attempt, the
 NOTE:	The case when an access attempt matches more than one rule includes the case when multiple events trigger an access attempt at the same time. When multiple events trigger an access attempt at the same time, how the access attempt is checked for multiple events is up to UE implementation.
 
 Table 4.5.2A.2: Mapping table for access categories
+
+| Rule # | Type of access attempt | Requirements to be met | Access Category |
+|---|---|---|---|
+| 1 | Responseto paging or NOTIFICATION over non-3GPP access ;5GMM connection management procedure initiated for the purpose of transporting an LPPor SLPPmessage without an ongoing 5GC-MO-LRor SL-MO-LRprocedure;Access attempt to handover of MMTEL voice call, MMTEL video call orSMSoIPfrom non-3GPP access;Access attempt upon receipt of "call-pull-initiated" indication from the upper layers (see 3GPP TS 24.174 [13D]) | Access attempt is for MT access, handover of ongoing MMTEL voice call, MMTEL video call orSMSoIPfrom non-3GPP access; orAccess attempt is made upon receipt of "call-pull-initiated" indication (3GPP TS 24.174 [13D]) | 0 (= MT_acc) |
+| 2 | Emergency | UE is attempting access for an emergency session (NOTE 1, NOTE 2) | 2(= emergency) |
+| 3 | Access attemptfor operator-defined access category | UE stores operator-defined access category definitions valid in the SNPN as specified in subclause 4.5.3, and access attempt is matching criteria of an operator-defined access category definition | 32-63(= based on operator classification) |
+| 4 | Access attemptfor delay tolerant service | (a)UEisconfigured for NAS signalling low priority, and(b)the UE received one of the categories a, b or c as part of the parameters for unified access control in the broadcast system information, and the UE is a member of the broadcasted category in the selected SNPN,RSNPNor equivalent SNPN(NOTE 3, NOTE 5, NOTE 6, NOTE 7, NOTE 8) | 1 (= delay tolerant) |
+| 5 | MO MMTel voice call; orMT MMTel voice call | Access attempt is for MO MMTel voice call or MT MMTel voice callor for NAS signalling connection recovery during ongoing MO MMTel voice call or ongoing MT MMTel voice call (NOTE 2) | 4(= MO MMTel voice) |
+| 6 | MO MMTel video call; orMT MMTel video call | Access attempt is for MO MMTel video call or MT MMTel video callor for NAS signalling connection recovery during ongoing MO MMTel video call or ongoing MT MMTel video call (NOTE 2) | 5(= MO MMTel video) |
+| 7 | MO SMS over NAS or MO SMSoIP; orMT SMSoIP | Access attempt is for MO SMS over NAS (NOTE 4) or MO SMS over SMSoIP transfer or MT SMS over SMSoIPor for NAS signalling connection recovery during ongoing MO SMS or SMSoIP transfer or MT SMS over SMSoIP (NOTE 2) | 6(= MO SMS and SMSoIP) |
+| 5 | MO MMTel voice call | Access attempt is for MO MMTel voice callor for NAS signalling connection recovery during ongoing MO MMTel voice call (NOTE 2) | 4(= MO MMTel voice) |
+| 6 | MO MMTel video call | Access attempt is for MO MMTel video callor for NAS signalling connection recovery during ongoing MO MMTel video call (NOTE 2) | 5(= MO MMTel video) |
+| 7 | MO SMS over NAS or MO SMSoIP | Access attempt is for MO SMS over NAS (NOTE 4) or MO SMS over SMSoIP transferor for NAS signalling connection recovery during ongoing MO SMS or SMSoIP transfer (NOTE 2) | 6(= MO SMS and SMSoIP) |
+| 7.1 | MO IMSregistration relatedsignalling | Access attempt is forMO IMS registration related signalling (e.g. IMS initial registration, re-registration, subscription refresh)or forPDU sessionestablishment procedurefor DNN = "IMS"orfor the DNN used for SMSoIP, ifthe upper layers have indicated a DNN used for SMSoIP and the indicated DNN used for SMSoIP is different from "IMS", establishing a PDU session or transferring a PDU session from non-3GPP accessor service request procedure triggered byPDU sessionestablishment procedurefor DNN = "IMS"orfor the DNN used for SMSoIP, ifthe upper layers have indicated a DNN used for SMSoIP and the indicated DNN used for SMSoIP is different from "IMS", establishing a PDU session or transferring a PDU session from non-3GPP accessor for NAS signalling connection recovery during ongoing procedure for MOIMS registration related signalling(NOTE 2a) | 9 (= MO IMS registration related signalling) |
+| 8 | UE NAS initiated 5GMM specific procedures | Access attempt is for MO signalling | 3 (= MO_sig) |
+| 8.1 | Mobile originated location request | Access attempt is for mobile originated location request (NOTE 9) | 3 (= MO_sig) |
+| 8.2 | Mobile originated signalling transaction towards the PCF | Access attempt is for mobile originated signalling transaction towards the PCF (NOTE 10) | 3 (= MO_sig) |
+| 8.3 | Access attempt for RAN timing synchronization | Access attempt isfor mobile originated signallingfor the reconnection to the network due to RAN timing synchronization status change | 3 (= MO_sig) |
+| 9 | UE NAS initiated 5GMM connection management procedure or 5GMM NAS transport procedure | Access attempt is for MO data | 7(= MO_data) |
+| 10 | An uplink user data packet is to be sent for a PDU session with suspended user-plane resources | No further requirement is to be met | 7(= MO_data) |
+| NOTE 1:VoidNOTE 2:Access for the purpose of NAS signalling connection recovery during an ongoing service as defined in subclause4.5.5, or for the purpose of NAS signalling connection establishment following fallbackindication from lower layersduring an ongoing service as defined in subclause4.5.5, is mapped to the access category of the ongoing service in order to derive an RRC establishment cause, but barring checks will be skipped for this access attempt.NOTE 2a:Access for the purpose of NAS signalling connection recovery during an ongoing MOIMS registration related signallingas defined in subclause 4.5.5, or for the purpose of NAS signalling connection establishment following fallback indication from lower layers during an ongoing MOIMS registration related signallingas defined in subclause 4.5.5, is mapped to the access category of the MOIMS registration related signallingin order to derive an RRC establishment cause, but barring checks will be skipped for this access attempt.NOTE 3:If the UE selects a new SNPN, then the selected SNPN is used to check the membership; otherwise the UE uses the RSNPNor an SNPN equivalent to the RSNPN.NOTE 4:This includes the 5GMM connection management procedures triggered by the UE-initiated NAS transport procedure for transporting the MO SMS.NOTE 5:The UE configured for NAS signalling low priority is not supported in this release of specification.NOTE 6:If the access category applicable for the access attempt is 1, then the UE shall additionally determine a second access category from the range 3 to 7. If more than one access category matches, the access category of the lowest rule number shall be chosen. The UE shall use the second access category only to derive an RRC establishment cause for the access attempt.NOTE7:Void.NOTE 8:For the definition of categories a, b and c associated with access category 1, see 3GPP TS 22.261 [3]. The categories associated with access category 1 are distinct from the categories a, b and c associated with EAB(see 3GPP TS 22.011 [1A]).NOTE9:This includes:a)the UE-initiated NAS transport procedure for transporting a mobile originated locationrequest;b)the 5GMM connection management procedure triggered by a) above; andc)NAS signalling connection recovery during an ongoing 5GC-MO-LR procedure.NOTE10:This includes:a)the UE-initiated NAS transport procedure for transporting a mobile originated signallingtransaction towards the PCF;b)the 5GMM connection management procedure triggered by a) above; andc)NAS signalling connection recovery during an ongoing UE-requestedpolicy provisioning procedureforV2XP (see 3GPP TS 24.587[19B]).. |
 
 ### 4.5.3	Operator-defined access categories
 
@@ -1307,7 +1393,42 @@ NOTE 2:	When the UE is acting as a 5G ProSe layer-2 UE-to-network relay UE, it 
 
 Table 4.5.6.1: Mapping table for access identities/access categories and RRC establishment cause when establishing N1 NAS signalling connection via NR connected to 5GCN
 
+| Rule # | Access identities | Access categories | RRC establishment cause is set to |
+|---|---|---|---|
+| 1 | 1 | Anycategory | mps-PriorityAccess |
+| 2 | 2 | Anycategory | mcs-PriorityAccess |
+| 3 | 11, 15 | Anycategory | highPriorityAccess |
+| 4 | 12,13,14, | Anycategory | highPriorityAccess |
+| 5 | 0 | 0 (= MT_acc) | mt-Access |
+|  |  | 1 (= delay tolerant) | Not applicable (NOTE 1) |
+|  |  | 2 (= emergency) | emergency |
+|  |  | 3 (= MO_sig) | mo-Signalling |
+|  |  | 4 (= MO MMTel voice) | mo-VoiceCall |
+|  |  | 5 (= MO MMTel video) | mo-VideoCall |
+|  |  | 6 (= MO SMS and SMSoIP) | mo-SMS |
+|  |  | 7(= MO_data) | mo-Data |
+|  |  | 9 (=MO IMS registration related signalling) | mo-Data |
+| NOTE1:A UE using access category 1 for the access barring check will determine a second access category in the range 3 to 7 that is to be used for determination of the RRC establishment cause. See subclause 4.5.2, table 4.5.2.2, NOTE 6.NOTE2:Seesubclause 4.5.2, table 4.5.2.1for use of the access identities of 0, 1, 2, and 11-15. |
+
 Table 4.5.6.2: Mapping table for access identities/access categories and RRC establishment cause when establishing N1 NAS signalling connection via E-UTRA connected to 5GCN
+
+| Rule # | Access identities | Access categories | RRC establishment cause is set to |
+|---|---|---|---|
+| 1 | 1 | Anycategory | highPriorityAccess |
+| 2 | 2 | Anycategory | highPriorityAccess |
+| 3 | 11, 15 | Anycategory | highPriorityAccess |
+| 4 | 12,13,14, | Anycategory | highPriorityAccess |
+| 5 | 0 | 0 (= MT_acc) | mt-Access |
+|  |  | 1 (= delay tolerant) | Not applicable (NOTE 1) |
+|  |  | 2 (= emergency) | emergency |
+|  |  | 3 (= MO_sig) | mo-Signalling |
+|  |  | 4 (= MO MMTel voice) | mo-VoiceCall |
+|  |  | 5 (= MO MMTel video) | mo-VoiceCall |
+|  |  | 6 (= MO SMS and SMSoIP) | mo-Data |
+|  |  | 7(= MO_data) | mo-Data |
+|  |  | 9 (=MO IMS registration related signalling) | mo-Data |
+|  |  | 10(= MO exception data) | mo-ExceptionData(NOTE 3) |
+| NOTE1:A UE using access category 1 for the access barring check will determine a second access category in the range 3 to 7 that is to be used for determination of the RRC establishment cause. See subclause 4.5.2, table 4.5.2.2, NOTE 6.NOTE2:Seesubclause 4.5.2, table 4.5.2.1for use of the access identities of 0, 1, 2, and 11-15.NOTE 3:This applies to the UE in NB-N1 mode. |
 
 ## 4.6	Network slicing
 
@@ -1714,6 +1835,15 @@ The UE NAS layer may provide the lower layers with an NSSAI (either requested NS
 The AMF may indicate, via the NSSAI inclusion mode IE of a REGISTRATION ACCEPT message, an NSSAI inclusion mode in which the UE shall operate over the current access within the current PLMN or SNPN, if any (see subclauses 5.5.1.2.4 and 5.5.1.3.4), where the NSSAI inclusion mode is chosen among the following NSSAI inclusion modes described in table 4.6.2.3.1.
 
 Table 4.6.2.3.1: NSSAI inclusion modes and NSSAI which shall be provided to the lower layers
+
+| Initial NAS message | NSSAI inclusion mode A | NSSAI inclusion mode B | NSSAI inclusion mode C | NSSAI inclusion mode D |
+|---|---|---|---|---|
+| REGISTRATION REQUEST message:i)including the 5GS registration type IE set to "initial registration" | Requested NSSAI, if any | Requested NSSAI, if any | Requested NSSAI, if any | No NSSAI |
+| REGISTRATION REQUEST message:i)including the 5GS registration type IE set to "mobility registration updating"; andii)initiated by case other than case g) or n) in subclause 5.5.1.3.2 | Requested NSSAI, if any | Requested NSSAI, if any | Requested NSSAI, if any | No NSSAI |
+| REGISTRATION REQUEST message:i)including the 5GS registration type IE set to "mobility registration updating"; andii)initiated by case g) or n) in subclause 5.5.1.3.2 | Allowed NSSAI, and partially allowed NSSAI, if any | Allowed NSSAI,and partially allowed NSSAI, if any | No NSSAI | No NSSAI |
+| REGISTRATION REQUEST message:i)including the 5GS registration type IE set to "periodic registration updating" | Allowed NSSAI,and partially allowed NSSAI, if any | Allowed NSSAI,and partially allowed NSSAI, if any | No NSSAI | No NSSAI |
+| SERVICE REQUEST message | Allowed NSSAI, and partially allowed NSSAI, if any | See NOTE 1 | No NSSAI | No NSSAI |
+| NOTE 1:All the S-NSSAIs of the PDU sessions that have the user-plane resources requested to be re-established by the service request procedure or the S-NSSAIs of a control plane interaction triggering the service request is related to (see 3GPP TS 23.501 [8])NOTE 2:For a REGISTRATION REQUEST message which is triggered by emergency services, a DEREGISTRATION REQUEST message, and a SERVICE REQUEST message which is triggered by emergency services (e.g. a SERVICE REQUEST message includes the service type IE set to "emergency services" or "emergency services fallback", a SERVICE REQUEST message triggered for emergency services includes the service type IE set to “high priority access” as specified in subclause 5.6.1.2.1), no NSSAI is provided to the lower layers. If the UE performs initial registration for onboarding services in SNPN or is registered for onboarding services in SNPN, the UE NAS layer shall not provide the lower layers with an NSSAI.NOTE 3:The mapped configured S-NSSAI(s) from the S-NSSAI(s) of the HPLMN are not included as part of the S-NSSAIs in the requested NSSAI or the allowed NSSAI when it is provided to the lower layers. |
 
 The UE shall store the NSSAI inclusion mode:
 
@@ -2378,6 +2508,20 @@ initiated in 5GMM-IDLE mode is mapped to "MO SMS over IP" type access attempt.
 If the access attempt matches more than one rule, the establishment cause for non-3GPP access of the lowest rule number shall be used.
 
 Table 4.7.2.2.1: Mapping table for determination of establishment cause for non-3GPP access
+
+| Rule # | Access identities | Type of access attempt | Requirements to be met | Establishment cause for non-3GPP access |
+|---|---|---|---|---|
+| 1 | 1 | Any | Any | mps-PriorityAccess |
+| 2 | 2 | Any | Any | mcs-PriorityAccess |
+| 3 | 11, 15 | Any | Any | highPriorityAccess |
+| 4 | 12,13,14, | Any | Any | highPriorityAccess |
+| 5 | 0 | Emergency | UE is attempting access for an emergency session (NOTE 1) | emergency |
+|  |  | UE NAS initiated 5GMM specific procedures | Access attempt is for MO signalling | mo-Signalling |
+|  |  | UE NAS initiated 5GMM connection management procedures or 5GMM NAS transport procedure | Access attempt is for MO data | mo-Data |
+|  |  | MO SMS over NASor MO SMS over IP | Access attempt is for MO SMS over NASor MO SMS over IP | mo-SMS |
+|  |  | MO MMTel voice call | Access attempt is for MO MMTel voice call | mo-VoiceCall |
+|  |  | MO MMTel video call | Access attempt is for MO MMTel video call | mo-Videocall |
+| NOTE 1:This includes 5GMM specific procedures while the service is ongoing and 5GMM connection management procedures required to establish a PDU session with request type = "initial emergency request" or "existing emergency PDU session", or to re-establish user-plane resources for such a PDU session.NOTE 2:Seesubclause 4.5.2, table 4.5.2.1for use of the access identities of 0, 1, 2, and 11-15. |
 
 ### 4.7.3	5GS session management aspects
 
@@ -24997,6 +25141,19 @@ Direction:	network to UE
 
 Table 8.2.1.1.1: AUTHENTICATION REQUEST message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Authentication request message identity | Message type9.7 | M | V | 1 |
+|  | ngKSI | NAS key set identifier9.11.3.32 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | ABBA | ABBA9.11.3.10 | M | LV | 3-n |
+| 21 | Authentication parameter RAND (5G authentication challenge) | Authentication parameter RAND9.11.3.16 | O | TV | 17 |
+| 20 | Authentication parameter AUTN (5G authentication challenge) | Authentication parameter AUTN9.11.3.15 | O | TLV | 18 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+
 #### 8.2.1.2	Authentication parameter RAND
 
 Authentication parameter RAND IE is included if the AUTHENTICATION REQUEST message is used in a 5G AKA authentication procedure.
@@ -25023,6 +25180,15 @@ Direction:	UE to network
 
 Table 8.2.2.1.1: AUTHENTICATION RESPONSE message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Authentication response message identity | Message type9.7 | M | V | 1 |
+| 2D | Authentication response parameter | Authentication response parameter9.11.3.17 | O | TLV | 18 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+
 #### 8.2.2.2	Authentication response parameter
 
 This IE is included if the message is sent in a 5G AKA based primary authentication and key agreement procedure.
@@ -25044,6 +25210,18 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.2.3.1.1: AUTHENTICATION RESULT message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Authentication result message identity | Message type9.7 | M | V | 1 |
+|  | ngKSI | NAS key set identifier9.11.3.32 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | EAP message | EAP message9.11.2.2 | M | LV-E | 6-1502 |
+| 38 | ABBA | ABBA9.11.3.10 | O | TLV | 4-n |
+| 55 | AUN3 device securitykey | AUN3 device securitykey9.11.3.107 | O | TLV | 36-n |
 
 NOTE:	It is possible for AMFs compliant with version 18.3.0 or 18.3.1 of this specification to send the AUN3 device security key IE with a fixed length of 66 octets.
 
@@ -25069,6 +25247,15 @@ Direction:	UE to network
 
 Table 8.2.4.1.1: AUTHENTICATION FAILURE message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Authentication failure message identity | Message type9.7 | M | V | 1 |
+|  | 5GMM cause | 5GMM cause9.11.3.2 | M | V | 1 |
+| 30 | Authentication failure parameter | Authentication failure parameter9.11.3.14 | O | TLV | 16 |
+
 #### 8.2.4.2	Authentication failure parameter
 
 This IE shall be included in a 5G AKA based primary authentication and key agreement procedure if and only if the 5GMM cause was #21 "synch failure". It shall include the response to the authentication challenge from the USIM, which is made up of the AUTS parameter (see 3GPP TS 33.501 [24]).
@@ -25087,6 +25274,14 @@ Direction:	network to UE
 
 Table 8.2.5.1.1: AUTHENTICATION REJECT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Authentication reject message identity | Message type9.7 | M | V | 1 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+
 #### 8.2.5.2	EAP message
 
 EAP message IE is included if the AUTHENTICATION REJECT message is used to convey EAP-failure message.
@@ -25104,6 +25299,58 @@ Significance:	dual
 Direction:	UE to network
 
 Table 8.2.6.1.1: REGISTRATION REQUEST message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended Protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Registration request message identity | Message type9.7 | M | V | 1 |
+|  | 5GS registration type | 5GS registration type9.11.3.7 | M | V | 1/2 |
+|  | ngKSI | NAS key set identifier9.11.3.32 | M | V | 1/2 |
+|  | 5GS mobile identity | 5GSmobile identity9.11.3.4 | M | LV-E | 6-n |
+| C- | Non-current native NAS key set identifier | NAS key set identifier9.11.3.32 | O | TV | 1 |
+| 10 | 5GMM capability | 5GMM capability9.11.3.1 | O | TLV | 3-15 |
+| 2E | UE security capability | UE security capability9.11.3.54 | O | TLV | 4-10 |
+| 2F | Requested NSSAI | NSSAI9.11.3.37 | O | TLV | 4-74 |
+| 52 | Last visited registered TAI | 5GS tracking area identity9.11.3.8 | O | TV | 7 |
+| 17 | S1 UE network capability | S1 UE network capability9.11.3.48 | O | TLV | 4-15 |
+| 40 | Uplink data status | Uplink data status9.11.3.57 | O | TLV | 4-34 |
+| 50 | PDU session status | PDU session status9.11.3.44 | O | TLV | 4-34 |
+| B- | MICO indication | MICO indication9.11.3.31 | O | TV | 1 |
+| 2B | UE status | UE status9.11.3.56 | O | TLV | 3 |
+| 77 | Additional GUTI | 5GS mobile identity9.11.3.4 | O | TLV-E | 14 |
+| 25 | Allowed PDU session status | Allowed PDU session status9.11.3.13 | O | TLV | 4-34 |
+| 18 | UE's usage setting | UE's usage setting9.11.3.55 | O | TLV | 3 |
+| 51 | Requested DRX parameters | 5GSDRX parameters9.11.3.2A | O | TLV | 3 |
+| 70 | EPS NAS message container | EPS NAS message container9.11.3.24 | O | TLV-E | 4-n |
+| 74 | LADN indication | LADN indication9.11.3.29 | O | TLV-E | 3-811 |
+| 8- | Payload container type | Payload container type9.11.3.40 | O | TV | 1 |
+| 7B | Payload container | Payload container9.11.3.39 | O | TLV-E | 4-65538 |
+| 9- | Network slicing indication | Network slicing indication9.11.3.36 | O | TV | 1 |
+| 53 | 5GS update type | 5GS update type9.11.3.9A | O | TLV | 3 |
+| 41 | Mobile station classmark 2 | Mobile station classmark 29.11.3.31C | O | TLV | 5 |
+| 42 | Supported codecs | Supported codec list9.11.3.51A | O | TLV | 5-n |
+| 71 | NAS message container | NAS message container9.11.3.33 | O | TLV-E | 4-n |
+| 60 | EPS bearercontextstatus | EPS bearercontextstatus9.11.3.23A | O | TLV | 4 |
+| 6E | Requested extended DRX parameters | Extended DRX parameters9.11.3.26A | O | TLV | 3-4 |
+| 6A | T3324 value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 67 | UE radio capability ID | UE radio capability ID9.11.3.68 | O | TLV | 3-n |
+| 35 | Requested mapped NSSAI | Mapped NSSAI9.11.3.31B | O | TLV | 3-42 |
+| 48 | Additional information requested | Additional information requested9.11.3.12A | O | TLV | 3 |
+| 1A | Requested WUS assistance information | WUS assistance information9.11.3.71 | O | TLV | 3-n |
+| A- | N5GC indication | N5GC indication9.11.3.72 | O | TV | 1 |
+| 30 | Requested NB-N1 mode DRX parameters | NB-N1 mode DRX parameters9.11.3.73 | O | TLV | 3 |
+| 29 | UE request type | UE request type9.11.3.76 | O | TLV | 3 |
+| 28 | Paging restriction | Paging restriction9.11.3.77 | O | TLV | 3-35 |
+| 72 | Service-level-AA container | Service-level-AA container9.11.2.10 | O | TLV-E | 4-65538 |
+| 32 | NID | NID9.11.3.79 | O | TLV | 8 |
+| 16 | UEdeterminedPLMN with disaster condition | PLMN identity9.11.3.85 | O | TLV | 5 |
+| 2A | Requested PEIPS assistance information | PEIPS assistance information9.11.3.80 | O | TLV | 3-n |
+| 3B | RequestedT3512value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 3C | Unavailabilityinformation | Unavailability information9.11.2.20 | O | TLV | 3-9 |
+| 3F | Non-3GPP path switching information | Non-3GPP path switching information9.11.3.102 | O | TLV | 3 |
+| 56 | AUN3indication | AUN3indication9.11.3.104 | O | TLV | 3 |
 
 #### 8.2.6.2	Non-current native NAS key set identifier
 
@@ -25326,6 +25573,75 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.2.7.1.1: REGISTRATION ACCEPT message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Registration accept message identity | Message type9.7 | M | V | 1 |
+|  | 5GS registration result | 5GS registration result9.11.3.6 | M | LV | 2 |
+| 77 | 5G-GUTI | 5GSmobile identity9.11.3.4 | O | TLV-E | 14 |
+| 4A | Equivalent PLMNs | PLMN list9.11.3.45 | O | TLV | 5-47 |
+| 54 | TAI list | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
+| 15 | Allowed NSSAI | NSSAI9.11.3.37 | O | TLV | 4-74 |
+| 11 | Rejected NSSAI | RejectedNSSAI9.11.3.46 | O | TLV | 4-42 |
+| 31 | Configured NSSAI | NSSAI9.11.3.37 | O | TLV | 4-146 |
+| 21 | 5GSnetwork feature support | 5GSnetwork feature support9.11.3.5 | O | TLV | 3-6 |
+| 50 | PDU session status | PDU session status9.11.3.44 | O | TLV | 4-34 |
+| 26 | PDU session reactivation result | PDU session reactivation result9.11.3.42 | O | TLV | 4-34 |
+| 72 | PDU session reactivation result error cause | PDU session reactivation result error cause9.11.3.43 | O | TLV-E | 5-515 |
+| 79 | LADN information | LADN information9.11.3.30 | O | TLV-E | 13-1715 |
+| B- | MICO indication | MICO indication9.11.3.31 | O | TV | 1 |
+| 9- | Network slicing indication | Network slicing indication9.11.3.36 | O | TV | 1 |
+| 27 | Service area list | Service area list9.11.3.49 | O | TLV | 6-114 |
+| 5E | T3512 value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 5D | Non-3GPP de-registration timer value | GPRS timer 29.11.2.4 | O | TLV | 3 |
+| 16 | T3502 value | GPRS timer 29.11.2.4 | O | TLV | 3 |
+| 34 | Emergency number list | Emergency number list9.11.3.23 | O | TLV | 5-50 |
+| 7A | Extended emergency number list | Extended emergency number list9.11.3.26 | O | TLV-E | 7-65538 |
+| 73 | SOR transparent container | SOR transparent container9.11.3.51 | O | TLV-E | 20-n |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+| A- | NSSAI inclusion mode | NSSAI inclusion mode9.11.3.37A | O | TV | 1 |
+| 76 | Operator-defined access category definitions | Operator-defined access category definitions9.11.3.38 | O | TLV-E | 3-8323 |
+| 51 | Negotiated DRX parameters | 5GS DRX parameters9.11.3.2A | O | TLV | 3 |
+| D- | Non-3GPP NWpolicies | Non-3GPP NWprovided policies9.11.3.36A | O | TV | 1 |
+| 60 | EPS bearercontextstatus | EPS bearercontextstatus9.11.3.23A | O | TLV | 4 |
+| 6E | Negotiated extended DRX parameters | Extended DRX parameters9.11.3.26A | O | TLV | 3-4 |
+| 6C | T3447 value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 6B | T3448 value | GPRS timer29.11.2.4 | O | TLV | 3 |
+| 6A | T3324 value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 67 | UE radio capability ID | UE radio capability ID9.11.3.68 | O | TLV | 3-n |
+| E- | UE radio capability ID deletion indication | UE radio capability ID deletion indication9.11.3.69 | O | TV | 1 |
+| 39 | Pending NSSAI | NSSAI9.11.3.37 | O | TLV | 4-146 |
+| 74 | Ciphering key data | Ciphering key data9.11.3.18C | O | TLV-E | 34-n |
+| 75 | CAG information list | CAG information list9.11.3.18A | O | TLV-E | 3-n |
+| 1B | Truncated 5G-S-TMSI configuration | Truncated 5G-S-TMSI configuration9.11.3.70 | O | TLV | 3 |
+| 1C | Negotiated WUS assistance information | WUS assistance information9.11.3.71 | O | TLV | 3-n |
+| 29 | Negotiated NB-N1 mode DRX parameters | NB-N1 mode DRX parameters9.11.3.73 | O | TLV | 3 |
+| 68 | Extended rejected NSSAI | Extended rejected NSSAI9.11.3.75 | O | TLV | 5-90 |
+| 7B | Service-level-AA container | Service-level-AA container9.11.2.10 | O | TLV-E | 4-65538 |
+| 33 | Negotiated PEIPS assistance information | PEIPS assistance information9.11.3.80 | O | TLV | 3-n |
+| 35 | 5GS additional request result | 5GS additional request result9.11.3.81 | O | TLV | 3 |
+| 70 | NSSRG information | NSSRG information9.11.3.82 | O | TLV-E | 7-4099 |
+| 14 | Disaster roaming wait range | Registration wait range9.11.3.84 | O | TLV | 4 |
+| 2C | Disaster return wait range | Registration wait range9.11.3.84 | O | TLV | 4 |
+| 13 | List of PLMNs to be used in disaster condition | List of PLMNs to be used in disaster condition9.11.3.83 | O | TLV | 2-n |
+| 1D | Forbidden TAI(s) for the list of "5GS forbidden tracking areas for roaming" | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
+| 1E | Forbidden TAI(s) for the list of "5GS forbidden tracking areas for regional provision of service" | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
+| 71 | Extended CAG information list | Extended CAG information list9.11.3.86 | O | TLV-E | 3-n |
+| 7C | NSAG information | NSAG information9.11.3.87 | O | TLV-E | 9-3143 |
+| 3D | Equivalent SNPNs | SNPN list9.11.3.92 | O | TLV | 11-137 |
+| 32 | NID | NID9.11.3.79 | O | TLV | 8 |
+| 7D | Registration accept type 6 IE container | Type 6 IE container9.11.3.98 | O | TLV-E | 6-65538 |
+| 4B | RAN timing synchronization | RAN timing synchronization9.11.3.95 | O | TLV | 3 |
+| 4C | Alternative NSSAI | Alternative NSSAI9.11.3.97 | O | TLV | 2-146 |
+| 4F | Maximumtimeoffset | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 5B | S-NSSAI time validity information | S-NSSAI time validity information9.11.3.101 | O | TLV | 23-257 |
+| 3C | Unavailabilityconfiguration | Unavailability configuration9.11.2.21 | O | TLV | 3-6 |
+| 5C | Featureauthorization indication | Featureauthorization indication9.11.3.105 | O | TLV | 3-257 |
+| 61 | On-demand NSSAI | On-demand NSSAI9.11.3.108 | O | TLV | 5-210 |
+| 63 | RATutilization control | RATutilization control9.11.3.110 | O | TLV | 4 |
 
 #### 8.2.7.2	5G-GUTI
 
@@ -25601,6 +25917,13 @@ In this version of the specification, only the transfer of the information eleme
 
 Table 8.2.7.54.1.1: Information elements and IEIs for the Registration accept type 6 IE container
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+| 01 | Extended LADN information | ExtendedLADN information9.11.3.96 | O | TLV-E | 15-1787 |
+| 02 | S-NSSAI location validity information | S-NSSAI location validity information9.11.3.100 | O | TLV-E | 17-38611 |
+| 03 | Partially allowed NSSAI | Partial NSSAI9.11.3.103 | O | TLV-E | 3-808 |
+| 04 | Partially rejected NSSAI | PartialNSSAI9.11.3.103 | O | TLV-E | 3-808 |
+
 ##### 8.2.7.54.2	Extended LADN information
 
 The network shall include this IE if the UE supports LADN per DNN and S-NSSAI and there are valid LADN service area(s) for the subscribed DNN(s) of the UE and S-NSSAI associated with the LADN in the current registration area.
@@ -25663,6 +25986,14 @@ Direction:	UE to network
 
 Table 8.2.8.1.1: REGISTRATION COMPLETE message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Registration complete message identity | Message type9.7 | M | V | 1 |
+| 73 | SOR transparentcontainer | SOR transparentcontainer9.11.3.51 | O | TLV-E | 20 |
+
 #### 8.2.8.2	SOR transparent container
 
 This IE may be sent by the UE. If this IE is sent, the contents of this IE indicates the UE acknowledgement of successful reception of the SOR transparent container IE in the REGISTRATION ACCEPT message. This IE shall indicate the ME support of SOR-CMCI.
@@ -25680,6 +26011,29 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.2.9.1.1: REGISTRATION REJECT message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Registration reject message identity | Message type9.7 | M | V | 1 |
+|  | 5GMM cause | 5GMM cause9.11.3.2 | M | V | 1 |
+| 5F | T3346value | GPRS timer 29.11.2.4 | O | TLV | 3 |
+| 16 | T3502 value | GPRS timer 29.11.2.4 | O | TLV | 3 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+| 69 | Rejected NSSAI | Rejected NSSAI9.11.3.46 | O | TLV | 4-42 |
+| 75 | CAG information list | CAG information list9.11.3.18A | O | TLV-E | 3-n |
+| 68 | Extended rejected NSSAI | Extended rejected NSSAI9.11.3.75 | O | TLV | 5-90 |
+| 2C | Disaster return wait range | Registration wait range9.11.3.84 | O | TLV | 4 |
+| 71 | Extended CAG information list | Extended CAG information list9.11.3.86 | O | TLV-E | 3-n |
+| 3A | Lower bound timer value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 1D | Forbidden TAI(s) for the list of "5GS forbidden tracking areas for roaming" | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
+| 1E | Forbidden TAI(s) for the list of "5GS forbidden tracking areas for regional provision of service" | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
+| 3E | N3IWFidentifier | N3IWFidentifier9.11.3.93 | O | TLV | 7-n |
+| 4D | TNAN information | TNAN information9.11.3.94 | O | TLV | 3-n |
+| 62 | Extended 5GMM cause | Extended 5GMM cause9.11.3.109 | O | TLV | 3 |
+| 63 | RAT utilization control | RAT utilization control9.11.3.110 | O | TLV | 4-n |
 
 NOTE:	It is possible for AMFs compliant with version 17.7.0 or 17.8.0 of this specification to send the Forbidden TAI(s) for the list of "5GS forbidden tracking areas for roaming" IE with IEI of value "3B" for this message or the Forbidden TAI(s) for the list of "5GS forbidden tracking areas for regional provision of service" IE with IEI of value "3C" for this message.
 
@@ -25757,6 +26111,27 @@ Direction:	UE to network
 
 Table 8.2.10.1.1: UL NAS TRANSPORT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | UL NAS TRANSPORT message identity | Message type9.7 | M | V | 1 |
+|  | Payload container type | Payload container type9.11.3.40 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Payload container | Payload container9.11.3.39 | M | LV-E | 3-65537 |
+| 12 | PDU session ID | PDU session identity29.11.3.41 | C | TV | 2 |
+| 59 | Old PDU session ID | PDU session identity29.11.3.41 | O | TV | 2 |
+| 8- | Request type | Request type9.11.3.47 | O | TV | 1 |
+| 22 | S-NSSAI | S-NSSAI9.11.2.8 | O | TLV | 3-10 |
+| 25 | DNN | DNN9.11.2.1B | O | TLV | 3-102 |
+| 24 | Additional information | Additional information9.11.2.1 | O | TLV | 3-n |
+| A- | MA PDU session information | MA PDU session information9.11.3.31A | O | TV | 1 |
+| F- | Release assistance indication | Release assistance indication9.11.3.46A | O | TV | 1 |
+| 4E | Non-3GPP access path switchingindication | Non-3GPP access path switchingindication9.11.3.99 | O | TLV | 3 |
+| 5A | AlternativeS-NSSAI | S-NSSAI9.11.2.8 | O | TLV | 3-10 |
+| 9- | Payload container information | Payload container information9.11.3.106 | O | TV | 1 |
+
 #### 8.2.10.2	PDU session ID
 
 The UE shall include this IE when the Payload container type IE is set to "N1 SM information" or "CIoT user data.
@@ -25819,6 +26194,21 @@ Direction:	network to UE
 
 Table 8.2.11.1.1: DL NAS TRANSPORT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | DL NAS TRANSPORT message identity | Message type9.7 | M | V | 1 |
+|  | Payload container type | Payload container type9.11.3.40 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Payload container | Payload container9.11.3.39 | M | LV-E | 3-65537 |
+| 12 | PDU session ID | PDU session identity29.11.3.41 | C | TV | 2 |
+| 24 | Additional information | Additional information9.11.2.1 | O | TLV | 3-n |
+| 58 | 5GMM cause | 5GMM cause9.11.3.2 | O | TV | 2 |
+| 37 | Back-off timer value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 3A | Lower bound timer value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+
 #### 8.2.11.2	PDU session ID
 
 The AMF shall include this IE when the Payload container type IE is set to "N1 SM information" or "CIoT user data container".
@@ -25853,6 +26243,18 @@ Direction:	UE to network
 
 Table 8.2.12.1.1: DEREGISTRATION REQUEST message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | De-registration request message identity | Message type9.7 | M | V | 1 |
+|  | De-registration type | De-registration type9.11.3.20 | M | V | 1/2 |
+|  | ngKSI | NAS key set identifier9.11.3.32 | M | V | 1/2 |
+|  | 5GS mobile identity | 5GS mobile identity9.11.3.4 | M | LV-E | 6-n |
+| 3C | Unavailabilityinformation | Unavailability information9.11.2.20 | O | TLV | 3-9 |
+| 71 | NAS message container | NAS message container9.11.3.33 | O | TLV-E | 4-n |
+
 #### 8.2.12.2	Unavailability information
 
 The UE may include this IE when an event is triggered in the UE that would make the UE unavailable for a certain period and the use of unavailability period is not due to NR satellite access discontinuous coverage.
@@ -25875,6 +26277,13 @@ Direction:	network to UE
 
 Table 8.2.13.1.1: DEREGISTRATION ACCEPT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | De-registrationacceptmessage identity | Message type9.7 | M | V | 1 |
+
 ### 8.2.14	De-registration request (UE terminated de-registration)
 
 #### 8.2.14.1	Message definition
@@ -25888,6 +26297,26 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.2.14.1.1: DEREGISTRATION REQUEST message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | De-registration request message identity | Message type9.7 | M | V | 1 |
+|  | De-registration type | De-registration type9.11.3.20 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+| 58 | 5GMM cause | 5GMM cause9.11.3.2 | O | TV | 2 |
+| 5F | T3346 value | GPRS timer 29.11.2.4 | O | TLV | 3 |
+| 6D | Rejected NSSAI | Rejected NSSAI9.11.3.46 | O | TLV | 4-42 |
+| 75 | CAG information list | CAG information list9.11.3.18A | O | TLV-E | 3-n |
+| 68 | Extended rejected NSSAI | Extended rejected NSSAI9.11.3.75 | O | TLV | 5-90 |
+| 2C | Disaster return wait range | Registration wait range9.11.3.84 | O | TLV | 4 |
+| 71 | Extended CAG information list | Extended CAG information list9.11.3.86 | O | TLV-E | 3-n |
+| 3A | Lower bound timer value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 1D | Forbidden TAI(s) for the list of "5GS forbidden tracking areas for roaming" | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
+| 1E | Forbidden TAI(s) for the list of "5GS forbidden tracking areas for regional provision of service" | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
+| 63 | RAT utilization control | RAT utilization control9.11.3.110 | O | TLV | 4-n |
 
 NOTE:	It is possible for AMFs compliant with version 17.7.0 or 17.8.0 of this specification to send the Forbidden TAI(s) for the list of "5GS forbidden tracking areas for roaming" IE with IEI of value "3B" for this message or the Forbidden TAI(s) for the list of "5GS forbidden tracking areas for regional provision of service" IE with IEI of value "3C" for this message.
 
@@ -25949,6 +26378,13 @@ Direction:	UE to network
 
 Table 8.2.15.1.1.1: DEREGISTRATION ACCEPT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | De-registrationacceptmessage identity | Message type9.7 | M | V | 1 |
+
 ### 8.2.16	Service request
 
 #### 8.2.16.1	Message definition
@@ -25962,6 +26398,22 @@ Significance:	dual
 Direction:	UE to network
 
 Table 8.2.16.1.1: SERVICE REQUEST message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Service request message identity | Message type9.7 | M | V | 1 |
+|  | ngKSI | NAS key set identifier9.11.3.32 | M | V | 1/2 |
+|  | Service type | Service type9.11.3.50 | M | V | 1/2 |
+|  | 5G-S-TMSI | 5GS mobile identity9.11.3.4 | M | LV-E | 9 |
+| 40 | Uplink data status | Uplink data status9.11.3.57 | O | TLV | 4-34 |
+| 50 | PDU session status | PDU session status9.11.3.44 | O | TLV | 4-34 |
+| 25 | Allowed PDU session status | Allowed PDU session status9.11.3.13 | O | TLV | 4-34 |
+| 71 | NAS message container | NAS message container9.11.3.33 | O | TLV-E | 4-n |
+| 29 | UE request type | UE request type9.11.3.76 | O | TLV | 3 |
+| 28 | Paging restriction | Paging restriction9.11.3.77 | O | TLV | 3-35 |
 
 #### 8.2.16.2	Uplink data status
 
@@ -26000,6 +26452,21 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.2.17.1.1: SERVICE ACCEPT message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Service accept message identity | Message type9.7 | M | V | 1 |
+| 50 | PDU session status | PDU session status9.11.3.44 | O | TLV | 4-34 |
+| 26 | PDU session reactivation result | PDU session reactivation result9.11.3.42 | O | TLV | 4-34 |
+| 72 | PDU session reactivation result error cause | PDU session reactivation result error cause9.11.3.43 | O | TLV-E | 5-515 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+| 6B | T3448 value | GPRS timer29.11.2.4 | O | TLV | 3 |
+| 34 | 5GS additional request result | 5GS additional request result9.11.3.81 | O | TLV | 3 |
+| 1D | Forbidden TAI(s) for the list of "5GS forbidden tracking areas for roaming" | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
+| 1E | Forbidden TAI(s) for the list of "5GS forbidden tracking areas for regional provision of service" | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
 
 #### 8.2.17.2	PDU session status
 
@@ -26050,6 +26517,24 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.2.18.1.1: SERVICE REJECT message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Service reject message identity | Message type9.7 | M | V | 1 |
+|  | 5GMM cause | 5GMM cause9.11.3.2 | M | V | 1 |
+| 50 | PDU session status | PDU session status9.11.3.44 | O | TLV | 4-34 |
+| 5F | T3346 value | GPRS timer 29.11.2.4 | O | TLV | 3 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+| 6B | T3448 value | GPRS timer29.11.2.4 | O | TLV | 3 |
+| 75 | CAG information list | CAG information list9.11.3.18A | O | TLV-E | 3-n |
+| 2C | Disaster return wait range | Registration wait range9.11.3.84 | O | TLV | 4 |
+| 71 | Extended CAG information list | Extended CAG information list9.11.3.86 | O | TLV-E | 3-n |
+| 3A | Lower bound timer value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 1D | Forbidden TAI(s) for the list of "5GS forbidden tracking areas for roaming" | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
+| 1E | Forbidden TAI(s) for the list of "5GS forbidden tracking areas for regional provision of service" | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
 
 NOTE:	It is possible for AMFs compliant with version 17.7.0 or 17.8.0 of this specification to send the Forbidden TAI(s) for the list of "5GS forbidden tracking areas for roaming" IE with IEI of value "3B" for this message or the Forbidden TAI(s) for the list of "5GS forbidden tracking areas for regional provision of service" IE with IEI of value "3C" for this message.
 
@@ -26106,6 +26591,58 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.2.19.1.1: CONFIGURATION UPDATE COMMAND message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Configuration update command message identity | Message type9.7 | M | V | 1 |
+| D- | Configuration update indication | Configuration update indication9.11.3.18 | O | TV | 1 |
+| 77 | 5G-GUTI | 5GS mobile identity9.11.3.4 | O | TLV-E | 14 |
+| 54 | TAI list | 5GS tracking area identity list9.11.3.9 | O | TLV | 9-114 |
+| 15 | Allowed NSSAI | NSSAI9.11.3.37 | O | TLV | 4-74 |
+| 27 | Service area list | Service area list9.11.3.49 | O | TLV | 6-114 |
+| 43 | Full name for network | Network name9.11.3.35 | O | TLV | 3-n |
+| 45 | Short name for network | Network name9.11.3.35 | O | TLV | 3-n |
+| 46 | Local time zone | Time zone9.11.3.52 | O | TV | 2 |
+| 47 | Universal time and local time zone | Time zone and time9.11.3.53 | O | TV | 8 |
+| 49 | Network daylight saving time | Daylight saving time9.11.3.19 | O | TLV | 3 |
+| 79 | LADNinformation | LADN information9.11.3.30 | O | TLV-E | 3-1715 |
+| B- | MICO indication | MICO indication9.11.3.31 | O | TV | 1 |
+| 9- | Network slicing indication | Network slicing indication9.11.3.36 | O | TV | 1 |
+| 31 | Configured NSSAI | NSSAI9.11.3.37 | O | TLV | 4-146 |
+| 11 | Rejected NSSAI | Rejected NSSAI9.11.3.46 | O | TLV | 4-42 |
+| 76 | Operator-defined access category definitions | Operator-defined access category definitions9.11.3.38 | O | TLV-E | 3-8323 |
+| F- | SMS indication | SMS indication9.11.3.50A | O | TV | 1 |
+| 6C | T3447 value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 75 | CAG information list | CAG information list9.11.3.18A | O | TLV-E | 3-n |
+| 67 | UE radio capability ID | UE radio capability ID9.11.3.68 | O | TLV | 3-n |
+| A- | UE radio capability ID deletion indication | UE radio capability ID deletion indication9.11.3.69 | O | TV | 1 |
+| 44 | 5GS registration result | 5GS registration result9.11.3.6 | O | TLV | 3 |
+| 1B | Truncated 5G-S-TMSI configuration | Truncated 5G-S-TMSI configuration9.11.3.70 | O | TLV | 3 |
+| C- | Additional configuration indication | Additional configuration indication9.11.3.74 | O | TV | 1 |
+| 68 | Extended rejected NSSAI | Extended rejected NSSAI9.11.3.75 | O | TLV | 5-90 |
+| 72 | Service-level-AA container | Service-level-AA container9.11.2.10 | O | TLV-E | 4-65538 |
+| 70 | NSSRG information | NSSRG information9.11.3.82 | O | TLV-E | 7-4099 |
+| 14 | Disaster roaming wait range | Registration wait range9.11.3.84 | O | TLV | 4 |
+| 2C | Disaster return wait range | Registration wait range9.11.3.84 | O | TLV | 4 |
+| 13 | List of PLMNs to be used in disaster condition | List of PLMNs to be used in disaster condition9.11.3.83 | O | TLV | 2-n |
+| 71 | Extended CAG information list | Extended CAG information list9.11.3.86 | O | TLV-E | 3-n |
+| 1F | Updated PEIPS assistance information | PEIPS assistance information9.11.3.80 | O | TLV | 3-n |
+| 73 | NSAG information | NSAG information9.11.3.87 | O | TLV-E | 9-3143 |
+| E- | Priority indicator | Priority indicator9.11.3.91 | O | TV | 1 |
+| 4B | RAN timing synchronization | RAN timing synchronization9.11.3.95 | O | TLV | 3 |
+| 78 | ExtendedLADNinformation | Extended LADN information9.11.3.96 | O | TLV-E | 3-1787 |
+| 4C | Alternative NSSAI | Alternative NSSAI9.11.3.97 | O | TLV | 2-146 |
+| 7B | S-NSSAIlocation validityinformation | S-NSSAIlocation validityinformation9.11.3.100 | O | TLV-E | 17-38611 |
+| 5B | S-NSSAItime validity information | S-NSSAItime validity information9.11.3.101 | O | TLV | 23-257 |
+| 4F | Maximumtimeoffset | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 74 | Partially allowed NSSAI | Partial NSSAI9.11.3.103 | O | TLV-E | 3-808 |
+| 7A | Partially rejected NSSAI | Partial NSSAI9.11.3.103 | O | TLV-E | 3-808 |
+| 5C | Feature authorization indication | Feature authorization indication9.11.3.105 | O | TLV | 3-257 |
+| 61 | On-demand NSSAI | On-demand NSSAI9.11.3.108 | O | TLV | 5-210 |
+| 63 | RATutilization control | RATutilization control9.11.3.110 | O | TLV | 2-n |
 
 #### 8.2.19.2	Configuration update indication
 
@@ -26301,6 +26838,13 @@ Direction:	UE to network
 
 Table 8.2.20.1.1: CONFIGURATION UPDATE COMPLETE message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Configuration update complete message identity | Message type9.7 | M | V | 1 |
+
 ### 8.2.21	Identity request
 
 #### 8.2.21.1	Message definition
@@ -26314,6 +26858,15 @@ Significance:	dual
 Direction:	AMF to UE
 
 Table 8.2.21.1.1: IDENTITY REQUEST message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Identity request message identity | Message type9.7 | M | V | 1 |
+|  | Identity type | 5GS identity type9.11.3.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
 
 ### 8.2.22	Identity response
 
@@ -26329,6 +26882,14 @@ Direction:	UE to AMF
 
 Table 8.2.22.1.1: IDENTITY RESPONSE message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Identity response message identity | Message type9.7 | M | V | 1 |
+|  | Mobile identity | 5GS mobile identity9.11.3.4 | M | LV-E | 3-n |
+
 ### 8.2.23	Notification
 
 #### 8.2.23.1	Message definition
@@ -26343,6 +26904,15 @@ Direction:	network to UE
 
 Table 8.2.23.1.1: NOTIFICATION message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Notification message identity | Message type9.7 | M | V | 1 |
+|  | Access type | Access type9.11.2.1A | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+
 ### 8.2.24	Notification response
 
 #### 8.2.24.1	Message definition
@@ -26356,6 +26926,14 @@ Significance:	dual
 Direction:	UE to network
 
 Table 8.2.2341.1: NOTIFICATION RESPONSE message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Notification response message identity | Message type9.7 | M | V | 1 |
+| 50 | PDU session status | PDU session status9.11.3.44 | O | TLV | 4-34 |
 
 #### 8.2.24.2	PDU session status
 
@@ -26374,6 +26952,24 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.2.25.1.1: SECURITY MODE COMMAND message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Security mode command message identity | Message type9.7 | M | V | 1 |
+|  | Selected NAS security algorithms | NAS security algorithms9.11.3.34 | M | V | 1 |
+|  | ngKSI | NAS key set identifier9.11.3.32 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Replayed UE security capabilities | UE security capability9.11.3.54 | M | LV | 3-9 |
+| E- | IMEISV request | IMEISV request9.11.3.28 | O | TV | 1 |
+| 57 | Selected EPS NAS security algorithms | EPS NAS security algorithms9.11.3.25 | O | TV | 2 |
+| 36 | Additional 5G security information | Additional 5G security information9.11.3.12 | O | TLV | 3 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+| 38 | ABBA | ABBA9.11.3.10 | O | TLV | 4-n |
+| 19 | Replayed S1 UE security capabilities | S1 UE security capability9.11.3.48A | O | TLV | 4-7 |
+| 55 | AUN3 device securitykey | AUN3 device securitykey9.11.3.107 | O | TLV | 36-257 |
 
 NOTE:	It is possible for AMFs compliant with version 18.3.0 or 18.3.1 of this specification to send the AUN3 device security key IE with a fixed length of 66 octets.
 
@@ -26423,6 +27019,16 @@ Direction:	UE to network
 
 Table 8.2.26.1.1: SECURITY MODE COMPLETE message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Security mode complete message identity | Message type9.6 | M | V | 1 |
+| 77 | IMEISV | 5GSmobile identity9.11.3.4 | O | TLV-E | 12 |
+| 71 | NAS message container | NAS message container9.11.3.33 | O | TLV-E | 4-n |
+| 78 | non-IMEISV PEI | 5GS mobile identity9.11.3.4 | O | TLV-E | 7-n |
+
 #### 8.2.26.2	IMEISV
 
 The UE shall include this information element, if the IMEISV was requested within the corresponding SECURITY MODE COMMAND message.
@@ -26455,6 +27061,14 @@ Direction:	UE to network
 
 Table 8.2.27.1.1: SECURITY MODE REJECT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Security mode reject message identity | Message type9.6 | M | V | 1 |
+|  | 5GMM cause | 5GMM cause9.11.3.2 | M | V | 1 |
+
 ### 8.2.28	Security protected 5GS NAS message
 
 #### 8.2.28.1	Message definition
@@ -26468,6 +27082,15 @@ Significance:	dual
 Direction:	both
 
 Table 8.2.28.1.1: SECURITY PROTECTED 5GS NAS MESSAGE message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Message authentication code | Message authentication code9.8 | M | V | 4 |
+|  | Sequence number | Sequence number9.10 | M | V | 1 |
+|  | Plain 5GSNAS message | Plain 5GSNAS message9.9 | M | V | 3-n |
 
 NOTE:	The minimum length of Plain 5GS NAS message IE can be 2 octets if it includes a Test Mode Control message specified in 3GPP TS 38.509 [31AA].
 
@@ -26485,6 +27108,14 @@ Direction:	both
 
 Table 8.2.29.1.1: 5GMM STATUS message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | 5GMM STATUS message identity | Message type9.7 | M | V | 1 |
+|  | 5GMM cause | 5GMM cause9.11.3.2 | M | V | 1 |
+
 ### 8.2.30	Control Plane Service request
 
 #### 8.2.30.1	Message definition
@@ -26498,6 +27129,27 @@ Significance:	dual
 Direction:	UE to network
 
 Table 8.2.30.1.1: CONTROL PLANE SERVICE REQUEST message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Control plane service request message identity | Message type9.7 | M | V | 1 |
+|  | Control plane service type | Control plane service type9.11.3.18D | M | V | 1/2 |
+|  | ngKSI | NAS key set identifier9.11.3.32 | M | V | 1/2 |
+| 6F | CIoT small data container | CIoT small data container9.11.3.18B | O | TLV | 4-257 |
+| 8- | Payload container type | Payload container type9.11.3.40 | O | TV | 1 |
+| 7B | Payload container | Payload container9.11.3.39 | O | TLV-E | 4-65538 |
+| 12 | PDU session ID | PDU session identity 29.11.3.41 | C | TV | 2 |
+| 50 | PDU session status | PDU session status9.11.3.44 | O | TLV | 4-34 |
+| F- | Release assistance indication | Release assistance indication9.11.3.46A | O | TV | 1 |
+| 40 | Uplink data status | Uplink data status9.11.3.57 | O | TLV | 4-34 |
+| 71 | NAS message container | NAS message container9.11.3.33 | O | TLV-E | 4-n |
+| 24 | Additional information | Additional information9.11.2.1 | O | TLV | 3-n |
+| 25 | Allowed PDU session status | Allowed PDU session status9.11.3.13 | O | TLV | 4-34 |
+| 29 | UE request type | UE request type9.11.3.76 | O | TLV | 3 |
+| 28 | Paging restriction | Paging restriction9.11.3.77 | O | TLV | 3-35 |
 
 #### 8.2.30.2	CIoT small data container
 
@@ -26567,6 +27219,15 @@ Direction:	network to UE
 
 Table 8.2.31.1.1: NETWORK SLICE-SPECIFIC AUTHENTICATION COMMAND message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | NETWORK SLICE-SPECIFIC AUTHENTICATION COMMAND message identity | Message type9.7 | M | V | 1 |
+|  | S-NSSAI | S-NSSAI9.11.2.8 | M | LV | 2-5 |
+|  | EAP message | EAP message9.11.2.2 | M | LV-E | 6-1502 |
+
 ### 8.2.32	Network slice-specific authentication complete
 
 #### 8.2.32.1	Message definition
@@ -26580,6 +27241,15 @@ Significance:	dual
 Direction:	UE to network
 
 Table 8.2.32.1.1: NETWORK SLICE-SPECIFIC AUTHENTICATION COMPLETE message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | NETWORK SLICE-SPECIFIC AUTHENTICATION COMPLETE message identity | Message type9.7 | M | V | 1 |
+|  | S-NSSAI | S-NSSAI9.11.2.8 | M | LV | 2-5 |
+|  | EAP message | EAP message9.11.2.2 | M | LV-E | 6-1502 |
 
 ### 8.2.33	Network slice-specific authentication result
 
@@ -26595,6 +27265,15 @@ Direction:	network to UE
 
 Table 8.2.33.1.1: NETWORK SLICE-SPECIFIC AUTHENTICATION RESULT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | NETWORK SLICE-SPECIFIC AUTHENTICATION RESULT message identity | Message type9.7 | M | V | 1 |
+|  | S-NSSAI | S-NSSAI9.11.2.8 | M | LV | 2-5 |
+|  | EAP message | EAP message9.11.2.2 | M | LV-E | 6-1502 |
+
 ### 8.2.34	Relay key request
 
 #### 8.2.34.1	Message definition
@@ -26609,6 +27288,15 @@ Direction:	UE to network
 
 Table 8.2.34.1: RELAY KEY REQUEST message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Relay key request message identity | Message type9.7 | M | V | 1 |
+|  | PRTI | ProSe relay transaction identity9.11.3.88 | M | V | 1 |
+|  | Relay key request parameters | Relay key request parameters9.11.3.89 | M | LV | 22-65537 |
+
 ### 8.2.35	Relay key accept
 
 #### 8.2.35.1	Message definition
@@ -26622,6 +27310,16 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.2.35.1: RELAY KEY ACCEPT message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Relay key accept message identity | Message type9.7 | M | V | 1 |
+|  | PRTI | ProSe relay transaction identity9.11.3.88 | M | V | 1 |
+|  | Relay key response parameters | Relay key response parameters9.11.3.90 | M | LV-E | 51-65537 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
 
 #### 8.2.35.2	EAP message
 
@@ -26641,6 +27339,15 @@ Direction:	network to UE
 
 Table 8.2.36.1: RELAY KEY REJECT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Relay key reject message identity | Message type9.7 | M | V | 1 |
+|  | PRTI | ProSe relay transaction identity9.11.3.88 | M | V | 1 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+
 #### 8.2.36.2	EAP message
 
 EAP message IE is included if the RELAY KEY REJECT message is used to convey EAP-failure message.
@@ -26659,6 +27366,15 @@ Direction:	Network to UE
 
 Table 8.2.37.1: RELAY AUTHENTICATION REQUEST message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Relay authentication request message identity | Message type9.7 | M | V | 1 |
+|  | PRTI | ProSe relay transaction identity9.11.3.88 | M | V | 1 |
+|  | EAP message | EAP message9.11.2.2 | M | LV-E | 7-1503 |
+
 ### 8.2.38	Relay authentication response
 
 #### 8.2.38.1	Message definition
@@ -26672,6 +27388,15 @@ Significance:	dual
 Direction:	UE to network
 
 Table 8.2.38.1: RELAY AUTHENTICATION RESPONSE message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | Security header type | Security header type9.3 | M | V | 1/2 |
+|  | Spare half octet | Spare half octet9.5 | M | V | 1/2 |
+|  | Relay authentication response message identity | Message type9.7 | M | V | 1 |
+|  | PRTI | ProSe relay transaction identity9.11.3.88 | M | V | 1 |
+|  | EAP message | EAP message9.11.2.2 | M | LV-E | 6-1502 |
 
 ## 8.3	5GS session management messages
 
@@ -26688,6 +27413,32 @@ Significance:	dual
 Direction:	UE to network
 
 Table 8.3.1.1.1: PDU SESSION ESTABLISHMENT REQUEST message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION ESTABLISHMENT REQUEST message identity | Message type9.7 | M | V | 1 |
+|  | Integrity protection maximum data rate | Integrity protection maximum data rate9.11.4.7 | M | V | 2 |
+| 9- | PDU session type | PDU session type9.11.4.11 | O | TV | 1 |
+| A- | SSC mode | SSC mode9.11.4.16 | O | TV | 1 |
+| 28 | 5GSM capability | 5GSM capability9.11.4.1 | O | TLV | 3-15 |
+| 55 | Maximum number of supported packet filters | Maximum number of supported packet filters9.11.4.9 | O | TV | 3 |
+| B- | Always-on PDU session requested | Always-on PDU session requested9.11.4.4 | O | TV | 1 |
+| 39 | SM PDU DN request container | SM PDU DN request container9.11.4.15 | O | TLV | 3-255 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+| 66 | IP header compression configuration | IP header compression configuration9.11.4.24 | O | TLV | 5-257 |
+| 6E | DS-TT Ethernet port MAC address | DS-TT Ethernet port MAC address9.11.4.25 | O | TLV | 8 |
+| 6F | UE-DS-TT residence time | UE-DS-TT residence time9.11.4.26 | O | TLV | 10 |
+| 74 | Port management information container | Port management information container9.11.4.27 | O | TLV-E | 8-65538 |
+| 1F | Ethernet header compression configuration | Ethernet header compression configuration9.11.4.28 | O | TLV | 3 |
+| 29 | Suggestedinterface identifier | PDU address9.11.4.10 | O | TLV | 11 |
+| 72 | Service-level-AA container | Service-level-AA container9.11.2.10 | O | TLV-E | 4-65538 |
+| 70 | Requested MBS container | Requested MBS container9.11.4.30 | O | TLV-E | 8-65538 |
+| 34 | PDU session pair ID | PDU session pair ID9.11.4.32 | O | TLV | 3 |
+| 35 | RSN | RSN9.11.4.33 | O | TLV | 3 |
+| 36 | URSP rule enforcement reports | URSP rule enforcement reports9.11.4.38 | O | TLV | 4-n |
 
 #### 8.3.1.2	PDU session type
 
@@ -26790,6 +27541,38 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.3.2.1.1: PDU SESSION ESTABLISHMENT ACCEPT message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION ESTABLISHMENT ACCEPT message identity | Message type9.7 | M | V | 1 |
+|  | Selected PDU session type | PDU session type9.11.4.11 | M | V | 1/2 |
+|  | Selected SSC mode | SSC mode9.11.4.16 | M | V | 1/2 |
+|  | Authorized QoS rules | QoS rules9.11.4.13 | M | LV-E | 6-65538 |
+|  | Session AMBR | Session-AMBR9.11.4.14 | M | LV | 7 |
+| 59 | 5GSM cause | 5GSM cause9.11.4.2 | O | TV | 2 |
+| 29 | PDU address | PDU address9.11.4.10 | O | TLV | 7-31 |
+| 56 | RQ timer value | GPRS timer9.11.2.3 | O | TV | 2 |
+| 22 | S-NSSAI | S-NSSAI9.11.2.8 | O | TLV | 3-10 |
+| 8- | Always-on PDU session indication | Always-on PDU session indication9.11.4.3 | O | TV | 1 |
+| 75 | Mapped EPS bearer contexts | Mapped EPS bearer contexts9.11.4.8 | O | TLV-E | 7-65538 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+| 79 | Authorized QoS flow descriptions | QoS flow descriptions9.11.4.12 | O | TLV-E | 6-65538 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+| 25 | DNN | DNN9.11.2.1B | O | TLV | 3-102 |
+| 17 | 5GSM network feature support | 5GSM network feature support9.11.4.18 | O | TLV | 3-15 |
+| 18 | Serving PLMN rate control | Serving PLMN rate control9.11.4.20 | O | TLV | 4 |
+| 77 | ATSSS container | ATSSS container9.11.4.22 | O | TLV-E | 3-65538 |
+| C- | Control plane only indication | Control plane only indication9.11.4.23 | O | TV | 1 |
+| 66 | IP header compression configuration | IP header compression configuration9.11.4.24 | O | TLV | 5-257 |
+| 1F | Ethernet header compression configuration | Ethernet header compression configuration9.11.4.28 | O | TLV | 3 |
+| 72 | Service-level-AA container | Service-level-AA container9.11.2.10 | O | TLV-E | 4-65538 |
+| 71 | Received MBS container | Received MBS container9.11.4.31 | O | TLV-E | 9-65538 |
+| 70 | N3QAI | N3QAI9.11.4.36 | O | TLV-E | 9-n |
+| 73 | Protocoldescription | Protocoldescription9.11.4.39 | O | TLV-E | 6-n |
+| 38 | ECN marking for L4Sindication | ECN marking for L4Sindication9.11.4.40 | O | TLV | 2-257 |
 
 #### 8.3.2.2	5GSM cause
 
@@ -26901,6 +27684,21 @@ Direction:	network to UE
 
 Table 8.3.3.1.1: PDU SESSION ESTABLISHMENT REJECT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION ESTABLISHMENT REJECT message identity | Message type9.7 | M | V | 1 |
+|  | 5GSM cause | 5GSM cause9.11.4.2 | M | V | 1 |
+| 37 | Back-off timer value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| F- | Allowed SSC mode | Allowed SSC mode9.11.4.5 | O | TV | 1 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+| 61 | 5GSM congestion re-attempt indicator | 5GSM congestion re-attempt indicator9.11.4.21 | O | TLV | 3 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+| 1D | Re-attempt indicator | Re-attempt indicator9.11.4.17 | O | TLV | 3 |
+| 72 | Service-level-AA container | Service-level-AA container9.11.2.10 | O | TLV-E | 4-65538 |
+
 #### 8.3.3.2	Back-off timer value
 
 The network may include this IE if the 5GSM cause is not #28 "unknown PDU session type", #39 "reactivation requested", #46 "out of LADN service area", #50 "PDU session type IPv4 only allowed", #51 "PDU session type IPv6 only allowed", #54 "PDU session does not exist", #57 "PDU session type IPv4v6 only allowed", #58 "PDU session type Unstructured only allowed", #61 "PDU session type Ethernet only allowed",#68 "not supported SSC mode", or #86 "UAS services not allowed" to request a minimum time interval before procedure retry is allowed.
@@ -26943,6 +27741,15 @@ Direction:	network to UE
 
 Table 8.3.4.1.1: PDU SESSION AUTHENTICATION COMMAND message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION AUTHENTICATIONCOMMANDmessage identity | Message type9.7 | M | V | 1 |
+|  | EAP message | EAP message9.11.2.2 | M | LV-E | 6-1502 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+
 #### 8.3.4.2	Extended protocol configuration options
 
 This IE is included in the message when the network needs to transmit (protocol) data (e.g. configuration parameters, error codes or messages/events) to the UE.
@@ -26963,6 +27770,15 @@ Direction:	UE to network
 
 Table 8.3.5.1.1: PDU SESSION AUTHENTICATION COMPLETE message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION AUTHENTICATIONCOMPLETEmessage identity | Message type9.7 | M | V | 1 |
+|  | EAP message | EAP message9.11.2.2 | M | LV-E | 6-1502 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+
 #### 8.3.5.2	Extended protocol configuration options
 
 This IE is included in the message when the UE needs to transmit (protocol) data (e.g. configuration parameters, error codes or messages/events) to the network.
@@ -26982,6 +27798,15 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.3.6.1.1: PDU SESSION AUTHENTICATION RESULT message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION AUTHENTICATION RESULT message identity | Message type9.7 | M | V | 1 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
 
 #### 8.3.6.2	EAP message
 
@@ -27006,6 +27831,29 @@ Significance:	dual
 Direction:	UE to network
 
 Table 8.3.7.1.1: PDU SESSION MODIFICATION REQUEST message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION MODIFICATION REQUEST message identity | Message type9.7 | M | V | 1 |
+| 28 | 5GSM capability | 5GSM capability9.11.4.1 | O | TLV | 3-15 |
+| 59 | 5GSM cause | 5GSM cause9.11.4.2 | O | TV | 2 |
+| 55 | Maximum number of supported packet filters | Maximum number of supported packet filters9.11.4.9 | O | TV | 3 |
+| B- | Always-on PDU session requested | Always-on PDU session requested9.11.4.4 | O | TV | 1 |
+| 13 | Integrity protection maximum data rate | Integrity protection maximum data rate9.11.4.7 | O | TV | 3 |
+| 7A | Requested QoS rules | QoS rules9.11.4.13 | O | TLV-E | 7-65538 |
+| 79 | Requested QoS flow descriptions | QoS flow descriptions9.11.4.12 | O | TLV-E | 6-65538 |
+| 75 | Mapped EPS bearer contexts | Mapped EPS bearer contexts9.11.4.8 | O | TLV-E | 7-65538 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+| 74 | Port management information container | Port management information container9.11.4.27 | O | TLV-E | 4-65538 |
+| 66 | IP header compression configuration | Header compression configuration9.11.4.24 | O | TLV | 5-257 |
+| 1F | Ethernet header compression configuration | Ethernet header compression configuration9.11.4.28 | O | TLV | 3 |
+| 70 | Requested MBS container | Requested MBS container9.11.4.30 | O | TLV-E | 8-65538 |
+| 72 | Service-level-AA container | Service-level-AA container9.11.2.10 | O | TLV-E | 4-65538 |
+| 73 | Non-3GPP delay budget | Non-3GPP delay budget9.11.4.37 | O | TLV-E | 6-n |
+| 36 | URSP rule enforcement reports | URSP rule enforcement reports9.11.4.38 | O | TLV | 4-n |
 
 NOTE:	It is possible for UEs compliant with version 15.2.1 or earlier versions of this specification to send the Mapped EPS bearer contexts IE with IEI of value "7F" for this message.
 
@@ -27103,6 +27951,18 @@ Direction:	network to UE
 
 Table 8.3.8.1.1: PDU SESSION MODIFICATION REJECT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION MODIFICATION REJECT message identity | Message type9.7 | M | V | 1 |
+|  | 5GSM cause | 5GSM cause9.11.4.2 | M | V | 1 |
+| 37 | Back-off timer value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 61 | 5GSM congestion re-attempt indicator | 5GSM congestion re-attempt indicator9.11.4.21 | O | TLV | 3 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+| 1D | Re-attempt indicator | Re-attempt indicator9.11.4.17 | O | TLV | 3 |
+
 #### 8.3.8.2	Back-off timer value
 
 The network may include this IE if the 5GSM cause is not #26 "insufficient resources", #37 "5GS QoS not accepted", #44 "Semantic errors in packet filter(s)", #45 "Syntactical error in packet filter(s)", #46 "out of LADN service area", #59 "unsupported 5QI value", #67 "insufficient resources for specific slice and DNN", #69 "insufficient resources for specific slice", #83 "Semantic error in the QoS operation", or #84 "Syntactical error in the QoS operation" to request a minimum time interval before procedure retry is allowed.
@@ -27132,6 +27992,32 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.3.9.1.1: PDU SESSION MODIFICATION COMMAND message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION MODIFICATION COMMAND message identity | Message type9.7 | M | V | 1 |
+| 59 | 5GSM cause | 5GSM cause9.11.4.2 | O | TV | 2 |
+| 2A | Session AMBR | Session-AMBR9.11.4.14 | O | TLV | 8 |
+| 56 | RQ timer value | GPRS timer9.11.2.3 | O | TV | 2 |
+| 8- | Always-on PDU session indication | Always-on PDU session indication9.11.4.3 | O | TV | 1 |
+| 7A | Authorized QoS rules | QoS rules9.11.4.13 | O | TLV-E | 7-65538 |
+| 75 | Mapped EPS bearer contexts | Mapped EPS bearer contexts9.11.4.8 | O | TLV-E | 7-65538 |
+| 79 | Authorized QoS flow descriptions | QoS flow descriptions9.11.4.12 | O | TLV-E | 6-65538 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+| 77 | ATSSS container | ATSSS container9.11.4.22 | O | TLV-E | 3-65538 |
+| 66 | IP header compression configuration | IP header compression configuration9.11.4.24 | O | TLV | 5-257 |
+| 74 | Port management information container | Port management information container9.11.4.27 | O | TLV-E | 4-65538 |
+| 1E | Serving PLMN rate control | Serving PLMN rate control9.11.4.20 | O | TLV | 4 |
+| 1F | Ethernet header compression configuration | Ethernet header compression configuration9.11.4.28 | O | TLV | 3 |
+| 71 | Received MBS container | Received MBS container9.11.4.31 | O | TLV-E | 9-65538 |
+| 72 | Service-level-AA container | Service-level-AA container9.11.2.10 | O | TLV-E | 4-65538 |
+| 5A | AlternativeS-NSSAI | S-NSSAI9.11.2.8 | O | TLV | 3-10 |
+| 70 | N3QAI | N3QAI9.11.4.36 | O | TLV-E | 9-n |
+| 73 | Protocoldescription | Protocoldescription9.11.4.39 | O | TLV-E | 6-n |
+| 38 | ECN marking for L4Sindication | ECN marking for L4Sindication9.11.4.40 | O | TLV | 2-257 |
 
 NOTE:	It is possible for networks compliant with version 15.2.1 or earlier versions of this specification to send the Mapped EPS bearer contexts IE with IEI of value "7F" for this message.
 
@@ -27233,6 +28119,15 @@ Direction:	UE to network
 
 Table 8.3.10.1.1: PDU SESSION MODIFICATION COMPLETE message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION MODIFICATIONCOMPLETEmessage identity | Message type9.7 | M | V | 1 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+| 74 | Port management information container | Port management information container9.11.4.27 | O | TLV-E | 4-65538 |
+
 NOTE:	It is possible for UEs compliant with version 15.3.0 of this specification to include the 5GSM cause IE with IEI 59 in the PDU SESSION MODIFICATION COMPLETE message, and therefore the IEI 59 cannot be used for other optional IEs other than the 5GSM cause IE for future extensions of the PDU SESSION MODIFICATION COMPLETE message.
 
 #### 8.3.10.2	Extended protocol configuration options
@@ -27257,6 +28152,15 @@ Direction:	UE to network
 
 Table 8.3.11.1.1: PDU SESSION MODIFICATION COMMAND REJECT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION MODIFICATION COMMAND REJECT message identity | Message type9.7 | M | V | 1 |
+|  | 5GSM cause | 5GSM cause9.11.4.2 | M | V | 1 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+
 #### 8.3.11.2	Extended protocol configuration options
 
 This IE is included in the message when the UE needs to transmit (protocol) data (e.g. configuration parameters, error codes or messages/events) to the network.
@@ -27274,6 +28178,15 @@ Significance:	dual
 Direction:	UE to network
 
 Table 8.3.12.1.1: PDU SESSION RELEASE REQUEST message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION RELEASE REQUEST message identity | Message type9.7 | M | V | 1 |
+| 59 | 5GSM cause | 5GSM cause9.11.4.2 | O | TV | 2 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
 
 #### 8.3.12.2	5GSM cause
 
@@ -27297,6 +28210,15 @@ Direction:	network to UE
 
 Table 8.3.13.1.1: PDU SESSION RELEASE REJECT message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDUSESSIONRELEASE REJECT message identity | Message type9.7 | M | V | 1 |
+|  | 5GSM cause | 5GSM cause9.11.4.2 | M | V | 1 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+
 #### 8.3.13.2	Extended protocol configuration options
 
 This IE is included in the message when the network needs to transmit (protocol) data (e.g. configuration parameters, error codes or messages/events) to the UE.
@@ -27314,6 +28236,21 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.3.14.1.1: PDU SESSION RELEASE COMMAND message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION RELEASE COMMAND message identity | Message type9.7 | M | V | 1 |
+|  | 5GSM cause | 5GSM cause9.11.4.2 | M | V | 1 |
+| 37 | Back-off timer value | GPRS timer 39.11.2.5 | O | TLV | 3 |
+| 78 | EAP message | EAP message9.11.2.2 | O | TLV-E | 7-1503 |
+| 61 | 5GSM congestion re-attempt indicator | 5GSM congestion re-attempt indicator9.11.4.21 | O | TLV | 3 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+| D- | Access type | Access type9.11.2.1A | O | TV | 1 |
+| 72 | Service-level-AA container | Service-level-AA container9.11.2.10 | O | TLV-E | 4-65538 |
+| 5A | Alternative S-NSSAI | S-NSSAI9.11.2.8 | O | TLV | 3-10 |
 
 #### 8.3.14.2	Back-off timer value
 
@@ -27357,6 +28294,15 @@ Direction:	UE to network
 
 Table 8.3.15.1.1: PDU SESSION RELEASE COMPLETE message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | PDU SESSION RELEASECOMPLETEmessage identity | Message type9.7 | M | V | 1 |
+| 59 | 5GSM cause | 5GSM cause9.11.4.2 | O | TV | 2 |
+| 7B | Extended protocol configuration options | Extended protocol configuration options9.11.4.6 | O | TLV-E | 4-65538 |
+
 #### 8.3.15.2	5GSM cause
 
 This IE is included in the message when the UE needs to indicate to the network that an error encountered with a mandatory information element in the PDU SESSION RELEASE COMMAND message.
@@ -27379,6 +28325,14 @@ Direction:	both
 
 Table 8.3.16.1.1: 5GSM STATUS message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | 5GSM STATUS message identity | Message type9.7 | M | V | 1 |
+|  | 5GSM cause | 5GSM cause9.11.4.2 | M | V | 1 |
+
 ### 8.3.17	Service-level authentication command
 
 #### 8.3.17.1	Message definition
@@ -27392,6 +28346,14 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.3.17.1.1: SERVICE-LEVEL AUTHENTICATION COMMAND message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | SERVICE-LEVEL AUTHENTICATION COMMAND message identity | Message type9.7 | M | V | 1 |
+|  | Service-level-AA container | Service-level-AA container9.11.2.10 | M | LV-E | 5-n |
 
 ### 8.3.18	Service-level authentication complete
 
@@ -27407,6 +28369,14 @@ Direction:	UE to network
 
 Table 8.3.18.1.1: SERVICE-LEVEL AUTHENTICATION COMPLETE message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | SERVICE-LEVEL AUTHENTICATION COMPLETE message identity | Message type9.7 | M | V | 1 |
+|  | Service-level-AA container | Service-level-AA container9.11.2.10 | M | LV-E | 5-n |
+
 ### 8.3.19	Remote UE report
 
 #### 8.3.19.1	Message definition
@@ -27420,6 +28390,15 @@ Significance:	dual
 Direction:	UE to network
 
 Table 8.3.19.1: REMOTE UE REPORT message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | Remote UE report message identity | Message type9.7 | M | V | 1 |
+| 76 | Remote UE context connected | Remote UE context list9.11.4.29 | O | TLV-E | 16-65538 |
+| 70 | Remote UE context disconnected | Remote UE context list9.11.4.29 | O | TLV-E | 16-65538 |
 
 #### 8.3.19.2	Remote UE context connected
 
@@ -27442,6 +28421,13 @@ Significance:	dual
 Direction:	network to UE
 
 Table 8.3.20.1: REMOTE UE REPORT RESPONSE message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | Extended protocol discriminator | Extended protocol discriminator9.2 | M | V | 1 |
+|  | PDU session ID | PDU session identity9.4 | M | V | 1 |
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | Remote UE report response message identity | Message type9.7 | M | V | 1 |
 
 # 9	General message format and information elements coding
 
@@ -27477,11 +28463,34 @@ e)	plain 5GS NAS message, as defined in item 1
 
 The organization of a plain 5GS NAS message is illustrated in the example shown in figure 9.1.1.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Extended protocol discriminator | octet 1 |
+| Security header type associated with a spare half octet; orPDU session identity | octet 2 |
+| Procedure transaction identity | octet2a* |
+| Message type | octet3 |
+|  | octet4 |
+| Other information elements as required |  |
+|  | octet n |
+
 Figure 9.1.1.1: General message organization example for a plain 5GS NAS message
 
 The PDU session identity and the procedure transaction identity are only used in messages with extended protocol discriminator 5GS session management. Octet 2a with the procedure transaction identity shall only be included in these messages.
 
 The organization of a security protected 5GS NAS message is illustrated in the example shown in figure 9.1.1.2.
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Extended protocol discriminator | octet 1 |
+| Security header type associated with a spare half octet | octet 2 |
+|  | octet 3 |
+| Message authentication code |  |
+|  |  |
+|  | octet 6 |
+| Sequence number | octet 7 |
+|  | octet 8 |
+| Plain 5GS NAS message |  |
+|  | octet n |
 
 Figure 9.1.1.2: General message organization example for a security protected 5GS NAS message
 
@@ -27494,6 +28503,11 @@ When a field is contained within a single octet, the lowest numbered bit of the 
 When a field extends over more than one octet, the order of bit values progressively decreases as the octet number increases. In that part of the field contained in a given octet, the lowest numbered bit represents the least significant bit. The most significant bit of the field is represented by the highest numbered bit of the lowest numbered octet of the field. The least significant bit of the field is represented by the lowest numbered bit of the highest numbered octet of the field.
 
 For example, a bit number can be identified as a couple (o, b) where o is the octet number and b is the relative bit number within the octet. Figure 9.1.2.1 illustrates a field that spans from bit (1, 3) to bit (2, 7). The most significant bit of the field is mapped on bit (1, 3) and the least significant bit is mapped on bit (2, 7).
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+|  |  |  |  |  | 24 | 23 | 22 | 1stoctet of field |
+| 21 | 20 |  |  |  |  |  |  | 2ndoctet of field |
 
 Figure 9.1.2.1: Field mapping convention
 
@@ -27508,6 +28522,22 @@ Bits 1 to 4 of the second octet of every 5GMM message contain the Security heade
 The Security header type IE can take the values shown in table 9.3.1.
 
 Table 9.3.1: Security header type
+
+| Security header type (octet 1) |
+|---|
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | Plain5GSNAS message, not security protected |
+|  |  |  |  |  |
+|  |  |  |  | Security protected5GSNAS message: |
+| 0 | 0 | 0 | 1 | Integrity protected |
+| 0 | 0 | 1 | 0 | Integrity protected and ciphered |
+| 0 | 0 | 1 | 1 | Integrity protected with new 5GNASsecurity context (NOTE 1) |
+| 0 | 1 | 0 | 0 | Integrity protected and ciphered with new 5GNASsecurity context (NOTE 2) |
+|  |  |  |  |  |
+| All other values are reserved. |
+|  |
+| NOTE 1:This codepoint may be used only for a SECURITY MODE COMMAND message.NOTE 2:This codepoint may be used only for a SECURITY MODE COMPLETE message. |
 
 A 5GMM message received with the security header type encoded as 0000 shall be treated as not security protected, plain 5GS NAS message. A protocol entity sending a not security protected 5GMM message shall send the message as plain 5GS NAS message and encode the security header type as 0000.
 
@@ -27529,7 +28559,90 @@ The Message type IE and its use are defined in 3GPP TS 24.007 [11]. Tables 9
 
 Table 9.7.1: Message types for 5GS mobility management
 
+| Bits |  |  |
+|---|---|---|
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+|  |  |  |  |  |  |  |  |  |  |
+| 0 | 1 | - | - | - | - | - | - |  | 5GS mobility management messages |
+|  |  |  |  |  |  |  |  |  |  |
+| 0 | 1 | 0 | 0 | 0 | 0 | 0 | 1 |  | Registration request |
+| 0 | 1 | 0 | 0 | 0 | 0 | 1 | 0 |  | Registration accept |
+| 0 | 1 | 0 | 0 | 0 | 0 | 1 | 1 |  | Registration complete |
+| 0 | 1 | 0 | 0 | 0 | 1 | 0 | 0 |  | Registration reject |
+| 0 | 1 | 0 | 0 | 0 | 1 | 0 | 1 |  | Deregistration request (UE originating)as specified in subclause 8.2.12) |
+| 0 | 1 | 0 | 0 | 0 | 1 | 1 | 0 |  | Deregistration accept (UE originating)as specified in subclause 8.2.13) |
+| 0 | 1 | 0 | 0 | 0 | 1 | 1 | 1 |  | Deregistration request (UE terminated)as specified in subclause  8.2.14) |
+| 0 | 1 | 0 | 0 | 1 | 0 | 0 | 0 |  | Deregistration accept (UE terminated)as specified in subclause 8.2.15) |
+|  |  |  |  |  |  |  |  |  |  |
+| 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 |  | Service request |
+| 0 | 1 | 0 | 0 | 1 | 1 | 0 | 1 |  | Service reject |
+| 0 | 1 | 0 | 0 | 1 | 1 | 1 | 0 |  | Service accept |
+| 0 | 1 | 0 | 0 | 1 | 1 | 1 | 1 |  | Control plane service request |
+|  |  |  |  |  |  |  |  |  |  |
+| 0 | 1 | 0 | 1 | 0 | 0 | 0 | 0 |  | Network slice-specific authentication command |
+| 0 | 1 | 0 | 1 | 0 | 0 | 0 | 1 |  | Network slice-specific authentication complete |
+| 0 | 1 | 0 | 1 | 0 | 0 | 1 | 0 |  | Network slice-specific authentication result |
+| 0 | 1 | 0 | 1 | 0 | 1 | 0 | 0 |  | Configuration update command |
+| 0 | 1 | 0 | 1 | 0 | 1 | 0 | 1 |  | Configuration update complete |
+| 0 | 1 | 0 | 1 | 0 | 1 | 1 | 0 |  | Authentication request |
+| 0 | 1 | 0 | 1 | 0 | 1 | 1 | 1 |  | Authentication response |
+| 0 | 1 | 0 | 1 | 1 | 0 | 0 | 0 |  | Authentication reject |
+| 0 | 1 | 0 | 1 | 1 | 0 | 0 | 1 |  | Authentication failure |
+| 0 | 1 | 0 | 1 | 1 | 0 | 1 | 0 |  | Authentication result |
+| 0 | 1 | 0 | 1 | 1 | 0 | 1 | 1 |  | Identity request |
+| 0 | 1 | 0 | 1 | 1 | 1 | 0 | 0 |  | Identity response |
+| 0 | 1 | 0 | 1 | 1 | 1 | 0 | 1 |  | Security mode command |
+| 0 | 1 | 0 | 1 | 1 | 1 | 1 | 0 |  | Security mode complete |
+| 0 | 1 | 0 | 1 | 1 | 1 | 1 | 1 |  | Security mode reject |
+|  |  |  |  |  |  |  |  |  |  |
+| 0 | 1 | 1 | 0 | 0 | 1 | 0 | 0 |  | 5GMM status |
+| 0 | 1 | 1 | 0 | 0 | 1 | 0 | 1 |  | Notification |
+| 0 | 1 | 1 | 0 | 0 | 1 | 1 | 0 |  | Notification response |
+| 0 | 1 | 1 | 0 | 0 | 1 | 1 | 1 |  | UL NAS transport |
+| 0 | 1 | 1 | 0 | 1 | 0 | 0 | 0 |  | DL NAS transport |
+|  |  |  |  |  |  |  |  |  |  |
+| 0 | 1 | 1 | 0 | 1 | 0 | 0 | 1 |  | Relay key request |
+| 0 | 1 | 1 | 0 | 1 | 0 | 1 | 0 |  | Relay key accept |
+| 0 | 1 | 1 | 0 | 1 | 0 | 1 | 1 |  | Relay key reject |
+| 0 | 1 | 1 | 0 | 1 | 1 | 0 | 0 |  | Relay authentication request |
+| 0 | 1 | 1 | 0 | 1 | 1 | 0 | 1 |  | Relay authentication response |
+|  |  |  |  |  |  |  |  |  |  |
+
 Table 9.7.2: Message types for 5GS session management
+
+| Bits |  |  |
+|---|---|---|
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+|  |  |  |  |  |  |  |  |  |  |
+| 1 | 1 | - | - | - | - | - | - |  | 5GS session management messages |
+|  |  |  |  |  |  |  |  |  |  |
+| 1 | 1 | 0 | 0 | 0 | 0 | 0 | 1 |  | PDU session establishment request |
+| 1 | 1 | 0 | 0 | 0 | 0 | 1 | 0 |  | PDU session establishment accept |
+| 1 | 1 | 0 | 0 | 0 | 0 | 1 | 1 |  | PDU session establishment reject |
+|  |  |  |  |  |  |  |  |  |  |
+| 1 | 1 | 0 | 0 | 0 | 1 | 0 | 1 |  | PDU session authentication command |
+| 1 | 1 | 0 | 0 | 0 | 1 | 1 | 0 |  | PDU session authentication complete |
+| 1 | 1 | 0 | 0 | 0 | 1 | 1 | 1 |  | PDU session authentication result |
+|  |  |  |  |  |  |  |  |  |  |
+| 1 | 1 | 0 | 0 | 1 | 0 | 0 | 1 |  | PDU session modification request |
+| 1 | 1 | 0 | 0 | 1 | 0 | 1 | 0 |  | PDU session modification reject |
+| 1 | 1 | 0 | 0 | 1 | 0 | 1 | 1 |  | PDU session modification command |
+| 1 | 1 | 0 | 0 | 1 | 1 | 0 | 0 |  | PDU session modification complete |
+| 1 | 1 | 0 | 0 | 1 | 1 | 0 | 1 |  | PDU session modification command reject |
+|  |  |  |  |  |  |  |  |  |  |
+| 1 | 1 | 0 | 1 | 0 | 0 | 0 | 1 |  | PDU session release request |
+| 1 | 1 | 0 | 1 | 0 | 0 | 1 | 0 |  | PDU session release reject |
+| 1 | 1 | 0 | 1 | 0 | 0 | 1 | 1 |  | PDU session release command |
+| 1 | 1 | 0 | 1 | 0 | 1 | 0 | 0 |  | PDU session release complete |
+|  |  |  |  |  |  |  |  |  |  |
+| 1 | 1 | 0 | 1 | 0 | 1 | 1 | 0 |  | 5GSM status |
+|  |  |  |  |  |  |  |  |  |  |
+| 1 | 1 | 0 | 1 | 1 | 0 | 0 | 0 |  | Service-level authentication command |
+| 1 | 1 | 0 | 1 | 1 | 0 | 0 | 1 |  | Service-level authentication complete |
+|  |  |  |  |  |  |  |  |  |  |
+| 1 | 1 | 0 | 1 | 1 | 0 | 1 | 0 |  | Remote UE report |
+| 1 | 1 | 0 | 1 | 1 | 0 | 1 | 1 |  | Remote UE reportresponse |
+|  |  |  |  |  |  |  |  |  |  |
 
 ## 9.8	Message authentication code
 
@@ -27585,9 +28698,20 @@ The Additional information information element is coded as shown in figure 9.11
 
 The Additional information is a type 4 information element with a minimum length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Additional information IEI | octet 1 |
+| Additional information length | octet 2 |
+| Additional information value | octets 3-n |
+
 Figure 9.11.2.1.1: Additional information information element
 
 Table 9.11.2.1.1 : Additional information information element
+
+| Additional information value (octet 3 to octet n) |
+|---|
+|  |
+| The coding of the additional information value is dependent on theLCS application. |
 
 #### 9.11.2.1A	Access type
 
@@ -27597,9 +28721,23 @@ The access type is a type 1 information element.
 
 The access type information element is coded as shown in figure 9.11.2.1A.1 and table 9.11.2.1A.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Access typeIEI | 0spare | Access type | octet 1 |
+
 Figure 9.11.2.1A.1: Access type information element
 
 Table 9.11.2.1A.1: Access type information element
+
+| Accesstype value (octet 1, bit 1 to bit 2) |
+|---|
+|  |
+| Bits |
+| 2 | 1 |  |  |  |
+| 0 | 1 |  |  | 3GPP access |
+| 1 | 0 |  |  | Non-3GPP access |
+|  |
+| All other values are reserved. |
 
 #### 9.11.2.1B	DNN
 
@@ -27608,6 +28746,12 @@ The purpose of the DNN information element is to identify the data network.
 The DNN information element is coded as shown in figure 9.11.2.1B.1.
 
 The DNN is a type 4 information element with a minimum length of 3 octets and a maximum length of 102 octets.
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| DNN IEI | octet 1 |
+| Length of DNN contents | octet 2 |
+| DNN value | octet 3octet n |
 
 Figure 9.11.2.1B.1: DNN information element
 
@@ -27621,9 +28765,19 @@ The EAP message information element is coded as shown in figure 9.11.2.2.1 and 
 
 The EAP message is a type 6 information element with minimum length of 7 octets and maximum length of 1503 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| EAP message IEI | octet 1 |
+| Length of EAP message contents | octet 2octet 3 |
+| EAP message | octet 4octetn |
+
 Figure 9.11.2.2.1: EAP message information element
 
 Table 9.11.2.2.1: EAP message information element
+
+| EAP message (octet 4 ton) |
+|---|
+| An EAP message asspecified inIETF RFC 3748 [34]. |
 
 #### 9.11.2.3	GPRS timer
 
@@ -27649,9 +28803,42 @@ The value part of the Intra N1 mode NAS transparent container information elemen
 
 NOTE:	For these cases the coding of the information element identifier and length information of RRC is defined in 3GPP TS 38.331 [30].
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Intra N1 modeNAS transparent container IEI | octet 1 |
+| Length of IntraN1 modeNAS transparent container contents | octet 2 |
+| Message authentication code | octet 3octet 6 |
+| Type of ciphering algorithm | Type of integrity protection algorithm | octet 7 |
+| 0 | 0Spare | 0 | KACF | TSC | Key set identifier in 5G | octet 8 |
+| Sequence number | octet 9 |
+
 Figure 9.11.2.6.1: Intra N1 mode NAS transparent container information element
 
 Table 9.11.2.6.1: Intra N1 mode NAS transparent container information element
+
+| Message authentication code(octet 3 to 6) |
+|---|
+|  |
+| This field is coded as the Message authentication code information element (see subclause9.8). |
+|  |
+| Type of integrity protection algorithm (octet 7, bit 1 to4) andtype of ciphering algorithm (octet 7, bit 5 to8) |
+|  |
+| These fields are coded as the type of integrity protection algorithm and type of ciphering algorithm in the NAS security algorithms information element (see subclause9.11.3.34). |
+|  |
+| K_AMF_change_flag (KACF) (octet8, bit 5) |
+| Bit |
+| 5 |  |
+| 0 | a new KAMFhas not been calculated by the network |
+| 1 | a new KAMFhas been calculated by the network |
+|  |
+| Key set identifier in 5G (octet8, bit 1 to 3) andType of security context flag (TSC) (octet8, bit 4) |
+|  |
+| These fields are coded as the NAS key set identifier and type of security context flag in the NAS key set identifier information element (see subclause9.11.3.32). |
+|  |
+| Sequence number (octet 9) |
+|  |
+| This field is coded as the Sequence number information element (see subclause 9.10) |
+|  |
 
 #### 9.11.2.7	N1 mode to S1 mode NAS transparent container
 
@@ -27663,9 +28850,19 @@ The N1 mode to S1 mode NAS transparent container is a type 3 information element
 
 The value part of the N1 mode to S1 mode NAS transparent container information element is included in specific information elements within some RRC messages sent to the UE; see 3GPP TS 38.331 [30]. For these cases the coding of the information element identifier and length information is defined in 3GPP TS 38.331 [30].
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| N1 mode to S1 mode NAS transparent container IEI | octet 1 |
+| Sequence number | octet 2 |
+
 Figure 9.11.2.7.1: N1 mode to S1 mode NAS transparent container information element
 
 Table 9.11.2.7.1: N1 mode to S1 mode NAS transparent container information element
+
+| Sequence number (octet 2) |
+|---|
+|  |
+| This field is coded as the Sequence number information element (see subclause 9.10). |
 
 #### 9.11.2.8	S-NSSAI
 
@@ -27675,9 +28872,40 @@ The S-NSSAI information element is coded as shown in figure 9.11.2.8.1 and tabl
 
 The S-NSSAI is a type 4 information element with a minimum length of 3 octets and a maximum length of 10 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| S-NSSAI IEI | octet 1 |
+| Length of S-NSSAI contents | octet 2 |
+| SST | octet 3 |
+| SD | octet 4*octet 6* |
+| MappedHPLMNSST | octet 7* |
+| MappedHPLMNSD | octet 8*octet 10* |
+
 Figure 9.11.2.8.1: S-NSSAI information element
 
 Table 9.11.2.8.1: S-NSSAI information element
+
+| Length of S-NSSAI contents (octet 2) |
+|---|
+|  |
+| This field indicates the length of the included S-NSSAI contents, and it can have the following values. Depending on the value of the length field the following S-NSSAI contents are included: |
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | SST |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | SST and mappedHPLMNSST |
+| 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | SST and SD |
+| 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 | SST, SD and mappedHPLMNSST |
+| 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | SST, SD, mappedHPLMNSST and mappedHPLMNSD |
+| All other values are reserved. |
+| Slice/service type (SST) (octet 3) |
+| This field contains the 8 bit SST value. The coding of the SST value part is defined in 3GPP TS 23.003 [4].If this IE is included during the network slice-specific authentication and authorization procedure, this field contains the 8 bit SST value of an S-NSSAI in the S-NSSAI(s) of the HPLMNor the RSNPN. |
+| Slice differentiator (SD) (octet 4 to octet 6)This field contains the 24 bit SD value. The coding of the SD value part is defined in 3GPP TS 23.003 [4].If this IE is included during the network slice-specific authentication and authorization procedure, this field contains the 24 bit SD value of an S-NSSAI in the S-NSSAI(s) of the HPLMNor the RSNPN. |
+| If the SST encoded in octet 3 is not associated with a valid SD value, and the sender needs to include a mappedHPLMNSST (octet 7) and a mappedHPLMNSD (octets 8 to 10), then the sender shall set the SD value (octets 4 to 6) to "no SD value associated with the SST". |
+|  |
+| mappedHPLMNSlice/service type (SST) (octet 7) |
+| This field contains the 8 bit SST value of an S-NSSAI intheS-NSSAI(s) oftheHPLMN to which the SST value is mapped. The coding of the SST value part is defined in 3GPP TS 23.003 [4]. |
+| mappedHPLMNSlice differentiator (SD)(octet 8 to octet 10)This field contains the 24 bit SD value of an S-NSSAI intheS-NSSAI(s) oftheHPLMN to which the SD value is mapped. The coding of the SD value part is defined in 3GPP TS 23.003 [4]. |
+| NOTE 1:Octet 3 shall always be included.NOTE2:If theoctet 4 is included, then octet 5 and octet 6 shall be included.NOTE 3:If the octet 7 is included, then octets 8, 9, and 10 may be included.NOTE4:If theoctet 8 is included, then octet 9 and octet 10 shall be included.NOTE 5:If only HPLMN S-NSSAIorsubscribedSNPN S-NSSAIis included, then octets 7 to 10 shall not be included. |
 
 #### 9.11.2.9	S1 mode to N1 mode NAS transparent container
 
@@ -27691,9 +28919,39 @@ The value part of the S1 mode to N1 mode NAS transparent container information e
 
 NOTE:	For these cases the coding of the information element identifier and length information of RRC is defined in 3GPP TS 38.331 [30].
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| S1 mode to N1 modeNAS transparent container IEI | octet 1 |
+| Length ofS1 mode to N1 modeNAS transparent container contents | octet 2 |
+| Message authentication code | octet 3octet 6 |
+| Type of ciphering algorithm | Type of integrity protection algorithm | octet 7 |
+| 0Spare | NCC | TSC | Key set identifier in 5G | octet 8 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | octet 9octet 10 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare |  |
+
 Figure 9.11.2.9.1: S1 mode to N1 mode NAS transparent container information element
 
 Table 9.11.2.9.1: S1 mode to N1 mode NAS transparent container information element
+
+| Message authentication code(octet3to6) |
+|---|
+|  |
+| This field is coded as the Message authentication code information element (see subclause9.8). |
+|  |
+| Type of integrity protection algorithm (octet7, bit 1 to4) andtype of ciphering algorithm (octet7, bit 5 to8) |
+|  |
+| These fields are coded as the type of integrity protection algorithm and type of ciphering algorithm in the NAS security algorithms information element (see subclause9.11.3.34). |
+|  |
+| NCC(octet8, bits 5 to7) |
+|  |
+| This fieldcontains the 3 bit Next hop chaining counter(see3GPP TS 33.501 [24]) |
+|  |
+| Key set identifier in 5G (octet8, bit 1 to 3) andtype of security context flag (TSC) (octet8, bit 4) |
+|  |
+| These fields are coded as the NAS key set identifier and type of security context flag in the NAS key set identifier information element (see subclause9.11.3.32). |
+|  |
+| Octets 9 and 10 are spare and shall be coded as zero. |
+| NOTE:In earlier versions of this protocol, octets 9 and 10 can have any value. In this version of the protocol, octets 9 and 10 can always be ignored by the UE. |
 
 #### 9.11.2.10	Service-level-AA container
 
@@ -27703,19 +28961,74 @@ The Service-level-AA container information element is coded as shown in figure 
 
 The Service-level-AA container information element is a type 6 information element with a minimum length of 4 octets and a maximum length of 65538 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Service-level-AA container IEI | octet 1 |
+| Length of Service-level-AA container contents | octet 2 |
+|  | octet 3 |
+|  | octet 4 |
+| Service-level-AA container contents |  |
+|  | octet n |
+
 Figure 9.11.2.10.1: Service-level-AA container information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Service-level-AA parameter 1 | octet 4octet x1 |
+| Service-level-AAparameter 2 | octet x1+1*octet x2* |
+| …… | … |
+| Service-level-AA parameter n | octet xi +1*octet n* |
 
 Figure 9.11.2.10.2: Service-level-AA container contents
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Type ofservice-level-AA parameter | octet xi +1 |
+| Length ofservice-level-AA parameter | octet xi +2 |
+| Value ofservice-level-AA parameter | octet xi +3octet n |
+
 Figure 9.11.2.10.3: Service-level-AA parameter (when the type of service-level-AA parameter field contains an IEI of a type 4 information element as specified in 3GPP TS 24.007 [11])
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Type ofservice-level-AA parameter | octet xi +1 |
+| Length ofservice-level-AA parameter | octet xi +2octet xi +3 |
+| Value of service-level-AA parameter | octet xi +4octet n |
 
 Figure 9.11.2.10.4: Service-level-AA parameter (when the type of service-level-AA parameter field contains an IEI of a type 6 information element as specified in 3GPP TS 24.007 [11])
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Service-level-AA payload type | octet xi +1octet xi +3 |
+| Service-level-AA payload | octet xi +4octet n |
+
 Figure 9.11.2.10.5: Service-level-AA parameter (when Service-level-AA payload type and its associated Service-level-AA payload are included in the Service-level-AA container contents)
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Type ofservice-level-AA parameter | Value ofservice-level-AA parameter | octet xi+1 |
 
 Figure 9.11.2.10.6: Service-level-AA parameter (when the type of service-level-AA parameter field contains an IEI of a type 1 information element as specified in 3GPP TS 24.007 [11])
 
 Table 9.11.2.10.1: Service-level-AA container information element
+
+| Service-level-AA container contents(octet 4 to octet n); max value of 65535 octets |
+|---|
+|  |
+| The error handlings forservice-level-AA parameters specified in subclauses7.6.1, 7.6.3 and 7.7.1 shall apply to theservice-level-AA parameters included in theservice-level-AA container contents. |
+| Service-level-AA parametersType ofservice-level-AA parameter(octetxi +1)This field contains the IEI of theservice-level-AA parameter. |
+|  |
+| Length ofservice-level-AA parameterThis field indicates binary coded length of the value of theservice-level-AA parameter. |
+| Value ofservice-level-AA parameterThis field contains the value of theservice-level-AA parameterwith the value part of the referred information element based on followingservice-level-AA parameterreference.The receiving entity shall ignoreservice-level-AA parameterwith type ofservice-level-AA parameter field containing anunknown IEI. |
+| IEI (hexadecimal) | Service-level-AA parametername | Service-level-AA parameterreference |
+| 10 | Service-level deviceID | Service-level deviceID (see subclause9.11.2.11) |
+| 20 | Service-level-AA server address | Service-level-AA server address(see subclause9.11.2.12) |
+| 30 | Service-level-AA response | Service-level-AA response (see subclause9.11.2.14) |
+| 40 | Service-level-AA payload type | Service-level-AA payload type (see subclause 9.11.2.15) (NOTE) |
+| 70 | Service-level-AA payload | Service-level-AA payload (see subclause 9.11.2.13) |
+| A- | Service-level-AA pending indication | Service-level-AA pending indication (see subclause 9.11.2.17) |
+| 50 | Service-level-AA service status indication | Service-level-AA service status indication (see subclause9.11.2.18) |
+| NOTE:Aservice-level-AA payload type is always followed by the associatedservice-level-AA payload as shown in figure 9.11.2.10.5. |
 
 #### 9.11.2.11	Service-level device ID
 
@@ -27725,9 +29038,18 @@ The Service-level device ID information element is coded as shown in figure 9.1
 
 The Service-level device ID information element is a type 4 information element with minimum length of 3 octets and maximum length of 257 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Service-level device IDIEI | octet 1 |
+| Service-level device IDlength | octet 2 |
+| Service-level device ID | octets 3-y |
+
 Figure 9.11.2.11.1: Service-level device ID information element
 
 Table 9.11.2.11.1: Service-level device ID information element
+
+| Service-level device ID(octet 3 to octet y)Aservice-level device IDencoded as UTF-8 string. |
+|---|
 
 #### 9.11.2.12	Service-level-AA server address
 
@@ -27737,9 +29059,34 @@ The Service-level-AA server address information element is coded as shown in fig
 
 The Service-level-AA server address information element is a type 4 information element with minimum length of 4 octets and maximum length of 257 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Service-level-AA server addressIEI | octet 1 |
+| Service-level-AA server address length | octet 2 |
+| Service-level-AA server addresstype | octet 3 |
+| Service-level-AA server address | octets 4-z |
+
 Figure 9.11.2.12.1: Service-level-AA server address information element
 
 Table 9.11.2.12.1: Service-level-AA server address information element
+
+| Service-level-AA server address type(octet3):Bits |
+|---|
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  | IPv4 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |  | IPv6 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |  | IPv4v6 |
+| 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |  | FQDN |
+| All other values are spare.If received they shall be ignored. |
+|  |
+| If theservice-level-AA server address typeindicates IPv4, then theservice-level-AA server addressfield contains an IPv4 address in octet 4 to octet 7. |
+|  |
+| If theservice-level-AA server address typeindicates IPv6, then theservice-level-AA server addressfield contains an IPv6 address in octet 4 to octet 19. |
+|  |
+| If theservice-level-AA server address typeindicates IPv4v6, then theservice-level-AA server address fieldcontains two IP addresses. The first IP address is an IPv4 address in octet 4 to octet 7. The second IP address is an IPv6 address in octet8to octet23. |
+|  |
+| If theservice-level-AA server address typeindicates FQDN, octet 4 to octet z is encoded as defined in subclause19.4.2.1in3GPP TS 23.003 [4]. |
+|  |
 
 #### 9.11.2.13	Service-level-AA payload
 
@@ -27749,9 +29096,18 @@ The Service-level-AA payload information element is coded as shown in figure 9.
 
 The Service-level-AA payload information element is a type 6 information element with minimum length of 4 octets and maximum length of 65538 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Service-level-AApayload IEI | octet 1 |
+| Service-level-AA payloadlength | octet 2octet 3 |
+| Service-level-AA payload | octets 4-s |
+
 Figure 9.11.2.13.1: Service-level-AA payload information element
 
 Table 9.11.2.13.1: Service-level-AA payload information element
+
+| Service-level-AA payload(octet 4 to octet s)Apayload for authentication and authorization transparently transported and which is provided from/to the upper layers. |
+|---|
 
 #### 9.11.2.14	Service-level-AA response
 
@@ -27761,9 +29117,34 @@ The Service-level-AA response information element is coded as shown in figure 9
 
 The Service-level-AA response information element is a type 4 information element with length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Service-level-AA responseIEI | octet 1 |
+| Service-level-AA responselength | octet 2 |
+| 0Spare | 0Spare | C2AR | SLAR | octet 3 |
+
 Figure 9.11.2.14.1: Service-level-AA response information element
 
 Table 9.11.2.14.1: Service-level-AA response information element
+
+| Service-level-AA resultfield (SLAR) (octet 3, bits 1 and 2) |
+|---|
+| Bits |
+| 1 | 2 |  |
+| 0 | 0 |  | No information |
+| 0 | 1 |  | Service level authentication and authorization was successful. |
+| 1 | 0 |  | Service level authentication and authorization was not successfulor service levelauthorizationis revoked. |
+| 1 | 1 |  | Reserved |
+|  |
+| C2 authorization result field (C2AR) (octet 3, bits 3 and 4) |
+| Bits |
+| 3 | 4 |  |  |
+| 0 | 0 |  | No information |
+| 0 | 1 |  | C2 authorization was successful. |
+| 1 | 0 |  | C2 authorization was not successful or C2 authorization is revoked. |
+| 1 | 1 |  | Reserved |
+|  |
+| Bits 5 to 8 of octet 3 are spare and shall be coded as zero. |
 
 #### 9.11.2.15	Service-level-AA payload type
 
@@ -27773,9 +29154,24 @@ The Service-level-AA payload type information element is coded as shown in figur
 
 The Service-level-AA payload type information element is a type 4 information element with length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Service-level-AA payload typeIEI | octet 1 |
+| Service-level-AA payload type length | octet 2 |
+| Service-level-AA payload type | octet 3 |
+
 Figure 9.11.2.15.1: Service-level-AA payload type information element
 
 Table 9.11.2.15.1: Service-level-AA payload type information element
+
+| Service-level-AA payload type(octet 3):Bits |
+|---|
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  | UUAA payload (see NOTE 1) |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |  | C2 authorization payload (see NOTE 2) |
+| All other values arespare, and the receiving entity shall ignore the service-level-AA payload type value set to a spare value. |
+|  |
+| NOTE 1:If the service-level-AA payload type indicates UUAA payload, the field for the service-level-AA payload of the Service-level AA payload information element is an application layer payload for UUAA procedure between the UE supporting UAS services and the USS.NOTE 2:If the service-level-AA payload type indicates C2 authorization payload, the field for the service-level-AA payload of theService-level-AA payloadinformation element is an application layer payload for C2 authorization procedure between the UE supporting UAS services and the USS. |
 
 #### 9.11.2.17	Service-level-AA pending indication
 
@@ -27785,9 +29181,20 @@ The Service-level-AA pending indication information element is coded as shown in
 
 The Service-level-AA pending indication information element is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Service-level-AA pending indication IEI | 0Spare | 0Spare | 0Spare | SLAPI | octet 1 |
+
 Figure 9.11.2.17.1: Service-level-AA pending indication
 
 Table 9.11.2.17.1: Service-level-AA pending indication
+
+| Service-level-AA pending indication (SLAPI) (octet 1, bit 1) |
+|---|
+| Bit |
+| 1 |  |
+| 0 | reserved |
+| 1 | Service-level-AA procedure is to be performed |
 
 #### 9.11.2.18	Service-level-AA service status indication
 
@@ -27797,9 +29204,24 @@ The Service-level-AA service status indication information element is coded as s
 
 The Service-level-AA service status indication information element is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 |  | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|---|
+| Service-level-AA servicestatus indication IEI | octet 1 |
+| Length of Service-level-AA service status indication | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | UAS | octet 3 |
+
 Figure 9.11.2.18.1: Service-level-AA-service-status indication information element
 
 Table 9.11.2.18.1: Service-level-AA-service-status indication information element
+
+| UAS (octet 3, bit 1) |
+|---|
+| Bit |
+| 1 |  |
+| 0 | UAS services not enabled |
+| 1 | UAS services enabled |
+|  |
+| Bits 2 to 8 of octet 3 are spare and shall be encoded as zero. |
 
 #### 9.11.2.19	Time duration
 
@@ -27823,9 +29245,466 @@ The 5GMM capability information element is coded as shown in figure 9.11.3.1.1 
 
 The 5GMM capability is a type 4 information element with a minimum length of 3 octets and a maximum length of 15 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GMM capability IEI | octet 1 |
+| Length of 5GMM capability contents | octet 2 |
+| SGC | 5G-IPHC-CP CIoT | N3 data | 5G-CP CIoT | RestrictEC | LPP | HO attach | S1 mode | octet 3 |
+| RACS | NSSAA | 5G-LCS | V2XCNPC5 | V2XCEPC5 | V2X | 5G-UP CIoT | 5GSRVCC | octet 4* |
+| 5GProSe-l2relay | 5GProSe-dc | 5GProSe-dd | ER-NSSAI | 5G-EHC-CP CIoT | multipleUP | WUSA | CAG | octet 5* |
+| PR | RPR | PIV | NCR | NR-PSSI | 5GProSe-l3rmt | 5GProSe-l2rmt | 5GProSe-l3relay | octet 6* |
+| MPSIU | UAS | NSAG | Ex-CAG | SSNPNSI | EventNotification | MINT | NSSRG | octet 7* |
+| SBTS | NSR | LADN-DS | RANtiming | ECI | ESI | RCMAN | RCMAP | octet 8* |
+| 5G ProSe-l2end | 5G ProSe-l3U2U relay | 5G ProSe-l2U2U relay | RSLPS | SBNS | UN-PER | A2XNPC5 | A2XEPC5 | octet 9* |
+| A2X-Uu | SLVI | TempNS | SUPL | LCS-UPP | PNS | RSLP | 5G ProSe-l3end | octet10* |
+| 0spare | RATUC | RSLPPU | RSLPVU | NSUC | RSLPL | NVL-SATNR | MCSIU | octet 11* |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | octet 12*-15* |
+| Spare |  |
+
 Figure 9.11.3.1.1: 5GMM capability information element
 
 Table 9.11.3.1.1: 5GMM capability information element
+
+| EPC NAS supported (S1 mode) (octet 3, bit 1)Bit |
+|---|
+| 1 |  |  |  |  |
+| 0 |  |  |  | S1 mode not supported |
+| 1 |  |  |  | S1 mode supported |
+|  |
+| ATTACH REQUEST message containing PDN CONNECTIVITY REQUEST message for handover support (HOattach) (octet 3, bit 2)Bit |
+| 2 |  |  |  |  |
+| 0 |  |  |  | ATTACH REQUEST message containing PDN CONNECTIVITY REQUEST message with request type set to "handover" or "handover of emergency bearer services" to transfer PDU session from N1 mode to S1 mode not supported |
+| 1 |  |  |  | ATTACH REQUEST message containing PDN CONNECTIVITY REQUEST message with request type set to "handover" or "handover of emergency bearer services" to transfer PDU session from N1 mode to S1 mode supported |
+|  |
+| LTE Positioning Protocol (LPP) capability (octet 3, bit 3) |
+| This bit indicates the capability to support LTE Positioning Protocol (LPP) (see 3GPP TS 37.355 [26]). |
+| Bit |
+| 3 |  |  |  |  |
+| 0 |  |  |  | LPP in N1 modenot supported |
+| 1 |  |  |  | LPP in N1 modesupported |
+|  |
+| Restriction on use of enhanced coverage support (RestrictEC) (octet 3, bit 4)This bit indicates the capability to support restriction on use of enhanced coverage.Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | Restriction on use of enhanced coverage not supported |
+| 1 |  |  |  | Restriction on use of enhanced coverage supported |
+|  |
+| Control plane CIoT 5GS optimization (5G-CP CIoT) (octet 3, bit 5)This bit indicates the capability for control plane CIoT 5GS optimization.Bit |
+| 5 |  |  |  |  |
+| 0 |  |  |  | Control plane CIoT 5GS optimization not supported |
+| 1 |  |  |  | Control plane CIoT 5GS optimization supported |
+|  |
+| N3 data transfer (N3 data) (octet 3, bit 6)This bit indicates the capability for N3 data transfer.Bit |
+| 6 |  |  |  |  |
+| 0 |  |  |  | N3 data transfer supported |
+| 1 |  |  |  | N3 data transfer not supported |
+|  |
+| IP header compression for control plane CIoT 5GS optimization (5G-IPHC-CP CIoT) (octet 3, bit 7)This bit indicates the capability for IP header compression for control plane CIoT 5GS optimization.Bit |
+| 7 |  |  |  |  |
+| 0 |  |  |  | IP header compression for control plane CIoT 5GS optimization not supported |
+| 1 |  |  |  | IP header compression for control plane CIoT 5GS optimization supported |
+|  |
+| Service gap control (SGC) (octet 3, bit 8)Bit |
+| 8 |  |  |  |  |
+| 0 |  |  |  | service gap control not supported |
+| 1 |  |  |  | service gap control supported |
+|  |
+| 5G-SRVCC from NG-RAN to UTRAN (5GSRVCC) capability(octet 4, bit 1) |
+| This bit indicates the capability for5G-SRVCC from NG-RAN to UTRAN (5GSRVCC)(see 3GPP TS 23.216 [6A]). |
+| Bit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | 5G-SRVCC from NG-RAN to UTRAN not supported |
+| 1 |  |  |  | 5G-SRVCC from NG-RAN to UTRAN supported |
+|  |
+| User plane CIoT 5GS optimization (5G-UP CIoT) (octet 4, bit 2)This bit indicates the capability for user plane CIoT 5GS optimization.Bit |
+| 2 |  |  |  |  |
+| 0 |  |  |  | User plane CIoT 5GS optimization not supported |
+| 1 |  |  |  | User plane CIoT 5GS optimization supported |
+|  |
+| V2X capability (V2X) (octet 4, bit 3) |
+| This bit indicates the capability for V2X, as specified in 3GPP TS 24.587 [19B].Bit |
+| 3 |  |  |  |  |
+| 0 |  |  |  | V2X not supported |
+| 1 |  |  |  | V2X supported |
+|  |
+| V2X communication over E-UTRA-PC5 capability (V2XCEPC5) (octet 4, bit 4) |
+| This bit indicates the capability for V2X communication over E-UTRA-PC5, as specified in 3GPP TS 24.587 [19B]. |
+| Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | V2X communication over E-UTRA-PC5 not supported |
+| 1 |  |  |  | V2X communication over E-UTRA-PC5 supported |
+|  |
+| V2X communication over NR-PC5 capability (V2XCNPC5) (octet 4, bit 5) |
+| This bit indicates the capability for V2X communication over NR-PC5, as specified in 3GPP TS 24.587 [19B]. |
+| Bit |
+| 5 |  |  |  |  |
+| 0 |  |  |  | V2X communication over NR-PC5 not supported |
+| 1 |  |  |  | V2X communication over NR-PC5 supported |
+|  |
+| Location Services (5G-LCS) notification mechanisms capability (octet 4, bit 6) |
+| This bit indicates the capability to support Location Services (5G-LCS) notification mechanisms (see 3GPP TS 23.273 [6B]). |
+| Bit |
+| 6 |  |  |  |  |
+| 0 |  |  |  | LCS notification mechanisms not supported |
+| 1 |  |  |  | LCS notification mechanisms supported |
+|  |
+| Network slice-specific authentication and authorization (NSSAA) (octet 4, bit 7)This bit indicates the capability to support network slice-specific authentication and authorization.Bit |
+| 7 |  |  |  |  |
+| 0 |  |  |  | Network slice-specific authentication and authorization not supported |
+| 1 |  |  |  | Network slice-specific authentication and authorization supported |
+|  |
+| Radio capability signalling optimisation (RACS) capability (octet 4, bit 8)Bit |
+| 8 |  |  |  |  |
+| 0 |  |  |  | RACS not supported |
+| 1 |  |  |  | RACS supported |
+|  |
+| Closed Access Group (CAG) capability (octet 5, bit 1)Bit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | CAG not supported |
+| 1 |  |  |  | CAG supported |
+|  |
+| WUS assistance (WUSA) information reception capability (octet 5, bit 2)Bit |
+| 2 |  |  |  |  |
+| 0 |  |  |  | WUS assistance information reception not supported |
+| 1 |  |  |  | WUS assistance information reception supported |
+|  |
+| Multiple user-plane resources support (multipleUP) (octet 5, bit 3) |
+| This bit indicates the capability to support multiple user-plane resources in NB-N1 mode. |
+| Bit |
+| 3 |  |  |  |  |
+| 0 |  |  |  | Multiple user-plane resources not supported |
+| 1 |  |  |  | Multiple user-plane resources supported |
+|  |
+|  |
+| Ethernet header compression for control plane CIoT 5GS optimization (5G-EHC-CP CIoT) (octet 5, bit 4)Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | Ethernet header compression for control plane CIoT 5GS optimization not supported |
+| 1 |  |  |  | Ethernet header compression for control plane CIoT 5GS optimization supported |
+|  |
+| Extended rejected NSSAI support (ER-NSSAI) (octet 5, bit 5) |
+| This bit indicates the capability to support extended rejected NSSAI.Bit |
+| 5 |  |  |  |  |
+| 0 |  |  |  | Extended rejected NSSAI not supported |
+| 1 |  |  |  | Extended rejected NSSAI supported |
+|  |
+| 5GProSedirect discovery (5GProSe-dd) (octet5, bit6)This bit indicates the capability for 5GProSe direct discovery.Bit |
+| 6 |  |  |  |  |
+| 0 |  |  |  | 5GProSe direct discovery not supported |
+| 1 |  |  |  | 5GProSe direct discovery supported |
+|  |
+| 5GProSedirectcommunication(5GProSe-dc) (octet5, bit7)This bit indicates the capabilityfor5GProSedirectcommunication.Bit |
+| 7 |  |  |  |  |
+| 0 |  |  |  | 5GProSe directcommunicationnot supported |
+| 1 |  |  |  | 5GProSe directcommunicationsupported |
+|  |
+| 5GProSelayer-2UE-to-network-relay(5GProSe-l2relay) (octet5, bit8)This bit indicates the capability to act as a 5GProSe layer-2UE-to-network relay UE.Bit |
+| 8 |  |  |  |  |
+| 0 |  |  |  | Acting as a 5GProSelayer-2UE-to-network relay UEnot supported |
+| 1 |  |  |  | Acting as a 5GProSelayer-2UE-to-network relay UEsupported |
+|  |
+| 5GProSelayer-3UE-to-network-relay(5GProSe-l3relay) (octet6, bit1)This bit indicates the capability to act as a 5GProSelayer-3UE-to-network relay UEBit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | Acting as a 5GProSelayer-3UE-to-network relay UEnot supported |
+| 1 |  |  |  | Acting as a 5GProSelayer-3UE-to-network relay UEsupported |
+|  |
+| 5GProSelayer-2UE-to-network-remote(5GProSe-l2rmt) (octet6, bit2)This bit indicates the capability to act as a 5GProSelayer-2UE-to-networkremote UEBit |
+| 2 |  |  |  |  |
+| 0 |  |  |  | Acting as a 5GProSelayer-2UE-to-networkremote UEnot supported |
+| 1 |  |  |  | Acting as a 5GProSelayer-2UE-to-networkremote UEsupported |
+|  |
+| 5GProSelayer-3UE-to-network-remote(5GProSe-l3rmt) (octet6, bit3)This bit indicates the capability to act as a 5GProSelayer-3UE-to-networkremote UEBit |
+| 3 |  |  |  |  |
+| 0 |  |  |  | Acting as a 5GProSelayer-3UE-to-networkremote UEnot supported |
+| 1 |  |  |  | Acting as a 5GProSelayer-3UE-to-networkremote UEsupported |
+|  |
+| NR paging subgroup support indication(NR-PSSI) (octet6, bit4) |
+| This bit indicates the capability to support NR paging subgrouping |
+| Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | NR paging subgrouping not supported |
+| 1 |  |  |  | NR paging subgrouping supported |
+|  |
+| N1 NAS signalling connection release (NCR) (octet 6, bit 5) |
+| This bit indicates whether N1 NAS signalling connection release is supported. |
+| Bit |
+| 5 |  |  |  |  |
+| 0 |  |  |  | N1 NAS signalling connection release not supported |
+| 1 |  |  |  | N1 NAS signalling connection release supported |
+|  |
+| Paging indication for voice services (PIV) (octet 6, bit 6) |
+| This bit indicates whether paging indication for voice services is supported. |
+| Bit |
+| 6 |  |  |  |  |
+| 0 |  |  |  | paging indication for voice services not supported |
+| 1 |  |  |  | paging indication for voice services supported |
+|  |
+| Reject paging request (RPR) (octet 6, bit 7) |
+| This bit indicates whether reject paging request is supported. |
+| Bit |
+| 7 |  |  |  |  |
+| 0 |  |  |  | reject paging requestnot supported |
+| 1 |  |  |  | reject paging requestsupported |
+|  |
+| Paging restriction (PR) (octet 6, bit 8) |
+| This bit indicates whether paging restriction is supported. |
+| Bit |
+| 8 |  |  |  |  |
+| 0 |  |  |  | paging restriction not supported |
+| 1 |  |  |  | paging restriction supported |
+|  |
+| NSSRG (octet 7, bit 1) |
+| This bit indicates the capability to support the NSSRG.Bit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | NSSRG not supported |
+| 1 |  |  |  | NSSRG supported |
+|  |
+| Minimization of service interruption(MINT) (octet7, bit 2) |
+| This bit indicates the capability to support Minimization of service interruption (MINT)Bit |
+| 2 |  |  |  |  |
+| 0 |  |  |  | MINT not supported |
+| 1 |  |  |  | MINT supported |
+|  |
+| Event notification (EventNotification)(octet7, bit 3) |
+| This bit indicates the capability to support event notification for upper layersBit |
+| 3 |  |  |  |  |
+| 0 |  |  |  | Event notification not supported |
+| 1 |  |  |  | Event notification supported |
+|  |
+| SOR-SNPN-SI (SOR SNPN SI) (octet7, bit 4) |
+| This bit indicates the capability to support SOR-SNPN-SI.Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | SOR-SNPN-SI not supported |
+| 1 |  |  |  | SOR-SNPN-SI supported |
+|  |
+| Extended CAG information list support (Ex-CAG) (octet7, bit5) |
+| This bit indicates the capability to support extended CAG information list.Bit |
+| 5 |  |  |  |  |
+| 0 |  |  |  | Extended CAG information listnotsupported |
+| 1 |  |  |  | Extended CAG information list supported |
+|  |
+| NSAG(octet7, bit6) |
+| This bit indicates the capability to supportNSAG.Bit |
+| 6 |  |  |  |  |
+| 0 |  |  |  | NSAGnotsupported |
+| 1 |  |  |  | NSAGsupported |
+|  |
+| UAS(octet7, bit7) |
+| This bit indicates the capability tosupportUAS services.Bit |
+| 7 |  |  |  |  |
+| 0 |  |  |  | UAS servicesnotsupported |
+| 1 |  |  |  | UAS servicessupported |
+|  |
+| MPS indicator update (MPSIU)(octet7, bit 8) |
+| This bit indicates the capability to supportMPS indicator update via the UE configuration update procedure.Bit |
+| 8 |  |  |  |  |
+| 0 |  |  |  | MPS indicator update not supported |
+| 1 |  |  |  | MPS indicator update supported |
+|  |
+| Registration complete message for acknowledging negotiated PEIPS assistance information(RCMAP)(octet8, bit 1) |
+| This bit indicates the capabilityforsending REGISTRATION COMPLETE message whenNegotiatedPEIPS assistance informationIEis included in the REGISTRATION ACCEPT message.Bit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | Sending of REGISTRATION COMPLETE message for negotiated PEIPS assistance information not supported |
+| 1 |  |  |  | Sending of REGISTRATION COMPLETE message for negotiated PEIPS assistance information supported |
+|  |
+| Registration complete message for acknowledging NSAG information(RCMAN)(octet8, bit 2) |
+| This bit indicates the capabilityforsending REGISTRATION COMPLETE message whenNSAG informationIEis included in the REGISTRATION ACCEPT message.Bit |
+| 2 |  |  |  |  |
+| 0 |  |  |  | Sending of REGISTRATION COMPLETE message for NSAG information not supported |
+| 1 |  |  |  | Sending of REGISTRATION COMPLETE message for NSAG information supported |
+|  |
+| Equivalent SNPNs indicator (ESI)(octet8, bit3) |
+| This bit indicates the capability to supportequivalent SNPNs.Bit |
+| 3 |  |  |  |  |
+| 0 |  |  |  | Equivalent SNPNs not supported |
+| 1 |  |  |  | Equivalent SNPNs supported |
+|  |
+| Enhanced CAG information(ECI)(octet8, bit 4) |
+| This bit indicates the capability to support enhanced CAG information.Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | Enhanced CAG informationnotsupported |
+| 1 |  |  |  | Enhanced CAG information supported |
+|  |
+| Reconnection to the network due to RAN timing synchronization status change (RANtiming) (octet8, bit 5) |
+| This bit indicates the capability to support Reconnection to the network due to RAN timing synchronization status change.Bit |
+| 5 |  |  |  |  |
+| 0 |  |  |  | Reconnection to the network due to RAN timing synchronization status changenotsupported |
+| 1 |  |  |  | Reconnection to the network due to RAN timing synchronization status change supported |
+|  |
+| LADN per DNN and S-NSSAIsupport (LADN-DS)(octet8, bit 6) |
+| This bit indicates the capability to support LADN per DNN and S-NSSAI.Bit |
+| 6 |  |  |  |  |
+| 0 |  |  |  | LADN per DNN and S-NSSAInotsupported |
+| 1 |  |  |  | LADN per DNN and S-NSSAIsupported |
+|  |
+| Network slice replacement (NSR) (octet 8, bit 7)This bit indicates the capability to support network slice replacement.Bit |
+| 7 |  |  |  |  |
+| 0 |  |  |  | Network slice replacement not supported |
+| 1 |  |  |  | Network slice replacementsupported |
+|  |
+| Slice-based TNGF selection support (SBTS) (octet 8, bit 8) |
+| This bit indicates the capability to support slice-based TNGF selection.Bit |
+| 8 |  |  |  |  |
+| 0 |  |  |  | Slice-based TNGF selectionnotsupported |
+| 1 |  |  |  | Slice-based TNGF selection supported |
+|  |
+| A2X over E-UTRA-PC5 (A2XEPC5)(octet 9, bit 1) |
+| This bit indicates the capability forA2X over E-UTRA-PC5, as specified in 3GPP TS 24.577 [60].Bit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | A2X over E-UTRA-PC5notsupported |
+| 1 |  |  |  | A2X over E-UTRA-PC5 supported |
+|  |
+| A2X over NR-PC5 (A2XNPC5) (octet 9, bit 2) |
+| This bit indicates the capability for A2X over NR-PC5,as specified in 3GPP TS 24.577 [60].Bit |
+| 2 |  |  |  |  |
+| 0 |  |  |  | A2X over NR-PC5notsupported |
+| 1 |  |  |  | A2X over NR-PC5 supported |
+|  |
+| Unavailability period(UN-PER) (octet 9, bit 3) |
+| This bit indicates the capabilityto support unavailability period. |
+| Bit |
+| 3 |  |  |  |  |
+| 0 |  |  |  | Unavailability period not supported |
+| 1 |  |  |  | Unavailability period supported |
+|  |
+| Slice-based N3IWFselection support (SBNS)(octet 9, bit 4) |
+| This bit indicates the capabilityto support slide-based N3IWF selection |
+| Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | Slice-based N3IWF selection not supported |
+| 1 |  |  |  | Slice-based N3IWF selection supported |
+|  |
+| SLpositioningserver UE(RSLPS) (octet 9, bit 5) |
+| This bit indicates the capability forSLpositioningserver UE,as specified in 3GPPTS 24.586[ts23586]. |
+| Bit |  |  |  |  |
+| 5 |  |  |  |  |
+| 0 |  |  |  | Ranging and sidelink positioningforSLpositioningserver UEnot supported |
+| 1 |  |  |  | Ranging and sidelink positioningforSLpositioningserver UEsupported |
+|  |
+| 5G ProSe layer-2 UE-to-UE relay (5G ProSe-l2U2Urelay) (octet9, bit6) |
+| This bit indicates the capability to act as a 5G ProSe layer-2 UE-to-UE relay UE. |
+| Bit |  |  |  |  |
+| 6 |  |  |  |  |
+| 0 |  |  |  | Acting as a 5G ProSe layer-2 UE-to-UE relay UE not supported |
+| 1 |  |  |  | Acting as a 5G ProSe layer-2 UE-to-UE relay UE supported |
+|  |
+| 5G ProSe layer-3 UE-to-UE relay (5G ProSe-l3U2Urelay) (octet9, bit7) |
+| This bit indicates the capability to act as a 5G ProSe layer-3 UE-to-UE relay UE. |
+| Bit |
+| 7 |  |  |  |  |
+| 0 |  |  |  | Acting as a 5G ProSe layer-3 UE-to-UE relay UE not supported |
+| 1 |  |  |  | Acting as a 5G ProSe layer-3 UE-to-UE relay UE supported |
+|  |
+| 5G ProSe layer-2 end UE (5G ProSe-l2end) (octet9, bit8) |
+| This bit indicates the capability to act as a 5G ProSe layer-2 end UE. |
+| Bit |
+| 8 |  |  |  |  |
+| 0 |  |  |  | Acting as a 5G ProSe layer-23 UE-to-UE relayend UE not supported |
+| 1 |  |  |  | Acting as a 5G ProSe layer-23 UE-to-UE relayend UE supported |
+|  |
+| 5G ProSe layer-3 end UE (5G ProSe-l3end) (octet10, bit1) |
+| This bit indicates the capability to act as a 5G ProSe layer-3 end UE. |
+| Bit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | Acting as a 5G ProSe layer-3 end UE not supported |
+| 1 |  |  |  | Acting as a 5G ProSe layer-3 end UE supported |
+|  |
+| Ranging and sidelink positioning support (RSLP) (octet 10, bit 2) |
+| Bit |
+| 2 |  |  |  |  |
+| 0 |  |  |  | Ranging and sidelink positioning not supported |
+| 1 |  |  |  | Ranging and sidelink positioning supported |
+|  |
+| Partial network slice (PNS) (octet 10, bit 3) |
+| This bit indicates whether the UE support partial network slice in the registration area. |
+| Bit |
+| 3 |  |  |  |  |
+| 0 |  |  |  | Partial network slice not supported |
+| 1 |  |  |  | Partial network slice supported |
+|  |
+| LCS-UPPuser plane positioning (LCS-UPP)(octet10, bit4) |
+| This bit indicates the capability to support LCS-UPPuser plane positioning(see 3GPP TS 23.273 [6B]). |
+| Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | User plane positioningusing LCS-UPPnotsupported |
+| 1 |  |  |  | User plane positioningusing LCS-UPP supported |
+|  |
+| SUPL user plane positioning (SUPL)(octet10, bit5) |
+| This bit indicates the capability to support SUPLuser plane positioning(see3GPP TS 38.305 [67] and3GPP TS 23.271 [68]). |
+| Bit |
+| 5 |  |  |  |  |
+| 0 |  |  |  | User plane positioningusing SUPLnotsupported |
+| 1 |  |  |  | User plane positioningusing SUPL supported |
+|  |
+| S-NSSAI time validity information(TempNS) (octet10, bit6) |
+| This bit indicates the capability to supporttheS-NSSAI time validity information. |
+| Bit |
+| 6 |  |  |  |  |
+| 0 |  |  |  | S-NSSAI time validity informationnotsupported |
+| 1 |  |  |  | S-NSSAI time validity informationsupported |
+|  |
+| S-NSSAIlocation validityinformation (SLVI) (octet10, bit7) |
+| This bit indicates the capability to support S-NSSAIlocation validityinformation. |
+| Bit |
+| 7 |  |  |  |  |
+| 0 |  |  |  | S-NSSAIlocation validityinformationnotsupported |
+| 1 |  |  |  | S-NSSAIlocation validityinformation supported |
+|  |
+| A2Xover Uucapability (A2X-Uu)(octet10, bit8) |
+| This bit indicates the capabilityforA2Xover Uu, as specified in 3GPP TS 24.577 [60]. |
+| Bit |
+| 8 |  |  |  |  |
+| 0 |  |  |  | A2X over Uunotsupported |
+| 1 |  |  |  | A2X over Uusupported |
+|  |
+| MCS indicator update (MCSIU)(octet11, bit1) |
+| This bit indicates the capability to supportMCS indicator update via the UE configuration update procedure. |
+| Bit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | MCS indicator update not supported |
+| 1 |  |  |  | MCS indicator update supported |
+|  |
+| Network verifiedUE location oversatellite NG-RAN(NVL-SATNR)(octet11, bit2) |
+| This bit indicates the capability to supportnetwork verifiedUE location oversatellite NG-RAN as specified in3GPP TS 23.501 [8]. |
+| Bit |  |  |  |  |
+| 2 |  |  |  |  |
+| 0 |  |  |  | Network verifiedUE location oversatellite NG-RAN not supported |
+| 1 |  |  |  | Network verifiedUE location oversatellite NG-RAN supported |
+|  |
+| Ranging and sidelink positioning over PC5 for located UE support (RSLPL)(octet11, bit3)This bit indicates the capability to support ranging and sidelink positioning over PC5 for located UE support. |
+| Bit |
+| 3 |  |  |  |  |
+| 0 |  |  |  | Ranging and sidelink positioningforlocatedUEnot supported |
+| 1 |  |  |  | Ranging and sidelink positioningforlocatedUEsupported |
+|  |
+| Network slice usage control (NSUC) (octet 11, bit 4) |
+| This bit indicates the capability to support network slice usage control. |
+| Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | Network slice usage control not supported |
+| 1 |  |  |  | Network slice usage control supported |
+|  |
+| Ranging and sidelink positioning with V2X capable UE(RSLPVU)(octet11, bit5)(see NOTE) |
+|  |
+| Bit |  |  |  |  |
+| 5 |  |  |  |  |
+| 0 |  |  |  | Ranging and sidelink positioning with V2X capable UE not supported |
+| 1 |  |  |  | Ranging and sidelink positioning with V2X capable UE supported |
+|  |
+| Ranging and sidelink positioningwith 5G ProSe capableUE support (RSLPPU)(octet11, bit6)(see NOTE) |
+| Bit |
+| 6 |  |  |  |  |
+| 0 |  |  |  | Ranging and sidelink positioningwith 5G ProSe capableUEnot supported |
+| 1 |  |  |  | Ranging and sidelink positioningwith5G ProSe capableUEsupported |
+|  |
+| RAT utilization control (RATUC)(octet 11, bit7) |
+| This bit indicates the supportof RAT utilization control. |
+| Bit |
+| 7 |  |  |  |  |
+| 0 |  |  |  | RAT utilizationcontrol not supported |
+| 1 |  |  |  | RAT utilizationcontrol supported |
+|  |
+| Bit8 in octet11and bits in octets 12to 15 are spare and shall be coded as zero, if the respective octet is included in the information element. |
+|  |
+| NOTE:If both the RSLPVU bit is set to "Ranging and sidelink positioning with V2X capable UEnotsupported" and the RSLPPU bit is set to "Ranging and sidelink positioning with 5G ProSe capable UEnotsupported" in the 5GMM capability IE, then the receiving entity shall ignore the RSLPVU bit and the RSLPPU bit. |
 
 #### 9.11.3.2	5GMM cause
 
@@ -27835,9 +29714,73 @@ The 5GMM cause information element is coded as shown in figure 9.11.3.2.1 and t
 
 The 5GMM cause is a type 3 information element with length of 2 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GMM cause IEI | octet 1 |
+| Cause value | octet 2 |
+
 Figure 9.11.3.2.1: 5GMM cause information element
 
 Table 9.11.3.2.1: 5GMM cause information element
+
+| Cause value (octet 2) |
+|---|
+|  |
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |  | Illegal UE |
+| 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 |  | PEI not accepted |
+| 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 |  | Illegal ME |
+| 0 | 0 | 0 | 0 | 0 | 1 | 1 | 1 |  | 5GS services not allowed |
+| 0 | 0 | 0 | 0 | 1 | 0 | 0 | 1 |  | UE identity cannot be derived by the network |
+| 0 | 0 | 0 | 0 | 1 | 0 | 1 | 0 |  | Implicitly de-registered |
+| 0 | 0 | 0 | 0 | 1 | 0 | 1 | 1 |  | PLMN not allowed |
+| 0 | 0 | 0 | 0 | 1 | 1 | 0 | 0 |  | Tracking area not allowed |
+| 0 | 0 | 0 | 0 | 1 | 1 | 0 | 1 |  | Roaming not allowed in this tracking area |
+| 0 | 0 | 0 | 0 | 1 | 1 | 1 | 1 |  | No suitable cells in tracking area |
+| 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |  | MAC failure |
+| 0 | 0 | 0 | 1 | 0 | 1 | 0 | 1 |  | Synch failure |
+| 0 | 0 | 0 | 1 | 0 | 1 | 1 | 0 |  | Congestion |
+| 0 | 0 | 0 | 1 | 0 | 1 | 1 | 1 |  | UE security capabilities mismatch |
+| 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 |  | Security mode rejected, unspecified |
+| 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 |  | Non-5G authentication unacceptable |
+| 0 | 0 | 0 | 1 | 1 | 0 | 1 | 1 |  | N1 mode not allowed |
+| 0 | 0 | 0 | 1 | 1 | 1 | 0 | 0 |  | Restricted service area |
+| 0 | 0 | 0 | 1 | 1 | 1 | 1 | 1 |  | Redirection to EPC required |
+| 0 | 0 | 1 | 0 | 0 | 1 | 0 | 0 |  | IAB-node operation not authorized |
+| 0 | 0 | 1 | 0 | 1 | 0 | 1 | 1 |  | LADN not available |
+| 0 | 0 | 1 | 1 | 1 | 1 | 1 | 0 |  | No network slices available |
+| 0 | 1 | 0 | 0 | 0 | 0 | 0 | 1 |  | Maximum number of PDU sessions reached |
+| 0 | 1 | 0 | 0 | 0 | 0 | 1 | 1 |  | Insufficient resources for specific slice and DNN |
+| 0 | 1 | 0 | 0 | 0 | 1 | 0 | 1 |  | Insufficient resources for specific slice |
+| 0 | 1 | 0 | 0 | 0 | 1 | 1 | 1 |  | ngKSI already in use |
+| 0 | 1 | 0 | 0 | 1 | 0 | 0 | 0 |  | Non-3GPP access to 5GCN not allowed |
+| 0 | 1 | 0 | 0 | 1 | 0 | 0 | 1 |  | Serving network not authorized |
+| 0 | 1 | 0 | 0 | 1 | 0 | 1 | 0 |  | Temporarily not authorized for this SNPN |
+| 0 | 1 | 0 | 0 | 1 | 0 | 1 | 1 |  | Permanently not authorized for this SNPN |
+| 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 |  | Not authorized for this CAG or authorized for CAG cells only |
+| 0 | 1 | 0 | 0 | 1 | 1 | 0 | 1 |  | Wireline access area not allowed |
+| 0 | 1 | 0 | 0 | 1 | 1 | 1 | 0 |  | PLMN not allowed to operate at the present UE location |
+| 0 | 1 | 0 | 0 | 1 | 1 | 1 | 1 |  | UAS services not allowed |
+| 0 | 1 | 0 | 1 | 0 | 0 | 0 | 0 |  | Disaster roaming for the determined PLMN with disaster condition not allowed |
+| 0 | 1 | 0 | 1 | 0 | 0 | 0 | 1 |  | Selected N3IWF is not compatible with the allowed NSSAI |
+| 0 | 1 | 0 | 1 | 0 | 0 | 1 | 0 |  | Selected TNGF is not compatible with the allowed NSSAI |
+| 0 | 1 | 0 | 1 | 1 | 0 | 1 | 0 |  | Payload was not forwarded |
+| 0 | 1 | 0 | 1 | 1 | 0 | 1 | 1 |  | DNN not supported or not subscribed in the slice |
+| 0 | 1 | 0 | 1 | 1 | 1 | 0 | 0 |  | Insufficient user-plane resources for the PDU session |
+| 0 | 1 | 0 | 1 | 1 | 1 | 0 | 1 |  | Onboarding services terminated |
+| 0 | 1 | 0 | 1 | 1 | 1 | 1 | 0 |  | User plane positioningnot authorized |
+| 0 | 1 | 0 | 1 | 1 | 1 | 1 | 1 |  | Semantically incorrect message |
+| 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 |  | Invalid mandatory information |
+| 0 | 1 | 1 | 0 | 0 | 0 | 0 | 1 |  | Message type non-existent or not implemented |
+| 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 |  | Message type not compatible with the protocol state |
+| 0 | 1 | 1 | 0 | 0 | 0 | 1 | 1 |  | Information element non-existent or not implemented |
+| 0 | 1 | 1 | 0 | 0 | 1 | 0 | 0 |  | Conditional IE error |
+| 0 | 1 | 1 | 0 | 0 | 1 | 0 | 1 |  | Message not compatible with the protocol state |
+| 0 | 1 | 1 | 0 | 1 | 1 | 1 | 1 |  | Protocol error, unspecified |
+|  |  |  |  |  |  |  |  |  |  |
+|  |  |  |  |  |  |  |  |  |  |
+| Any other value received by the mobile station shall be treated as 0110 1111, "protocol error, unspecified". Any other value received by the network shall be treated as 0110 1111, "protocol error, unspecified". |
 
 #### 9.11.3.2A	5GS DRX parameters
 
@@ -27849,9 +29792,29 @@ The 5GS DRX parameters information element is coded as shown in figure 9.11.3.2
 
 The value part of a DRX parameter information element is coded as shown in table 9.11.3.2A.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS DRX parameters IEI | octet 1 |
+| Length of 5GS DRX parameters contents | octet 2 |
+| 0 | 0 | 0 | 0 | DRX value |  |
+| spare |  | octet 3 |
+
 Figure 9.11.3.2A.1: 5GS DRX parameters information element
 
 Table 9.11.3.2A.1: 5GS DRX parameters information element
+
+| DRX value (bits 4 to 1 of octet 3)This field represents the DRX cycle parameter 'T' as defined in 3GPP TS 38.304 [28]or 3GPP TS 36.304 [25C]. |
+|---|
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | DRX value not specified |
+| 0 | 0 | 0 | 1 | DRX cycle parameter T = 32 |
+| 0 | 0 | 1 | 0 | DRX cycle parameter T = 64 |
+| 0 | 0 | 1 | 1 | DRX cycle parameter T = 128 |
+| 0 | 1 | 0 | 0 | DRX cycle parameter T = 256 |
+|  |
+| All other values shall be interpreted as "DRX value not specified" by this version of the protocol.Bits 5 to 8 of octet 3 are spare and shall be coded as zero. |
+|  |
 
 #### 9.11.3.3	5GS identity type
 
@@ -27861,9 +29824,27 @@ The 5GS identity type is a type 1 information element.
 
 The 5GS identity type information element is coded as shown in figure 9.11.3.3.1 and table 9.11.3.3.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS identity typeIEI | 0spare | Type ofidentity | octet 1 |
+
 Figure 9.11.3.3.1: 5GS identity type information element
 
 Table 9.11.3.3.1: 5GS identity type information element
+
+| Type of identity (octet 1) |
+|---|
+| Bits |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 1 |  | SUCI |
+| 0 | 1 | 0 |  | 5G-GUTI |
+| 0 | 1 | 1 |  | IMEI |
+| 1 | 0 | 0 |  | 5G-S-TMSI |
+| 1 | 0 | 1 |  | IMEISV |
+| 1 | 1 | 0 |  | MAC address |
+| 1 | 1 | 1 |  | EUI-64 |
+|  |
+| All other valuesare unused and shall beinterpreted as"SUCI", if received by the UE. |
 
 #### 9.11.3.4	5GS mobile identity
 
@@ -27873,25 +29854,200 @@ The 5GS mobile identity information element is coded as shown in figures 9.11.3
 
 The 5GS mobile identity is a type 6 information element with a minimum length of 4.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS mobile identity IEI | octet 1 |
+| Length of 5GS mobile identity contents | octet2octet3 |
+| 1 | 1 | 1 | 1 | 0spare | Type of identity | octet4 |
+| MCC digit 2 | MCC digit 1 | octet5 |
+| MNC digit 3 | MCC digit 3 | octet6 |
+| MNC digit 2 | MNC digit 1 | octet7 |
+| AMF Region ID | octet8 |
+| AMFSetID | octet9 |
+| AMF Set ID (continued) | AMF Pointer | octet10 |
+| 5G-TMSI | octet 11 |
+| 5G-TMSI (continued) | octet 12 |
+| 5G-TMSI (continued) | octet 13 |
+| 5G-TMSI (continued) | octet 14 |
+
 Figure 9.11.3.4.1: 5GS mobile identity information element for type of identity "5G-GUTI"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS mobile identity IEI | octet 1 |
+| Length of 5GS mobile identity contents | octet 2octet3 |
+| Identity digit 1 | odd/evenindic | Type of identity | octet4 |
+| Identity digit p+1 | Identity digit p | octet5* |
 
 Figure 9.11.3.4.2: 5GS mobile identity information element for type of identity "IMEI" or "IMEISV"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS mobile identity IEI | octet 1 |
+| Length of 5GS mobile identity contents | octet 2octet3 |
+| 0spare | SUPI format | 0spare | Type of identity | octet4 |
+| MCC digit 2 | MCC digit 1 | octet5 |
+| MNC digit 3 | MCC digit 3 | octet6 |
+| MNC digit 2 | MNC digit 1 | octet7 |
+| Routing indicator digit 2 | Routing indicator digit 1 | octet8 |
+| Routing indicator digit 4 | Routing indicator digit 3 | octet9 |
+| 0Spare | 0Spare | 0Spare | 0Spare | Protection scheme Id | octet10 |
+| Home network public key identifier | octet 11 |
+| Scheme output | octet 12- x |
+
 Figure 9.11.3.4.3: 5GS mobile identity information element for type of identity "SUCI" and SUPI format "IMSI"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MSIN digit 2 | MSIN digit 1 | octet 12 |
+| … |  |
+| MSIN digit n+1 | MSIN digit n | octet x |
 
 Figure 9.11.3.4.3a: Scheme output for type of identity "SUCI", SUPI format "IMSI" and Protection scheme Id "Null scheme"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS mobile identity IEI | octet 1 |
+| Length of 5GS mobile identity contents | octet 2octet 3 |
+| 0Spare | SUPI format | 0Spare | Type of identity | octet 4 |
+| SUCI NAI | octet 5 - y |
+
 Figure 9.11.3.4.4: 5GS mobile identity information element for type of identity "SUCI" and SUPI format "Network specific identifier", "GCI" or "GLI"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS mobile identity IEI | octet 1 |
+| Length of 5GS mobile identity contents | octet 2octet3 |
+| 1 | 1 | 1 | 1 | 0spare | Type of identity | octet4 |
+| AMF Set ID | octet5 |
+| AMF Set ID (continued) | AMF Pointer | octet6 |
+| 5G-TMSI | octet7 |
+| 5G-TMSI (continued) | octet8 |
+| 5G-TMSI (continued) | octet9 |
+| 5G-TMSI (continued) | octet10 |
 
 Figure 9.11.3.4.5: 5GS mobile identity information element for type of identity "5G-S-TMSI"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS mobile identity IEI | octet 1 |
+| Length of 5GS mobile identity contents | octet 2octet3 |
+| 0 | 0 | 0 | 0 | 0 | Type of identity | octet4 |
+| spare |  |  |
+
 Figure 9.11.3.4.6: 5GS mobile identity information element for type of identity "No identity"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS mobile identity IEI | octet 1 |
+| Length of 5GS mobile identity contents | octet 2octet 3 |
+| 0spare | 0spare | 0spare | 0spare | MAURI | Type of identity | octet 4 |
+| MAC address | octet 5octet 10 |
+
 Figure 9.11.3.4.7: 5GS mobile identity information element for type of identity "MAC address"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS mobile identity IEI | octet 1 |
+| Length of 5GS mobile identity contents | octet 2octet 3 |
+| 0spare | 0spare | 0spare | 0spare | 0spare | Type of identity | octet 4 |
+| EUI-64 | octet 5octet 12 |
 
 Figure 9.11.3.4.8: 5GS mobile identity information element for type of identity "EUI-64"
 
 Table 9.11.3.4.1: 5GS mobile identity information element
+
+| Type of identity (octet 4)Bits |
+|---|
+| 3 | 2 | 1 |  |
+| 0 | 0 | 0 | No identity (see NOTE 1) |
+| 0 | 0 | 1 | SUCI |
+| 0 | 1 | 0 | 5G-GUTI |
+| 0 | 1 | 1 | IMEI |
+| 1 | 0 | 0 | 5G-S-TMSI |
+| 1 | 0 | 1 | IMEISV |
+| 1 | 1 | 0 | MAC address |
+| 1 | 1 | 1 | EUI-64 |
+| All other values are reserved. |
+|  |
+| Odd/even indication (octet 4)Bit |
+| 4 |  |  |  |
+| 0 |  |  | even number of identity digits |
+| 1 |  |  | odd number of identity digits |
+|  |
+| For the 5G-GUTI, then bits 5 to 8 of octet 4 are coded as "1111", octet 5 through 7 contain the MCC and MNC values as specified below, octet 8 through 10 contain the AMF Region ID, the AMF Set ID and the AMF Pointer values and octet 11 through 14 contain the 5G-TMSI as defined in 3GPP TS 23.003 [4]. |
+| MCC, Mobile country code (octet 5, octet 6 bits 1 to 4)The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+| MNC, Mobile network code (octet 6 bits 5 to 8, octet 7)The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, bits 5 to 8 of octet 6 shall be coded as "1111".The MCC and MNC digits are coded as octets 6 to 8 of the Temporary mobile group identity IE in figure 10.5.154 of 3GPP TS 24.008 [12]. |
+|  |
+| AMF Region ID (octet 8)This field contains the binary encoding of the AMF Region ID. Bit 8 of octet 7 is the most significant bit and bit 1 of octet 7 is the least significant bit.AMF Set ID (octet 9, octet 10 bits 7 to 8)This field contains the binary encoding of the AMF Set ID. Bit 8 of octet 9 is the most significant bit and bit 7 of octet 10 is the least significant bit.AMF Pointer (octet 10 bits 1 to 6)This field contains the binary encoding of the AMF Pointer. Bit 6 of octet 9 is the most significant bit and bit 1 of octet 9 is the least significant bit.5G-TMSI (octet 11 to 14)Bit 8 of octet 11 is the most significant bit and bit 1 of octet 14 is the least significant bit. |
+|  |
+| Identity digit (octet 4 bits 5 to 8, octet 5 etc.) |
+| For the IMEI, Identity digit field is coded using BCD coding. If the number of identity digits is even then bits 5 to 8 of the last octet shall be filled with an end mark coded as "1111". The format of the IMEI is described in 3GPP TS 23.003 [4]. |
+|  |
+| For the IMEISV, Identity digit field is coded using BCD coding. Bits 5 to 8 of the last octet shall be filled with an end mark coded as "1111". The format of the IMEISV is described in 3GPP TS 23.003 [4]. |
+|  |
+| For the SUCI, bit 8 of octet 4 is spare and shall be coded as zero. Bits 5-7 of octet 4 contain the SUPI format and are coded as shown below. |
+| SUPI format (octet 4, bits 5-7)Bits |
+| 7 | 6 | 5 |  |  |
+| 0 | 0 | 0 |  | IMSI |
+| 0 | 0 | 1 |  | Network specific identifier |
+| 0 | 1 | 0 |  | GCI |
+| 0 | 1 | 1 |  | GLI |
+| All other values are interpreted as IMSI by this version of the protocol. |
+|  |
+| For the SUCI with SUPI format "IMSI", octets 5 through 7 contain the MCC and MNC values as specified below. For subsequent fields, bit 8 of octet 8 is the most significant bit and bit 1 of the last octet the least significant bit. The required fields for the SUCI are as defined in 3GPP TS 23.003 [4]. |
+| MCC, Mobile country code (octet 5, octet 6 bits 1 to 4)The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+| MNC, Mobile network code (octet 6 bits 5 to 8, octet 7)The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, bits 5 to 8 of octet 6 shall be coded as "1111".The MCC and MNC digits are coded as octets 6 to 8 of the Temporary mobile group identity IE in figure 10.5.154 of 3GPP TS 24.008 [12]. |
+|  |
+| Routing indicator (octets 8-9)Routing Indicator shall consist of 1 to 4 digits. The coding of this field is the responsibility of home network operator but BCD coding shall be used. If a network operator decides to assign less than 4 digits to Routing Indicator, the remaining digits shall be coded as "1111" to fill the 4 digits coding of Routing Indicator (see NOTE 2). If no Routing Indicator is configured in the USIMor the ME, the UE shall code bits 1 to 4 of octet 8 of the Routing Indicator as "0000" and the remaining digits as"1111". |
+|  |
+| Protection scheme identifier (octet 10 bits 1 to 4) |
+| Bits |
+|  |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | Null scheme |
+| 0 | 0 | 0 | 1 | ECIES scheme profile A |
+| 0 | 0 | 1 | 0 | ECIES scheme profile B |
+| 0 | 0 | 1 | 1 |  |
+| to | Reserved |
+| 1 | 0 | 1 | 1 |  |
+| 1 | 1 | 0 | 0 |  |
+| to | Operator-specific protection scheme |
+| 1 | 1 | 1 | 1 |  |
+|  |
+| Bits 5-8 of octet 10 are spare and shall be coded as zero. |
+|  |
+| Home network public key identifier (octet 11) |
+| The Home network public key identifier (PKI) field is coded as defined in 3GPP TS 23.003 [4]. Home network public key identifier shall be coded as "00000000" when Protection scheme identifier is set to "0000" (i.e. Null scheme). |
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  | Home network PKI value 0 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  |  |
+| to |  | Home network PKI value (1-254) |
+| 1 | 1 | 1 | 1 | 1 | 1 | 1 | 0 |  |  |
+| 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |  | Reserved |
+|  |
+|  |
+| Scheme output (octets 12 to x)The Scheme output field consists of a string of characters with a variable length or hexadecimal digits as specified in 3GPP TS 23.003 [4]. If Protection scheme identifier is set to "0000" (i.e. Null scheme), then the Scheme output consists of the MSIN and is coded using BCD coding with each digit of the MSIN coded over 4 bits. If the MSIN includes an odd number of digits, bits 5 to 8 of octet x shall be coded as "1111". If Protection scheme identifier is not "0000" (i.e.ECIES scheme profile A,ECIES scheme profile B orOperator-specific protection scheme), then Scheme output is coded as hexadecimal digits. |
+|  |
+| For the SUCI with SUPI format set to "Network specific identifier", the SUCI NAI field contains an NAI constructed as specified in subclause 28.7.3 of 3GPP TS 23.003 [4] and encoded as UTF-8 string. |
+|  |
+| For the SUCI with SUPI format set to "GCI", the SUCI NAI field contains an NAI constructed as specified in subclause 28.15.5 of 3GPP TS 23.003 [4] and encoded as UTF-8 string. |
+|  |
+| For the SUCI with SUPI format set to "GLI", the SUCI NAI field contains an NAI constructed as specified in subclause 28.16.5 of 3GPP TS 23.003 [4] and encoded as UTF-8 string. |
+|  |
+| For the 5G-S-TMSI, bits 5 to 8 of octet 4 are coded as "1111". The coding of the 5G-S-TMSI is left open for each administration. |
+|  |
+| AMF Set ID (octet 5, octet 6 bits 7 to 8)This field contains the binary encoding of the AMF Set ID. Bit 8 of octet 5 is the most significant bit and bit 7 of octet 6 is the least significant bit.AMF Pointer (octet 6 bits 1 to 6)This field contains the binary encoding of the AMF Pointer. Bit 6 of octet 6 is the most significant bit and bit 1 of octet 6 is the least significant bit.5G-TMSI (octet 7 to 10)Bit 8 of octet 7 is the most significant bit and bit 1 of octet 10 is the least significant bit. |
+| For Type of identity "No identity", the length of mobile identity contents parameter shall be set to 1 and the bits 4-8 of octet 4 are spare and shall be coded as zero. |
+| MAC address usage restriction indication (MAURI) (octet 4 bit 4) |
+| Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | No restrictions |
+| 1 |  |  |  | MAC address is not usable as an equipment identifier |
+| MAC address (octets 5 to 10)This field contains the MAC address as defined in subclause 8 of IEEE Std 802 [43].Bit 8 of octet 5 is the most significant bit and bit 1 of octet 10 is the least significant bit. |
+| EUI-64 (octets 5 to 12)This field contains an EUI-64 as defined in [48].Bit 8 of octet 5 is the most significant bit and bit 1 of octet 12 is the least significant bit. |
+| NOTE 1:This can be used when the requested identity is not available at the UE during the identification procedure.NOTE2:For a 3-digit Routing Indicator, e.g "567", bits 1 to 4 of octet 8 are coded as "0101", bits 5 to 8 of octet 8 are coded as "0110", bits 1 to 4 of octet 9 are coded as "0111", bits 5 to 8 of octet 9 are coded as "1111". |
 
 #### 9.11.3.5	5GS network feature support
 
@@ -27909,9 +30065,214 @@ If:
 
 -	the length of 5GS network feature support contents field is set to three, the UE shall interpret this as a receipt of an information element with all bits of octet 6 coded as zero.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS network feature support IEI | octet 1 |
+| Length of 5GS network feature support contents | octet 2 |
+| MPSI | IWK N26 | EMF | EMC | IMS- VoPS-N3GPP | IMS- VoPS-3GPP | octet 3 |
+| 5G-UP CIoT | 5G-IPHC-CP CIoT | N3 data | 5G-CP CIoT | RestrictEC | MCSI | EMCN3 | octet 4* |
+| UN-PER | PR | RPR | PIV | NCR | 5G-EHC-CP CIoT | ATS-IND | 5G-LCS | octet 5* |
+| 0spare | 0spare | 0spare | 0spare | RSLP | SUPL | LCS-UPP | NAPS | octet 6* |
+
 Figure 9.11.3.5.1: 5GS network feature support information element
 
 Table 9.11.3.5.1: 5GS network feature support information element
+
+| IMS voice over PS session over 3GPP access indicator(IMS-VoPS-3GPP) (octet 3, bit 1) |
+|---|
+| This bit indicates the support of IMS voice over PS session over 3GPP access (see NOTE 1). |
+| Bit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | IMS voice over PS sessionnot supported over 3GPP access |
+| 1 |  |  |  | IMS voice over PS session supported over 3GPP access |
+|  |
+| IMS voice over PS session over non-3GPP access indicator(IMS-VoPS-N3GPP) (octet 3, bit 2) |
+| This bit indicates the support of IMS voice over PS session over non-3GPP access. |
+| Bit |
+| 2 |  |  |  |  |
+| 0 |  |  |  | IMS voice over PS sessionnot supported over non-3GPP access |
+| 1 |  |  |  | IMS voice over PS session supported over non-3GPP access |
+|  |
+| Emergency service support indicator for 3GPP access (EMC)(octet 3, bit 3 and bit 4) |
+| These bits indicate the support of emergency services in 5GS for 3GPP access (see NOTE 1). |
+| Bits |
+| 4 | 3 |  |  |  |
+| 0 | 0 |  |  | Emergency services not supported |
+| 0 | 1 |  |  | Emergency services supported in NR connected to 5GCN only |
+| 1 | 0 |  |  | Emergency services supported in E-UTRA connected to 5GCN only |
+| 1 | 1 |  |  | Emergency services supported in NR connected to 5GCN and E-UTRA connected to 5GCN |
+|  |
+| Emergency services fallback indicator for 3GPP access (EMF) (octet 3, bit 5 and bit 6) |
+| These bits indicate the support of emergency services fallback for 3GPP access (see NOTE 1). |
+| Bits |
+| 6 | 5 |  |  |  |
+| 0 | 0 |  |  | Emergency services fallback not supported |
+| 0 | 1 |  |  | Emergency services fallback supported in NR connected to 5GCN only |
+| 1 | 0 |  |  | Emergency services fallback supported in E-UTRA connected to 5GCN only |
+| 1 | 1 |  |  | Emergency services fallback supported in NR connected to 5GCN and E-UTRA connected to 5GCN |
+|  |
+| Interworking without N26 interface indicator (IWK N26) (octet 3, bit 7) |
+| This bit indicates whether interworking without N26 interface is supported. |
+| Bit |
+| 7 |  |  |  |  |
+| 0 |  |  |  | Interworking without N26 interface not supported |
+| 1 |  |  |  | Interworking without N26 interface supported |
+|  |
+| MPS indicator (MPSI) (octet 3, bit 8) |
+| This bit indicates the validity of MPS. |
+| Bit |
+| 8 |  |  |  |  |
+| 0 |  |  |  | Access identity 1 not valid |
+| 1 |  |  |  | Access identity 1 valid |
+|  |
+| Emergency service support for non-3GPP access indicator (EMCN3) (octet 4, bit 1) |
+| This bit indicates the support of emergency services in 5GS for non-3GPP access. |
+| Bit (see NOTE 2) |
+| 1 |  |  |  |  |
+| 0 |  |  |  | Emergency services not supported over non-3GPP access |
+| 1 |  |  |  | Emergency services supported over non-3GPP access |
+|  |  |  |  |  |
+| MCS indicator (MCSI) (octet 4, bit 2) |
+| This bit indicates the validity of MCS. |
+| Bit |
+| 2 |  |  |  |  |
+| 0 |  |  |  | Access identity 2 not valid |
+| 1 |  |  |  | Access identity 2 valid |
+|  |
+| Restriction on enhanced coverage (RestrictEC) (octet 4, bit 3 and bit 4)These bits indicate enhanced coverage restricted information. |
+| In WB-N1 mode these bits are set as follows:Bits |
+| 4 | 3 |  |  |  |
+| 0 | 0 |  |  | Both CE mode A and CE mode B are not restricted |
+| 0 | 1 |  |  | Both CE mode A and CE mode B are restricted |
+| 1 | 0 |  |  | CE mode B is restricted |
+| 1 | 1 |  |  | Reserved |
+| In NB-N1 mode these bits are set as follows |
+| Bits |
+| 4 | 3 |  |  |  |
+| 0 | 0 |  |  | Use of enhanced coverage is not restricted |
+| 0 | 1 |  |  | Use of enhanced coverage is restricted |
+| 1 | 0 |  |  | Reserved |
+| 1 | 1 |  |  | Reserved |
+|  |
+| Control plane CIoT 5GS optimization (5G-CP CIoT) (octet 4, bit 5) |
+| This bit indicates the capability for control plane CIoT 5GS optimization. |
+| Bit |
+| 5 |
+| 0 |  |  |  | Control plane CIoT 5GS optimization not supported |
+| 1 |  |  |  | Control plane CIoT 5GS optimization supported |
+|  |
+| N3 data transfer (N3 data) (octet 4, bit 6) |
+| This bit indicates the capability for N3 data transfer. |
+| Bit |
+| 6 |
+| 0 |  |  |  | N3 data transfer supported |
+| 1 |  |  |  | N3 data transfer not supported |
+|  |
+| IP header compression for control plane CIoT 5GS optimization (5G-IPHC-CP CIoT) (octet 4, bit 7) |
+| This bit indicates the capability for IP header compression for control plane CIoT 5GS optimization. |
+| Bit |
+| 7 |
+| 0 |  |  |  | IP header compression for control plane CIoT 5GS optimization not supported |
+| 1 |  |  |  | IP header compression for control plane CIoT 5GS optimization supported |
+|  |
+| User plane CIoT 5GS optimization (5G-UP CIoT) (octet 4, bit 8) |
+| This bit indicates the capability for user plane CIoT 5GS optimization. |
+| Bit |
+| 8 |
+| 0 |  |  |  | User plane CIoT 5GS optimization not supported |
+| 1 |  |  |  | User plane CIoT 5GS optimization supported |
+|  |
+| Location Services indicator in 5GC (5G-LCS) (octet 5, bit 1) |
+| Bit |
+| 1 |
+| 0 |  |  |  | Location services via 5GC not supported |
+| 1 |  |  |  | Location services via 5GC supported |
+|  |
+| ATSSS support indicator (ATS-IND) (octet 5, bit 2) |
+| This bit indicates the network support for ATSSS. |
+| Bit |
+| 2 |
+| 0 |  |  |  | ATSSS not supported |
+| 1 |  |  |  | ATSSS supported |
+|  |
+|  |
+| Ethernet header compression for control plane CIoT 5GS optimization (5G-EHC-CP CIoT) (octet 5, bit 3) |
+| This bit indicates the capability for Ethernet header compression for control plane CIoT 5GS optimization |
+| Bit |
+| 3 |
+| 0 |  |  |  | Ethernet header compression for control plane CIoT 5GS optimization not supported |
+| 1 |  |  |  | Ethernet header compression for control plane CIoT 5GS optimization supported |
+|  |  |  |  |  |
+|  |
+| N1 NAS signalling connection release (NCR) (octet 5, bit 4) |
+| This bit indicates whether N1 NAS signalling connection release is supported. |
+| Bit |
+| 4 |
+| 0 |  |  |  | N1-NAS signalling connection release not supported |
+| 1 |  |  |  | N1-NAS signalling connection release supported |
+|  |
+| Paging indication for voice services (PIV) (octet 5, bit 5) |
+| This bit indicates whether paging indication for voice services is supported. |
+| Bit |
+| 5 |
+| 0 |  |  |  | paging indication for voice services not supported |
+| 1 |  |  |  | paging indication for voice services supported |
+|  |
+| Reject paging request (RPR) (octet 5, bit 6) |
+| This bit indicates whether reject paging request is supported. |
+| Bit |
+| 6 |
+| 0 |  |  |  | reject paging request not supported |
+| 1 |  |  |  | reject paging request supported |
+|  |
+| Paging restriction (PR) (octet 5, bit 7) |
+| This bit indicates whether paging restriction is supported. |
+| Bit |
+| 7 |
+| 0 |  |  |  | paging restriction not supported |
+| 1 |  |  |  | paging restriction supported |
+|  |
+|  |
+| UN-PER (octet 5, bit 8) |
+| This bit indicates the capability to support Unavailability period |
+| Bit |
+| 8 |
+| 0unavailability period not supported1unavailability period supported |
+|  |
+|  |
+| Non-3GPP access path switching (NAPS) (octet 6, bit 1) |
+| This bit indicates whether non-3GPP access path switching is supported. |
+| Bit |
+| 1 |
+| 0 |  |  |  | non-3GPP access path switching not supported |
+| 1 |  |  |  | non-3GPP access path switching supported |
+|  |
+|  |
+| LCS-UPP user plane positioning (LCS-UPP)(octet6, bit2) |
+| This bit indicates the capability to support LCS-UPPuser plane positioning(see 3GPP TS 23.273 [6B]). |
+| Bit |
+| 2 |
+| 0 |  |  |  | User plane positioningusing LCS-UPPnotsupported |
+| 1 |  |  |  | User plane positioningusing LCS-UPP supported |
+|  |
+|  |
+| SUPL user plane positioning (SUPL)(octet6, bit3) |
+| This bit indicates the capability to support SUPLuser plane positioning(see3GPP TS 38.305 [67] and3GPP TS 23.271 [68]). |
+| Bit |
+| 3 |
+| 0 |  |  |  | User plane positioningusing SUPLnotsupported |
+| 1 |  |  |  | User plane positioningusing SUPL supported |
+|  |
+| Ranging and sidelink positioning support(RSLP) (octet 6, bit 4) |
+| This bit indicates the capability to support ranging and sidelink positioning. |
+| Bit |
+| 4 |
+| 0 |  |  |  | Ranging and sidelink positioningnotsupported |
+| 1 |  |  |  | Ranging and sidelink positioningsupported |
+|  |
+| Bits5to 8 of octet 6 are spare and shall be coded as zero. |
+|  |
+| NOTE 1:For a registration procedure over non-3GPP access, bit 1 of octet 3 and bits 3 to 7 of octet 3 are ignored.NOTE 2:For a registration procedure over 3GPP access, bit 2 of octet 3 and bit 1 of octet 4 are ignored. |
 
 #### 9.11.3.6	5GS registration result
 
@@ -27921,9 +30282,53 @@ The 5GS registration result information element is coded as shown in figure 9.1
 
 The 5GS registration result is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS registration result IEI | octet 1 |
+| Length of 5GS registration resultcontents | octet 2 |
+| 0Spare | Disaster roaming registration result value | Emergency registered | NSSAA Performed | SMS allowed | 5GS registration result value | octet 3 |
+
 Figure 9.11.3.6.1: 5GS registration result information element
 
 Table 9.11.3.6.1: 5GS registration result information element
+
+| 5GS registration result value (octet3, bits 1 to 3)(NOTE) |
+|---|
+| Bits |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 1 |  | 3GPP access |
+| 0 | 1 | 0 |  | Non-3GPP access |
+| 0 | 1 | 1 |  | 3GPP access andnon-3GPP access |
+| 1 | 1 | 1 |  | reserved |
+|  |
+| All other values areunusedand shall be treated as "3GPP access", if received by the UE. |
+|  |
+| SMS over NAS transport allowed (SMS allowed) (octet 3, bit 4)(NOTE) |
+| Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | SMS over NAS not allowed |
+| 1 |  |  |  | SMS over NAS allowed |
+|  |
+| Network slice-specific authentication and authorization is to be performed (NSSAA to be performed) (octet 3, bit 5)(NOTE) |
+| Bit |
+| 5 |  |  |  |  |
+| 0 |  |  |  | Network slice-specific authentication and authorization is not to be performed |
+| 1 |  |  |  | Network slice-specific authentication and authorization is to be performed |
+|  |
+| Emergency registered (octet 3, bit 6) |
+| Bit |
+| 6 |  |  |  |  |
+| 0 |  |  |  | Not registered for emergency services |
+| 1 |  |  |  | Registered for emergency services |
+|  |
+| Disaster roaming registration result value(octet 3, bit 7)(NOTE) |
+| Bit |
+| 7 |  |  |  |  |
+| 0 |  |  |  | No additional information |
+| 1 |  |  |  | Request for registration for disaster roaming service accepted as registration not for disaster roaming service |
+|  |
+| Bit8of octet3isspare and shall be coded as zero. |
+| NOTE:All bits other than bit 6 in octet 3 shall be ignored by the UE when the 5GS registration result IE is received in the CONFIGURATION UPDATE COMMAND message |
 
 #### 9.11.3.7	5GS registration type
 
@@ -27933,9 +30338,33 @@ The 5GS registration type information element is coded as shown in figure 9.11.
 
 The 5GS registration type is a type 1 information element with a length of 1 octet.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS registration type IEI | FOR | 5GS registration type value | octet 1 |
+
 Figure 9.11.3.7.1: 5GS registration type information element
 
 Table 9.11.3.7.1: 5GS registration type information element
+
+| 5GS registration type value (octet 1, bits 1 to 3) |
+|---|
+| Bits |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 1 |  | initial registration |
+| 0 | 1 | 0 |  | mobility registration updating |
+| 0 | 1 | 1 |  | periodic registration updating |
+| 1 | 0 | 0 |  | emergency registration |
+| 1 | 0 | 1 |  | SNPN onboarding registration |
+| 1 | 1 | 0 |  | disaster roaming mobility registration updating |
+| 1 | 1 | 1 |  | disaster roaming initial registration |
+|  |
+| All other values are unused and shall be interpreted as "initial registration", if received by the network. |
+|  |
+| Follow-on request bit (FOR) (octet 1, bit 4) |
+| Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | No follow-on request pending |
+| 1 |  |  |  | Follow-on request pending |
 
 #### 9.11.3.8	5GS tracking area identity
 
@@ -27945,9 +30374,22 @@ The 5GS tracking area identity information element is coded as shown in figure 
 
 The 5GS tracking area identity is a type 3 information element with a length of 7 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS tracking area identity IEI | octet 1 |
+| MCC digit 2 | MCC digit 1 | octet 2 |
+| MNC digit 3 | MCC digit 3 | octet 3 |
+| MNC digit 2 | MNC digit 1 | octet 4 |
+| TAC | octet 5 |
+| TAC (continued) | octet 6 |
+| TAC (continued) | octet 7 |
+
 Figure 9.11.3.8.1: 5GS tracking area identity information element
 
 Table 9.11.3.8.1: 5GS tracking area identity information element
+
+| MCC, Mobile country code (octets 2 and 3)The MCC field is coded as in ITU-TRecommendationE212 [42], annex A.If the TAI is deleted the MCC and MNC shall take the value from the deleted TAI.In abnormal cases, the MCC stored in the UE can contain elements not in the set {0, 1 ... 9}. In such cases the UE should transmit the stored values using full hexadecimal encoding. When receiving such an MCC, the network shall treat the TAI as deleted.MNC, Mobile network code (octet 3 bits 5 to 8, octet 4)The coding of this field is the responsibility of each administration, but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. For PCS 1900 for NA, Federal regulation mandates that a 3-digit MNC shall be used. However, a network operator may decide to use only two digits in the MNC in the TAI over the radio interface. In this case, bits 5 to 8 of octet 3 shall be coded as "1111". Mobile equipment shall accept a TAI coded in such a way.In abnormal cases, the MNC stored in the UE can have:-digit 1 or 2 not in the set {0, 1 ... 9}, or-digit 3 not in the set {0, 1 ... 9, F} hex.In such cases the UE shall transmit the stored values using full hexadecimal encoding. When receiving such an MNC, the network shall treat the TAI as deleted.The same handling shall apply for the network, if a 3-digit MNC is sent by the UE to a network using only a 2-digit MNC.TAC, Tracking area code (octets 5 to 7)In the TAC field bit 8 of octet 5 is the most significant bit and bit 1 of octet7the least significant bit.The coding of the tracking area code is the responsibility of each administration except that two values are used to mark the TAC, and hence the TAI, as deleted. Coding using full hexadecimal representation may be used. The tracking area code consists of 3 octets.If a TAI has to be deleted, then all bits of the tracking area code shall be set to one with the exception of the least significant bit which shall be set to zero. If a USIM is inserted in a mobile equipment with the tracking area code containing all zeros, then the mobile equipment shall recognise this TAC as part of a deleted TAI. |
+|---|
 
 #### 9.11.3.9	5GS tracking area identity list
 
@@ -27959,15 +30401,141 @@ The 5GS tracking area identity list information element is coded as shown in fig
 
 The 5GS tracking area identity list is a type 4 information element, with a minimum length of 9 octets and a maximum length of 114 octets. The list can contain a maximum of 16 different tracking area identities.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS tracking area identity list IEI | octet 1 |
+| Length of 5GS tracking area identity list contents | octet 2 |
+| Partial tracking area identity list 1 | octet 3octet i |
+| Partial tracking area identity list 2 | octet i+1*octet l* |
+| … | octet l+1*octet m* |
+| Partial tracking area identity list p | octet m+1*octet n* |
+
 Figure 9.11.3.9.1: 5GS tracking area identity list information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | Type of list | Number of elements | octet 1 |
+| MCC digit 2 | MCC digit 1 | octet 2 |
+| MNC digit 3 | MCC digit 3 | octet 3 |
+| MNC digit 2 | MNC digit 1 | octet 4 |
+| TAC 1 | octet 5 |
+| TAC 1 (continued) | octet 6 |
+| TAC 1 (continued) | octet 7 |
+| … | … |
+| … | … |
+| TAC k | octet 3k+2* |
+| TAC k (continued) | octet 3k+3* |
+| TAC k (continued) | octet 3k+4* |
 
 Figure 9.11.3.9.2: Partial tracking area identity list – type of list = "00"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | Type of list | Number of elements | octet 1 |
+| MCC digit 2 | MCC digit 1 | octet 2 |
+| MNC digit 3 | MCC digit 3 | octet 3 |
+| MNC digit 2 | MNC digit 1 | octet 4 |
+| TAC 1 | octet 5 |
+| TAC 1 (continued) | octet 6 |
+| TAC 1 (continued) | octet 7 |
+
 Figure 9.11.3.9.3: Partial tracking area identity list – type of list = "01"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | Type of list | Number of elements | octet 1 |
+| MCC digit 2 | MCC digit 1 | octet 2 |
+| MNC digit 3 | MCC digit 3 | octet 3 |
+| MNC digit 2 | MNC digit 1 | octet 4 |
+| TAC 1 | octet 5 |
+| TAC 1 (continued) | octet 6 |
+| TAC 1 (continued) | octet 7 |
+| MCC digit 2 | MCC digit 1 | octet 8* |
+| MNC digit 3 | MCC digit 3 | octet 9* |
+| MNC digit 2 | MNC digit 1 | octet 10* |
+| TAC 2 | octet 11* |
+| TAC 2 (continued) | octet 12* |
+| TAC 2 (continued) | octet 13* |
+| … |  |
+| … |  |
+| MCC digit 2 | MCC digit 1 | octet 6k-4* |
+| MNC digit 3 | MCC digit 3 | octet 6k-3* |
+| MNC digit 2 | MNC digit 1 | octet 6k-2* |
+| TAC k | octet 6k-1* |
+| TAC k (continued) | octet 6k* |
+| TAC k (continued) | octet 6k+1* |
 
 Figure 9.11.3.9.4: Partial tracking area identity list – type of list = "10"
 
 Table 9.11.3.9.1: Tracking area identity list information element
+
+| Value part of the Tracking area identity list information element (octets 3 to n) |
+|---|
+|  |
+| The value part of the Tracking area identity list information element consists of one or several partial tracking area identity lists. The length of each partial tracking area identity list can be determined from the 'type of list' field and the 'number of elements' field in the first octet of the partial tracking area identity list. |
+| The UE shall store the complete list received. If more than 16 TAIs are included in this information element, the UE shall store the first 16 TAIs and ignore the remaining octets of the information element. |
+|  |
+|  |
+| Partial tracking area identity list: |
+|  |
+| Type of list (octet 1) |
+| Bits |
+| 7 | 6 |  |
+| 0 | 0 | list of TACs belonging to one PLMNor SNPN, with non-consecutive TAC values |
+| 0 | 1 | list of TACs belonging to one PLMNor SNPN, with consecutive TAC values |
+| 1 | 0 | list of TAIs belonging to different PLMNs (see NOTE) |
+|  |
+| All other values are reserved. |
+|  |
+| Number of elements (octet 1) |
+| Bits |
+| 5 | 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | 0 | 1 element |
+| 0 | 0 | 0 | 0 | 1 | 2 elements |
+| 0 | 0 | 0 | 1 | 0 | 3 elements |
+| … |  |
+| 0 | 1 | 1 | 0 | 1 | 14 elements |
+| 0 | 1 | 1 | 1 | 0 | 15 elements |
+| 0 | 1 | 1 | 1 | 1 | 16 elements |
+|  |
+| All other values are unused and shall be interpreted as 16, if received by the UE. |
+|  |
+| Bit 8 of octet 1 is spare and shall be coded as zero. |
+|  |
+|  |
+| For type of list = "00" and number of elements = k: |
+|  |
+| octet 2 to 4 contain the MCC+MNC, and |
+| for j = 1, …, k: |
+| octets 3j+2 to 3j+4 contain the TAC of the j-th TAI belonging to the partial list, |
+|  |
+| For type of list = "01" and number of elements = k: |
+|  |
+| octet 2 to 4 contain the MCC+MNC, and |
+| octets 5 to 7 contain the TAC of the first TAI belonging to the partial list. |
+| The TAC values of the other k-1 TAIs are TAC+1, TAC+2, …, TAC+k-1. |
+|  |
+| For type of list = "10" and number of elements = k: |
+|  |
+| for j = 1, …, k. |
+| octets 6j-4 to 6j-2 contain the MCC+MNC, and |
+| octets 6j-1 to 6j+1 contain the TAC of the j-th TAI belonging to the partial list. |
+|  |
+|  |
+| MCC, Mobile country code |
+|  |
+| The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|  |
+| MNC, Mobile network code |
+|  |
+| The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, MNC digit 3 shall be coded as "1111". |
+|  |
+| TAC, Tracking area code |
+|  |
+| In the TAC field bit 8 of the first octet is the most significant bit and bit 1 of third octet the least significant bit. |
+| The coding of the tracking area code is the responsibility of each administration. Coding using full hexadecimal representation may be used. The tracking area code consists of 3 octets. |
+|  |
+| NOTE:If the "list of TAIs belonging to different PLMNs"isused, the PLMNs included in the list need to be present in the list of "equivalent PLMNs".This type of list is not applicable in an SNPN. |
 
 #### 9.11.3.9A	5GS update type
 
@@ -27977,9 +30545,45 @@ The 5GS update type information element is coded as shown in figure 9.11.3.9A.1
 
 The 5GS update type is a type 4 information element with a length of 3 octects.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS update type IEI | octet 1 |
+| Length of 5GS update type | octet 2 |
+| 0Spare | 0Spare | EPS-PNB-CIoT | 5GS-PNB-CIoT | NG-RAN-RCU | SMS requested | octet 3 |
+
 Figure 9.11.3.9A.1: 5GS update type information element
 
 Table 9.11.3.9A.1: 5GS update type information element
+
+| SMS over NAS transport requested (SMS requested) (octet 3, bit 1) |
+|---|
+| Bit |
+| 1 |  |  |
+| 0 |  | SMS over NAS not supported |
+| 1 |  | SMS over NAS supported |
+|  |
+| NG-RAN Radio Capability Update (NG-RAN-RCU) (octet 3, bit 2) |
+| Bit |
+| 2 |  |  |
+| 0 |  | UEradio capability update not needed |
+| 1 |  | UEradio capability update needed |
+| For a list of RATs for which a radio capability update can be triggered by means of this indication see subclause5.5.1.3.2, case n). |
+| 5GSPreferred CIoT network behaviour (5GSPNB-CIoT) (octet 3, bits 3 and 4) |
+|  |
+| Bits |
+| 4 | 3 |  |
+| 0 | 0 | no additional information |
+| 0 | 1 | control plane CIoT 5GS optimization |
+| 1 | 0 | user plane CIoT 5GS optimization |
+| 1 | 1 | reserved |
+|  |
+| EPS Preferred CIoT network behaviour (EPS-PNB-CIoT) (octet 3, bits 5 and 6) |
+|  |
+| Bits65 |
+| 00no additional information01control plane CIoT EPS optimization10user plane CIoT EPS optimization11reserved |
+|  |
+|  |
+| Bits7to 8 of octet 3 are spare and shall be coded as zero. |
 
 #### 9.11.3.10	ABBA
 
@@ -27989,9 +30593,19 @@ The ABBA information element is coded as shown in figure 9.11.3.10.1 and table�
 
 The ABBA is a type 4 information element with a minimum length of 4 octets and maximum length of 257 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| ABBA IEI | octet 1 |
+| Length of ABBA contents | octet 2 |
+| ABBAcontents | octet 3octet n |
+
 Figure 9.11.3.10.1: ABBA information element
 
 Table 9.11.3.10.1: ABBA information element
+
+| ABBA contents (octet 3-n):indicate set of security features defined for 5GS as described in 3GPP TS 33.501 [24]. |
+|---|
+| NOTE 1:If the UE receives the ABBA IE with a length that is set to a value of 2 and with a value of 0000H, the UE shall use the length and the contents of the ABBA IE as received from the network.NOTE 2:If the UE receives the ABBA IE with a length that is set to a value larger than 2 or with a value that is different from 0000H, the UE shall use the length and the contents of the ABBA IE as received from the network. |
 
 #### 9.11.3.12	Additional 5G security information
 
@@ -28001,9 +30615,26 @@ The Additional 5G security information information element is coded as shown in 
 
 The Additional 5G security information is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Additional 5G securityinformationIEI | octet 1 |
+| Length of Additional 5G securityinformationcontents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | RINMR | HDP | octet 3 |
+
 Figure 9.11.3.12.1: Additional 5G security information information element
 
 Table 9.11.3.12.1: Additional 5G security information information element
+
+| Horizontal derivation parameter (HDP) (octet 3, bit 1) |
+|---|
+| 0 |  | KAMFderivation is not required |
+| 1 |  | KAMFderivation is required |
+|  |
+| Retransmission of initial NAS message request (octet 3, bit 2) |
+| 0 |  | Retransmission of the initial NAS message not requested |
+| 1 |  | Retransmission of the initial NAS message requested |
+|  |
+| Bits 3 to 8 of octet 3 are spare and shall be coded as zero. |
 
 #### 9.11.3.12A	Additional information requested
 
@@ -28013,9 +30644,25 @@ The Additional information requested information element is coded as shown in fi
 
 The Additional information requested is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Additional information requested IEI | octet 1 |
+| Length of additional information requested contents | octet 2 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | CipherKey | octet 3 |
+| Spare |  |  |
+
 Figure 9.11.3.12A.1: Additional information requested information element
 
 Table 9.11.3.12A.1: Additional information requested information element
+
+| Ciphering keys for ciphered broadcast assistance data (CipherKey) (octet 3, bit 1) |
+|---|
+| Bit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | ciphering keys for ciphered broadcast assistance data not requested |
+| 1 |  |  |  | ciphering keys for ciphered broadcast assistance data requested |
+|  |
+| Bits 8 to 2 of octet 3 are spare and shall be coded as zero. |
 
 #### 9.11.3.13	Allowed PDU session status
 
@@ -28027,9 +30674,21 @@ The Allowed PDU session status information element is coded as shown in figure 
 
 The Allowed PDU session status is a type 4 information element with minimum length of 4 octets and maximum length of 34 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Allowed PDU session status IEI | octet 1 |
+| Length of Allowed PDU session status contents | octet 2 |
+| PSI(7) | PSI(6) | PSI(5) | PSI(4) | PSI(3) | PSI(2) | PSI(1) | PSI(0) | octet 3 |
+| PSI(15) | PSI(14) | PSI(13) | PSI(12) | PSI(11) | PSI(10) | PSI(9) | PSI(8) | octet 4 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  |
+| Spare | octet 5* -34* |
+
 Figure 9.11.3.13.1: Allowed PDU session status information element
 
 Table 9.11.3.13.1: Allowed PDU session status information element
+
+| PSI(x) shall be coded as follows:PSI(0):Bit 1octet 3isspare and shall be coded as zero.PSI(1) – PSI(15):0indicates that theuser-plane resources ofcorresponding PDU session is not allowed to be re-establishedover 3GPP access.1indicates that theuser-plane resources ofcorresponding PDU session can be re-establishedover 3GPP access.Ifthere is no PDU sessionfor which the user-plane resourcescan be re-establishedover 3GPP access, all bits in PSI(1) – PSI(15) shall be coded as zero.All bits in octet 5 to 34 are spare and shall be coded as zero, if the respective octet is included in the information element. |
+|---|
 
 #### 9.11.3.14	Authentication failure parameter
 
@@ -28055,9 +30714,28 @@ The Configuration update indication information element is coded as shown in fig
 
 The Configuration update indication is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Configuration update indication IEI | 0Spare | 0Spare | RED | ACK | octet 1 |
+
 Figure 9.11.3.18.1: Configuration update indication
 
 Table 9.11.3.18.1: Configuration update indication
+
+| Acknowledgement (ACK) (octet 1, bit 1) |
+|---|
+| Bit |
+| 1 |  |
+| 0 | acknowledgement not requested |
+| 1 | acknowledgement requested |
+|  |
+| Registration requested (RED) (octet 1, bit 2) |
+| Bit |
+| 2 |  |
+| 0 | registration not requested |
+| 1 | registration requested |
+|  |
+| Bits 3 and 4 are spare and shall be coded as zero, |
 
 #### 9.11.3.18A	CAG information list
 
@@ -28067,11 +30745,47 @@ The CAG information list information element is coded as shown in figures 9.11.
 
 The CAG information list is a type 6 information element, with a minimum length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| CAG information list IEI | octet 1 |
+| Length of CAG information list contents | octet 2octet 3 |
+| Entry 1 | octet 4*octet a* |
+| Entry 2 | octet a+1*octet b* |
+| … | octet b+1*octet g* |
+| Entry n | octet g+1*octet h* |
+
 Figure 9.11.3.18A.1: CAG information list information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of entry contents | octet q |
+| MCC digit 2 | MCC digit 1 | octet q+1 |
+| MNC digit 3 | MCC digit 3 | octet q+2 |
+| MNC digit 2 | MNC digit 1 | octet q+3 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | CAGonly | octet q+4 |
+| CAG-ID 1 | octet q+5*octet q+8* |
+| CAG-ID 2 | octet q+9*octet q+12* |
+| … | octet q+13*octet q+4m* |
+| CAG-IDm | octet q+4m+1*octet q+4m+4* |
 
 Figure 9.11.3.18A.2: Entry n
 
 Table 9.11.3.18A.1: CAG information list information element
+
+| MCC, Mobile country code (octet q+1 and bits 1 to 4 octet q+2)The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|---|
+|  |
+| MNC, Mobile network code (bits 5 to 8 of octet q+2 and octet q+3)The coding of this field is the responsibility of each administration,but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, bits 5 to 8 of octetq+2shall be coded as "1111". |
+|  |
+| The MCC and MNC digits are coded as octets 6 to 8 of the Temporary mobile group identity IE in figure 10.5.154 of 3GPP TS 24.008 [12]. |
+|  |
+| Indication that the UE is only allowed to access 5GS via CAG cells (CAGonly) (bit 1 of octet q+4) |
+| Bit |
+| 1 |  |
+| 0 | "Indication that the UE is only allowed to access 5GS via CAG cells" is not set (i.e.,the UE is allowed to access 5GS via non-CAG cells) |
+| 1 | "Indication that the UE is only allowed to access 5GS via CAG cells" is set (i.e.,the UE is not allowed to access 5GS via non-CAG cells) |
+|  |
+| CAG-ID m (octet q+4m+1 to octet q+4m+4)This field contains the 32 bit CAG-ID. The coding of the CAG-ID is defined as the CAG-Identifier in 3GPP TS 23.003 [4].NOTE1:TheLength of CAG information list contents shall be0if no subscription data for CAG information list exists.NOTE2:The Length of entry contents shall be 4 if there is no allowed CAG-ID for the PLMN.NOTE 3:Bit 2 in octet q+4 may be set to 1 in the USIM (see 3GPP TS 31.102 [22]).NOTE 4:For a givenPLMN ID, there shall be up to one Entry containing the MCCvalueand the MNCvalue of the PLMN ID. |
 
 #### 9.11.3.18B	CIoT small data container
 
@@ -28079,15 +30793,84 @@ This information element is used to encapsulate the CIoT user data, SMS, or loca
 
 The CIoT small data container is a type 4 information element with a minimum length of 4 octets and a maximum length of 257 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| CIoT small data container IEI | octet 1 |
+| Length of CIoT small data container contents | octet 2 |
+|  | octet 3 |
+| CIoT small data container contents |  |
+|  | octet 257 |
+
 Figure 9.11.3.18B.1: CIoT small data container information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Data type | DDX | PDU session identity | octet 3 |
+| Data contents | octet 4octet 257 |
 
 Figure 9.11.3.18B.2: CIoT small data container contents for Data type "Control plane user data"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Data type | DDX | 0Spare | 0Spare | 0Spare | octet 3 |
+| Length of additional information | octet 4 |
+| Additional information | octet 5*octet m* |
+| Data contents | octet m+1octet n |
+
 Figure 9.11.3.18B.3: CIoT small data container contents for Data type "Location services message container"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Data type |  | Spare | octet 3 |
+| Data contents | octet 4octet n |
 
 Figure 9.11.3.18B.4: CIoT small data container contents for Data type "SMS"
 
 Table 9.11.3.18B.1: CIoT small data container information element
+
+| CIoT small data container contents (octet 3 to octet 257) |
+|---|
+|  |
+| These octets include user data to be delivered between UE and AMF. |
+|  |
+| Data type (octet 3, bits 6 to 8)Bits |
+| 8 | 7 | 6 |  |  |
+| 0 | 0 | 0 |  | Control plane user data |
+| 0 | 0 | 1 |  | SMS |
+| 0 | 1 | 0 |  | Location services message container |
+|  |
+| All other values are spare.If received they shall be ignored. |
+|  |
+| When the Data type is "Control plane user data ", the PDU session identity andDownlink data expected (DDX)fields are encoded as follows: |
+|  |
+| PDU session identity(octet 3, bits 1 to 4)Bit |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 |  | No PDU session identity assigned |
+| 0 | 0 | 1 |  | PDU session identity value1 |
+| 0 | 1 | 0 |  | PDU session identity value2 |
+| 0 | 1 | 1 |  | PDU session identity value3 |
+| 1 | 0 | 0 |  | PDU session identity value4 |
+| 1 | 0 | 1 |  | PDU session identity value 5 |
+| 1 | 1 | 0 |  | PDU session identity value 6 |
+| 1 | 1 | 1 |  | PDU session identity value 7 |
+|  |
+|  |
+| Downlink data expected (DDX)(octet 3, bits 5 to 6) |
+| Bits |
+| 5 | 4 |  |
+| 0 | 0 | No information available |
+| 0 | 1 | No further uplink and no further downlink data transmission subsequent to the uplink data transmission is expected |
+| 1 | 0 | Only a single downlink data transmission and no further uplink data transmission subsequent to the uplink data transmission is expected |
+| 1 | 1 | reserved |
+|  |
+| NOTE:The DDX field is only used in the UE to network direction. |
+|  |
+| Data contents (octet 4 to octet 257)This field contains the control plane user data. |
+|  |
+| When the Data type is "SMS", Bits 1 to 5 of octet 3 are spare and shall be coded as zero. |
+| Data contents (octet 4 to octet 257)This field contains an SMS message.When the Data type is "Location services message container":Downlink data expected (DDX)(octet 3, bits 5 to 4)This field is encoded as described above for the case when the Data type is "Control plane user data".Bits 3 to 1 of octet 3 are spare and shall be encoded as zero.Length of Additional information (octet 4) (see NOTE)Indicates the length, in octets, of the Additional information field.Additional information (octets 5 to m)Contains additional information if provided by the upper layer location services application.Data contents (octets m+1 to n)Contains the location services message payload. |
+|  |
+| NOTE:The Length of Additional information shall be set to zero if the upper layer location service application does not provide routing information. |
 
 #### 9.11.3.18C	Ciphering key data
 
@@ -28097,11 +30880,416 @@ The Ciphering key data information element is coded as shown in figure 9.11.3.1
 
 The Ciphering key data is a type 6 information element, with a minimum length of 34 octets and a maximum length of 2675 octets. The list can contain a maximum of 16 ciphering data sets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Ciphering key data IEI | octet 1 |
+| Length of ciphering key data contents | octet 2octet 3 |
+| Ciphering data set 1 | octet 4octet i |
+| Ciphering data set 2 | octet i+1*octet l* |
+| … | octet l+1*octet m* |
+| Ciphering data set p | octet m+1*octet n* |
+
 Figure 9.11.3.18C.1: Ciphering key data information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Ciphering set ID | octet 1octet 2 |
+| Ciphering key | octet 3octet 18 |
+| 0 | 0 | 0 | c0 length | octet 19 |
+| Spare |  |  |
+| c0 | octet 20octet k |
+| 0 | 0 | 0 | 0 | E-UTRA posSIB length | octet k+1 |
+| Spare |  |  |
+| PosSIBType1-1 | PosSIBType1-2 | PosSIBType1-3 | PosSIBType1-4 | PosSIBType1-5 | PosSIBType1-6 | PosSIBType1-7 | PosSIBType1-8 | octet k+2octet k+3 |
+| PosSIBType2-1 | PosSIBType2-2 | PosSIBType2-3 | PosSIBType2-4 | PosSIBType2-5 | PosSIBType2-6 | PosSIBType2-7 | PosSIBType2-8 |  |
+| PosSIBType2-9 | PosSIBType2-10 | PosSIBType2-11 | PosSIBType2-12 | PosSIBType2-13 | PosSIBType2-14 | PosSIBType2-15 | PosSIBType2-16 |  |
+| PosSIBType2-17 | PosSIBType2-18 | PosSIBType2-19 | PosSIBType2-20 | PosSIBType2-21 | PosSIBType2-22 | PosSIBType2-23 | PosSIBType2-24 |  |
+| PosSIBType2-25 | PosSIBType3-1 | PosSIBType4-1 | PosSIBType5-1 | PosSIBType1-9 | PosSIBType1-10e | 0Spare | 0Spare | octet p |
+| 0 | 0 | 0 | 0 | NR posSIB length | octet p+1 |
+| Spare |  |  |
+| PosSIBType1-1 | PosSIBType1-2 | PosSIBType1-3 | PosSIBType1-4 | PosSIBType1-5 | PosSIBType1-6 | PosSIBType1-7 | PosSIBType1-8 | octet p+2octet p+3 |
+| PosSIBType2-1 | PosSIBType2-2 | PosSIBType2-3 | PosSIBType2-4 | PosSIBType2-5 | PosSIBType2-6 | PosSIBType2-7 | PosSIBType2-8 |  |
+| PosSIBType2-9 | PosSIBType2-10 | PosSIBType2-11 | PosSIBType2-12 | PosSIBType2-13 | PosSIBType2-14 | PosSIBType2-15 | PosSIBType2-16 |  |
+| PosSIBType2-17 | PosSIBType2-18 | PosSIBType2-19 | PosSIBType2-20 | PosSIBType2-21 | PosSIBType2-22 | PosSIBType2-23 | PosSIBType3-1 |  |
+| PosSIBType4-1 | PosSIBType5-1 | PosSIBType6-1 | PosSIBType6-2 | PosSIBType6-3 | PosSIBType6-4 | PosSIBType6-5 | PosSIBType6-6 |  |
+| PosSIBType1-9 | PosSIBType1-10 | PosSIBType2-24 | PosSIBType2-25 | 0Spare | 0Spare | 0Spare | 0Spare | octet q |
+| Validity start time | octet q+1octetq+5 |
+| Validity duration | octet q+6octet q+7 |
+| TAIs list | octet q+8octet r |
 
 Figure 9.11.3.18C.2: Ciphering data set
 
 Table 9.11.3.18C.1: Ciphering key data information element
+
+| Value part of the Ciphering key data information element (octets 4 to n) |
+|---|
+|  |
+| The value part of the Ciphering key data information element consists of one or several ciphering data sets. |
+| The UE shall store the complete list received. If more than 16 ciphering data sets are included in this information element, the UE shall store the first 16 ciphering data sets and ignore the remaining octets of the information element. |
+|  |
+|  |
+| Ciphering data set: |
+|  |
+| Ciphering set ID (octets 1 to 2) |
+|  |
+| This field contains the binary encoding of the ID identifying the ciphering set. |
+|  |
+| Ciphering key (octets 3 to octet 18) |
+|  |
+| This field contains the 128 bit ciphering key. |
+|  |
+| c0 length (octet 19, bits 5 to 1)This field contains the binary encoding of the length, in octets, of the c0 counter. The maximum value for the length of the c0 counter is 16 octets. |
+|  |
+| Bits 8 to 6 of octect 19 are spare and shall be coded as zero. |
+|  |
+|  |
+| c0 (octets 20 to k) |
+|  |
+| This field contains the binary encoding of the c0 counter. |
+|  |
+|  |
+| E-UTRA posSIB length (octet k+1, bits 4 to 1)This field contains the length in octets of the E -UTRA Positioning SIB types. A length of zero means E -UTRA Positioning SIB types are not included (see NOTE).E-UTRA Positioning SIB types for which the ciphering data set is applicable (octets k+2 to p). Unassigned bits shall be ignored by a UE. Non-included bits shall be assumed to be zero by a UE. |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-1 (octet k+2, bit 8) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-1 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-1 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-2 (octet k+2, bit 7) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-2 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-2 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-3 (octet k+2, bit 6) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-3 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-3 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-4 (octet k+2, bit 5) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-4 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-4 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-5 (octet k+2, bit 4) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-5 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-5 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-6 (octet k+2, bit 3) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-6 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-6 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-7 (octet k+2, bit 2) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-7 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-7 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-8 (octet k+2, bit 1) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-8 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-8 |
+|  |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-1 (octet k+3, bit 8) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-1 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-1 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-2 (octet k+3, bit 7) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-2 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-2 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-3 (octet k+3, bit 6) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-3 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-3 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-4 (octet k+3, bit 5) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-4 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-4 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-5 (octet k+3, bit 4) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-5 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-5 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-6 (octet k+3, bit 3) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-6 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-6 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-7 (octet k+3, bit 2) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-7 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-7 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-8 (octet k+3, bit 1) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-8 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-8 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-9 (octet k+4, bit 8) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-9 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-9 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-10 (octet k+4, bit 7) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-10 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-10 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-11 (octet k+4, bit 6) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-11 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-11 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-12 (octet k+4, bit 5) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-12 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-12 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-13 (octet k+4, bit 4) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-13 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-13 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-14 (octet k+4, bit 3) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-14 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-14 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-15 (octet k+4, bit 2) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-15 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-15 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-16 (octet k+4, bit 1) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-16 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-16 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-17 (octet k+5, bit 8) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-17 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-17 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-18 (octet k+5, bit 7) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-18 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-18 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-19 (octet k+5, bit 6) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-19 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-19 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-20 (octet k+5, bit 5) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-20 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-20 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-21 (octet k+5, bit 4) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-21 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-21 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-22 (octet k+5, bit 3) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-22 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-22 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-23 (octet k+5, bit 2) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-23 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-23 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-24 (octet k+5, bit 1) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-24 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-24 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-25 (octet k+6, bit 8) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-25 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-25 |
+|  |
+| Ciphering data set applicable for positioning SIB type 3-1 (octet k+6, bit7) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 3-1 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 3-1 |
+|  |
+| Ciphering data set applicable for positioning SIB type 4-1 (octet k+6, bit 6) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 4-1 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 4-1 |
+|  |
+| Ciphering data set applicable for positioning SIB type 5-1 (octet k+6, bit 5) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 5-1 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 5-1 |
+| Ciphering data set applicable for positioning SIB type1-9 (octetk+6, bit4) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type1-9 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type1-9 |
+| Ciphering data set applicable for positioning SIB type1-10 (octetk+6, bit3) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type1-10 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type1-10 |
+|  |
+| Any unassigned bits shall be coded as zero. |
+|  |
+|  |
+| NR posSIB length (octet p+1, bits 4 to 1)This field contains the length in octets of the NR Positioning SIB types. A length of zero means NR Positioning SIB types are not included (see NOTE).NR Positioning SIB types for which the ciphering data set is applicable (octets p+2 to q). Unassigned bits shall be ignored. Non-included bits shall be assumed to be zero. |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-1 (octet p+2, bit 8) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-1 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-1 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-2 (octet p+2, bit 7) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-2 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-2 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-3 (octet p+2, bit 6) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-3 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-3 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-4 (octet p+2, bit 5) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-4 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-4 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-5 (octet p+2, bit 4) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-5 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-5 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-6 (octet p+2, bit 3) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-6 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-6 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-7 (octet p+2, bit 2) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-7 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-7 |
+|  |
+| Ciphering data set applicable for positioning SIB type 1-8 (octet p+2, bit 1) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 1-8 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 1-8 |
+|  |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-1 (octet p+3, bit 8) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-1 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-1 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-2 (octet p+3, bit 7) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-2 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-2 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-3 (octet p+3, bit 6) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-3 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-3 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-4 (octet p+3, bit 5) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-4 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-4 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-5 (octet p+3, bit 4) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-5 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-5 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-6 (octet p+3, bit 3) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-6 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-6 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-7 (octet p+3, bit 2) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-7 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-7 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-8 (octet p+3, bit 1) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-8 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-8 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-9 (octet p+4, bit 8) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-9 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-9 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-10 (octet p+4, bit 7) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-10 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-10 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-11 (octet p+4, bit 6) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-11 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-11 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-12 (octet p+4, bit 5) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-12 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-12 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-13 (octet p+4, bit 4) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-13 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-13 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-14 (octet p+4, bit 3) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-14 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-14 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-15 (octet p+4, bit 2) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-15 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-15 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-16 (octet p+4, bit 1) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-16 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-16 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-17 (octet p+5, bit 8) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-17 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-17 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-18 (octet p+5, bit 7) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-18 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-18 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-19 (octet p+5, bit 6) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-19 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-19 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-20 (octet p+5, bit 5) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-20 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-20 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-21 (octet p+5, bit 4) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-21 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-21 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-22 (octet p+5, bit 3) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-22 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-22 |
+|  |
+| Ciphering data set applicable for positioning SIB type 2-23 (octet p+5, bit 2) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 2-23 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 2-23 |
+|  |
+| Ciphering data set applicable for positioning SIB type 3-1 (octet p+5, bit 1) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 3-1 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 3-1 |
+|  |
+| Ciphering data set applicable for positioning SIB type 4-1 (octet p+6, bit 8) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 4-1 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 4-1 |
+|  |
+| Ciphering data set applicable for positioning SIB type 5-1 (octet p+6, bit 7) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 5-1 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 5-1 |
+|  |
+| Ciphering data set applicable for positioning SIB type 6-1 (octet p+6, bit 6) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 6-1 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 6-1 |
+| Ciphering data set applicable for positioning SIB type 6-2 (octet p+6, bit 5) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 6-2 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 6-3 |
+| Ciphering data set applicable for positioning SIB type 6-3 (octet p+6, bit 4) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type 6-3 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type 6-3 |
+| Ciphering data set applicable for positioning SIB type6-4 (octet p+6, bit3) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type6-4 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type6-4 |
+| Ciphering data set applicable for positioning SIB type6-5 (octet p+6, bit2) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type6-5 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type6-5 |
+| Ciphering data set applicable for positioning SIB type6-6 (octet p+6, bit1) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type6-6 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type6-6 |
+| Ciphering data set applicable for positioning SIB type1-9 (octet p+7, bit8) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type1-9 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type1-9 |
+| Ciphering data set applicable for positioning SIB type1-10 (octet p+7, bit7) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type1-10 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type1-10 |
+| Ciphering data set applicable for positioning SIB type2-24 (octet p+7, bit6) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type2-24 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type2-24 |
+| Ciphering data set applicable for positioning SIB type2-25 (octet p+7, bit5) |
+| 0 |  |  |  | Ciphering data set not applicable to positioning SIB type2-25 |
+| 1 |  |  |  | Ciphering data set applicable to positioning SIB type2-25 |
+|  |
+| Any unassigned bits shall be coded as zero. |
+|  |
+|  |
+| Validity start time (octets q+1 to q+5) |
+|  |
+| This field contains the UTC time when the ciphering data set becomes valid, encoded as octets 2 to 6 of the Time zone and time IE specified in 3GPP TS 24.008 [12]. |
+|  |
+|  |
+| Validity duration (octets q+6 to q+7) |
+|  |
+| This field contains the duration for which the ciphering data set is valid after the validity start time, in units of minutes. |
+|  |
+|  |
+| TAIs list (octets q+8 to r) |
+|  |
+| This field contains the list of tracking areas for which the ciphering data set is applicable, encoded as octets 2 to n of the Tracking area identity list IE as specified in subclause 9.11.3.9. If the TAIs list is empty (as indicated by a zero length), the ciphering data set is applicable to the entire serving PLMN.NOTE:The ciphering data set is always applicable to at least one of the E -UTRA Positioning SIB types or the NR Positioning SIB types. |
 
 #### 9.11.3.18D	Control plane service type
 
@@ -28111,9 +31299,28 @@ The Control plane service type information element is coded as shown in figure 
 
 The Control plane service type is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Control plane service typeIEI | 0Spare | Control plane service typevalue | octet 1 |
+
 Figure 9.9.3.18D.1: Control plane service type information element
 
 Table 9.9.3.18D.1: Control plane service type information element
+
+| Control plane service type value (octet 1, bit 1 to 3) |
+|---|
+|  |
+| Bits |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 |  | mobile originating request |
+| 0 | 0 | 1 |  | mobile terminating request |
+| 0 | 1 | 0 |  | emergency services |
+| 0 | 1 | 1 |  | emergency services fallback |
+| 1 | 0 | 0 |  |  |
+|  | to |  |  | unused; shall be interpreted as " mobile originating request", if received by the network. |
+| 1 | 1 | 1 |  |  |
+|  |
+|  |
 
 #### 9.11.3.19	Daylight saving time
 
@@ -28127,9 +31334,42 @@ The De-registration type information element is coded as shown in figure 9.11.3
 
 The De-registration type is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| De-registrationtypeIEI | Switchoff | Re-registrationrequired | Access type | octet 1 |
+
 Figure 9.11.3.20.1: Deregistration type information element
 
 Table 9.11.3.20.1: Deregistration type information element
+
+| Switch off (octet 1, bit 4) |
+|---|
+| In theUEtonetworkdirection: |
+| Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | Normal de-registration |
+| 1 |  |  |  | Switch off |
+|  |
+| In the network to UE direction bit4is spare. Thenetworkshall set this bit to zero. |
+|  |
+| Re-registrationrequired (octet 1, bit 3) |
+|  |
+| In the networkto UEdirection: |
+| Bit |
+| 3 |  |  |  |  |
+| 0 |  |  |  | re-registrationnot required |
+| 1 |  |  |  | re-registrationrequired |
+|  |
+| In theUEtonetworkdirection bit3is spare. TheUEshall set this bit to zero. |
+|  |
+| Access type(octet 1,bit 2, bit 1) |
+| Bit |
+| 2 | 1 |  |  |  |
+| 0 | 1 |  |  | 3GPP access |
+| 1 | 0 |  |  | Non-3GPP access |
+| 1 | 1 |  |  | 3GPP access and non-3GPP access |
+|  |
+| All other values are reserved. |
 
 #### 9.11.3.23	Emergency number list
 
@@ -28147,9 +31387,19 @@ The EPS NAS message container information element is coded as shown in figure 9
 
 The EPS NAS message container is a type 6 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| EPS NAS message container IEI | octet 1 |
+| Length of EPS NAS message container contents | octet 2octet 3 |
+| EPS NAS message container | octet 4octetn |
+
 Figure 9.11.3.24.1: EPS NAS message container information element
 
 Table 9.11.3.24.1: EPS NAS message container information element
+
+| EPS NAS message container (octet 4 ton) |
+|---|
+| An EPS NAS message asspecified in3GPP TS 24.301 [15]. |
 
 #### 9.11.3.25	EPS NAS security algorithms
 
@@ -28177,9 +31427,21 @@ The LADN indication is a type 6 information element with a minimum length of 3 o
 
 The LADN indication information element can contain a minimum of 0 and a maximum of 8 different LADN DNN values.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| LADN indication IEI | octet 1 |
+| Length of LADN indication contents | octet 2octet 3 |
+| LADN DNN value1 | octet 4*octet a* |
+| LADN DNN value 2 | octet a+1*octet b* |
+| … | octet b+1*octet g* |
+| LADN DNN value n | octet g+1*octet h* |
+
 Figure 9.11.3.29.1: LADN indication information element
 
 Table 9.11.3.29.1: LADN indication information element
+
+| Value part of the LADN indication information element (octet 4 to h):The value part of the LADN indication information element consists of zero or more LADN DNN values. If the LADN indication information element conveys more than 8 LADN DNN values in this information element, the network shall consider the first 8 LADN DNN values and ignore the remaining octets of the information element.LADN DNN value:LADN DNN value is coded as the length and value part of DNN information element as specified in subclause9.11.2.1Bstarting with the second octet. |
+|---|
 
 #### 9.11.3.30	LADN information
 
@@ -28191,11 +31453,31 @@ The LADN information is a type 6 information element with a minimum length of 3 
 
 The LADN information information element can contain a minimum of 0 and a maximum of 8 different LADNs each including a DNN and a 5GS tracking area identity list.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| LADN information IEI | octet 1 |
+| Length of LADN information contents | octet 2octet 3 |
+| LADN1 | octet 4octet a |
+| LADN 2 | octet a+1*octet b* |
+| … | octet b+1*octet g* |
+| LADN n | octet g+1*octet h* |
+
 Figure 9.11.3.30.1: LADN information information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of DNN value | octet4 |
+| DNN value | octet5octetm |
+| 5GS tracking area identity list | octetm+1octeta |
 
 Figure 9.11.3.30.2: LADN
 
 Table 9.11.3.30.1: LADN information information element
+
+| Value part of the LADN information information element (octet4toocteth)The value part of the LADN information information element consists of one or several LADNs. Each LADN(e.g. octet 4 to octet a)consists one DNN value and one5GS tracking area identity list. The length of each LADN is determined by the length of DNN valuefieldand the length of5GS tracking area identity listfield.The UE shall store the complete listasreceived. If more than 8 LADNs are included in this information element, the UE shall store the first 8 LADNs and ignore the remaining octets of the information element.DNN value (octet 5 to octetm):DNN valuefieldis coded asDNN value part of DNN information element asspecified in subclause9.11.2.1Bstarting with the third octet. |
+|---|
+| 5GS tracking area identity list (octetm+1 to octeta): |
+| 5GS tracking area identity listfieldis coded asthelength and thevalue part of the5GSTracking area identity list information element asspecified in subclause9.11.3.9starting with thesecondoctet. |
 
 #### 9.11.3.31	MICO indication
 
@@ -28205,9 +31487,32 @@ The MICO indication information element is coded as shown in figure 9.11.3.31.1
 
 The MICO indication is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MICO indication IEI | 0Spare | 0Spare | SPRTI | RAAI | octet 1 |
+
 Figure 9.11.3.31.1: MICO indication
 
 Table 9.11.3.31.1: MICO indication
+
+| Registration Area Allocation Indication (RAAI) (octet 1, bit 1) |
+|---|
+|  |
+| In the network to UE direction: |
+| Bit |
+| 1 |  |
+| 0 | all PLMN registration area not allocated |
+| 1 | all PLMN registration area allocated |
+| In the UE to network direction bit 1 is spare. The UE shall set this bit to zero. |
+| Strictly Periodic Registration Timer Indication (SPRTI) (octet 1, bit 2) |
+|  |
+| In the network to UE and the UE to network direction: |
+| Bit |
+| 2 |  |
+| 0 | strictly periodic registration timer not supported |
+| 1 | strictly periodic registration timer supported |
+|  |
+| Bits 3 and 4 are spare and shall be coded as zero.NOTE:In the network to UE direction in the CONFIGURATION UPDATE COMMAND message, bits1and 2shall be coded as zero. |
 
 #### 9.11.3.31A	MA PDU session information
 
@@ -28217,9 +31522,22 @@ The MA PDU session information information element is coded as shown in figure 
 
 The MA PDU session information is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MA PDU session information IEI | MA PDU session information value | octet 1 |
+
 Figure 9.11.3.31A.1: MA PDU session information information element
 
 Table 9.11.3.31A.1: MA PDU session information information element
+
+| MA PDU sessioninformationvalue (octet 1, bit 1 to bit 4) |
+|---|
+|  |
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | No additional information |
+| 0 | 0 | 0 | 1 | MA PDU session network upgrade is allowed |
+| All other values arespare.If received they shall be ignored. |
 
 #### 9.11.3.31B	Mapped NSSAI
 
@@ -28231,11 +31549,29 @@ The Mapped NSSAI is a type 4 information element with a minimum length of 4 octe
 
 NOTE 1:	The total number of S-NSSAI values in a requested mapped NSSAI cannot exceed eight.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Mapped NSSAI IEI | octet 1 |
+| Length of Mapped NSSAI contents | octet 2 |
+| MappedS-NSSAIcontent 1 | octet 3octet m |
+| Mapped S-NSSAI content 2 | octet m+1*octet n* |
+| … | octet n+1*octet u* |
+| Mapped S-NSSAI content n | octet u+1*octet v* |
+
 Figure 9.11.3.31B.1: Mapped NSSAI information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of Mapped S-NSSAI content | octet 3 |
+| Mapped HPLMN SST | octet 4 |
+| Mapped HPLMN SD | octet 5*octet 7* |
 
 Figure 9.11.3.31B.2: Mapped S-NSSAI content
 
 Table 9.11.3.31B.1: Mapped NSSAI information element
+
+| Value part of the Mapped NSSAI information element (octet 3 to v)The value part of the Mapped NSSAI information element consists of one or more mapped S-NSSAI contents.Mapped S-NSSAI content:Length of S-NSSAI contents (octet 3)Mapped HPLMN Slice/service type (SST) (octet 4)This field contains the 8 bit SST value of an S-NSSAI intheS-NSSAI(s) oftheHPLMN to which the SST value is mapped. The coding of the SST value part is defined in 3GPP TS 23.003 [4].NOTE 1:Octet 4 (i.e. mapped HPLMN SST) shall always be included.Mapped HPLMN Slice differentiator (SD) (octet 5 to octet 7)This field contains a 24-bit SD value of an S-NSSAI in the S-NSSAI(s) of the HPLMN to which the SD value is mapped. The coding of the SD value part is defined in 3GPP TS 23.003 [4].NOTE 2:If the octet 5 is included, then octet 6 and octet 7 shall be included. |
+|---|
 
 #### 9.11.3.31C	Mobile station classmark 2
 
@@ -28249,9 +31585,34 @@ The NAS key set identifier information element is coded as shown in figure 9.11
 
 The NAS key set identifier is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| NAS key set identifier IEI | TSC | NAS key set identifier | octet 1 |
+
 Figure 9.11.3.32.1: NAS key set identifier information element
 
 Table 9.11.3.32.1: NAS key set identifier information element
+
+| Type of security context flag (TSC) (octet 1) |
+|---|
+|  |
+| Bit |
+| 4 |  |  |  |
+| 0 |  |  | native security context(for KSIAMF) |
+| 1 |  |  | mapped security context(for KSIASME) |
+|  |
+| TSC does not apply for NAS key set identifier value "111". |
+|  |
+| NAS key set identifier (octet 1) |
+|  |
+| Bits |
+| 3 | 2 | 1 |  |
+| 0 | 0 | 0 |  |
+| through | possible values for the NAS key set identifier |
+| 1 | 1 | 0 |  |
+|  |  |  |  |
+| 1 | 1 | 1 | no key is available(UEto network); |
+|  |  |  | reserved (network toUE) |
 
 #### 9.11.3.33	NAS message container
 
@@ -28261,9 +31622,23 @@ The NAS message container information element is coded as shown in figure 9.11.
 
 The NAS message container is a type 6 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| NAS message container IEI | octet 1 |
+| Length of NAS message container contents | octet 2 |
+|  | octet 3 |
+|  | octet 4 |
+| NAS message container contents |  |
+|  | octet n |
+
 Figure 9.11.3.33.1: NAS message container information element
 
 Table 9.11.3.33.1: NAS message container information element
+
+| NAS message container contents (octet 4 to octet n); Max value of 65535 octets |
+|---|
+|  |
+| This IE can contain a REGISTRATION REQUEST message as defined in subclause 5.5.1,DEREGISTRATION REQUESTmessage as defined in subclause 5.5.2.2.1,or a SERVICE REQUEST message as defined in subclause 5.6.1, or non-cleartext IEs of a CONTROL PLANE SERVICE REQUEST message as defined in subclause 5.6.1. |
 
 #### 9.11.3.34	NAS security algorithms
 
@@ -28273,9 +31648,43 @@ The NAS security algorithms information element is coded as shown in figure 9.1
 
 The NAS security algorithms is a type 3 information element with a length of 2 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| NAS security algorithms IEI | octet 1 |
+| Type of ciphering algorithm | Type of integrity protection algorithm | octet 2 |
+
 Figure 9.11.3.34.1: NAS security algorithms information element
 
 Table 9.11.3.34.1: NAS security algorithms information element
+
+| Type of integrity protection algorithm (octet 2, bit 1 to 3) |
+|---|
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | 5Gintegrity algorithm5G-IA0(nullintegrityprotection algorithm) |
+| 0 | 0 | 0 | 1 | 5Gintegrity algorithm 128-5G-IA1 |
+| 0 | 0 | 1 | 0 | 5Gintegrity algorithm 128-5G-IA2 |
+| 0 | 0 | 1 | 1 | 5Gintegrity algorithm 128-5G-IA3 |
+| 0 | 1 | 0 | 0 | 5Gintegrity algorithm5G-IA4 |
+| 0 | 1 | 0 | 1 | 5Gintegrity algorithm5G-IA5 |
+| 0 | 1 | 1 | 0 | 5G integrity algorithm5G-IA6 |
+| 0 | 1 | 1 | 1 | 5G integrity algorithm5G-IA7 |
+|  |
+| All other values are reserved. |
+|  |
+| Type of ciphering algorithm (octet 2, bit 5 to 7) |
+| Bits |
+| 8 | 7 | 6 | 5 |  |
+| 0 | 0 | 0 | 0 | 5G encryption algorithm5G-EA0 (nullcipheringalgorithm) |
+| 0 | 0 | 0 | 1 | 5G encryption algorithm 128-5G-EA1 |
+| 0 | 0 | 1 | 0 | 5G encryption algorithm 128-5G-EA2 |
+| 0 | 0 | 1 | 1 | 5G encryption algorithm 128-5G-EA3 |
+| 0 | 1 | 0 | 0 | 5G encryption algorithm5G-EA4 |
+| 0 | 1 | 0 | 1 | 5G encryption algorithm5G-EA5 |
+| 0 | 1 | 1 | 0 | 5G encryption algorithm5G-EA6 |
+| 0 | 1 | 1 | 1 | 5G encryption algorithm5G-EA7 |
+|  |
+| All other values are reserved. |
 
 #### 9.11.3.35	Network name
 
@@ -28289,9 +31698,28 @@ The Network slicing indication information element is coded as shown in figure 
 
 The Network slicing indication is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Network slicing indication IEI | 0Spare | 0Spare | DCNI | NSSCI | octet 1 |
+
 Figure 9.11.3.36.1: Network slicing indication
 
 Table 9.11.3.36.1: Network slicing indication
+
+| Network slicing subscription change indication (NSSCI) (octet 1, bit 1) |
+|---|
+| Bit |
+| 1 |  |
+| 0 | Network slicing subscription not changed |
+| 1 | Network slicing subscription changed |
+|  |
+| Default configured NSSAI indication (DCNI) (octet 1, bit 2) |
+| Bit |
+| 2 |  |
+| 0 | Requested NSSAI not created from default configured NSSAI |
+| 1 | Requested NSSAI created from default configured NSSAI |
+|  |
+| In the UE to network direction bit 1 is spare. The UE shall set this bit to zero.In the network to UE direction bit 2 is spare. The network shall set this bit to zero.Bits 3 and 4 are spare and shall be coded as zero. |
 
 #### 9.11.3.36A	Non-3GPP NW provided policies
 
@@ -28307,9 +31735,22 @@ The NSSAI is a type 4 information element with a minimum length of 4 octets and 
 
 NOTE:	More than one S-NSSAIs in an NSSAI can have the same SST values, and optionally same SD values, which are associated with different mapped HPLMN SST values and optionally mapped HPLMN SD values.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| NSSAI IEI | octet 1 |
+| Length of NSSAI contents | octet 2 |
+| S-NSSAIvalue 1 | octet 3octet m |
+| S-NSSAI value 2 | octet m+1*octet n* |
+| … | octet n+1*octet u* |
+| S-NSSAI value n | octet u+1*octet v* |
+
 Figure 9.11.3.37.1: NSSAI information element
 
 Table 9.11.3.37.1: NSSAI information element
+
+| Value part of the NSSAI information element (octet 3 to v)The value part of the NSSAI information element consists of one or more S-NSSAI values. Each S-NSSAI value consists of one S-NSSAI and optionally one mapped S-NSSAI.The recipient of this information element shall store the complete list received(NOTE 1, NOTE 2, NOTE 3). If the NSSAI information element conveys an allowed NSSAI and more than 8 S-NSSAI values are included in this information element, the UE shall store the first 8 S-NSSAI values and ignore the remaining octets of the information element.If the NSSAI information element conveys a configured NSSAI(including the default configured NSSAI)or pending NSSAIand more than 16 S-NSSAI values are included in this information element, the UE shall store the first 16 S-NSSAI values and ignore the remaining octets of the information element.S-NSSAI value:S-NSSAI value is coded as the length and value part of S-NSSAI information element asspecified in subclause9.11.2.8starting with the second octet. |
+|---|
+| NOTE 1:The total number of S-NSSAI values in a requested NSSAI shall not exceed eight.NOTE 2:The number of S-NSSAI values in an allowed NSSAI shall not exceed eight.NOTE 3:The number of S-NSSAI values in a configured NSSAI(including the default configured NSSAI)or pending NSSAI shall not exceed sixteen. |
 
 #### 9.11.3.37A	NSSAI inclusion mode
 
@@ -28319,9 +31760,23 @@ The NSSAI inclusion mode is a type 1 information element.
 
 The NSSAI inclusion mode information element is coded as shown in figure 9.11.3.37A.1 and table 9.11.3.37A.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| NSSAI inclusion modeIEI | 0spare | 0spare | NSSAI inclusion mode | octet 1 |
+
 Figure 9.11.3.37A.1: NSSAI inclusion mode information element
 
 Table 9.11.3.37A.1: NSSAI inclusion mode information element
+
+| NSSAI inclusion mode (octet 1, bit 1 to bit 2) |
+|---|
+|  |
+| Bits |
+| 2 | 1 |  |  |  |
+| 0 | 0 |  |  | NSSAI inclusion mode A |
+| 0 | 1 |  |  | NSSAI inclusion mode B |
+| 1 | 0 |  |  | NSSAI inclusion mode C |
+| 1 | 1 |  |  | NSSAI inclusion mode D |
 
 #### 9.11.3.38	Operator-defined access category definitions
 
@@ -28331,11 +31786,84 @@ The Operator-defined access category definitions information element is coded as
 
 The Operator-defined access category definitions is a type 6 information element with a minimum length of 3 octets, and maximum length of 8323 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Operator-defined access category definitionsIEI | octet 1 |
+| Length of operator-defined access category definitions contents | octet 2octet 3 |
+| Operator-defined access category definition1 | octet 4*octet a* |
+| Operator-defined access category definition 2 | octet a+1*octet b* |
+| … | octet b+1*octet g* |
+| Operator-defined access category definition n | octet g+1*octet h* |
+
 Figure 9.11.3.38.1: Operator-defined access category definitions information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of operator-defined access category definition contents | octet 4 |
+| Precedence value | octet 5 |
+| PSAC | 0Spare | 0Spare | Operator-defined access category number | octet 6 |
+| Length of criteria | octet 7 |
+| Criteria | octet 8octet a-1 |
+| 0Spare | 0Spare | 0Spare | Standardized access category | octet a* |
 
 Figure 9.11.3.38.2: Operator-defined access category definition
 
 Table 9.11.3.38.1: Operator-defined access category definitions information element
+
+| Value part of the Operator-defined access category definitions information element (octet4to h)The value part of the Operator-defined access category definitions information element consists ofzeroorno more than 32operator-defined access category definition fields. Each operator-defined access category definition field is coded as described in figure 9.11.3.38.2. The length of each operator-defined access category definition field is determined by the length of operator-defined access category definition contents field. |
+|---|
+| Operator-defined access category definition (octet 4 to octet a): |
+| Length of operator-defined access category definition contents (octet 4)Length of operator-defined access category definition contents indicates binary coded length of the operator-defined access category definition value field (octet 5 to octet a).Precedence value (octet 5) |
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  | Precedence value 0 |
+| to |  |  |
+| 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |  | Precedence value 255 |
+|  |
+| Operator-defined access category number (bits 5 to 1 of octet 6) |
+| Bits |
+| 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 |  | Access category number 32 |
+| to |  |  |
+| 1 | 1 | 1 | 1 | 1 |  | Access category number 63 |
+|  |
+| Presence of standardized access category (PSAC) (bit 8 of octet 6) |
+| PSAC field indicates whether thestandardized access category field is present or absent. |
+| Bit |
+| 8 |  |  |
+| 0 | Standardized access category field is not included |
+| 1 | Standardized access category field is included |
+|  |
+| Length of criteria (octet 7) |
+| Length of criteria field indicates binary coded length of the criteria field. |
+|  |
+| Criteria (octets 8 to octet a-1) |
+| The criteria field containsoneor more criteria components fields. Each criteria component field shall be encoded as a sequence of a one octet criteria type field and zero or more octets criteria value field. The criteria type field shall be transmitted first. |
+|  |
+| Criteria type |
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  | DNN type |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  | OS id + OS App Id type |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |  | S-NSSAI type |
+| All other values are reserved. |
+|  |
+| For "DNN type", the criteria value field shall be encoded as a sequence of one octet DNN length-value pair count field and one or more DNN length-value pair fields. The DNN length-value pair count field indicates the number of included DNN length-value pair fields. Each DNN length-value pair field is coded as a sequence of one octet DNN value length field and a DNN value field. The DNN value length field indicates the length in octets of the DNN value field. The DNN value field contains an APN as specified in 3GPP TS 23.003 [4]. |
+|  |
+| For "OS Id + OS App Id type", the criteria value field shall be encoded as a sequence of one octet app id value count field and one or more app id value fields. The app id value count field indicates the number of included app id value fields. Each app id value field is coded as a sequence of a sixteen octet OS id value field, one octet OS app id value length field and an OS app id value field. The OS app id value length field indicates the length in octets of the OS app id value field. The OS id value field contains aUniversally Unique IDentifier (UUID)as specified in IETFRFC4122[35A]. The OS app idvaluefield contains an OS specific application identifier. Coding of theOS app id value field is outside thescope of the present document. |
+|  |
+| For "S-NSSAI type", the criteria value field shall be encoded as a sequence of one octet S-NSSAI length-value pair count field and one or more S-NSSAI length-value value fields. The S-NSSAI length-value pair count field indicates the number of included S-NSSAI length-value pair fields. Each S-NSSAI length-value pair field is coded as a sequence of one octet S-NSSAI value length field and an S-NSSAI value field. The S-NSSAI value length field indicates the length in octets of the S-NSSAI value field. The S-NSSAI value field contains one octet SST field optionally followed by three octets SD field. The SST field contains a SST. The SD field contains an SD. SST and SD are specified in 3GPP TS 23.003 [4]. |
+|  |
+| Standardized access category (bits 5 to 1 of octet a) |
+| Standardized access category field indicates the access category number of the standardized access category that is used in combination with the access identities to determine the establishment cause. |
+| Bits |
+| 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 |  | Access category number 0 |
+| to |  |  |
+| 0 | 0 | 1 | 1 | 1 |  | Access category number 7 |
+| 0 | 1 | 0 | 0 | 1 |  | Access category number 9 |
+| 0 | 1 | 0 | 1 | 0 |  | Access category number 10 |
+| All other values are reserved. |
 
 #### 9.11.3.39	Payload container
 
@@ -28345,19 +31873,97 @@ The Payload container information element is coded as shown in figure 9.11.3.39
 
 The Payload container information element is a type 6 information element with a minimum length of 4 octets and a maximum length of 65538 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Payload container IEI | octet 1 |
+| Length of payload container contents | octet 2 |
+|  | octet 3 |
+|  | octet 4 |
+| Payload container contents |  |
+|  | octet n |
+
 Figure 9.11.3.39.1: Payload container information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of event notification indicators | octet 4 |
+| Event notification indicator 1 | octet 5octet j |
+| Event notification indicator 2 | octet j+1*octet k* |
+| … | octet k+1*…octet l* |
+| Event notification indicator n | octet l+1*octet m* |
 
 Figure 9.11.3.39.1A: Payload container contents with Payload container type "Event notification"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Type of event notification indicator n | octet l+1 |
+| Length of event notification indicator n | octet l+2 |
+| Value of event notification indicator n | octet l+3*octet m* |
+
 Figure 9.11.3.39.1B: Even notification indicator n
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of entries | octet 4 |
+| Payload container entry 1 | octet 5octet x2 |
+| Payload container entry 2 | octet x2+1octet x3 |
+| …… | … |
+| Payload container entry i | octet xi +1octet n |
 
 Figure 9.11.3.39.2: Payload container contents with Payload container type "Multiple payloads"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of Payload container entry | octet xi +1octet xi +2 |
+| Number of optional IEs | Payload container type | octet xi +3 |
+| Optional IE 1 | octet xi +4octet y2 |
+| Optional IE 2 | octet y2+1octet y3 |
+| … |  |
+| Optional IE j | octet yj+1octet z |
+| Payload container entry contents | octet z+1octet n |
+
 Figure 9.11.3.39.3: Payload container entry
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Type of optional IE | octet xi +4 |
+| Length ofoptional IE | octet xi +5 |
+| Value of optional IE | octet xi +6octet y2 |
 
 Figure 9.11.3.39.4: Optional IE
 
 Table 9.11.3.39.1: Payload container information element
+
+| Payload container contents (octet4to octet n); max value of 65535 octets |
+|---|
+| If the payload container type is set to "N1 SM information" and is included in the UL NAS TRANSPORT or DL NAS TRANSPORT message, the payload container contents contain a 5GSM message as defined in subclause 8.3.If the payload container type isset to "SOR transparent container"and is included in the DL NAS TRANSPORT message, the payload container contents are coded the same way as the contents of the SOR transparent container IE (see subclause9.11.3.51) for SOR data typeis set tovalue "0" except that the first three octets are not included.If the payload container type isset to "SOR transparent container"and is included in the UL NAS TRANSPORT message, the payload container contents are coded the same way as the contents of the SOR transparent container IE (see subclause9.11.3.51) for SOR data typeis set tovalue "1" except that the first three octets are not included.If the payload container type is set to "UE policy container" and is included in the DL NAS TRANSPORT, UL NAS TRANSPORT or REGISTRATION REQUEST message, the payload container contents are coded as defined in subclause Annex D.If the payload container type isset to "UE parameters update transparent container"and is included in the DL NAS TRANSPORT message, the payload container contents are coded the same way as the contents of the UE parameters update transparent container IE (see subclause9.11.3.53A) for UE parameters update data typeis set tovalue "0" except that the first three octets are not included.If the payload container type isset to "UE parameters update transparent container"and is included in the UL NAS TRANSPORT message, the payload container contents are coded the same way as the contents of the UE parameters update transparent container IE (see subclause9.11.3.53A) for UE parameters update data typeis set tovalue "1" except that the first three octets are not included.If the payload container type is set to "SMS"and is included in the UL NAS TRANSPORT or DL NAS TRANSPORT message, the payload container contents contain an SMS message (i.e. CP-DATA, CP-ACK or CP-ERROR) as defined in subclause 7.2 in 3GPP TS 24.011 [13].If the payload container type is set to "CIoT user data container" and is included in theUL NAS TRANSPORT, DL NAS TRANSPORT orCONTROL PLANE SERVICE REQUEST message, the payload container contents are coded the same way as the contents of the user data container IE (see subclause 9.9.4.24 in 3GPP TS 24.301 [15]) except that the first three octets are not included.If the payload container type is set to "SMS" and is included in the CONTROL PLANE SERVICE REQUEST message, the payload container contents are coded the same way as the contents of the NAS message container IE (see subclause 9.9.3.22 in 3GPP TS 24.301 [15]) except that the firsttwooctets are not included.If the payload container type is set to "Location services message container" and is included in the UL NAS TRANSPORT, DL NAS TRANSPORT or CONTROL PLANE SERVICE REQUEST message, the payload container contents include location services message payload.If the payload container type is set to "LTE Positioning Protocol (LPP) message container" and is included in the UL NAS TRANSPORT or DL NAS TRANSPORT message, the payload container contents include LPP message payload.If the payload container type is set to "SLPP message container" and is included in the UL NAS TRANSPORT or DL NAS TRANSPORT message, the payload container contents includeSLPP message payload.If the payload container type is set to "Service-level-AA container" and is included in the UL NAS TRANSPORT or DL NAS TRANSPORT message, the payload container contentsare coded the same way as the contents ofservice-level-AA container (see subclause 9.11.2.10).If the payload container type is set to "Event notification", the payload container contents include one or more event notification indicators. |
+| Type of event notification indicator n (octet l+1)Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  | "SRVCC handover cancelled, IMS session re-establishment required" indicator |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  |  |
+| to |  | Unused, shall be ignored if received by the UE |
+| 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |  |  |
+|  |
+| If the type of an event notification indicator is set to "SRVCC handover cancelled, IMS session re-establishment required" indicator, the value of the event notification indicator shall not be included. |
+|  |
+| If the payload container type is set to"UPP-CMIcontainer" and is included in the UL NAS TRANSPORT or DL NAS TRANSPORT message, the payload container contents includeUPP-CMImessages as specified in3GPP TS 24.572[64]. |
+| If the payload container type is set to "Multiple payloads",the number of entries field represents the total number of payload container entries, andthe payload container entry contents field is codedas a list of payload container entryaccording tofigure 9.11.3.39.2, with each payload container entry is coded according to figure 9.11.3.39.3 and figure 9.11.3.39.4. |
+|  |
+| The coding of Payload container contents is dependent on the particular application. |
+|  |
+| Payload container entryFor eachpayload container entry, thepayload container typefieldrepresents the payloadcontainertypevalue as described in subclause9.11.3.40,the coding ofpayload containercontents field is dependent on the particular application,and the number of optional IEs field represents the total number ofoptional IEs associated with the payloadcontainerentrycontents fieldinthepayload container entry.The error handlings for optional IEs specified in subclauses7.6.3 and 7.7.1 shall apply to the optional IEs included in the payload container entry.The receiving entity shall ignore Optional IEs with type of optinal IEparameter field containing anunknown IEI. |
+| Optional IEsType of optional IE(octetxi +4)This field contains the IEI of the optional IE.Length of optionalIE (octetxi+5)This field indicates binary coded length of the value of the optional IE entry.Value of optionalIE (octetxi+6to octet y2)This field contains the value of the optional IE entry with the value part of the referred information element based on following optionalIEreference.If the Request type is included, the value part of the Request type shall be encoded in the bits 1 to 4 and bits 5 to 8 shall be coded as zero.If the Release assistance indication is included, the value part of the Release assistance indication shall be encoded in the bits 1 to 4 and bits 5 to 8 shall be coded as zero.If the MA PDU session information is included, the value part of the MA PDU session information shall be encoded in the bits 1 to 4 and bits 5 to 8 shall be coded as zero. |
+| IEI | Optional IE name | Optional IE reference |
+| 12 | PDU session ID | PDU session identity 2 (see subclause9.11.3.41) |
+| 24 | Additional information | Additional information (see subclause9.11.2.1) |
+| 58 | 5GMM cause | 5GMM cause (see subclause9.11.3.2) |
+| 37 | Back-off timer value | GPRS timer 3 (see subclause9.11.2.5) |
+| 59 | Old PDU session ID | PDU session identity2(see subclause 9.11.3.41) |
+| 80 | Request type | Request type (see subclause9.11.3.47) |
+| 22 | S-NSSAI | S-NSSAI (see subclause9.11.2.8) |
+| 25 | DNN | DNN (see subclause9.11.2.1B) |
+| F0 | Release assistance indication | Release assistance indication (see subclause9.11.3.46A) |
+| A0 | MA PDU session information | MA PDU session information (see subclause 9.11.3.31A) |
 
 #### 9.11.3.40	Payload container type
 
@@ -28367,9 +31973,35 @@ The Payload container type information element is coded as shown in figure 9.11
 
 The Payload container type information element is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Payload container typeIEI | Payload container type value | octet 1 |
+
 Figure 9.11.3.40.1: Payload container type information element
 
 Table 9.11.3.40.1: Payload container type information element
+
+| Payload container type value (octet 1) |
+|---|
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 1 | N1 SM information |
+| 0 | 0 | 1 | 0 | SMS |
+| 0 | 0 | 1 | 1 | LTE Positioning Protocol (LPP) message container |
+| 0 | 1 | 0 | 0 | SOR transparent container |
+| 0 | 1 | 0 | 1 | UE policy container |
+| 0 | 1 | 1 | 0 | UE parameters update transparent container |
+| 0 | 1 | 1 | 1 | Location services message container (see 3GPP TS 23.273[6B]) |
+| 1 | 0 | 0 | 0 | CIoT user data container |
+| 1 | 0 | 0 | 1 | Service-level-AA container |
+| 1 | 0 | 1 | 0 | Event notification |
+| 1 | 0 | 1 | 1 | UPP-CMIcontainer |
+| 1 | 1 | 0 | 0 | SLPP message container |
+| 1 | 1 | 1 | 1 | Multiple payloads |
+|  |
+| All other values are reserved. |
+|  |
+| NOTE:The value "Multiple payloads" isonlyused when thePayload container contents in figure 9.11.3.39.1 contains multiple payloads as shown in figure 9.11.3.39.2. |
 
 #### 9.11.3.41	PDU session identity 2
 
@@ -28379,9 +32011,17 @@ The PDU session identity 2 information element is coded as shown in figure 9.11
 
 The PDU session identity 2 is a type 3 information element with a length of 2 octets .
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| PDU session identity 2IEI | octet 1 |
+| PDU session identity 2 value | octet 2 |
+
 Figure 9.11.3.41.1: PDU session identity 2 information element
 
 Table 9.11.3.41.1: PDU session identity 2 information element
+
+| PDU session identity 2 value (octet 2)The coding of thePDU session identity 2 value is identical to the coding of the PDU session identity value as defined in 3GPP TS 24.007 [11] . |
+|---|
 
 #### 9.11.3.42	PDU session reactivation result
 
@@ -28391,9 +32031,20 @@ The PDU session reactivation result information element is coded as shown in fig
 
 The PDU session reactivation result is a type 4 information element with minimum length of 4 octets and maximum length of 34 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| PDU session reactivation result IEI | octet 1 |
+| Length of PDU session reactivation result | octet 2 |
+| PSI(7) | PSI(6) | PSI(5) | PSI(4) | PSI(3) | PSI(2) | PSI(1) | PSI(0) | octet 3 |
+| PSI(15) | PSI(14) | PSI(13) | PSI(12) | PSI(11) | PSI(10) | PSI(9) | PSI(8) | octet 4 |
+| 00000000Spare | octet 5* -34* |
+
 Figure 9.11.3.42.1: PDU session reactivation result information element
 
 Table 9.11.3.42.1: PDU session reactivation result information element
+
+| PSI(x) shall be coded as follows:PSI(0):Bit1of octet 3isspare and shall be coded as zero.PSI(1) – PSI(15):0indicatesestablishment of user-plane resources of thePDU session was not requested intheUplink data status IEorestablishment of user-plane resources of the PDU sessionwas not allowed in the Allowed PDU session status IEorestablishment ofuser-planeresourceof the PDU sessionis successful.1indicateseitherestablishment of user-plane resources of thePDU session was requested intheUplink data status IE butestablishment ofuser-planeresourceof the PDU sessionis not successfulor indicatesestablishment of user-plane resources of thePDU session was allowed in the Allowed PDU session status IE butestablishment ofuser-plane resourceof the PDU sessionis either not performed or not successful.All bits in octet 5 to 34 are spare and shall be coded as zero, if the respective octet is included in the information element. |
+|---|
 
 #### 9.11.3.43	PDU session reactivation result error cause
 
@@ -28403,9 +32054,25 @@ The PDU session reactivation result error cause information element is coded as 
 
 The PDU session reactivation result error cause is a type 6 information element with a minimum length of 5 octets and a maximum length of 515 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| PDU session reactivation result error cause IEI | octet 1 |
+| Length of PDU session reactivation result error cause | octet 2 |
+|  | octet 3 |
+| PDU session ID | octet 4 |
+| cause value | octet 5 |
+|  |  |
+| …. |  |
+|  |  |
+| PDU session ID | octet 514* |
+| cause value | octet 515* |
+
 Figure 9.11.3.43.1: PDU session reactivation result error cause information element
 
 Table 9.11.3.43.1: PDU session reactivation result error cause information element
+
+| PDU session ID is coded same as PDU session ID IE (see subclause 9.4).The cause value is coded same as second octet of 5GMM cause information element (see subclause9.11.3.2). |
+|---|
 
 #### 9.11.3.44	PDU session status
 
@@ -28415,9 +32082,21 @@ The PDU session status information element is coded as shown in figure 9.11.3.4
 
 The PDU session status information element is a type 4 information element with minimum length of 4 octets and a maximum length of 34 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| PDU session status IEI | octet 1 |
+| Length of PDU session status contents | octet 2 |
+| PSI(7) | PSI(6) | PSI(5) | PSI(4) | PSI(3) | PSI(2) | PSI(1) | PSI(0) | octet 3 |
+| PSI(15) | PSI(14) | PSI(13) | PSI(12) | PSI(11) | PSI(10) | PSI(9) | PSI(8) | octet 4 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | octet 5*- |
+| spare | 34* |
+
 Figure 9.11.3.44.1: PDU session status information element
 
 Table 9.11.3.44.1: PDU session status information element
+
+| PSI(x) shall be coded as follows:PSI(0):Bit 1 of octet 3 is spare and shall be coded as zero.PSI(1) – PSI(15):0indicates that the 5GSM state of the corresponding PDU session is PDU SESSION INACTIVE.1indicates that the 5GSM state of the corresponding PDU session isnot PDU SESSION INACTIVEAll bits in octet 5 to 34 are spare and shall be coded as zero, if the respective octet is included in the information element. |
+|---|
 
 #### 9.11.3.45	PLMN list
 
@@ -28431,11 +32110,49 @@ The Rejected NSSAI information element is coded as shown in figure 9.11.3.46.1,
 
 The Rejected NSSAI is a type 4 information element with a minimum length of 4 octets and a maximum length of 42 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Rejected NSSAI IEI | octet 1 |
+| Length of Rejected NSSAI contents | octet 2 |
+| Rejected S-NSSAI1 | octet 3octet m |
+| Rejected S-NSSAI 2 | octet m+1*octet n* |
+| … | octet n+1*octet u* |
+| Rejected S-NSSAI n | octet u+1*octet v* |
+
 Figure 9.11.3.46.1: Rejected NSSAI information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of rejected S-NSSAI | Cause value | octet3 |
+| SST | octet4 |
+| SD | octet5*octet7* |
 
 Figure 9.11.3.46.2: Rejected S-NSSAI
 
 Table 9.11.3.46.1: Rejected NSSAI information element
+
+| Value part of the Rejected NSSAI information element (octet 3 to v) |
+|---|
+|  |
+| The value part of the Rejected NSSAI information element consists of one or more rejected S-NSSAIs. Each rejected S-NSSAI consists of one S-NSSAI and an associated cause value. The length of each rejected S-NSSAI can be determined by the 'length of rejected S-NSSAI' field in the first octet of the rejected S-NSSAI. |
+| The UE shall store the complete list received(NOTE 0). If more than 8 rejected S-NSSAIs are included in this information element, the UE shall store the first 8 rejected S-NSSAIs and ignore the remaining octets of the information element. |
+|  |
+| Rejected S-NSSAI: |
+|  |
+| Cause value (octet3) |
+| Bits |
+| 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 |  | S-NSSAI not available in the current PLMNor SNPN |
+| 0 | 0 | 0 | 1 |  | S-NSSAI not available in the current registration area |
+| 0 | 0 | 1 | 0 |  | S-NSSAI not available due to the failed or revoked network slice-specificauthentication andauthorization |
+| All other values are reserved. |
+|  |
+| Slice/service type (SST) (octet4) |
+| This field contains the 8 bit SST value. The coding of the SST value part is defined in 3GPP TS 23.003 [4].(NOTE 2) |
+|  |
+| Slice differentiator (SD) (octet5to octet7) |
+| This field contains the 24 bit SD value. The coding of the SD value part is defined in 3GPP TS 23.003 [4].(NOTE 3) |
+| NOTE 0:The number of rejected S-NSSAI(s) shall not exceed eight.NOTE1:Ifoctet5is included, then octet6and octet7shall be included.NOTE 2:Ifthe Cause value is"S-NSSAI not available due to the failed or revoked network slice-specific authentication and authorization",this fieldshallcontain the 8 bit SST value of an S-NSSAI in the S-NSSAI(s) of the HPLMN.NOTE3:Ifthe Cause value is"S-NSSAI not available due to the failed or revoked network slice-specific authentication and authorization",this field, if included,shallcontain the 24 bit SD value of an S-NSSAI in the S-NSSAI(s) of the HPLMN. |
 
 #### 9.11.3.46A	Release assistance indication
 
@@ -28449,9 +32166,28 @@ The Request type information element is coded as shown in figure 9.11.3.47.1 an
 
 The Request type is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Request type IEI | 0spare | Request type value | octet 1 |
+
 Figure 9.11.3.47.1: Request type information element
 
 Table 9.11.3.47.1: Request type information element
+
+| Request type value (octet 1, bit 1 to bit 4) |
+|---|
+|  |
+| Bits |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 1 |  | initial request |
+| 0 | 1 | 0 |  | existing PDU session |
+| 0 | 1 | 1 |  | initial emergency request |
+| 1 | 0 | 0 |  | existing emergency PDU session |
+| 1 | 0 | 1 |  | modification request |
+| 1 | 1 | 0 |  | MA PDU request(NOTE) |
+| 1 | 1 | 1 |  | reserved |
+| All other values are unused and shall be interpreted as "initial request", if received by the network. |
+| NOTE:This value shall be interpreted as "initial request", if received by a network not supporting MA PDU sessions. |
 
 #### 9.11.3.48	S1 UE network capability
 
@@ -28471,17 +32207,149 @@ The Service area list information element is coded as shown in figure 9.11.3.49
 
 The Service area list is a type 4 information element with a minimum length of 6 octets and a maximum length of 114 octets. The list can contain a maximum of 16 different tracking area identities.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Service area list IEI | octet 1 |
+| Length of service area list contents | octet 2 |
+| Partial service area list 1 | octet 3octet i |
+| Partial service area list 2 | octet i+1*octet l* |
+| … | octet l+1*octet m* |
+| Partial service area list p | octet m+1*octet n* |
+
 Figure 9.11.3.49.1: Service area list information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Allowed type | Type of list | Number of elements | octet 1 |
+| MCC digit 2 | MCC digit 1 | octet 2 |
+| MNC digit 3 | MCC digit 3 | octet 3 |
+| MNC digit 2 | MNC digit 1 | octet 4 |
+| TAC 1 | octet 5 |
+| TAC 1 (continued) | octet 6 |
+| TAC 1 (continued) | octet 7 |
+| … | … |
+| TAC k | octet 3k+2* |
+| TAC k (continued) | octet 3k+3* |
+| TAC k (continued) | octet 3k+4* |
 
 Figure 9.11.3.49.2: Partial service area list – type of list = "00"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Allowed type | Type of list | Number of elements | octet 1 |
+| MCC digit 2 | MCC digit 1 | octet 2 |
+| MNC digit 3 | MCC digit 3 | octet 3 |
+| MNC digit 2 | MNC digit 1 | octet 4 |
+| TAC 1 | octet 5 |
+| TAC 1 (continued) | octet 6 |
+| TAC 1 (continued) | octet 7 |
+
 Figure 9.11.3.49.3: Partial service area list – type of list = "01"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Allowed type | Type of list | Number of elements | octet 1 |
+| MCC digit 2 | MCC digit 1 | octet 2 |
+| MNC digit 3 | MCC digit 3 | octet 3 |
+| MNC digit 2 | MNC digit 1 | octet 4 |
+| TAC 1 | octet 5 |
+| TAC 1 (continued) | octet 6 |
+| TAC 1 (continued) | octet 7 |
+| MCC digit 2 | MCC digit 1 | octet 8* |
+| MNC digit 3 | MCC digit 3 | octet 9* |
+| MNC digit 2 | MNC digit 1 | octet 10* |
+| TAC 2 | octet 11* |
+| TAC 2 (continued) | octet 12* |
+| TAC 2 (continued) | octet 13* |
+| … |  |
+| MCC digit 2 | MCC digit 1 | octet 6k-4* |
+| MNC digit 3 | MCC digit 3 | octet 6k-3* |
+| MNC digit 2 | MNC digit 1 | octet 6k-2* |
+| TAC k | octet 6k*-1 |
+| TAC k (continued) | octet 6k* |
+| TAC k (continued) | octet 6k+1* |
+
 Figure 9.11.3.49.4: Partial service area list – type of list = "10"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Allowed type | Type of list | Number of elements | octet 1 |
+| MCC digit 2 | MCC digit 1 | octet 2 |
+| MNC digit 3 | MCC digit 3 | octet 3 |
+| MNC digit 2 | MNC digit 1 | octet 4 |
 
 Figure 9.11.3.49.5: Partial service area list – type of list = "11"
 
 Table 9.11.3.49.1: Service area list information element
+
+| Value part of the Service area list information element (octets3 to n) |
+|---|
+|  |
+| The value part of the Service area list information element consists of one or several partial service area lists. The length of each partial service area list can be determined from the 'type of list' field and the 'number of elements' field in the first octet of the partial service area list. |
+| The "Allowed type" fields in all the partial service area lists shall have the same value.For allowed type "0", TAIs contained in all partial service area lists are in the allowed area. For allowed type "1", TAIs contained in all partial service area lists are in the non-allowed area.The UE shall store the complete list received. If more than 16 TAIs are included in this information element, the UE shall store the first 16 TAIs and ignore the remaining octets of the information element. |
+|  |
+|  |
+| Partial service area list: |
+|  |
+| Allowed type (octet 1) |
+| Bit |
+| 8 |  |  |
+| 0 |  | TAIs in the list are in the allowed area |
+| 1 |  | TAIs in the list are in the non-allowed area |
+|  |
+| Type of list (octet 1) |
+| Bits |
+| 7 | 6 |  |
+| 0 | 0 | list of TACs belonging to one PLMN, with non-consecutive TAC values |
+| 0 | 1 | list of TACs belonging to one PLMN, with consecutive TAC values |
+| 1 | 0 | list of TAIs belonging to different PLMNs (see NOTE) |
+| 1 | 1 | All TAIs belonging to the PLMNsin the registration areaarein theallowedarea |
+|  |
+| Number of elements (octet 1) |
+| Bits |
+| 5 | 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | 0 | 1 element |
+| 0 | 0 | 0 | 0 | 1 | 2 elements |
+| 0 | 0 | 0 | 1 | 0 | 3 elements |
+| to |  |
+| 0 | 1 | 1 | 0 | 1 | 14 elements |
+| 0 | 1 | 1 | 1 | 0 | 15 elements |
+| 0 | 1 | 1 | 1 | 1 | 16 elements |
+|  |
+| All other values are unused and shall be interpreted as 16, if received by the UE. |
+|  |
+| For type of list = "00" and number of elements = k: |
+|  |
+| octets2 to 4 contain the MCC+MNC, and |
+| for j = 1,…,k: |
+| octets3j+2to3j+4 contain the TAC of the j-th TAI belonging to the partial list, |
+|  |
+| For type of list = "01" and number of elements = k: |
+|  |
+| octets2 to 4 contain the MCC+MNC, and |
+| octets5to 7contain the TAC of the first TAI belonging to the partial list. |
+| The TAC values of the other k-1 TAIs are TAC+1, TAC+2, …, TAC+k-1. |
+|  |
+| For type of list = "10" and number of elements = k: |
+|  |
+| for j = 1,…,k. |
+| octets6j-4to6j-2contain the MCC+MNC, and |
+| octets6j-1to6j+1 contain the TAC of the j-th TAI belonging to the partial list. |
+|  |
+| For type of list = "11": |
+|  |
+| Allowed type shall be coded as "0" and number of elements shall be ignored, andoctets 2 to 4containing the MCC+MNC can be ignored.If allowed type is coded as "1", it shall be interpreted as "0". |
+| MCC, Mobile country codeThe MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|  |
+| MNC, Mobile network code |
+|  |
+| The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, MNC digit 3 shall be coded as "1111". |
+|  |
+| TAC, Tracking area code |
+|  |
+| In the TAC field bit 8 of the first octet is the most significant bit and bit 1 ofthe thirdoctet the least significant bit. |
+| The coding of the tracking area code is the responsibility of each administration. Coding using full hexadecimal representation may be used. The tracking area code consists of3octets. |
+| NOTE:If the "list of TAIs belonging to different PLMNs"isused, the PLMNs included in the list needto be present in thelist of equivalent PLMNs.This type is not applicable in an SNPN. |
 
 #### 9.11.3.50	Service type
 
@@ -28491,9 +32359,34 @@ The service type is a type 1 information element.
 
 The service type information element is coded as shown in figure 9.11.3.50.1 and table 9.11.3.50.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Service typeIEI | Service type value | octet 1 |
+
 Figure 9.11.3.50.1: Service type information element
 
 Table 9.11.3.50.1: Service type information element
+
+| Service type value (octet 1) |
+|---|
+|  |
+| Service type value |
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | signalling |
+| 0 | 0 | 0 | 1 | data |
+| 0 | 0 | 1 | 0 | mobile terminated services |
+| 0 | 0 | 1 | 1 | emergencyservices |
+| 0 | 1 | 0 | 0 | emergency services fallback |
+| 0 | 1 | 0 | 1 | high priority access |
+| 0 | 1 | 1 | 0 | elevated signalling |
+| 0 | 1 | 1 | 1 | unused; shall be interpreted as "signalling", if received by the network |
+| 1 | 0 | 0 | 0 | unused; shall be interpreted as "signalling", if received by the network |
+| 1 | 0 | 0 | 1 | unused; shall be interpreted as "data", if received by the network |
+| 1 | 0 | 1 | 0 | unused; shall be interpreted as "data", if received by the network |
+| 1 | 0 | 1 | 1 | unused; shall be interpreted as "data", if received by the network |
+|  |
+| All other values are reserved. |
 
 #### 9.11.3.50A	SMS indication
 
@@ -28503,9 +32396,23 @@ The SMS indication information element is coded as shown in figure 9.11.3.50A.1
 
 The SMS indication is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| SMS indication IEI | 0Spare | 0Spare | 0Spare | SAI | octet 1 |
+
 Figure 9.11.3.50A.1: SMS indication
 
 Table 9.11.3.50A.1: SMS indication
+
+| SMS availability indication (SAI) (octet 1) |
+|---|
+|  |
+| Bit |
+| 1 |  |
+| 0 | SMS over NAS not available |
+| 1 | SMS over NAS available |
+|  |  |
+| Bits 2, 3 and 4 are spare and shall be coded as zero, |
 
 #### 9.11.3.51	SOR transparent container
 
@@ -28519,75 +32426,527 @@ The SOR transparent container information element is coded as shown in figure 9
 
 The SOR transparent container is a type 6 information element with a minimum length of 20 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| SOR transparent container IEI | octet 1 |
+| Length of SOR transparent container contents | octet 2octet 3 |
+| SOR header | octet 4 |
+| SOR-MAC-IAUSF | octet 5-20 |
+| CounterSOR | octet 21-22 |
+| Secured packet | octet 23* - n* |
+
 Figure 9.11.3.51.1: SOR transparent container information element for list type with value "0" and SOR data type with value "0"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| SOR transparent container IEI | octet 1 |
+| Length of SOR transparent container contents | octet 2octet 3 |
+| SOR header | octet 4 |
+| SOR-MAC-IAUSF | octet 5-20 |
+| CounterSOR | octet 21-22 |
+| PLMN ID and access technology list | octet 23*-m* |
 
 Figure 9.11.3.51.2: SOR transparent container information element for list type with value "1", SOR data type with value "0", and additional parameters with value "0"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| SOR transparent container IEI | octet 1 |
+| Length of SOR transparent container contents | octet 2octet 3 |
+| SOR header | octet 4 |
+| SOR-MAC-IAUSF | octet 5octet 20 |
+| CounterSOR | octet 21octet 22 |
+| Length of PLMN ID and access technology list | octet 23* |
+| PLMN ID and access technology list | octet 24*octet m* |
+| 0Spare | 0Spare | 0Spare | 0Spare | SSSLI | SSSI | SSCMI | SI | octet o |
+| SOR-CMCI | octet (o+1)*octet p* |
+| SOR-SNPN-SI | octet (p+1)*octet u* |
+| SOR-SNPN-SI-LS | octet (u+1)*octetv* |
+
 Figure 9.11.3.51.2A: SOR transparent container information element for list type with value "1", SOR data type with value "0", additional parameters with value "1"
+
+| PLMN ID 1 | octet 23*- 25* |
+|---|---|
+| access technology identifier 1 | octet 26*- 27* |
+| … |  |
+| PLMN ID n | octet (18+5*n)*-(20+5*n)* |
+| access technology identifier n | octet (21+5*n)*-(22+5*n)* |
 
 Figure 9.11.3.51.3: PLMN ID and access technology list (m=22+5*n)
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| SOR transparent container IEI | octet 1 |
+| Length of SOR transparent container contents | octet 2octet 3 |
+| SOR header | octet 4 |
+| SOR-MAC-IUE | octet 5 - 20 |
+
 Figure 9.11.3.51.4: SOR transparent container information element for SOR data type with value "1"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | 0Spare | 0Spare | AP | ACK | List type | List indication | SOR data type | octet 4 |
+
 Figure 9.11.3.51.5: SOR header for SOR data type with value "0"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | 0Spare | 0Spare | 0Spare | MSSSNPNSILS | MSSNPNSI | MSSI | SOR data type | octet 4 |
 
 Figure 9.11.3.51.6: SOR header for SOR data type with value "1"
 
 Table 9.11.3.51.1: SOR transparent container information element
 
+| SOR-MAC-IAUSF(see NOTE 1),SOR-MAC-IUE(see NOTE 2) and CounterSOR(see NOTE 1) are coded asspecified in3GPP TS 33.501 [24]. |
+|---|
+|  |
+| SOR data type (octet 4, bit 1) |
+| 0 | The SOR transparent container carries steering of roaming information. |
+| 1 | The SOR transparent container carries acknowledgement of successful reception of the steering of roaming information. |
+|  |
+| List indication (octet 4, bit 2) (see NOTE 1 and NOTE 5) |
+| 0 | HPLMN indication that 'no change of the "Operator Controlled PLMN Selector with Access Technology" list stored in the UE is needed and thus no list of preferred PLMN/access technology combinations is provided' |
+| 1 | list of preferred PLMN/access technology combinations is provided |
+|  |
+| List type (octet 4, bit 3) (see NOTE 1) |
+| 0 | The list type is a secured packet. |
+| 1 | The list type is a "PLMN ID and access technology list". |
+|  |  |
+| Acknowledgement (ACK) value (octet 4, bit 4) (see NOTE 1) |
+| 0 | acknowledgement not requested |
+| 1 | acknowledgement requested |
+|  |
+| Additional parameters (AP) value (octet 4, bit 5) |
+| Bit |
+| 5 |
+| 0 | Additional parameters not included |
+| 1 | Additional parameters included (see NOTE 3) |
+|  |
+| If the SOR data type is set to value "0", the list type bit is set to value "1", and the additional parameters bit is set to value "1" then:- the octet o is present.- if the list indication bit is set to "0" then the PLMN ID and access technology list field and the length of PLMN ID and access technology list field are absent.- if the list indication bit is set to "1" then the PLMN ID and access technology list field and the length of PLMN ID and access technology list field are present. |
+|  |
+| The secure packet is coded as specified in 3GPP TS 31.115 [22B]. (see NOTE 1) |
+|  |
+| The PLMN ID and access technology list consists of PLMN ID and access technology identifier and are coded as specified in 3GPP TS 31.102 [22] subclause 4.2.5. The PLMN ID and access technology identifier are provided in decreasing order of priority, i.e. PLMN ID 1 indicates highest priority and PLMN ID n indicates lowest priority. The PLMN ID and access technology list contains at minimum zero and at maximum 16 (decimal) PLMN IDs and access technology identifiers. (see NOTE 1) |
+| ME support of SOR-CMCI indicator(MSSI) value (octet 4, bit 2) (see NOTE 2, NOTE 4) |
+| 0 | SOR-CMCI not supported by the ME |
+| 1 | SOR-CMCI supported by the ME |
+| ME support of SOR-SNPN-SI indicator(MSSNPNSI) value (octet 4, bit 3) (see NOTE 2, NOTE 6) |
+| 0 | SOR-SNPN-SI not supported by the ME |
+| 1 | SOR-SNPN-SI supported by the ME |
+|  |
+| MS support of SOR-SNPN-SI-LS indicator(MSSNPNSILS) value (octet 4, bit 4) (see NOTE 2) |
+| Bit |
+| 4 |
+| 0 | SOR-SNPN-SI-LS not supported by the ME |
+| 1 | SOR-SNPN-SI-LS supported by the ME |
+| SOR-CMCI indicator (SI) value (octet o, bit 1)Bit |
+| 1 |
+| 0 | SOR-CMCI absent |
+| 1 | SOR-CMCI present |
+|  |  |
+| If the SOR-CMCI indicator bit is set to "SOR-CMCI present", the SOR-CMCI field is present. If the SI bit is set to "SOR-CMCI absent", the SOR-CMCI field is absent. |
+|  |
+| Store SOR-CMCI in ME indicator (SSCMI) value (octet o, bit 2)Bit |
+| 2 |
+| 0 | Do not store SOR-CMCI in ME |
+| 1 | Store SOR-CMCI in ME |
+|  |
+| SOR-CMCI (octet o+1 to octet p)The SOR-CMCI field is coded according to figure 9.11.3.51.7 and table 9.11.3.51.2. |
+|  |
+| SOR-SNPN-SI indicator (SSSI) value (octet o, bit 3)Bit |
+| 3 |
+| 0 | subscribed SNPN or HPLMN indication that 'no change of the SOR-SNPN-SI stored in the UE is needed and thus no SOR-SNPN-SI is provided' |
+| 1 | SOR-SNPN-SI present |
+|  |
+| If the SSSI bit is set to "SOR-SNPN-SI present", the SOR-SNPN-SI field is present. If the SSSI bit is set to "subscribed SNPN or HPLMN indication that 'no change of the SOR-SNPN-SI stored in the UE is needed and thus no SOR-SNPN-SI is provided'", the SOR-SNPN-SI is absent. |
+|  |
+| SOR-SNPN-SI-LSindicator (SSSLI) value (octet o, bit4)Bit |
+| 4 |
+| 0 | SOR-SNPN-SI-LS absent |
+| 1 | SOR-SNPN-SI-LS present |
+|  |
+| If the SSSLI bit is set to "SOR-SNPN-SI-LSpresent", the SOR-SNPN-SI-LSfield is present. If the SSSLI bit is set to "SOR-SNPN-SI-LSabsent", the SOR-SNPN-SI-LSis absent. |
+|  |
+| NOTE 1:This bit or field applies for SOR header with SOR data type with value "0".NOTE 2:This bit or field applies for SOR header with SOR data type with value "1".NOTE 3:Additional parameters can be set to value "1" only when the ME supports SOR-CMCI,SOR-SNPN-SIorSOR-SNPN-SI-LS, and the list type bit is set to value "1".The ME supportingSOR-SNPN-SI-LS supportsSOR-SNPN-SIas specified in3GPP TS 23.122 [5].NOTE 4:The "SOR-CMCI supported by the ME"is not set by a UE compliant to an earlier release of the specification.NOTE 5:This bit or field applies for SOR header with list type with value "1".NOTE 6:The "SOR-SNPN-SI supported by the ME"may only be set by a UE which supports access to an SNPN using credentials from a credentials holder and which isnot operating in SNPN access operation mode. |
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of SOR-CMCI contents | octet (o+1)octet (o+2) |
+| SOR-CMCI rule 1 | octet (o+3)*octet q* |
+| SOR-CMCI rule 2 | octet (q+1)*octet r* |
+| ... | octet (r+1)*octet s* |
+| SOR-CMCI rule n | octet (s+1)*octet p* |
+
 Figure 9.11.3.51.7: SOR-CMCI
 
 Table 9.11.3.51.2: SOR-CMCI
+
+| SOR-CMCI rule:The SOR-CMCI rule is coded according to figure 9.11.3.51.8 and table 9.11.3.51.3. |
+|---|
+|  |
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of SOR-CMCI rule contents | octet q+1octet q+2 |
+| Tsor-cm timer value | octet q+3 |
+| Criterion type | octet q+4 |
+| Criterion value | octet (q+5)*octet r* |
 
 Figure 9.11.3.51.8: SOR-CMCI rule
 
 Table 9.11.3.51.3: SOR-CMCI rule
 
+| Tsor-cm timer valueThe Tsor-cm timer value field is coded according to octet 2 of the GPRS timer information element as specified in 3GPP TS 24.008 [12] subclause 10.5.7.3 and indicates the Tsor-cm timer value. When the unit field of the Tsor-cm timer value field indicates that the timer is deactivated, the receiving entity shall consider that Tsor-cm timer value is set to the infinity value. |
+|---|
+|  |
+| Criterion type |
+| Bits8 7 6 5 4 3 2 10 0 0 0 0 0 0 1DNN0 0 0 0 0 0 1 0S-NSSAI SST0 0 0 0 0 0 1 1S-NSSAI SST and SD0 0 0 0 0 1 0 0IMS registration related signalling0 0 0 0 0 1 0 1MMTEL voice call0 0 0 0 0 1 1 0MMTEL video call0 0 0 0 0 1 1 1SMS over NAS or SMSoIP0 0 0 0 1 0 0 0SOR security checknot successful1 1 1 1 1 1 1 1match allAll other values are spare. |
+|  |
+| The receiving entity shall ignore SOR-CMCI rule with criterion of criterion type set to a spare value. |
+|  |
+| For "DNN", the criterion value field shall be encoded as a DNN length-value pair field.For "S-NSSAI SST", the criterion value field shall be encoded as one octet SST field.For "S-NSSAI SST and SD", the criterion value field shall be encoded as a sequence of one octet SST field and three octets SD field. The SST field shall be transmitted first.The DNN length-value pair field shall be encoded as a sequence of one octet DNN value length field and a DNN value field. The DNN value length field shall be transmitted first. The DNN value length field indicates the length in octets of the DNN value field. The DNN value field contains an APN as specified in 3GPP TS 23.003 [4].The SST field contains SST of HPLMN's S-NSSAI.The SD field contains SD of HPLMN's S-NSSAI.For "match all", "SOR security checknot successful", "IMS registration related signalling", "MMTEL voice call", "MMTEL video call", and "SMS over NAS or SMSoIP", the criterion value field is zero octets long. |
+|  |
+| If the length of SOR-CMCI rule contents field indicates a length bigger than indicated in figure 9.11.3.51.8, receiving entity shll ignore any superfluous octets located at the end of the SOR-CMCI rule.The UE applies SOR-CMCI rules as described in3GPP TS 23.122 [5] annex C. |
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of SOR-SNPN-SI contents | octet (p+1)octet (p+2) |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | CLGI | CLSI | octet (p+3) |
+| CH controlled prioritized list of preferred SNPNs | octet (p+4)*octet t* |
+| CH controlled prioritized list of GINs | octet (t+1)*octet u* |
+
 Figure 9.11.3.51.9: SOR-SNPN-SI
 
 Table 9.11.3.51.4: SOR-SNPN-SI
+
+| CH controlled prioritized list of preferred SNPNs indicator (CLSI) value (octet p+3, bit 1)Bit |
+|---|
+| 1 |
+| 0 | CH controlled prioritized list of preferred SNPNs absent |
+| 1 | CH controlled prioritized list of preferred SNPNs present |
+|  |
+| If the CLSI bit is set to "CH controlled prioritized list of preferred SNPNs present", the CH controlled prioritized list of preferred SNPNs field is present. If the CLSI bit is set to "CH controlled prioritized list of preferred SNPNs absent", the CH controlled prioritized list of preferred SNPNs field is absent. |
+|  |
+| CH controlled prioritized list of GINs indicator (CLGI) value (octet p+3, bit 2)Bit |
+| 2 |
+| 0 | CH controlled prioritized list of GINs absent |
+| 1 | CH controlled prioritized list of GINs present |
+|  |
+| If the CLGI bit is set to "CH controlled prioritized list of GINs present", the CH controlled prioritized list of GINs field is present. If the CLGI bit is set to "CH controlled prioritized list of GINs absent", the CH controlled prioritized list of GINs field is absent. |
+|  |
+| If the length of SOR-SNPN-SI contents field indicates a length bigger than indicated in figure 9.11.3.51.9, receiving entity shall ignore any superfluous octets located at the end of the SOR-SNPN-SI. |
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of SOR-SNPN-SI-LScontents | octet (u+1)octet (u+2) |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | CLGLSI | CLSLSI | octet (u+3) |
+| CH controlled prioritized list of preferred SNPNs for access for localized services in SNPN | octet (w+1)*octetx* |
+| CH controlled prioritized list ofpreferredGINs for access for localized services in SNPN | octet (x+1)*octetv* |
 
 Figure 9.11.3.51.9A: SOR-SNPN-SI-LS
 
 Table 9.11.3.51.4A: SOR-SNPN-SI-LS
 
+| CH controlled prioritized list of preferred SNPNs for access for localized services in SNPN indicator (CLSLSI) value (octetu+3, bit1)Bit |
+|---|
+| 1 |
+| 0 | CH controlled prioritized list of preferred SNPNs for access for localized services in SNPN absent |
+| 1 | CH controlled prioritized list of preferred SNPNs for access for localized services in SNPN present |
+|  |
+| If theCLSLSIbit is set to " CH controlled prioritized list of preferred SNPNs for access for localized services in SNPN present", the CH controlled prioritized list of preferred SNPNsfor access for localized services in SNPNfield is present. If theCLSLSIbit is set to " CH controlled prioritized list of preferred SNPNs for access for localized services in SNPN absent", the CH controlled prioritized list of preferred SNPNsfor access for localized services in SNPNfield is absent. |
+|  |
+| CH controlled prioritized list ofpreferredGINs for access for localized services in SNPN indicator (CLGLSI) value (octetu+3, bit2)Bit |
+| 2 |
+| 0 | CH controlled prioritized list ofpreferredGINs for access for localized services in SNPN absent |
+| 1 | CH controlled prioritized list ofpreferredGINs for access for localized services in SNPN present |
+|  |
+| If theCLGLSIbit is set to " CH controlled prioritized list ofpreferredGINs for access for localized services in SNPN present", the CH controlled prioritized list ofpreferredGINs for accessforlocalized services in SNPN field is present. If theCLGLSIbit is set to " CH controlled prioritized list ofpreferredGINs for access for localized services in SNPN absent", the CH controlled prioritized list ofpreferredGINs for accessforlocalized services in SNPN field is absent. |
+|  |
+| If the length of SOR-SNPN-SI-LScontents field indicates a length bigger than indicated in figure 9.11.3.51.9A, receiving entity shall ignore any superfluous octets located at the end of the SOR-SNPN-SI. |
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of CH controlled prioritized list of preferred SNPNs contents | octet p+4octet p+5 |
+| SNPN identity 1 | octet (p+6)*octet (p+14)* |
+| SNPN identity 2 | octet (p+15)*octet (p+23)* |
+| ... | octet (p+24)*octet (p+n*9-2)* |
+| SNPN identity n | octet (p+n*9-3)*octet (p+n*9+5)* = octet t* |
+
 Figure 9.11.3.51.10: CH controlled prioritized list of preferred SNPNs
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of CH controlled prioritized list of preferred SNPNs for access for localized services in SNPN contents | octetu+1octetu+2 |
+| SNPN info 1 | octet (u+3)*octetu1* |
+| SNPN info 2 | octet (u1+1)*octetu2* |
+| ... | octet (u2+1)*octetu3* |
+| SNPN info n | octet (u3+1)*octetv* |
 
 Figure 9.11.3.51.10A: CH controlled prioritized list of preferred SNPNs for access for localized services in SNPN
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of SNPN info | octetu+3octetu+4 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | LVII | LAII | Time Ind | octetu+5 |
+| SNPN identity | octet (u+6)*octet (u+14)* |
+| Time validity information | octet (u+15)*octets* |
+| Location assistance information | octet (s+1)*octet q* |
+| Location validity information | octet (q+1)*octet u1* |
+
 Figure 9.11.3.51.10B: SNPN info
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MCC digit 2 | MCC digit 1 | octet p+15 |
+| MNC digit 3 | MCC digit 3 | octet p+16 |
+| MNC digit 2 | MNC digit 1 | octet p+17 |
+| 0Spare | 0Spare | 0Spare | 0Spare | NID assignment mode | octet p+18 |
+| NID value digit 2 | NID value digit 1 | octet p+19 |
+| NID value digit 4 | NID value digit 3 | octet p+20 |
+| NID value digit 6 | NID value digit 5 | octet p+21 |
+| NID value digit 8 | NID value digit 7 | octet p+22 |
+| NID value digit 10 | NID value digit 9 | octet p+23 |
 
 Figure 9.11.3.51.11: SNPN identity
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of time periods | octet (p+18)or(t+15) |
+| Time period 1 | octet (p+19)or(t+16)octet (p+34)or(t+31) |
+| Time period 2 | octet (p+35)* or(t+32)*octet (p+50)* or(t+47)* |
+| ... | octet (p+51)* or(t+48)*octet (p+2+o*16)* or(t-1+o*16)* |
+| Time period o | octet (p+3+o*16)* or(t+o*16)octet (p+18+o*16)*  or(t+15+o*16)= octet s* |
+
 Figure 9.11.3.51.11A: Time validity information
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | TAISI | TAIPI | GADI | octet (s+1) |
+| Geographical area descriptions | octet (s+2)*octet s3* |
+| Tracking area information of PLMNs | octet (s3+1)*octet s4* |
+| Tracking area information of SNPNs | octet (s4+1)*octet s5* = octet q* |
 
 Figure 9.11.3.51.11B: Location assistance information
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of geographical area descriptions | octet (s+2) |
+| Type of shape 1 | octet (s+3) |
+| Shape description 1 | octet (s+4)octet s1 |
+| … | octet (s1+1)*octet s2* |
+| Type of shape n | octet (s2+1)* |
+| Shape description n | octet (s2+2)*octet s3* |
+
 Figure 9.11.3.51.11C: Geographical area descriptions
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of tracking area information of PLMNs | octet s3+1 |
+| Tracking area information of PLMN 1 | octet (s3+2)octet s8 |
+| Tracking area information of PLMN 2 | octet (s8+1)*octet s9* |
+| ... | octet (s9+1)*octet s10* |
+| Tracking area information of PLMN n | octet (s10+1)*octet s4* |
 
 Figure 9.11.3.51.11D: Tracking area information of PLMNs
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MCC digit 2 | MCC digit 1 | octet s8+1 |
+| MNC digit 3 | MCC digit 3 | octet s8+2 |
+| MNC digit 2 | MNC digit 1 | octet s8+3 |
+| TAC list | octet s8+4octet s9 |
+
 Figure 9.11.3.51.11E: Tracking area information of PLMN
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of TACs | octet s14 = octet s8+4 or octet s11+10 |
+| TAC 1 | octet s14+1octet s14+3 |
+| TAC 2 | octet (s14+4)*octet (s14+6)* |
+| ... |  |
+| TAC m | octet (s14+m*3-2)*octet (s14+m*3)* = octet s9 or octet s12 |
 
 Figure 9.11.3.51.11F: TAC list
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of tracking area information of SNPNs | octet s4+1 |
+| Tracking area information of SNPN 1 | octet (s4+2)octet s11 |
+| Tracking area information of SNPN 2 | octet (s11+1)*octet s12* |
+| ... | octet (s12+1)*octet s13* |
+| Tracking area information of SNPN n | octet (s13+1)*octet s5* |
+
 Figure 9.11.3.51.11G: Tracking area information of SNPNs
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| SNPN identity | octet s11+1octet s11+9 |
+| TAC list | octet s11+10octet s12 |
+
 Figure 9.11.3.51.11H: Tracking area information of SNPN
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | TACI | octet (q+1) |
+| TAC list | octet (q+2)*octet u1* |
 
 Figure 9.11.3.51.11I: Location validity information
 
 Table 9.11.3.51.5: CH controlled prioritized list of preferred SNPNs and CH controlled prioritized list of preferred SNPNs for access for localized services in SNPN
 
+| Mobile country code (MCC):The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|---|
+|  |
+| Mobile network code (MNC):The coding of MNC field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, MNC digit 3 shall be coded as "1111". |
+|  |
+| NID assignment mode(see NOTE1) |
+| NID assignment mode is coded as specified in 3GPP TS 23.003 [4]. |
+|  |
+| NID value(see NOTE1) |
+| NID value is coded as specified in 3GPP TS 23.003 [4]. |
+|  |
+| Time indication (bit1 of octetu+5)Bit |
+| 1 |
+| 0 |  | Time validity infomation not included |
+| 1 |  | Time validityinfomationinformationisincluded |
+|  |
+| Location assistance information indicator (LAII) (bit 2 of octetu+5)Bit |
+| 2 |
+| 0 |  | Location assistance information not included |
+| 1 |  | Location assistance information included |
+|  |
+| Locationvalidityinformation indicator (LVII) (bit3of octetu+5)Bit |
+| 3 |
+| 0 |  | Locationvalidityinformation not included |
+| 1 |  | Location validity information included |
+|  |
+| Tracking area code list indicator(TACI) (bit1of octetq+1)(see NOTE2)Bit |
+| 1 |
+| 0 |  | TAC listnot included |
+| 1 |  | TAC listincluded |
+|  |
+| Geographical area descriptions indicator (GADI) (bit1of octets+1)Bit |
+| 1 |
+| 0 |  | Geographical area descriptions not included |
+| 1 |  | Geographical area descriptions included |
+|  |
+| Tracking area information of PLMNs(TAIPI) (bit 2 of octets+1)Bit |
+| 2 |
+| 0 |  | Tracking area information of PLMNsnot included |
+| 1 |  | Tracking area information of PLMNsincluded |
+|  |
+| Tracking area information of SNPNs(TAISI) (bit3of octets+1)Bit |
+| 3 |
+| 0 |  | Tracking area information of SNPNsnot included |
+| 1 |  | Tracking area information of SNPNsincluded |
+|  |
+|  |
+| Location assistance information |
+| Location assistance information field contains the geographical area descriptionsfield, the tracking area information of PLMNsfield, the tracking area information of SNPNs field. or any combination of them. |
+|  |
+| Time period |
+| Thetime periodfieldiscoded as theroute selection descriptor component value field for "time window type"specified in 3GPP TS 24.526 [19]table 5.2.1. |
+|  |
+| Type of shape |
+| Type of shape is coded as specified in Table 2a in 3GPP TS23.032 [4B]. |
+|  |
+| Shape description |
+| Shape descriptionis coded as specified in subclause 7.3 in 3GPP TS23.032 [4B]. |
+| Tracking area information of PLMNs |
+| Tracking area information of PLMNs field contains one or more tracking area information of PLMN fields. |
+|  |
+| Tracking area information of PLMN |
+| Tracking area information of PLMN field contains an MCC and MNC of a PLMN identity and a TAC list field containing one or more tracking area codefields, each indicating a TAC of a PLMN identified by the PLMN identity. |
+| Tracking area information of SNPNs |
+| Tracking area information of SNPNs field contains one or more tracking area information of SNPN fields.If the tracking area information of SNPNs field is included in a location assistance information field of anSNPN infofield, the SNPN identity field in each tracking area information of SNPN field of the tracking area information of SNPNs field is different from the SNPN identity field in theSNPN infofield. |
+|  |
+| Tracking area information of SNPN |
+| Tracking area information of SNPN field contains SNPN identity and a TAC list containing one or more tracking area codefields, each indicating a TAC of an SNPN identified by the SNPN identity. |
+| Tracking area code (TAC) |
+| In the TAC field bit 8 of the first octet is the most significant bit and bit 1 of third octet the least significant bit.The coding of the tracking area code is the responsibility of each administration. Coding using full hexadecimal representation may be used. The tracking area code consists of 3 octets. |
+|  |
+|  |
+| NOTE1:NID coding deviates from coding ofvalue part of NID IE as specified in subclause9.2.7 of 3GPP TS 24.502 [18], coding of the NID field of the SNPNlistIE as specified in subclause 9.11.3.92, and coding of the NID field of theSNPNlist with trusted 5Gconnectivity IEas specified in subclauseH.2.4.7of 3GPP TS 24.302 [16].NOTE2:If thelocation validity information indicator is set to 'Location validity information included' but TAC list indicator is set to 'TAC list not included', the UE shall ignore the location validity information. |
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of CH controlled prioritized list of GINs contents | octet t+1octet t+2 |
+| GIN 1 | octet (t+3)*octet (t+11)* |
+| GIN 2 | octet (t+12)*octet (t+20)* |
+| ... | octet (t+21)*octet (t+n*9-5)* |
+| GIN n | octet (t+n*9-6)*octet (t+n*9+2)* = octet u* |
+
 Figure 9.11.3.51.12: CH controlled prioritized list of GINs
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of CH controlled prioritized list ofpreferredGINs for access for localized services in SNPN contents | octetv+1octetv+2 |
+| GIN info 1 | octet (v+3)*octetv1* |
+| GIN info 2 | octet (v1+1)*octetv2* |
+| ... | octet (v2+1)*octetv3* |
+| GIN info n | octet (v3+1)*octetw* |
 
 Figure 9.11.3.51.12A: CH controlled prioritized list of preferred GINs for access for localized services in SNPN
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of GIN info | octetv+3octetv+4 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | LVII | LAII | Time Ind | octetv+5 |
+| GIN | octet (v+6)*octet (v+14)* |
+| Time validity information | octet (v+15)*octets* |
+| Location assistance information | octet (s+1)*octet q* |
+| Location validity information | octet (q+1)*octet v1* |
+
 Figure 9.11.3.51.12B: GIN info
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MCC digit 2 | MCC digit 1 | octet t+12 |
+| MNC digit 3 | MCC digit 3 | octet t+13 |
+| MNC digit 2 | MNC digit 1 | octet t+14 |
+| 0Spare | 0Spare | 0Spare | 0Spare | NID assignment mode | octet t+15 |
+| NID value digit 2 | NID value digit 1 | octet t+16 |
+| NID value digit 4 | NID value digit 3 | octet t+17 |
+| NID value digit 6 | NID value digit 5 | octet t+18 |
+| NID value digit 8 | NID value digit 7 | octet t+19 |
+| NID value digit 10 | NID value digit 9 | octet t+20 |
 
 Figure 9.11.3.51.13: GIN
 
 Table 9.11.3.51.6: CH controlled prioritized list of GINs and CH controlled prioritized list of preferred GINs for access for localized services in SNPN
+
+| Mobile country code (MCC):The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|---|
+|  |
+| Mobile network code (MNC):The coding of MNC field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, MNC digit 3 shall be coded as "1111". |
+|  |
+| NID assignment mode(see NOTE) |
+| NID assignment mode is coded as specified in 3GPP TS 23.003 [4]. |
+|  |
+| NID value(see NOTE) |
+| NID value is coded as specified in 3GPP TS 23.003 [4]. |
+|  |
+| Time indication (bit1 of octetv+5)Bit |
+| 1 |
+| 0 |  | Time validity information not included |
+| 1 |  | Time validity information included |
+|  |
+| Location assistance information indicator (LAII) (bit 2 of octetv+5)Bit |
+| 2 |
+| 0 |  | Location assistance information not included |
+| 1 |  | Location assistance information included |
+|  |
+| Locationvalidityinformation indicator (LVII) (bit3of octetv+5)Bit |
+| 3 |
+| 0 |  | Locationvalidityinformation not included |
+| 1 |  | Locationvalidityinformation included |
+|  |
+| Time period |
+| Thetime periodfieldiscoded as theroute selection descriptor component value field for "time window type"specified in 3GPP TS 24.526 [19]table 5.2.1. |
+|  |
+| Location assistance information (oct(s+1)* to (q)*) |
+| The Location assistance information is coded according to Figure 9.11.3.51.11B and Table 9.11.3.51.5. |
+|  |
+| NOTE:NID coding deviates from coding ofvalue part of NID IE as specified in subclause9.2.7 of 3GPP TS 24.502 [18], coding of the NID field of the SNPNlistIE as specified in subclause 9.11.3.92, and coding of the NID field of theSNPNlist with trusted 5Gconnectivity IEas specified in subclauseH.2.4.7of 3GPP TS 24.302 [16]. |
 
 #### 9.11.3.51A	Supported codec list
 
@@ -28609,25 +32968,114 @@ The UE parameters update transparent container information element is coded as s
 
 The UE parameters update transparent container is a type 6 information element with a minimum length of 20 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE parameters update transparent container IEI | octet 1 |
+| Length of UE parameters update transparent container contents | octet 2octet 3 |
+| UE parameters update header | octet 4 |
+| UPU-MAC-IAUSF | octet 5-20 |
+| CounterUPU | octet 21-22 |
+| UE parameters update list | octet 23* - n* |
+
 Figure 9.11.3.53A.1: UE parameters update transparent container information element for UE parameters update data type with value "0"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | 0Spare | 0Spare | 0Spare | UE parameters update data set 1 type | octet 23* |
+| Length of UE parameters update data set 1 | octet 24*-25* |
+| UE parameters update data set 1 | octet 26*-x* |
+| … |  |
+| 0Spare | 0Spare | 0Spare | 0Spare | UE parameters update data set n type | octet y* |
+| Length of UE parameters update data set n | octet y+1*-y+2* |
+| UE parameters update data set n | octet y+3*-n* |
 
 Figure 9.11.3.53A.2: UE parameters update list
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Secured packet | octet a* - a+z* |
+
 Figure 9.11.3.53A.3: UE parameters update data set for UE parameters update data set type with value "0001"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Default configured NSSAI | octet b* -c* |
 
 Figure 9.11.3.53A.4: UE parameters update data set for UE parameters update data set type with value "0010"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | AOL | DREI | octet d* |
+
 Figure 9.11.3.53A.4A: UE parameters update data set for UE parameters update data set type with value "0011"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Routing indicator digit 2 | Routing indicator digit 1 | octet e* |
+| Routing indicator digit 4 | Routing indicator digit 3 | octet (e+1)* |
 
 Figure 9.11.3.53A.4B: UE parameters update data set for UE parameters update data set type with value "0100"
 
+| UE parameters update transparent container IEI | octet 1 |
+|---|---|
+| Length of UE parameters update transparent container contents | octet 2octet 3 |
+| UE parameters update header | octet 4 |
+| UPU-MAC-IUE | octet 5 - 20 |
+
 Figure 9.11.3.53A.5: UE parameters update transparent container information element for UE parameters update data type with value "1"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | REG | ACK | UPU data type | octet 4 |
+
 Figure 9.11.3.53A.6: UE parameters update header for UE parameters update data type with value "0"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | UPU data type | octet 4 |
 
 Figure 9.11.3.53A.7: UE parameters update header for UE parameters update data type with value "1"
 
 Table 9.11.3.53A.1: UE parameters update transparent container information element
+
+| UPU-MAC-IAUSF, UPU-MAC-IUEand CounterUPUare coded asspecified in3GPP TS 33.501 [24] |
+|---|
+|  |
+| UPU data type(octet 4, bit 1) |
+| 0 | The UE parameters update transparent container carries a UE parameters update list(NOTE 2) |
+| 1 | The UE parameters update transparent container carries an acknowledgement of successful reception of a UE parameters update list(NOTE 2) |
+|  |
+| Acknowledgement (ACK) value (octet 4, bit 2) |
+| 0 | acknowledgement not requested |
+| 1 | acknowledgement requested |
+|  |
+| Re-registration (REG) value (octet 4, bit 3) |
+| 0 | re-registration not requested |
+| 1 | re-registration requested |
+|  |
+| UE parameters update data set type |
+| Bits4 3 2 1 |
+| 0 0 0 1 Routing indicator update data |
+| 0 0 1 0 Default configured NSSAI update data |
+| 0 0 1 1 Disaster roaming information update data |
+| 0 1 0 0 ME routing indicator update data |
+|  |
+| All other values are reserved |
+|  |
+| Disaster Roaming Enabled Indication (DREI) value (octet d*, bit 1) |
+| 0Disaster roaming is disabled in the UE1Disaster roaming is enabled in the UE |
+|  |
+| Indication of 'applicability of "lists of PLMN(s) to be used in disaster condition" provided by a VPLMN' (AOL) value (octet d*, bit 2) |
+| 0false1true |
+|  |
+| The secured packet is coded as specified in 3GPP TS 31.115 [22B]. |
+|  |
+| The default configured NSSAI is encoded as the value part of the NSSAI IE (see subclause 9.11.3.37). |
+|  |
+| Routing indicator |
+| Routing indicator is encoded as the routing indicator field of the 5GS mobile identity IE (see subclause 9.11.3.4). |
+|  |
+| NOTE1:When the routing indicator is updated, if the SNPN uses the EAP based primary authentication and key agreement procedure using the EAP-AKA' or the 5G AKA based primary authentication and key agreement procedure, then UE parameter update data set type is set to"routing indicator update data", otherwise, UE parameter update data set type is set to"MErouting indicator update data".NOTE2:The UPU data type set to "0"is used in thenetworktoUEdirection.The UPU data type set to "1"is used in theUEtonetworkdirection. |
 
 #### 9.11.3.54	UE security capability
 
@@ -28645,9 +33093,160 @@ If the UE does not support any security algorithm for AS security over E-UTRA co
 
 If the network includes octet 7, then it shall include also octet 8. If the network includes octet 9, then it shall include also octet 10.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UEsecurity capabilityIEI | octet 1 |
+| Length of UEsecurity capability contents | octet 2 |
+| 5G-EA0 | 128-5G-EA1 | 128-5G-EA2 | 128-5G-EA3 | 5G-EA4 | 5G-EA5 | 5G-EA6 | 5G-EA7 | octet 3 |
+| 5G-IA0 | 128-5G-IA1 | 128-5G-IA2 | 128-5G-IA3 | 5G-IA4 | 5G-IA5 | 5G-IA6 | 5G-IA7 | octet 4 |
+| EEA0 | 128-EEA1 | 128-EEA2 | 128-EEA3 | EEA4 | EEA5 | EEA6 | EEA7 | octet 5* |
+| EIA0 | 128-EIA1 | 128-EIA2 | 128-EIA3 | EIA4 | EIA5 | EIA6 | EIA7 | octet 6* |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  |
+| Spare | octet 7* -10* |
+
 Figure 9.11.3.54.1: UE security capability information element
 
 Table 9.11.3.54.1: UE security capability information element
+
+| 5GS encryption algorithms supported (see NOTE1) (octet 3) |
+|---|
+|  |
+| 5GS encryption algorithm 5G-EA0 supported (octet 3, bit 8) |
+| 0 |  |  |  | 5GS encryption algorithm 5G-EA0 not supported |
+| 1 |  |  |  | 5GS encryption algorithm 5G-EA0 supported |
+|  |
+| 5GS encryption algorithm 128-5G-EA1 supported (octet 3, bit 7) |
+| 0 |  |  |  | 5GS encryption algorithm 128-5G-EA1 not supported |
+| 1 |  |  |  | 5GS encryption algorithm 128-5G-EA1 supported |
+|  |
+| 5GS encryption algorithm 128-5G-EA2 supported (octet 3, bit 6) |
+| 0 |  |  |  | 5GS encryption algorithm 128-5G-EA2 not supported |
+| 1 |  |  |  | 5GS encryption algorithm 128-5G-EA2 supported |
+|  |
+| 5GS encryption algorithm 128-5G-EA3 supported (octet 3, bit 5) |
+| 0 |  |  |  | 5GS encryption algorithm 128-5G-EA3 not supported |
+| 1 |  |  |  | 5GS encryption algorithm 128-5G-EA3 supported |
+|  |
+| 5GS encryption algorithm 5G-EA4 supported (octet 3, bit 4) |
+| 0 |  |  |  | 5GS encryption algorithm 5G-EA4 not supported |
+| 1 |  |  |  | 5GS encryption algorithm 5G-EA4 supported |
+|  |
+| 5GS encryption algorithm 5G-EA5 supported (octet 3, bit 3) |
+| 0 |  |  |  | 5GS encryption algorithm 5G-EA5 not supported |
+| 1 |  |  |  | 5GS encryption algorithm 5G-EA5 supported |
+|  |
+| 5GS encryption algorithm 5G-EA6 supported (octet 3, bit 2) |
+| 0 |  |  |  | 5GS encryption algorithm 5G-EA6 not supported |
+| 1 |  |  |  | 5GS encryption algorithm 5G-EA6 supported |
+|  |
+| 5GS encryption algorithm 5G-EA7 supported (octet 3, bit 1) |
+| 0 |  |  |  | 5GS encryption algorithm 5G-EA7 not supported |
+| 1 |  |  |  | 5GS encryption algorithm 5G-EA7 supported |
+|  |
+| 5GS integrity algorithms supported (see NOTE2) (octet 4) |
+|  |
+| 5GS integrity algorithm 5G-IA0 supported (octet 4, bit 8) |
+| 0 |  |  |  | 5GS integrity algorithm 5G-IA0 not supported |
+| 1 |  |  |  | 5GS integrity algorithm 5G-IA0 supported |
+|  |
+| 5GS integrity algorithm 128-5G-IA1 supported (octet 4, bit 7) |
+| 0 |  |  |  | 5GS integrity algorithm 128-5G-IA1 not supported |
+| 1 |  |  |  | 5GS integrity algorithm 128-5G-IA1 supported |
+|  |
+| 5GS integrity algorithm 128-5G-IA2 supported (octet 4, bit 6) |
+| 0 |  |  |  | 5GS integrity algorithm 128-5G-IA2 not supported |
+| 1 |  |  |  | 5GS integrity algorithm 128-5G-IA2 supported |
+|  |
+| 5GS integrity algorithm 128-5G-IA3 supported (octet 4, bit 5) |
+| 0 |  |  |  | 5GS integrity algorithm 128-5G-IA3 not supported |
+| 1 |  |  |  | 5GS integrity algorithm 128-5G-IA3 supported |
+|  |
+| 5GS integrity algorithm 5G-IA4 supported (octet 4, bit 4) |
+| 0 |  |  |  | 5GS integrity algorithm 5G-IA4 not supported |
+| 1 |  |  |  | 5GS integrity algorithm 5G-IA4 supported |
+|  |
+| 5GS integrity algorithm 5G-IA5 supported (octet 4, bit 3) |
+| 0 |  |  |  | 5GS integrity algorithm 5G-IA5 not supported |
+| 1 |  |  |  | 5GS integrity algorithm 5G-IA5 supported |
+|  |
+| 5GS integrity algorithm 5G-IA6supported (octet 4, bit 2) |
+| 0 |  |  |  | 5GS integrity algorithm 5G-IA6 not supported |
+| 1 |  |  |  | 5GS integrity algorithm 5G-IA6 supported |
+|  |
+| 5GS integrity algorithm 5G-IA7 supported (octet 4, bit 1) |
+| 0 |  |  |  | 5GS integrity algorithm 5G-IA7 not supported |
+| 1 |  |  |  | 5GS integrity algorithm 5G-IA7 supported |
+|  |
+| EPS encryption algorithms supported (see NOTE3) (octet 5) |
+|  |
+| EPS encryption algorithm EEA0 supported (octet 5, bit 8) |
+| 0 |  |  |  | EPS encryption algorithm EEA0 not supported |
+| 1 |  |  |  | EPS encryption algorithm EEA0 supported |
+|  |
+| EPS encryption algorithm 128-EEA1 supported (octet 5, bit 7) |
+| 0 |  |  |  | EPS encryption algorithm 128-EEA1 not supported |
+| 1 |  |  |  | EPS encryption algorithm 128-EEA1 supported |
+|  |
+| EPS encryption algorithm 128-EEA2 supported (octet 5, bit 6) |
+| 0 |  |  |  | EPS encryption algorithm 128-EEA2 not supported |
+| 1 |  |  |  | EPS encryption algorithm 128-EEA2 supported |
+|  |
+| EPS encryption algorithm 128-EEA3 supported (octet 5, bit 5) |
+| 0 |  |  |  | EPS encryption algorithm 128-EEA3 not supported |
+| 1 |  |  |  | EPS encryption algorithm 128-EEA3 supported |
+|  |
+| EPS encryption algorithm EEA4 supported (octet 5, bit 4) |
+| 0 |  |  |  | EPS encryption algorithm EEA4 not supported |
+| 1 |  |  |  | EPS encryption algorithm EEA4 supported |
+|  |
+| EPS encryption algorithm EEA5 supported (octet 5, bit 3) |
+| 0 |  |  |  | EPS encryption algorithm EEA5 not supported |
+| 1 |  |  |  | EPS encryption algorithm EEA5 supported |
+|  |
+| EPS encryption algorithm EEA6 supported (octet 5, bit 2) |
+| 0 |  |  |  | EPS encryption algorithm EEA6 not supported |
+| 1 |  |  |  | EPS encryption algorithm EEA6 supported |
+|  |
+| EPS encryption algorithm EEA7 supported (octet 5, bit 1) |
+| 0 |  |  |  | EPS encryption algorithm EEA7 not supported |
+| 1 |  |  |  | EPS encryption algorithm EEA7 supported |
+|  |
+| EPS integrity algorithms supported (see NOTE4) (octet 6) |
+|  |
+| EPS integrity algorithm EIA0supported (octet 6, bit8) |
+| 0 |  |  |  | EPS integrity algorithm EIA0not supported |
+| 1 |  |  |  | EPS integrity algorithm EIA0supported |
+|  |
+| EPS integrity algorithm 128-EIA1 supported (octet 6, bit 7) |
+| 0 |  |  |  | EPS integrity algorithm 128-EIA1 not supported |
+| 1 |  |  |  | EPS integrity algorithm 128-EIA1 supported |
+|  |
+| EPS integrity algorithm 128-EIA2 supported (octet 6, bit 6) |
+| 0 |  |  |  | EPS integrity algorithm 128-EIA2 not supported |
+| 1 |  |  |  | EPS integrity algorithm 128-EIA2 supported |
+|  |
+| EPS integrity algorithm 128-EIA3 supported (octet 6, bit 5) |
+| 0 |  |  |  | EPS integrity algorithm 128-EIA3 not supported |
+| 1 |  |  |  | EPS integrity algorithm 128-EIA3 supported |
+|  |
+| EPS integrity algorithm EIA4 supported (octet 6, bit 4) |
+| 0 |  |  |  | EPS integrity algorithm EIA4 not supported |
+| 1 |  |  |  | EPS integrity algorithm EIA4 supported |
+|  |
+| EPS integrity algorithm EIA5 supported (octet 6, bit 3) |
+| 0 |  |  |  | EPS integrity algorithm EIA5 not supported |
+| 1 |  |  |  | EPS integrity algorithm EIA5 supported |
+|  |
+| EPS integrity algorithm EIA6 supported (octet 6, bit 2) |
+| 0 |  |  |  | EPS integrity algorithm EIA6 not supported |
+| 1 |  |  |  | EPS integrity algorithm EIA6 supported |
+|  |
+| EPS integrity algorithm EIA7 supported (octet 6, bit 1) |
+| 0 |  |  |  | EPS integrity algorithm EIA7 not supported |
+| 1 |  |  |  | EPS integrity algorithm EIA7 supported |
+|  |
+| For the UE not supporting any security algorithm for AS security over E-UTRA connected to 5GCN, all bits in octets 5 to 10 are spare and shall be ignored, if the respective octet is received with the information element.For the UEsupporting at least one security algorithm for AS security over E-UTRA connected to 5GCNall bits in octets 7 to 10 are spare and shall beignored, if the respective octet isreceived withthe information element.If the AMF receives any of the octets 7 to 10 (NOTE 5), it shall store the octets as received and include them when sending the UE security capability information element to the UE. |
+| NOTE1:The code points in octet 3 are used to indicate support for 5GS encryption algorithms for NAS security in N1 mode and support for 5GS encryption algorithms for AS security over NR.NOTE2:The code points in octet 4 are used to indicate support for 5GS integrity algorithms for NAS security in N1 mode and support for 5GS integrity algorithms for AS security over NR.NOTE3:The code points in octet 5 are used to indicate support for EPS encryption algorithms for AS security over E-UTRAconnected to 5GCN.NOTE4:The code points in octet 6 are used to indicate support for EPS integrity algorithms for AS security over E-UTRAconnected to 5GCN.NOTE5:The AMF can receive this information element also from another AMF or MME during N1 mode to N1 mode or S1 mode to N1 mode handover preparation. |
 
 #### 9.11.3.55	UE's usage setting
 
@@ -28657,9 +33256,22 @@ The UE's usage setting information element is coded as shown in figure 9.11.3.5
 
 The UE's usage setting is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE's usage setting IEI | octet 1 |
+| Length of UE's usage setting contents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | UE's usage setting | octet 3 |
+
 Figure 9.11.3.55.1: UE's usage setting information element
 
 Table 9.11.3.55.1: UE's usage setting information element
+
+| UE's usage setting (octet 3, bit 1) |
+|---|
+| 0 |  |  |  | voice centric |
+| 1 |  |  |  | data centric |
+|  |
+| All other bits in the octet 3 are spare and shall be coded as zero, |
 
 #### 9.11.3.56	UE status
 
@@ -28669,9 +33281,26 @@ The UE status information element is coded as shown in figure 9.11.3.56.1 and t
 
 The UE status is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE status IEI | octet 1 |
+| Length of UE status contents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | N1 mode reg | S1 mode reg | octet 3 |
+
 Figure 9.11.3.56.1: UE status information element
 
 Table 9.11.3.56.1: UE status information element
+
+| EMM registration status (S1 mode reg) (octet 3, bit 1) |
+|---|
+| 0 |  |  |  | UE is not in EMM-REGISTERED state |
+| 1 |  |  |  | UE is in EMM-REGISTERED state |
+|  |
+| 5GMM registration status (N1 mode reg) (octet 3, bit 2) |
+| 0 |  |  |  | UE is not in 5GMM-REGISTERED state |
+| 1 |  |  |  | UE is in 5GMM-REGISTERED state |
+|  |
+| All other bits in the octet 3 are spare and shall be coded as zero. |
 
 #### 9.11.3.57	Uplink data status
 
@@ -28681,9 +33310,21 @@ The Uplink data status information element is coded as shown in figure 9.11.3.5
 
 The Uplink data status information element is a type 4 information element with minimum length of 4 octets a maximum length of 34 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Uplink data status IEI | octet 1 |
+| Length of uplink data status contents | octet 2 |
+| PSI(7) | PSI(6) | PSI(5) | PSI(4) | PSI(3) | PSI(2) | PSI(1) | PSI(0) | octet 3 |
+| PSI(15) | PSI(14) | PSI(13) | PSI(12) | PSI(11) | PSI(10) | PSI(9) | PSI(8) | octet 4 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  |
+| spare | octet 5* -34* |
+
 Figure 9.11.3.57.1: Uplink data status information element
 
 Table 9.11.3.57.1: Uplink data status information element
+
+| PSI(x) shall be coded as follows:PSI(0):Bit 1 of octet 3 is spare and shall be coded as zero.PSI(1) – PSI(15):0indicates that no uplink data are pending for the corresponding PDU session identityor the PDU session is in PDU SESSION INACTIVE state or is in PDU SESSION ACTIVE state with user-plane resources already established.1indicates that uplink data are pending for the corresponding PDU session identityand the user-plane resources for the corresponding PDU session are not established, or the UE hasactivemulticast MBS session(s) associated withthecorresponding PDU session.All bits in octet 5 to 34 are spare and shall be coded as zero, if the respective octet is included in the information element. |
+|---|
 
 #### 9.11.3.68	UE radio capability ID
 
@@ -28693,9 +33334,21 @@ The UE radio capability ID information element is coded as shown in figure 9.11
 
 The UE radio capability ID is a type 4 information element with a length of n octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE radio capability ID IEI | octet 1 |
+| Length of UE radio capability IDcontents | octet 2 |
+| UE radio capability ID | octet 3 |
+|  | octet n |
+
 Figure 9.11.3.68.1: UE radio capability ID information element
 
 Table 9.11.3.68.1: UE radio capability ID information element
+
+| UE radio capability ID (octets 3 to n) |
+|---|
+| The UE radio capability ID contents contain the UE radio capability ID as specified in 3GPP TS 23.003 [4], with eachhexadecimaldigit codedover 4 bits, starting with the firsthexadecimaldigit coded in bits 4 to 1 of octet 3, the secondhexadecimaldigit coded in bits 8 to 5 of octet 3, and so on. If the UE radio capability ID contains an odd number ofhexadecimaldigits, bits 8 to 5 of the last octet (octet n) shall be coded as "1111". |
+|  |
 
 #### 9.11.3.69	UE radio capability ID deletion indication
 
@@ -28705,9 +33358,22 @@ The UE radio capability ID deletion indication is a type 1 information element.
 
 The UE radio capability ID deletion indication information element is coded as shown in figure 9.11.3.69.1 and table 9.11.3.69.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE radio capability ID deletion indicationIEI | 0spare | Deletion request | octet 1 |
+
 Figure 9.11.3.69.1: UE radio capability ID deletion indication information element
 
 Table 9.11.3.69.1: UE radio capability ID deletion indication information element
+
+| Deletion requested (octet 1) |
+|---|
+| Bits |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 |  | UE radio capability ID deletion not requested |
+| 0 | 0 | 1 |  | Network-assigned UE radio capability IDs deletion requested |
+|  |
+| All other values are unused and shall be interpreted as "UE radio capability ID deletion not requested", if received by the UE. |
 
 #### 9.11.3.70	Truncated 5G-S-TMSI configuration
 
@@ -28717,9 +33383,47 @@ The Truncated 5G-S-TMSI configuration information element is coded as shown in f
 
 The Truncated 5G-S-TMSI configuration is a type 4 information element with 3 octets length.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Truncated 5G-S-TMSI configuration IEI | octet 1 |
+| Length of Truncated 5G-S-TMSI configurationcontents | octet 2 |
+| Truncated AMF Set ID value | Truncated AMF Pointer value | octet 3 |
+
 Figure 9.11.3.70.1: Truncated 5G-S-TMSI configuration information element
 
 Table 9.11.3.70.1: Truncated 5G-S-TMSI configuration information element
+
+| Truncated AMF Pointer value (bits 4 to 1 of octet 3)This field represents the size of the least significant bits of the AMF Pointer. |
+|---|
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | reserved |
+| 0 | 0 | 0 | 1 | 1 least significant bit of the AMF Pointer |
+| 0 | 0 | 1 | 0 | 2 least significant bits of the AMF Pointer |
+| 0 | 0 | 1 | 1 | 3 least significant bits of the AMF Pointer |
+| 0 | 1 | 0 | 0 | 4 least significant bits of the AMF Pointer |
+| 0 | 1 | 0 | 1 | 5 least significant bits of the AMF Pointer |
+| 0 | 1 | 1 | 0 | 6 least significant bits of the AMF Pointer |
+|  |
+| All other values shall be interpreted as "6 least significant bits of the AMF Pointer" by this version of the protocol. |
+| Truncated AMF Set ID value (bits 8 to 5 of octet 3)This field represents the size of the least significant bits of the AMF Set ID. |
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | reserved |
+| 0 | 0 | 0 | 1 | 1 least significant bit of the AMF Set ID |
+| 0 | 0 | 1 | 0 | 2 least significant bits of the AMF Set ID |
+| 0 | 0 | 1 | 1 | 3 least significant bits of the AMF Set ID |
+| 0 | 1 | 0 | 0 | 4 least significant bits of the AMF Set ID |
+| 0 | 1 | 0 | 1 | 5 least significant bits of the AMF Set ID |
+| 0 | 1 | 1 | 0 | 6 least significant bits of the AMF Set ID |
+| 0 | 1 | 1 | 1 | 7 least significant bits of the AMF Set ID |
+| 1 | 0 | 0 | 0 | 8 least significant bits of the AMF Set ID |
+| 1 | 0 | 0 | 1 | 9 least significant bits of the AMF Set ID |
+| 1 | 0 | 1 | 0 | 10 least significant bits of the AMF Set ID |
+|  |
+| All other values shall be interpreted as "10 least significant bits of the AMF Set ID" by this version of the protocol. |
+|  |
+| NOTE:Total sum of the "Truncated AMF Set ID value" and the "Truncated AMF Pointer value" in the Truncated 5G-S-TMSI configuration IE is specified in3GPP TS 23.003 [4]and3GPP TS36.300 [25B]. |
 
 #### 9.11.3.71	WUS assistance information
 
@@ -28733,9 +33437,22 @@ The N5GC indication information element is coded as shown in figure 9.11.3.72.1
 
 The N5GC indication is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| N5GC indication IEI | 0Spare | 0Spare | 0Spare | N5GCREG | octet 1 |
+
 Figure 9.11.3.72.1: N5GC indication
 
 Table 9.11.3.72.1: N5GC indication
+
+| N5GC device indication bit (N5GCREG) (octet 1, bit 1) |
+|---|
+| Bit |
+| 1 |  |
+| 0 | N5GC device registration is not requested |
+| 1 | N5GC device registration is requested |
+|  |
+| Bits 2 to 4 are spare and shall be coded as zero. |
 
 #### 9.11.3.73	NB-N1 mode DRX parameters
 
@@ -28747,9 +33464,31 @@ The NB-N1 mode DRX parameters information element is coded as shown in figure 9
 
 The value part of a DRX parameter information element is coded as shown in table 9.11.3.73.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| NB-N1 mode DRX parameters IEI | octet 1 |
+| Length of NB-N1 mode DRX parameters contents | octet 2 |
+| 0 | 0 | 0 | 0 | NB-N1 mode DRX value |  |
+| Spare |  | octet 3 |
+
 Figure 9.11.3.73.1: NB-N1 mode DRX parameters information element
 
 Table 9.11.3.73.1: NB-N1 mode DRX parameters information element
+
+| NB-N1 mode DRX value (octet 3, bits 1 to 4)This field represents the DRX cycle parameter 'T', for NB-N1 mode, as defined in 3GPP TS 36.304 [25C]. |
+|---|
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | DRX value not specified |
+| 0 | 0 | 0 | 1 | DRX cycle parameter T = 32 |
+| 0 | 0 | 1 | 0 | DRX cycle parameter T = 64 |
+| 0 | 0 | 1 | 1 | DRX cycle parameter T = 128 |
+| 0 | 1 | 0 | 0 | DRX cycle parameter T = 256 |
+| 0 | 1 | 0 | 1 | DRX cycle parameter T = 512 |
+| 0 | 1 | 1 | 1 | DRX cycle parameter T = 1024 |
+|  |
+| All other values shall be interpreted as "DRX value not specified" by this version of the protocol.Bits 5 to 8 of octet 3 are spare and shall be coded as zero. |
+|  |
 
 #### 9.11.3.74	Additional configuration indication
 
@@ -28759,9 +33498,22 @@ The Additional configuration indication information element is coded as shown in
 
 The Additional configuration indication is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Additional configuration indicationIEI | 0Spare | 0Spare | 0Spare | SCMR | octet 1 |
+
 Figure 9.11.3.74.1: Additional configuration indication
 
 Table 9.11.3.74.1: Additional configuration indication
+
+| Signalling connection maintain request (SCMR) (octet 1, bit 1) |
+|---|
+| Bit |
+| 1 |  |
+| 0 | no additional information |
+| 1 | release of N1 NAS signalling connection not required |
+|  |
+| Bits 2 to 4 are spare and shall be coded as zero, |
 
 #### 9.11.3.75	Extended rejected NSSAI
 
@@ -28771,15 +33523,101 @@ The Extended rejected NSSAI information element is coded as shown in figure 9.1
 
 The Extended rejected NSSAI is a type 4 information element with a minimum length of 5 octets and a maximum length of 90 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Extended rejected NSSAI IEI | octet 1 |
+| Length of Extended rejected NSSAI contents | octet 2 |
+| Partial extended rejected NSSAI list 1 | octet 3octet m |
+| Partial extended rejected NSSAI list 2 | octet m+1*octet n* |
+| … | octet n+1*octet u* |
+| Partial extended rejected NSSAI list n | octet u+1*octet v* |
+
 Figure 9.11.3.75.1: Extended rejected NSSAI information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| spare | Type of list | Number of elements | octet 3 |
+| Rejected S-NSSAI 1 | octet 4octet j |
+| Rejected S-NSSAI 2 | octet j+1*octet k* |
+| … | octet k+1octet p* |
+| Rejected S-NSSAI n | octet p+1*octet m* |
 
 Figure 9.11.3.75.2: Partial extended rejected NSSAI list – type of list = 000
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| spare | Type of list | Number of elements | octet 3 |
+| Back-off timer value | octet 4 |
+| Rejected S-NSSAI 1 | octet 5octet j |
+| Rejected S-NSSAI 2 | octet j+1*octet k* |
+| … | octet k+1*octet p* |
+| Rejected S-NSSAI n | octet p+1*octet m* |
+
 Figure 9.11.3.75.3: Partial extended rejected NSSAI list – type of list = 001
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of rejected S-NSSAI | Cause value | octet 4 |
+| SST | octet 5 |
+| SD | octet 6*octet 8* |
+| Mapped HPLMN SST | octet 9* |
+| Mapped HPLMN SD | octet 10*octet 12* |
 
 Figure 9.11.3.75.4: Rejected S-NSSAI
 
 Table 9.11.3.75.1: Extended rejected NSSAI information element
+
+| Value part of the Extended rejected NSSAI information element (octet 3 to v) |
+|---|
+|  |
+| The value part of the Extended rejected NSSAI information element consists of one or more partial extended rejected NSSAI lists. The length of each partial extended rejected NSSAI list can be determined from the 'type of list' field and the 'number of elements' field in the first octet of the partial extended rejected NSSAI list.Each rejected S-NSSAI consists of one S-NSSAI and an associated cause value. Each rejected S-NSSAI also includes the mapped HPLMN S-NSSAI if available. The length of each rejected S-NSSAI can be determined by the 'length of rejected S-NSSAI' field in the first octet of the rejected S-NSSAI. |
+| The UE shall store the complete list received (NOTE 0). If more than 8 rejected S-NSSAIs are included in this information element, the UE shall store the first 8 rejected S-NSSAIs and ignore the remaining octets of the information element. |
+|  |
+| Partial extended rejected NSSAI list: |
+|  |
+| Number of elements (octet 3, bits 1 to 4) |
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | 1 element |
+| 0 | 0 | 0 | 1 | 2 element |
+|  |  | … |  |  |
+| 0 | 1 | 1 | 0 | 7 element |
+| 0 | 1 | 1 | 1 | 8 element |
+|  |
+| All other values are unused and shall be interpreted as 8, if received by the UE. |
+|  |
+| Type of list (octet 3, bits 5 to 7) (NOTE 7) |
+| Bits |
+| 7 | 6 | 5 |  |  |
+| 0 | 0 | 0 |  | list of S-NSSAIs without any associated back-off timer value |
+| 0 | 0 | 1 |  | list of S-NSSAIs with one associated back-off timer value that applies to all S-NSSAIs in the list |
+|  |
+| All other values are reserved. |
+|  |
+| Bit 8 of octet 3 is spare and shall be coded as zero. |
+|  |
+| Back-off timer value (octet 4): |
+|  |
+| Back-off timer value is coded as the value part of GPRS timer 3 in subclause 10.5.7.4a in 3GPP TS 24.008 [12]. |
+|  |
+| Rejected S-NSSAI: |
+|  |
+| Cause value (octetx)(NOTE 8) |
+| Bits |
+| 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 |  | S-NSSAI not available in the current PLMN or SNPN |
+| 0 | 0 | 0 | 1 |  | S-NSSAI not available in the current registration area |
+| 0 | 0 | 1 | 0 |  | S-NSSAI not available due to the failed or revoked network slice-specific authentication and authorization |
+| 0 | 0 | 1 | 1 |  | S-NSSAI not available due to maximum number of UEs reached |
+| All other values are reserved. |
+|  |
+| Slice/service type (SST) (octetx+1) |
+| This field contains the 8 bit SST value. The coding of the SST value part is defined in 3GPP TS 23.003 [4].(NOTE 5) |
+|  |
+| Slice differentiator (SD) (octetx+2to octetx+4) |
+| This field contains the 24 bit SD value. The coding of the SD value part is defined in 3GPP TS 23.003 [4]. (NOTE 6)If the SST encoded in octetx+1is not associated with a valid SD value, and the sender needs to include a mapped HPLMN SST (octetx+5) and a mapped HPLMN SD (octetsx+6tox+8), then the sender shall set the SD value (octetsx+2tox+4) to "no SD value associated with the SST".mapped HPLMN Slice/service type (SST) (octetx+5)This field contains the 8 bit SST value of an S-NSSAI in the S-NSSAI(s) of the HPLMN to which the SST value is mapped. The coding of the SST value part is defined in 3GPP TS 23.003 [4].mapped HPLMN Slice differentiator (SD) (octetx+6to octetx+8)This field contains the 24 bit SD value of an S-NSSAI in the S-NSSAI(s) of the HPLMN to which the SD value is mapped. The coding of the SD value part is defined in 3GPP TS 23.003 [4]. |
+| NOTE 0:The number of rejected S-NSSAI(s) shall not exceed eight.NOTE 1:Octetxand octetx+1shall always be included.NOTE 2:If the octetx+2is included, then octetx+3and octetx+4shall be included.NOTE 3:If the octetx+5is included, then octetsx+6,x+7, andx+8may be included.NOTE 4:If the octetx+6is included, then octetx+7and octetx+8shall be included.NOTE 5:Ifthe Cause value is "S-NSSAI not available due to the failed or revoked network slice-specific authentication and authorization",this fieldshallcontain the 8 bit SST value of an S-NSSAI in the S-NSSAI(s) of the HPLMN and octetsx+5,x+6,x+7, andx+8shall not be included.NOTE6:Ifthe Cause value is "S-NSSAI not available due to the failed or revoked network slice-specific authentication and authorization",this fieldshallcontain the 24 bit SD value of an S-NSSAI in the S-NSSAI(s) of the HPLMN and octetsx+5,x+6,x+7, andx+8shall not be included.NOTE 7:The partial extended rejected NSSAI with type of list = 001 shall only be used for rejected S-NSSAI(s) with the rejection cause "S-NSSAI not available due to maximum number of UEs reached". |
+| NOTE 8:Octet x can be 4 or 5. |
 
 #### 9.11.3.76	UE request type
 
@@ -28793,11 +33631,40 @@ The Paging restriction information element is coded as shown in figure 9.11.3.7
 
 The Paging restriction is a type 4 information element with a minimum length of 3 octets and a maximum length of 35 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Paging restriction IEI | octet 1 |
+| Length of Paging restriction contents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | Paging restriction type | octet 3 |
+
 Figure 9.11.3.77.1:	Paging restriction information element for Paging restriction type = "All paging is restricted" and for Paging restriction type = "All paging is restricted except voice"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Paging restriction IEI | octet 1 |
+| Length of Paging restriction contents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | Paging restriction type | octet 3 |
+| PSI(7) | PSI(6) | PSI(5) | PSI(4) | PSI(3) | PSI(2) | PSI(1) | PSI(0) | octet 4 |
+| PSI(15) | PSI(14) | PSI(13) | PSI(12) | PSI(11) | PSI(10) | PSI(9) | PSI(8) | octet 5 |
+| 0           0            0            0              0            0            0            0spare | octet 6*-35* |
 
 Figure 9.11.3.77.2:	Paging restriction information element for Paging restriction type = "All paging is restricted except for specified PDU session(s)" and for Paging restriction type = "All paging is restricted except for voice service and specified PDU session(s)"
 
 Table 9.11.3.77.1:	Paging restriction information element
+
+| Paging restriction type (bits 4 to 1 of octet 3) |
+|---|
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | reserved |
+| 0 | 0 | 0 | 1 | All paging is restricted |
+| 0 | 0 | 1 | 0 | All paging is restricted except for voice service |
+| 0 | 0 | 1 | 1 | All paging is restricted except for specified PDU session(s) |
+| 0 | 1 | 0 | 0 | All paging is restricted except for voice service and specified PDU session(s) |
+|  |
+| All other values are reserved. |
+| Bits 5 to 8 of octet 3 are spare and shall be coded as zero.PSI(x) (bits 8 to 1 of octet 4 and octet 5):This field indicates the PDU session identity of the PDU session for which paging is restricted.PSI(0): (bit 1 of octet 4)Spare and shall be coded as zero.PSI(1) – PSI(15):0indicates that paging is restricted for the PDU session associated with the PDU session identity.1indicates that paging is not restricted for the PDU session associated with the PDU session identity. |
+| All bits in octet 6 to 35 are spare and shall be coded as zero, if the respective octet is included in the information element. |
 
 #### 9.11.3.79	NID
 
@@ -28813,13 +33680,77 @@ The PEIPS assistance information, information element is coded as shown in figur
 
 The PEIPS assistance information is a type 4 information element, with a minimum length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| PEIPS assistance information IEI | octet 1 |
+| Length of PEIPS assistance information contents | octet 2 |
+| PEIPS assistance information type 1 | octet 3octet i |
+| PEIPS assistance information type 2 | octet i+1*octet l* |
+| … | octet l+1*octet m* |
+| PEIPS assistance information type p | octet m+1*octet n* |
+
 Figure 9.11.3.80.1: PEIPS assistance information information element
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Type of information | Paging subgroup ID value | octet 1 |
+
 Figure 9.11.3.80.2: PEIPS assistance information type –type of information= "000"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Type of information | UE paging probability information value | octet 1 |
 
 Figure 9.11.3.80.3: PEIPS assistance information type –type of information= "001"
 
 Table 9.11.3.80.1: PEIPS assistance information information element
+
+| Value part of the PEIPS assistance information information element (octets 3 to n) |
+|---|
+|  |
+| The value part of the PEIPS assistance information information element consists of one or several types of PEIPS assistance information. |
+|  |
+| PEIPS assistance information type: |
+|  |
+| Type of information (octet 1) |
+| Bits |
+| 8 | 7 | 6 |  |
+| 0 | 0 | 0 | Paging subgroup ID |
+| 0 | 0 | 1 | UE paging probability information |
+|  |
+| All other values are reserved. |
+|  |
+| Paging subgroup ID value: (octet 1, bits 1-5) |
+| This field contains the value (in decimal) of paging subgroup ID that is assigned by the AMF for paging the UE. This field has a valid range of values from (0-7). All other values areunusedand shall be interpreted as 0 by this version of the protocol. |
+| UE paging probability information value: (octet 1, bits 1-5) |
+| This field contains the value of UE paging probability information provided by the UE to the AMF. It represents the probability of the UE receiving the paging. |
+|  |
+| Bit |
+| 5 | 4 | 3 | 2 | 1 | UE paging probability information value |
+| 0 | 0 | 0 | 0 | 0 | p00 (UE calculated paging probability is 0%) |
+| 0 | 0 | 0 | 0 | 1 | p05 (UE calculated paging probability > 0% and <= 5%) |
+| 0 | 0 | 0 | 1 | 0 | p10 (UE calculated paging probability > 5% and <= 10%) |
+| 0 | 0 | 0 | 1 | 1 | p15 (UE calculated paging probability > 10% and <= 15%) |
+| 0 | 0 | 1 | 0 | 0 | p20 (UE calculated paging probability > 15% and <= 20%) |
+| 0 | 0 | 1 | 0 | 1 | p25 (UE calculated paging probability > 20% and <= 25%) |
+| 0 | 0 | 1 | 1 | 0 | p30 (UE calculated paging probability > 25% and <= 30%) |
+| 0 | 0 | 1 | 1 | 1 | p35 (UE calculated paging probability > 30% and <= 35%) |
+| 0 | 1 | 0 | 0 | 0 | p40 (UE calculated paging probability > 35% and <= 40%) |
+| 0 | 1 | 0 | 0 | 1 | p45 (UE calculated paging probability > 40% and <= 45%) |
+| 0 | 1 | 0 | 1 | 0 | p50 (UE calculated paging probability > 45% and <= 50%) |
+| 0 | 1 | 0 | 1 | 1 | p55 (UE calculated paging probability > 50% and <= 55%) |
+| 0 | 1 | 1 | 0 | 0 | p60 (UE calculated paging probability > 55% and <= 60%) |
+| 0 | 1 | 1 | 0 | 1 | p65 (UE calculated paging probability > 60% and <= 65%) |
+| 0 | 1 | 1 | 1 | 0 | p70 (UE calculated paging probability > 65% and <= 70%) |
+| 0 | 1 | 1 | 1 | 1 | p75 (UE calculated paging probability > 70% and <= 75%) |
+| 1 | 0 | 0 | 0 | 0 | p80 (UE calculated paging probability > 75% and <= 80%) |
+| 1 | 0 | 0 | 0 | 1 | p85 (UE calculated paging probability > 80% and <= 85%) |
+| 1 | 0 | 0 | 1 | 0 | p90 (UE calculated paging probability > 85% and <= 90%) |
+| 1 | 0 | 0 | 1 | 1 | p95 (UE calculated paging probability > 90% and <= 95%) |
+| 1 | 0 | 1 | 0 | 0 | p100 (UE calculated paging probability > 95% and <= 100%) |
+|  |
+| All other values shall be interpreted as 10100 by this version of the protocol. |
+|  |
 
 #### 9.11.3.81	5GS additional request result
 
@@ -28829,9 +33760,26 @@ The 5GS additional request result information element is coded as shown in figur
 
 The 5GS additional request result is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GS additional request resultIEI | octet 1 |
+| Length of5GS additional request resultcontents | octet 2 |
+| 0 Spare | 0 Spare | 0 Spare | 0 Spare | 0 Spare | 0 Spare | PRD | octet 3 |
+
 Figure 9.11.3.81.1: 5GS additional request result information element
 
 Table 9.11.3.81.1: 5GS additional request result information element
+
+| Paging restriction decision (PRD) (bits 2 to 1 of octet 3) |
+|---|
+| Bits |
+| 2 | 1 |  |
+| 0 | 0 | no additional information |
+| 0 | 1 | paging restriction is accepted |
+| 1 | 0 | paging restriction is rejected |
+|  |
+| All other values are reserved. |
+| Bits 3 to 8 of octet 3 are spare and shall be coded as zero. |
 
 #### 9.11.3.82	NSSRG information
 
@@ -28841,11 +33789,35 @@ The NSSRG information information element is coded as shown in figure 9.11.3.82
 
 The NSSRG information is a type 6 information element with minimum length of 7 octets and maximum length of 4099 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| NSSRG information IEI | octet 1 |
+| Length of NSSRG information contents | octet 2octet 3 |
+| NSSRG values for S-NSSAI 1 | octet 4octet m |
+| NSSRG values for S-NSSAI 2 | octet m+1*octet n* |
+| … | octet n+1*octet u* |
+| NSSRG values for S-NSSAI x | octet u+1*octet v* |
+
 Figure 9.11.3.82.1: NSSRG information information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of NSSRG values for S-NSSAI | octet4 |
+| S-NSSAI value | octet 5octet w |
+| NSSRG value 1 for the S-NSSAI | octet w+1 |
+| NSSRG value 2 for the S-NSSAI | octet w+2* |
+| … | octet w+3*octetw+15 |
+| NSSRG value y for the S-NSSAI | octetw+16 |
 
 Figure 9.11.3.82.2: NSSRG values for S-NSSAI
 
 Table 9.11.3.82.1: NSSRG information information element
+
+| Value part of the NSSRG information information element (octet 4 to v)The value part of the NSSRG information information element consists of one or more NSSRG values for each S-NSSAI in the Configured NSSAI IE.S-NSSAI value (octet 5 to w) (see NOTE 2)S-NSSAI value is coded as the length and value part of S-NSSAI information element asspecified in subclause9.11.2.8 starting with the second octet.See NOTE 1. |
+|---|
+| NSSRG value for the S-NSSAI (octet w+1) |
+| This field contains the 8 bit NSSRG value. |
+| NOTE 1:If a mapped HPLMN SST is included in a S-NSSAI value, then the NSSRG value(s) are associated with the Mapped HPLMN SST, and the Mapped HPLMN SD, if included.NOTE 2:The NSSRG information IE shall contain the complete set of S-NSSAI(s) included in the configured NSSAI.NOTE 3:The number of NSSRG values associated with an S-NSSAI cannot exceed 16. If there are more than 16 NSSRG values for an S-NSSAI in the NSSRG information, then the UE shall retain only the first 16 NSSRG values and ignore the rest. |
 
 #### 9.11.3.83	List of PLMNs to be used in disaster condition
 
@@ -28855,11 +33827,34 @@ The list of PLMNs to be used in disaster condition information element is coded 
 
 The list of PLMNs to be used in disaster condition is a type 4 information element, with a minimum length of 2 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| List of PLMNs to be used in disaster condition list IEI | octet 1 |
+| Length of list of PLMNs to be used in disaster condition contents | octet 2 |
+| PLMN ID 1 | octet 3*octet 5* |
+| PLMN ID 2 | octet 6*octet 8* |
+| … | octet 9*octetq* |
+| PLMN ID n | octetq+1*octet q+3* |
+
 Figure 9.11.3.83.1: List of PLMNs to be used in disaster condition information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MCC digit 2 | MCC digit 1 | octet q+1 |
+| MNC digit 3 | MCC digit 3 | octet q+2 |
+| MNC digit 2 | MNC digit 1 | octet q+3 |
 
 Figure 9.11.3.83.2: PLMN ID n
 
 Table 9.11.3.83.1: List of PLMNs to be used in disaster condition information element
+
+| MCC, Mobile country code (octet q+1 and bits 1 to 4 octet q+2)The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|---|
+|  |
+| MNC, Mobile network code (bits 5 to 8 of octet q+2 and octet q+3)The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, bits 5 to 8 of octet q+2 shall be coded as "1111". |
+|  |
+| The MCC and MNC digits are coded as octets 6 to 8 of the Temporary mobile group identity IE in figure 10.5.154 of 3GPP TS 24.008 [12]. |
+| NOTE:The PLMN IDs are provided in decreasing order of priority, i.e. PLMN ID 1 indicates highest priority and PLMN ID n indicates lowest priority. |
 
 #### 9.11.3.84	Registration wait range
 
@@ -28869,9 +33864,22 @@ The registration wait range information element is coded as shown in figure 9.1
 
 The registration wait range is a type 4 information element, with a length of 4 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Registration wait range IEI | octet 1 |
+| Length of registration wait range | octet 2 |
+| Minimum registration wait time | octet 3 |
+| Maximum registration wait time | octet 4 |
+
 Figure 9.11.3.84.1: Registration wait range information element
 
 Table 9.11.3.84.1: Registration wait range information element
+
+| Minimum registration wait time (octet 3)The minimum registration wait time contains the minimum duration of the registration wait time, encoded as octet 2 of the GPRS timer information element (see 3GPP TS 24.008 [12] subclause 10.5.7.3). |
+|---|
+|  |
+| Maximum registration wait time (octet 4)The maximum registration wait time contains the maximum duration of the registration wait time, encoded as octet 2 of the GPRS timer information element (see 3GPP TS 24.008 [12] subclause 10.5.7.3). |
+|  |
 
 #### 9.11.3.85	PLMN identity
 
@@ -28881,9 +33889,26 @@ The PLMN identity information element is coded as shown in figure 9.11.3.85.1, 
 
 The PLMN identity is a type 4 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| PLMN identityIEI | octet 1 |
+| Length ofPLMN identitycontents | octet 2 |
+| MCC digit 2 | MCC digit 1 | octet 3 |
+| MNC digit 3 | MCC digit 3 | octet 4 |
+| MNC digit 2 | MNC digit 1 | octet 5 |
+
 Figure 9.11.3.85.1: PLMN identity information element
 
 Table 9.11.3.85.1: PLMN identity information element
+
+| MCC, Mobile country code (octet 3, octet 4 bits 1 to 4) |
+|---|
+| The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|  |
+| MNC, Mobile network code (octet 4 bits 5 to 8, octet 5) |
+| The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, bits 5 to 8 of octet4shall be coded as "1111". |
+| The MCC and MNC digits are coded as octets 6 to 8 of the Temporary mobile group identity IE in figure 10.5.154 of 3GPP TS 24.008 [12]. |
+|  |
 
 #### 9.11.3.86	Extended CAG information list
 
@@ -28893,21 +33918,129 @@ The Extended CAG information list information element is coded as shown in figur
 
 The Extended CAG information list is a type 6 information element, with a minimum length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Extended CAG information list IEI | octet 1 |
+| Length of Extended CAG information list contents | octet 2octet 3 |
+| Entry 1 | octet 4*octet a* |
+| Entry 2 | octet a+1*octet b* |
+| … | octet b+1*octet g* |
+| Entry n | octet g+1*octet h* |
+
 Figure 9.11.3.86.1: Extended CAG information list information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of entry contents | octet q |
+|  | octet q+1 |
+| MCC digit 2 | MCC digit 1 | octet q+2 |
+| MNC digit 3 | MCC digit 3 | octet q+3 |
+| MNC digit 2 | MNC digit 1 | octet q+4 |
+| 0Spare | 0Spare | 0Spare | 0Spare | CAILI | LCI | 0Spare | CAGonly | octet q+5 |
+| Length of CAG-ID without additional information list | octet (q+6)*octet (q+7)* |
+| CAG-ID 1 | octetr* (see NOTE)octet(r+3)* |
+| CAG-ID 2 | octet (r+4)*octet (r+7)* |
+| … | octet (r+8)*octet (r+4*m-5)* |
+| CAG-IDm | octet(r+4*m-4)*octet(r+4*m-1)* |
+| CAG-ID with additional information list | octet t*(see NOTE)octet u* |
 
 NOTE:	The field is placed immediately after the last present preceding field.
 
 Figure 9.11.3.86.2: Entry n
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length ofCAG-ID with additional information list contents | octett |
+|  | octett+1 |
+| CAG-ID with additional information 1 | octet t+2octetv |
+| CAG-ID with additional information 2 | octet (v+1)*octet (w)* |
+| … | octet (w+1)*octet (x)* |
+| CAG-ID with additional information o | octet(x+1)*octetu* |
+
 Figure 9.11.3.86.3: CAG-ID with additional information list
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length ofCAG-ID with additional information contents | octetx+1 |
+|  | octetx+2 |
+| CAG-ID | octet x+3octetx+6 |
+| 0Spare | SVII | SVII | SVII | SVII | SVII | SVII | TVII | octet x+7 |
+| Time validity information | octet (x+8)*octet (x+23)* |
 
 NOTE:	The field is placed immediately after the last present preceding field.
 
 Figure 9.11.3.86.4: CAG-ID with additional information
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of time periods | octet (x+8) |
+| Time period 1 | octet (x+9)octet (x+24) |
+| Time period 2 | octet (x+25)*octet (x+40)* |
+| ... | octet (x+41)*octet (x-8+o*16)* |
+| Time period o | octet (x-7+o*16)octet (x+8+o*16)* = octet u* |
+
 Figure 9.11.3.86.5: Time validity infomation
 
 Table 9.11.3.86.1: Extended CAG information list information element
+
+| Value part of the Extended CAG information list information element (octet4toh)The value part of the Extended CAG information list information element consists of one or moreentries.Entry n:Length ofentrycontents(octetq and q+1)MCC, Mobile country code (octet q+2and bits 1 to 4 octet q+3)The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|---|
+|  |
+| MNC, Mobile network code (bits 5 to 8 of octet q+3and octet q+4)The coding of this field is the responsibility of each administration, but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, bits 5 to 8 of octet q+2 shall be coded as "1111". |
+|  |
+| The MCC and MNC digits are coded as octets 6 to 8 of the Temporary mobile group identity IE in figure 10.5.154 of 3GPP TS 24.008 [12]. |
+|  |
+| Indication that the UE is only allowed to access 5GS via CAG cells (CAGonly) (bit 1 of octet q+5) |
+| Bit |
+| 1 |  |
+| 0 | "Indication that the UE is only allowed to access 5GS via CAG cells" is not set (i.e., the UE is allowed to access 5GS via non-CAG cells) |
+| 1 | "Indication that the UE is only allowed to access 5GS via CAG cells" is set (i.e., the UE is not allowed to access 5GS via non-CAG cells) |
+|  |
+| Length of CAG-IDs indicator (LCI) (bit 3 of octet q+5) |
+| Bit |
+| 3 |  |
+| 0 | Length of CAG-IDs field is absent |
+| 1 | Length of CAG-IDs field is present |
+| If the UE does not supportenhanced CAG information, the LCI bit shall be set to "Length of CAG-IDs field is absent". |
+|  |
+| CAG-ID with additional information list indicator (CAILI) (bit 4 of octet q+5) |
+| Bit |
+| 4 |  |
+| 0 | CAG-ID with additional information list field is absent |
+| 1 | CAG-ID with additional information list field is present |
+| If the UE does not support enhanced CAG information, theCAILIbit shall be set to "CAG-ID with additional information list field is absent". |
+|  |
+| Length of CAG-ID without additional information list (octetq+6 to octetq+7) |
+| This field indicates length of CAG-ID fields in octet r to octet(r+4*m-1). |
+|  |
+| CAG-ID m (octetr+4*m-4to octetr+4*m-1)This field contains the 32 bit CAG-ID which is not associated with additional information. The coding of the CAG-ID is defined as the CAG-Identifier in 3GPP TS 23.003 [4].See NOTE 4. |
+|  |
+| If thelength of entry contentsfield indicates a length bigger than indicated infigure 9.11.3.86.1, receiving entity shall ignore any superfluous octets located at the end of theentry contents. |
+|  |
+| CAG-ID (octetx+3to octetx+6)This field contains the 32 bit CAG-ID which is associated with additional information. The additional information is indicated in remaining fields of figure 9.11.3.86.4. The coding of the CAG-ID is defined as the CAG-Identifier in 3GPP TS 23.003 [4]. |
+|  |
+| Time validity information indicator (TVII) (bit 1 of octet x+7) |
+| Bit |
+| 1 |  |
+| 0 | Time validity information field is absent |
+| 1 | Time validity information field is present |
+|  |
+| Spare validity information indicator (SVII) |
+| 0 | Spare validity information is absent |
+| 1 | Spare validity information is present |
+| The SVII bit indicates presence of a validity information not specified in the present version of the present document.See NOTE 5. |
+| If the SVII bit is set to "Spare validity information is present", the receiving entity shall ignore theCAG-ID with additional information field. |
+|  |
+| Timeperiod(octet x+25tooctet x+40) |
+| The timeperiodfieldiscoded as theroute selection descriptor component value field for "time window type"specified in 3GPP TS 24.526 [19]table 5.2.1. |
+|  |
+| If thelength ofCAG-ID with additional information contentsfield indicates a length bigger than indicated infigure 9.11.3.86.4, receiving entity shall ignore any superfluous octets located at the end of theCAG-ID with additional information contents. |
+|  |
+| NOTE 1:Thelength of extended CAG information list contents field shall be0if no subscription data for CAG information list exists. |
+| NOTE 2:The length of entry contents field shall be4if there is no allowed CAG-ID for the PLMN. |
+| NOTE3:For a givenPLMN ID, there shall be up to one entry field containing the MCCvalueand the MNCvalue of the PLMN ID. |
+| NOTE4:CAG-ID field containing a CAG-ID which is not associated with additional information, can be provided regardless whether theLCI bit is set to "Length of CAG-IDs field is absent" or "Length of CAG-IDs field is present". |
+| NOTE5:In a future version of the present document, semantic of this bit can be changed to indicate presence or absence of an additional validity information. |
 
 #### 9.11.3.87	NSAG information
 
@@ -28921,13 +34054,46 @@ In the NSAG information information element, at most 4 NSAG entries can contain 
 
 The NSAG information is a type 6 information element, with a minimum length of 9 octets and a maximum length of 3143 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| NSAG information IEI | octet 1 |
+| Length of NSAG information contents | octet 2octet 3 |
+| NSAG 1 | octet 4octet m |
+| NSAG 2 | octet m+1*octet n* |
+| … | octet n+1*octet u* |
+| NSAG x | octet u+1*octet v* |
+
 Figure 9.11.3.87.1: NSAG information information element
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of NSAG | octet 4 |
+|  |  |
+| NSAG identifier | octet5 |
+| S-NSSAIlist of NSAG | octet6octet j |
+| NSAG priority | octet j+1 |
+| TAI list | octet j+2*octet m* |
+
 Figure 9.11.3.87.2: NSAG
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length ofS-NSSAIlist of NSAG | octet6 |
+| S-NSSAI value1 | octet7octet k |
+| S-NSSAI value2 | octet k+1*octet s* |
+| … | octet s+1*octet i-1* |
+| S-NSSAI valuex | octet i*octet j* |
 
 Figure 9.11.3.87.3: S-NSSAI list of NSAG
 
 Table 9.11.3.87.1: NSAG information information element
+
+| NSAG part of the NSAG information information element (octet 4 to m)Each entry of the NSAG information information element consists of one NSAG in the NSAG information IE. |
+|---|
+| NSAG identifier(octet5)NSAG identifier field contains an 8 bits NSAG ID value. |
+| S-NSSAIlist of NSAG (octet6to j)S-NSSAI list of NSAG field consists of one or more S-NSSAIs in the configured NSSAI. Each S-NSSAI in S-NSSAI list of NSAG field is coded as the length and value part of S-NSSAI information element asspecified in subclause9.11.2.8 starting with the second octet, without the mapped HPLMN SST field and without the mapped HPLMN SD field. |
+| NSAG priority (octet j+1)The NSAG priority fieldrepresents the binary coded value of NSAGpriority for cell reselection (see3GPP TS 38.304 [28]) and random access (see 3GPP TS 38.321 [58]).The range of the NSAG priority is 0 to 255.A lower value indicates a higher priority, with 0 as the highest priority. |
+| TAI list (octet j+2 to m)The TAI list field is coded as the length and value partofthe 5GS tracking area identity list IE defined in subclause 9.11.3.9 starting with the second octet. |
 
 #### 9.11.3.88	ProSe relay transaction identity
 
@@ -28937,9 +34103,26 @@ The ProSe relay transaction identity information element is coded as shown in fi
 
 The ProSe relay transaction identity is a type 3 information element with a length of 2 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| ProSe relay transaction identity IEI | octet 1 |
+| ProSe relay transaction identity value | octet 2 |
+
 Figure 9.11.3.88.1: ProSe relay transaction identity information element
 
 Table 9.11.3.88.1: ProSe relay transaction identity information element
+
+|  |
+|---|
+| ProSe relay transaction identity value (octet 2) |
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  | No ProSe relay transaction identity assigned |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  | \ |
+| to |  | } ProSe relay transaction identity value |
+| 1 | 1 | 1 | 1 | 1 | 1 | 1 | 0 |  | / |
+| 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |  | Reserved |
+|  |  |  |  |  |  |  |  |  |  |
 
 #### 9.11.3.89	Relay key request parameters
 
@@ -28949,11 +34132,27 @@ The relay key request parameters information element is coded as shown in figure
 
 The relay key request parameters is a type 6 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Relay key request parametersIEI | octet 1 |
+| Length ofRelay key request parameters | octet 2octet 3 |
+| Relay service code | octet 4octet 6 |
+| Nonce_1 | octet 7octet 22 |
+| UE identity | octet 23octet n |
+
 Figure 9.11.3.89.1: Relay key request parameters information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0spare | 0spare | 0spare | 0spare | 0spare | 0spare | 0spare | UIT | octet 23 |
+| UE ID | octet 23+1octet n |
 
 Figure 9.11.3.89.2: UE identity
 
 Table 9.11.3.89.1: Relay key request parameters information element
+
+| Relay service code (octet 4 to 6)The relay service code contains 24-bit relay service code as defined in 3GPP TS 24.554 [19E].Nonce_1 (octet 7 to 22)Nonce_1 is the128-bit nonce value as defined in3GPP TS 24.554 [19E].UE ID type (UIT) (octet 23, bit 1)Bit10SUCI1CP-PRUKIDUE ID (octet 23+1 to n)UE ID indicates the value of the 5G ProSe remote UE identityor the5G ProSeendUE identity.If the UE ID type is set to SUCI, the UE ID is coded as 5GS mobile identity IE starting from octet 2 with the Type of identity set to "SUCI" (see subclause9.11.3.4).If the UE ID type is set toCP-PRUK ID, the UE ID is coded as theCP-PRUK ID as defined in 3GPPTS 33.503 [56]. |
+|---|
 
 #### 9.11.3.90	Relay key response parameters
 
@@ -28963,9 +34162,20 @@ The relay key response parameters information element is coded as shown in figur
 
 The relay key response parameters is a type 6 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Relay key response parametersIEI | octet 1 |
+| Length ofRelay key response parameters | octet 2octet 3 |
+| KeyKNR_ProSe | octet4octet 35 |
+| Nonce_2 | octet 36octet 51 |
+| CP-PRUK ID | octet 52octet m |
+
 Figure 9.11.3.90.1: Relay key response parameters information element
 
 Table 9.11.3.90.1: Relay key response parameters information element
+
+| KeyKNR_ProSe(octet 5 to 35)KeyKNR_ProSecontains a 256-bit root key that is established between the two entities that communicating using NR PC5 unicast link as defined in 3GPP TS 33.503 [56].Nonce_2 (octet 36to51)Nonce_2 is the128-bit nonce value as defined in3GPP TS 24.554 [19E].CP-PRUK ID (octet 52to m)TheCP-PRUK ID is defined in 3GPPTS 33.503 [56]. |
+|---|
 
 #### 9.11.3.91	Priority indicator
 
@@ -28975,9 +34185,25 @@ The Priority indicator information element is coded as shown in figure 9.11.3.9
 
 The Priority indicator is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Priority indicator IEI | 0Spare | 0Spare | MCSI | MPSI | octet 1 |
+
 Figure 9.11.3.91.1: Priority indicator
 
 Table 9.11.3.91.1: Priority indicator
+
+| MPS indicator (MPSI) (octet 1, bit 1) |
+|---|
+| Bit1 |
+| 01 | Access identity 1 not validAccess identity 1 valid |
+|  |
+| MCSindicator (MCSI) (octet 1, bit 2) |
+| Bit2 |
+| 0 | Access identity 2not valid |
+| 1 | Access identity 2valid |
+|  |
+| Bits 3, 4 are spare and shall be coded as zero. |
 
 #### 9.11.3.92	SNPN list
 
@@ -28987,13 +34213,46 @@ The SNPN list information element is coded as shown in figure 9.11.3.92.1, tabl
 
 The SNPN list is a type 4 information element with a minimum length of 11 octets and a maximum length of 137 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| SNPN listIEI | octet 1 |
+| Length ofSNPN listcontents | octet 2 |
+| SNPN identity1 | octet 3octet 11 |
+| SNPN identity2 | octet 12*octet 20* |
+| … | octet 21*octet (n*9-7)* |
+| SNPN identityn | octet (n*9-6)*octet (n*9+2)* |
+
 Figure 9.11.3.92.1: SNPN list information element
 
 Table 9.11.3.92.1: SNPN list information element
 
+| Each SNPN identity field is coded according to figure 9.11.3.92.2 and table 9.11.3.92.2. |
+|---|
+|  |
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MCC digit 2 | MCC digit 1 | octet(i*9-6) |
+| MNC digit 3 | MCC digit 3 | octet(i*9-5) |
+| MNC digit 2 | MNC digit 1 | octet(i*9-4) |
+| NID | octet(i*9-3)octet(i*9+2) |
+
 Figure 9.11.3.92.2: SNPN identity i
 
 Table 9.11.3.92.2: SNPN identity i
+
+| MCC, Mobile country code (octet (i*9-6), octet (i*9-5) bits 1 to 4) |
+|---|
+| The MCC field is coded as in ITU-TRecommendationE.212[42], annexA. |
+|  |
+| MNC, Mobile network code (octet (i*9-5)bits 5 to 8,octet (i*9-4)) |
+| The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, bits 5 to 8 of octet 6 shall be coded as "1111" |
+|  |
+| The MCC and MNC digits are coded as octets 6 to 8 of the Temporary mobile group identity IE in figure10.5.154 of 3GPPTS24.008[12]. |
+|  |
+| NID (octet(i*9-3) to octet (i*9+2)) |
+| NID field is coded as the NID fieldof NID IE as specified infigure9.2.7-2 and table9.2.7-2 of 3GPP TS 24.502 [18]starting with the octet 3 and ending with the octet 8. |
+|  |
 
 #### 9.11.3.93	N3IWF identifier
 
@@ -29003,13 +34262,48 @@ The N3IWF identifier information element is coded as shown in figure 9.11.3.93.
 
 The N3IWF identifier information element is a type 4 information element with a minimum length of 7 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| N3IWFidentifierIEI | octet 1 |
+| Length of N3IWF identifiercontents | octet 2 |
+| N3IWFidentifiertype | octet 3 |
+| N3IWFidentifierentry | octet 4octet k |
+
 Figure 9.11.3.93.1: N3IWF identifier information element
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| N3IWF IP address | octet 4octetm |
+
 Figure 9.11.3.93.2: N3IWF address entry (N3IWF identifier type = "IPv4", "IPv6" or "IPv4v6")
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| N3IWF FQDN | octet 4octet n |
 
 Figure 9.11.3.93.3: N3IWF identifier entry (N3IWF identifiertype ="FQDN")
 
 Table 9.11.3.93.1: N3IWF address entry
+
+| N3IWFidentifiertype (octet3) is set as follows: |
+|---|
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  | IPv4 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |  | IPv6 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |  | IPv4v6 |
+| 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |  | FQDN |
+| All other values are reserved. |
+|  |
+| If the N3IWFidentifiertype indicates IPv4, then theN3IWF IP addressfield contains an IPv4 address in octet4to octet7. |
+|  |
+| If the N3IWFidentifiertype indicates IPv6, then the N3IWF IP address field contains an IPv6 address in octet4to octet19. |
+|  |
+| If the N3IWFidentifiertype indicates IPv4v6, then the N3IWF IP address field contains two IP addresses. The first IP address is an IPv4 address in octet4to octet7. The second IP address is an IPv6 address in octet8to octet23. |
+|  |
+|  |
+|  |
+| If the N3IWFidentifiertype indicatesFQDN, theN3IWF FQDN field in octet4to octet n is encoded as defined insubclauses28.3.2.2.2, 28.3.2.2.3, 28.3.2.2.8 or28.3.2.2.9in3GPP TS 23.003 [4]. |
+|  |
 
 #### 9.11.3.94	TNAN information
 
@@ -29019,9 +34313,45 @@ The TNAN information information element is coded as shown in figure 9.11.3.94.
 
 The TNAN information information element is a type 4 information element with a minimum length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| TNAN information IEI | octet 1 |
+| Length of TNAN information contents | octet 2 |
+| 0Spare | SSID ind | TNGF ID ind | octet 3 |
+| TNGF ID length | octet 4* |
+| TNGF ID | octet 5*octet m* |
+| SSID length | octet m+1* |
+| SSID | octet m+2*octet u* |
+
 Figure 9.11.3.94.1: TNAN information information element
 
 Table 9.11.3.94.1: TNAN information information element
+
+| TNGF ID indication (TNGF ID ind) (bit 1 of octet 3) |
+|---|
+| The TNGF ID ind indicates whether the TNGF ID length field and the TNGF ID field are included in the TNAN information or not. |
+| Bit |
+| 1 |
+| 0 | TNGF ID length and TNGF ID not included |
+| 1 | TNGF ID length and TNGF ID included |
+|  |
+| SSID indication (SSID ind) (bit 2 of octet 3) |
+| The SSID ind indicates whether the SSID length field and the SSID field are included in the TNAN information or not. |
+| Bit |
+| 2 |
+| 0 | SSID length and SSID not included |
+| 1 | SSID length and SSID included |
+|  |
+| Bits 3 to 8 of octet 3 are spare and shall be coded as zero |
+|  |
+| TNGF ID length (octet 4) indicates the length of the TNGF ID field. |
+| TNGF ID (octets 5 to m) |
+| The TNGF ID field is an octet string that indicates the TNGF ID. |
+|  |
+| SSID length (octet m+1) indicates the length of the SSID field. |
+| SSID (octets m+2 to u) |
+| The SSID field is an octet string which shall have a maximum length of 32 octets (see IEEE Std 802.11 [59]). |
+|  |
 
 #### 9.11.3.95	RAN timing synchronization
 
@@ -29031,9 +34361,25 @@ The RAN timing synchronization information element is coded as shown in figure 
 
 The RAN timing synchronization is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| RAN timing synchronization IEI | octet 1 |
+| Length of RAN timing synchronization | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | RecReq | octet 3 |
+
 Figure 9.11.3.95.1: RAN timing synchronization information element
 
 Table 9.11.3.95.1: RAN timing synchronization information element
+
+| Request to reconnect to the network upon receiving an indication of a change in the RAN timing synchronization status (RecReq) (octet 3, bit 1) |
+|---|
+| Bit |
+| 1 |  |  |
+| 0 |  | Reconnection not requested |
+| 1 |  | Reconnection requested |
+|  |
+| Bits 2 to 8 of octet 3 are spare and shall be coded as zero. |
+|  |
 
 #### 9.11.3.96	Extended LADN information
 
@@ -29045,11 +34391,33 @@ The Extended LADN information is a type 6 information element with a minimum len
 
 The Extended LADN information information element can contain a minimum of 0 and a maximum of 8 different LADNs each including a DNN, an S-NSSAI and a 5GS tracking area identity list.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| ExtendedLADN information IEI | octet 1 |
+| Length ofExtendedLADN information contents | octet 2octet 3 |
+| LADN1 | octet 4octet a |
+| LADN 2 | octet a+1*octet b* |
+| … | octet b+1*octet g* |
+| LADN n | octet g+1*octet h* |
+
 Figure 9.11.3.96.1: Extended LADN information information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of DNN value | octet 4 |
+| DNN value | octet 5octet m |
+| S-NSSAI | octet m+1octet n |
+| 5GS tracking area identity list | octet n+1octet a |
 
 Figure 9.11.3.96.2: LADN
 
 Table 9.11.3.96.1: Extended LADN information information element
+
+| Value part of theExtendedLADN information information element (octet 4 to octet h)The value part of theExtendedLADN information information element consists of one or several LADNs. Each LADN (e.g. octet 4 to octet a) consistsofone DNN value, one S-NSSAI and one 5GS tracking area identity list. The length of each LADN is determined by the length of DNN value field, the length of S-NSSAI field and the length of 5GS tracking area identity list field.The UE shall store the complete list as received. If more than 8 LADNs are included in this information element, the UE shall store the first 8 LADNs and ignore the remaining octets of the information element.DNN value (octet 5 to octetm):DNN value field is coded as DNN value part of DNN information element asspecified in subclause9.11.2.1B starting with the third octet. |
+|---|
+| S-NSSAI (octet m+1 to n) (see NOTE 1)S-NSSAI is coded as the length and value part of S-NSSAI information element asspecified in subclause9.11.2.8 starting with the second octet.5GS tracking area identity list (octet m+1 to octet a): |
+| 5GS tracking area identity list field is coded as the length and the value part of the 5GS Tracking area identity list information element as specified in subclause 9.11.3.9 starting with the second octet. |
+| NOTE 1:The S-NSSAI included in theExtendedLADN information information element shall beanS-NSSAIfrom,an allowed NSSAIor anpartially allowedNSSAIprovided to the UE. |
 
 #### 9.11.3.97	Alternative NSSAI
 
@@ -29059,11 +34427,31 @@ The Alternative NSSAI information element is coded as shown in figure 9.11.3.97
 
 The Alternative NSSAI is a type 4 information element with minimum length of 2 octets and maximum length of 146 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Alternative NSSAI IEI | octet 1 |
+| Length of Alternative NSSAI contents | octet 2 |
+| Entry 1 | octet3*octeta* |
+| Entry 2 | octet a+1*octet b* |
+| … | octet b+1*octet c* |
+| Entry n | octet c+1*octet d* |
+
 Figure 9.11.3.97.1: Alternative NSSAI information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| S-NSSAIto be replaced | octet3octet x |
+| AlternativeS-NSSAI | octet x+1octet a |
 
 Figure 9.11.3.97.2: Entry
 
 Table 9.11.3.97.1: Alternative NSSAI information element
+
+| Value part of the Alternative NSSAI information element (octet 3 to d)The value part of the Alternative NSSAI information element consists of one or more entries, each entry consists of one S-NSSAI to be replaced and one alternative S-NSSAI.The number of entries shall not exceed eight.S-NSSAI to be replaced (octet3to x) (see NOTE)S-NSSAI to be replaced is coded as the length and value part of S-NSSAI information element asspecified in subclause9.11.2.8 starting with the second octet. |
+|---|
+| Alternative S-NSSAI (octet x+1 to a) |
+| Alternative S-NSSAI is coded as the length and value part of S-NSSAI information element asspecified in subclause9.11.2.8 starting with the second octet. |
+| NOTE:The S-NSSAI to be replaced shall be one S-NSSAI included in the allowed NSSAI. |
 
 #### 9.11.3.98	Type 6 IE container
 
@@ -29077,11 +34465,33 @@ The type 6 IE container information element is coded as shown in figure 9.11.3.
 
 The type 6 IE container is a type 6 information element with a minimum length of 6 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Type 6 IE container IEI | octet 1 |
+| Length of Type 6 IE container contents | octet 2 |
+|  | octet 3 |
+|  | octet 4 |
+| Type 6 IE container contents |  |
+|  | octet n |
+
 Figure 9.11.3.98.1: Type 6 IE container information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Type 6 IE 1 | octet 4octet j |
+| Type 6 IE 2 | octet j + 1*octet k* |
+| ….. | octet k+1*octet m* |
+| Type 6 IE z | octet m+1*octet n* |
 
 Figure 9.11.3.98.2: Type 6 IE container contents
 
 Table 9.11.3.98.1: Type 6 IE container contents
+
+| Type 6 IE container contents (octets 4 to n)The Type 6 IE container is coded according to figure 9.11.3.98.2. |
+|---|
+| The sender of this information element shall encode each type 6 IE included in the contents in format TLV-E. |
+| For the coding of each of the type 6 IEs in the type 6 IE container, see the definition of the respective type 6 IE insubclause9.11 |
+|  |
 
 #### 9.11.3.99	Non-3GPP access path switching indication
 
@@ -29091,9 +34501,27 @@ The Non-3GPP access path switching indication information element is coded as sh
 
 The Non-3GPP access path switching indication is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Non-3GPP access path switching indicationIEI | octet 1 |
+| Non-3GPP access path switching indicationlength | octet 2 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | NAPS | octet 3 |
+| Spare |  |  |
+
 Figure 9.11.3.99.1: Non-3GPP access path switching indication information element
 
 Table 9.11.3.99.1 : Non-3GPP access path switching indication information element
+
+| Non-3GPP access path switching(NAPS) (octet3, bit1) |
+|---|
+| This bit indicateswhethernon-3GPP access path switchingis supported. |
+| Bit |
+| 1 |
+| 0 |  |  |  | non-3GPP access path switchingnot supported |
+| 1 |  |  |  | non-3GPP access path switchingsupported |
+|  |
+| Bits2to8of octet3are spare and shall be coded as zero. |
+|  |
 
 #### 9.11.3.100	S-NSSAI location validity information
 
@@ -29105,15 +34533,67 @@ The S-NSSAI location validity information information element can contain per-S-
 
 The S-NSSAI location validity information information is a type 6 information element with a minimum length of 17 octets and a maximum length of 38611 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| S-NSSAIlocation validityinformation information IEI | octet 1 |
+| Length of S-NSSAIlocation validityinformation contents | octet 2octet 3 |
+| Per-S-NSSAIlocation validityinformation for S-NSSAI 1 | octet 4octet a |
+| Per-S-NSSAIlocation validityinformation for S-NSSAI 2 | octet(a+1)*octet b* |
+| … | octet(b+1)*octet c* |
+| Per-S-NSSAIlocation validityinformation for S-NSSAI n | octet(c+1)*octet d* |
+
 Figure 9.11.3.100.1: S-NSSAI location validity information information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of Per-S-NSSAIlocation validityinformation for S-NSSAI | octet4octet5 |
+| S-NSSAI | octet6octet e |
+| NS-AoS | octet e+1octeta |
 
 Figure 9.11.3.100.2: Per-S-NSSAI location validity information for S-NSSAI
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of NR CGIs | octet(e+1)octet(e+2) |
+| NR CGI 1 | octet(e+3)octet(e+10) |
+| NR CGI 2 | octet(e+11)*octet(e+18)* |
+| … | octet(e+19)*octetf* |
+| NR CGI w | octet(f+1)*octeta=(f+8)* |
+
 Figure 9.11.3.100.3: NS-AoS
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| NR Cell ID | octet(e+3)octet(e+7) |
+| MCC digit 2 | MCC digit 1 | octet(e+8) |
+| MNC digit 3 | MCC digit 3 | octet(e+9) |
+| MNC digit 2 | MNC digit 1 | octet(e+10) |
 
 Figure 9.11.3.100.4: NR CGI
 
 Table 9.11.3.100.1: S-NSSAI location validity information information element
+
+| S-NSSAI (octet6to e)S-NSSAI value is coded as the length and value part of S-NSSAI information element as specified in subclause 9.11.2.8 starting with the second octet. |
+|---|
+|  |
+| NS-AoS (octet e+1 to octeta) |
+| NS-AoS field consists of the Number of NRCGIs field and at leastoneNR CGI. |
+|  |
+| Number of NRCGIs(octet e+1 to octet e+2) |
+| The field indicates the number of NRCGIsincluded in octets e+3tooctet a.(NOTE). |
+|  |
+| NR CGI (octete+3toe+10) |
+| The NR CGI globally identifies an NR cell. It contains the NR Cell ID and the PLMN ID of that cell. |
+|  |
+| NR Cell ID (octete+3toe+7) |
+| The NR Cell ID consists of 36 bits identifying an NR Cell ID as specified in subclause 9.3.1.7 of 3GPP TS 38.413 [31], in hexadecimal representation. Bit 8 of octete+3is the most significant bit and bit 5 of octete+7is the least significant bit. Bits 1 to 4 of octete+7are spare and shall be coded as zero. |
+| MCC, Mobile country code (octete+8and bits 1 to 4 octete+9)The MCC field is coded as in ITU-T Recommendation E.212 [42],annexA. |
+|  |
+| MNC, Mobile network code (bits 5 to 8 of octete+9and octete+10)The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, bits 5 to 8 of octete+9shall be coded as "1111". |
+|  |
+| The MCC and MNC digits are coded as octets 6 to 8 of the Temporary mobile group identity IE in figure 10.5.154 of 3GPP TS 24.008 [12]. |
+|  |
+| NOTE:In this versionofthe specification, the maximum number of NRCGIsis 300. |
 
 #### 9.11.3.101	S-NSSAI time validity information
 
@@ -29125,15 +34605,73 @@ The S-NSSAI time validity information information element can contain per-S-NSSA
 
 The S-NSSAI time validity information information is a type 4 information element with a minimum length of 23 octets and a maximum length of 257 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| S-NSSAItime validity informationinformation IEI | octet 1 |
+| Length of S-NSSAItime validity informationcontents | octet 2 |
+| Per-S-NSSAItime validity informationfor S-NSSAI 1 | octet3octet a |
+| Per-S-NSSAI time validity informationfor S-NSSAI 2 | octet a+1*octet b* |
+| … | octet b+1*octet c* |
+| Per-S-NSSAItime validity informationfor S-NSSAI n | octet c+1*octet d* |
+
 Figure 9.11.3.101.1: S-NSSAI time validity information information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of Per-S-NSSAItime validityinformation for S-NSSAI | octet3 |
+| S-NSSAI | octet4octet e |
+| Per-S-NSSAItime validity information for the S-NSSAI | octet e+1octeta |
 
 Figure 9.11.3.101.2: Per-S-NSSAI time validity information for S-NSSAI 1
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length ofPer-S-NSSAItime validity information for the S-NSSAI | octete+1 |
+| Time window 1 | octete+2octetf |
+| Time window 2 | octetf+1*octetg* |
+| … | octet g+1*octet h* |
+| Time window m | octet h+1*octet i* |
+
 Figure 9.11.3.101.3: Per-S-NSSAI time validity information for the S-NSSAI
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length ofTime window 1 | octete+2 |
+| Start time | octete+3octete+10 |
+| Stop time | octete+11octete+18 |
+| 0Spare | 0Spare | 0Spare | 0Spare | Recurrence pattern | octet e+19* |
+| Recurrence end time | octet e+20*octet e+27* |
 
 Figure 9.11.3.101.4: Time window 1
 
 Table 9.11.3.101.1: S-NSSAI time validity information information element
+
+| S-NSSAI (octet6tooctete)S-NSSAI value is coded as the length and value part of S-NSSAI information element as specified insubclause 9.11.2.8 starting with the second octet. |
+|---|
+|  |
+| Start time (octet e+3 to octet e+10) |
+| The fieldindicates the time when the network slice identified by the S-NSSAI becomes available (for the first time if octet e+20 is included) andis represented by the number of seconds since 00:00:00 on 1 January 1970UTCand is encoded as the 64-bit NTP timestamp format defined in IETFRFC5905[36A], where binary encoding of the integer part is in the first 32 bits and binary encoding of the fraction part in the last 32 bits. |
+|  |
+| Stop time (octet e+11 to octet e+18) |
+| The fieldindicates the time when the network slice identified by the S-NSSAI becomes unavailable (for the first time if octet e+20 is included) andis represented by the number of seconds since 00:00:00 on 1 January 1970UTCand is encoded as the 64-bit NTP timestamp format defined in IETFRFC5905[36A], where binary encoding of the integer part is in the first 32 bits and binary encoding of the fraction part in the last 32 bits. |
+|  |
+| Recurrence pattern (bit 1 to bit 4 of octet e+19) |
+| Bits |
+| 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 |  | Everyday |
+| 0 | 0 | 0 | 1 |  | Every weekday |
+| 0 | 0 | 1 | 0 |  | Every week |
+| 0 | 0 | 1 | 1 |  | Every 2 weeks |
+| 0 | 1 | 0 | 0 |  | Every month (absolute) |
+| 0 | 1 | 0 | 1 |  | Every month (relative) |
+| 0 | 1 | 1 | 0 |  | Every quarter (absolute) |
+| 0 | 1 | 1 | 1 |  | Every quarter (relative) |
+| 1 | 0 | 0 | 0 |  | Every 6 months (absolute) |
+| 1 | 0 | 0 | 1 |  | Every 6 months (relative) |
+| All other values are reserved.The recurrence pattern indicates how often the time window is repeated. For example, if the time window starts at 13:00 on Wednesday January 1st2020 and stops at 13:30 on Wednesday January 1st2020 and the recurrent pattern is set to:-"Everyday", the time window repeats everyday from 13:00 to 13:30;-"Every week", the time window repeats every Wednesday from 13:00 to 13:30;-"Every month (absolute)", the time window repeats every 1stday of the monthfrom 13:00 to 13:30; and-"Every month (relative)", the time window repeats every month on the firstWednesday from 13:00 to 13:30. |
+| Recurrence end time (octet e+20 to octet e+27) |
+| The fieldindicates the time when the repetition of the time window ends. If the field is not included and octet e+19 is included in the IE, the time window is repeated indefinitely.The fieldis represented by the number of seconds since 00:00:00 on 1 January 1970UTCand is encoded as the 64-bit NTP timestamp format defined in IETFRFC5905[36A], where binary encoding of the integer part is in the first 32 bits and binary encoding of the fraction part in the last 32 bits. |
+|  |
 
 #### 9.11.3.102	Non-3GPP path switching information
 
@@ -29143,9 +34681,26 @@ The Non-3GPP path switching information information element is coded as shown in
 
 The Non-3GPP path switching information is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Non-3GPP path switching informationIEI | octet 1 |
+| Length ofNon-3GPP path switching information | octet 2 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | NSONR | octet 3 |
+| Spare |  |  |
+
 Figure 9.11.3.102.1: Non-3GPP path switching information information element
 
 Table 9.11.3.102.1: Non-3GPP path switching information information element
+
+| Non-3GPP path switching while using oldnon-3GPPresources(NSONR) (octet 3, bit 1) |
+|---|
+| Bit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | non-3GPP path switching while using oldnon-3GPPresourcesnot requested |
+| 1 |  |  |  | non-3GPP path switching while using oldnon-3GPPresourcesrequested |
+|  |
+| Bits 8 to 2 of octet 3 are spare and shall be coded as zero. |
+|  |
 
 #### 9.11.3.103	Partial NSSAI
 
@@ -29155,9 +34710,30 @@ The Partial NSSAI information element is coded as shown in figure 9.11.3.103.1,
 
 The Partial NSSAI information element is a type 6 information element, with a minimum length of 3 octets and a maximum length of 808 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Partial NSSAI IEI | octet 1 |
+| Length of partial NSSAI contents | octet 2 |
+|  | octet 3 |
+| S-NSSAI value1 | octet 4*octet i* |
+| Partial tracking area identity list 1 | octet(i+1)*octet j* |
+| … | octet(j+1)*octet l* |
+| S-NSSAI value n | octet (l+1)*octet k* |
+| Partial tracking area identity list n | octet (k+1)*octet m* |
+
 Figure 9.11.3.103.1: Partial NSSAI information element
 
 Table 9.11.3.103.1: Partial NSSAI information element
+
+| S-NSSAI value (octet 4 to i)(NOTE1) |
+|---|
+| S-NSSAI value is coded as the length and value part of S-NSSAI information element as specified in subclause 9.11.2.8 starting with the second octet. |
+|  |
+| Partial tracking area identity list (octet i+1 to j) |
+| The partial tracking area identity list field is coded as the length and value partofthe 5GS tracking area identity list IE defined in subclause 9.11.3.9 starting with the second octet (NOTE2). |
+|  |
+| NOTE1:The maximum number of S-NSSAIs included in this information element is 7.NOTE2:A registration area contains maximum 16 different tracking areas, therefore the partial tracking area identity list can contain at the most 15 tracking area identities.NOTE3:The AMF shall set the Length of partial NSSAI contents to 0 if there are no S-NSSAIs to deliver in a set of tracking areas of a registration area and, the UE shall delete any existing stored partially allowed NSSAI for the current registration area or partially rejected NSSAI for the current registration area. |
+|  |
 
 #### 9.11.3.104	AUN3 indication
 
@@ -29167,9 +34743,26 @@ The AUN3 indication information element is coded as shown in figure 9.11.3.104.
 
 The AUN3 indication is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| AUN3indicationIEI | octet 1 |
+| Length ofAUN3indication | octet 2 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | AUN3REG | octet 3 |
+| Spare |  |  |
+
 Figure 9.11.3.104.1: AUN3 indication information element
 
 Table 9.11.3.104.1: AUN3 indication information element
+
+| AUN3 device indication bit (AUN3REG) (octet 3, bit 1) |
+|---|
+| Bit |
+| 1 |  |  |
+| 0 |  | AUN3device registration is not requested |
+| 1 |  | AUN3device registration is requested |
+|  |
+| Bits 8 to 2 of octet 3 are spare and shall be coded as zero. |
+|  |
 
 9.11.3.105	Feature authorization indication
 
@@ -29179,9 +34772,29 @@ The Feature authorization indication is a type 4 information element with a mini
 
 The Feature authorization indication information element is coded as shown in Figure 9.11.3.105.1 and Table 9.11.3.105.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Featureauthorization indicationIEI | octet 1 |
+| Length ofFeature authorizationindicationcontents | octet 2 |
+| 0 | 0 | 0 | 0 | 0 | 0 | MBSRAI | octet 3 |
+| Spare | Spare | Spare | Spare | Spare | Spare |  |  |
+| Spare | octet 4octetn |
+
 Figure 9.11.3.105.1: Feature authorization indication information element
 
 Table 9.11.3.105.1: Feature authorization indication information element
+
+| MBSR authorization indication (MBSRAI)(octet3, bit 1 to bit 2) |
+|---|
+| This fieldindicates whether UE is authorized or not to operate as an MBSR node |
+| Bits |
+| 2 | 1 |  |  |  |
+| 0 | 0 |  |  | no information |
+| 0 | 1 |  |  | not authorized to operate as MBSR but allowed to operate as a UE |
+| 1 | 0 |  |  | authorized to operate as MBSR |
+| 1 | 1 |  |  | spare |
+|  |  |  |  |  |
+| Bits 3 to 8 of octet 3 are spare and shall be coded as zero. |
 
 #### 9.11.3.106	Payload container information
 
@@ -29191,9 +34804,23 @@ The Payload container information is a type 1 information element.
 
 The Payload container information information element is coded as shown in figure 9.11.3.106.1 and table 9.11.3.106.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Payload containerinformationIEI | 0 | 0spare | 0 | PRU | octet 1 |
+
 Figure 9.11.3.106.1: Payload container information information element
 
 Table 9.11.3.106.1: Payload container information information element
+
+| PRU related content (PRU)(octet 1, bit1) |
+|---|
+| Bit |
+| 1 |  |  |  |  |
+| 0 |  |  |  | Payload container not related to PRU |
+| 1 |  |  |  | Payload container related to PRU |
+|  |
+|  |
+| Bits 2to4 are spare and shall be coded as zero. |
 
 #### 9.11.3.107	AUN3 device security key
 
@@ -29203,9 +34830,29 @@ The AUN3 device security key information element is coded as shown in figure 9.
 
 The AUN3 device security key is a type 4 information element with a minimum length of 36 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| AUN3 device securitykeyIEI | octet 1 |
+| Length ofAUN3 device security keycontent | octet 2 |
+| 0 | 0 | 0 | 0 | 0 | 0 | ASKT | octet3 |
+| Spare |  |  |
+| Length of key content | octet 4 |
+| Keycontent | octet5octetn |
+
 Figure 9.11.3.107.1: AUN3 device security key information element
 
 Table 9.11.3.107.1: AUN3 device security key information element
+
+| AUN3 device security key type(ASKT) (bits1and 2of octet3) |
+|---|
+| The ASKT indicates whichAUN3 device security keyis included in the IE.Bits |
+| 2 | 1 |  |
+| 0 | 0 | Master session keyis included |
+| 0 | 1 | KWAGFkeyis included |
+| All other values are unused and shall be interpreted as "Master session key is included", if received by the UE. |
+|  |
+| Keycontent (octets5 to n)IfASKT is set to "Master session key included", the Key content contains the value of theMaster session keyas defined in3GPP TS 33.501 [24]. If ASKT is set to "KWAGFkey included", the Key content contains the value of theKWAGFkey as defined in 3GPP TS 33.501 [24]. |
+|  |
 
 #### 9.11.3.108	On-demand NSSAI
 
@@ -29215,11 +34862,28 @@ The On-demand NSSAI information element is coded as shown in figure 9.11.3.108.
 
 The On-demand NSSAI is a type 4 information element with a minimum length of 5 octets and a maximum length of 210 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| On-demand NSSAI IEI | octet 1 |
+| Length of On-demand NSSAI contents | octet 2 |
+| Information of on-demand S-NSSAI 1 | octet 3octet a |
+| Information of on-demand S-NSSAI 2 | octet(a+1)*octet b* |
+| … | octet(b+1)*octet c* |
+| Information of on-demand S-NSSAI n | octet(c+1)*octet d* |
+
 Figure 9.11.3.108.1: On-demand NSSAI information element
+
+| Length ofInformation of on-demand S-NSSAI | octet 3 |
+|---|---|
+| On-demand S-NSSAI | octet4octet a-3 |
+| Slice deregistration inactivity timer | octet(a-2)*octet a* |
 
 Figure 9.11.3.108.2: Information of on-demand S-NSSAI
 
 Table 9.11.3.108.1: On-demand NSSAI information element
+
+| Value part of the On-demand NSSAI information element (octet 3 to d)The value part of the On-demand NSSAI information element consists of one or more Information of on-demand S-NSSAIs. Each Information of on-demand S-NSSAI consists of one on-demand S-NSSAI andoptionallythe slice deregistration inactivity timer of the on-demand S-NSSAI. The number of information of on-demand S-NSSAIs shall not exceed 16.On-demand S-NSSAI (octet4to a-3)On-demand S-NSSAI is coded as the length and value part of S-NSSAI information element as specified in subclause 9.11.2.8 starting with the second octet.Slice deregistration inactivity timer (octet(a-2)* to a*)Slice deregistration inactivity timer is coded as the value part of Time durationinformation element as specifiedin subclause 9.9.3.68of 3GPP TS 24.301 [15]starting with the third octet. |
+|---|
 
 #### 9.11.3.109	Extended 5GMM cause
 
@@ -29229,9 +34893,27 @@ The Extended 5GMM cause information element is coded as shown in figure 9.11.3.
 
 The Extended 5GMM cause is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Extended 5GMM causeIEI | octet 1 |
+| Length ofExtended 5GMM causecontents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | Sat-NR | octet 3 |
+
 Figure 9.11.3.109.1: Extended 5GMM cause information element
 
 Table 9.11.3.109.1: Extended 5GMM cause information element
+
+| Sat-NR value (octet3, bit 1) |
+|---|
+|  |
+| Bit |
+| 1 |  |  |
+| 0 |  | Satellite NG-RAN allowedin PLMN |
+| 1 |  | Satellite NG-RAN not allowedin PLMN |
+|  |
+|  |
+| Bit2to 8of octet3arespare and shall be coded as zero. |
+|  |
 
 #### 9.11.3.110	RAT utilization control
 
@@ -29247,9 +34929,67 @@ The 5GSM capability information element is coded as shown in figure 9.11.4.1.1 
 
 The 5GSM capability is a type 4 information element with a minimum length of 3 octets and a maximum length of 15 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GSM capability IEI | octet 1 |
+| Length of 5GSM capability contents | octet 2 |
+| TPMIC | ATSSS-ST | EPT-S1 | MH6-PDU | RqoS | octet 3 |
+| 0 Spare | 0 Spare | 0 Spare | 0 Spare | 0 Spare | RTPMMI | SDNAEPC | APMQF | octet 4* |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | octet 5* -15* |
+| Spare |  |
+
 Figure 9.11.4.1.1: 5GSM capability information element
 
 Table 9.11.4.1.1: 5GSM capability information element
+
+| 5GSM capability value |
+|---|
+| RqoS (octet 3, bit 1) |
+| This bit indicates the 5GSM capability to support reflective QoS. |
+| 0 |  |  |  | Reflective QoS not supported |
+| 1 |  |  |  | Reflective QoS supported |
+|  |
+| Multi-homed IPv6 PDU session (MH6-PDU) (octet 3, bit 2) |
+| This bit indicates the 5GSM capability for Multi-homed IPv6 PDU session. |
+| 0 |  |  |  | Multi-homed IPv6 PDU session not supported |
+| 1 |  |  |  | Multi-homed IPv6 PDU session supported |
+|  |
+| Ethernet PDN type in S1 mode (EPT-S1) (octet 3, bit 3) |
+| This bit indicates UE's 5GSM capability for Ethernet PDN type in S1 mode. |
+| 0 |  |  |  | Ethernet PDN type in S1 mode not supported |
+| 1 |  |  |  | Ethernet PDN type in S1 mode supported |
+|  |
+| SupportedATSSSsteering functionalities and steering modes(ATSSS-ST) (octet 3, bits 4 to 7) |
+| Thesebitsindicate the 5GSM capabilityofATSSSsteering functionalities and steering modes |
+| 0 | 0 | 0 | 0 | ATSSS not supported |
+| 0 | 0 | 0 | 1 | ATSSS Low-Layer functionality with any steering modeallowed for ATSSS-LLsupported |
+| 0 | 0 | 1 | 0 | MPTCP functionalitywith any steering mode and ATSSS-LL functionality with only active-standby steering mode supported |
+| 0 | 0 | 1 | 1 | MPTCP functionality with any steering mode and ATSSS-LL functionality with any steering modeallowed for ATSSS-LLsupported |
+| 0 | 1 | 0 | 0 | MPQUIC functionality with any steering mode and ATSSS-LL functionality with only active-standby steering mode supported |
+| 0 | 1 | 0 | 1 | MPQUIC functionality with any steering mode and ATSSS-LL functionality with any steering modeallowed for ATSSS-LLsupported |
+| 0 | 1 | 1 | 0 | MPTCP functionality with any steering mode, MPQUIC functionality with any steering mode and ATSSS-LL functionality with only active-standby steering mode supported |
+| 0 | 1 | 1 | 1 | MPTCP functionality with any steering mode, MPQUIC functionalitywith any steering mode and ATSSS-LL functionality with any steering modeallowed for ATSSS-LLsupported |
+| All other values are reserved. |
+| Transfer of port management information containers (TPMIC) (octet 3, bit 8) |
+| This bit indicates the 5GSM capability to support transfer of port management information containers |
+| 0 |  |  |  | Transfer of port management information containers not supported |
+| 1 |  |  |  | Transfer of port management information containerssupported |
+|  |
+| Access performance measurements per QoS flowrule(APMQF)(octet 4, bit1) |
+| This bit indicates the 5GSM capability to support access performance measurements usingthe QoS flow of thenon default QoS rule, that is used by the service data flow (SDF) traffic. |
+| 0 |  |  |  | Access performance measurements per QoS flownot supported. |
+| 1 |  |  |  | Access performance measurements per QoS flowsupported. |
+|  |
+| Secondary DN authentication and authorization over EPC (SDNAEPC) (octet 4, bit 2) |
+| This bit indicates the 5GSM capability to support secondary DN authentication and authorization over EPC |
+| 0 |  |  |  | Secondary DN authentication and authorization over EPCnot supported |
+| 1 |  |  |  | Secondary DN authentication and authorization over EPCsupported |
+|  |
+| (S)RTP multiplexed media information (RTPMMI) (octet 4, bit 3) |
+| 0 |  |  |  | (S)RTPmultiplexedmediainformationnot supported. |
+| 1 |  |  |  | (S)RTPmultiplexedmediainformationsupported. |
+|  |
+| All other bits in octet5to 15 are spare and shall be coded as zero, if the respective octet is included in the information element. |
 
 #### 9.11.4.2	5GSM cause
 
@@ -29259,9 +34999,66 @@ The 5GSM cause information element is coded as shown in figure 9.11.4.2.1 and t
 
 The 5GSM cause is a type 3 information element with a length of 2 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GSM cause IEI | octet 1 |
+| Cause value | octet 2 |
+
 Figure 9.11.4.2.1: 5GSM cause information element
 
 Table 9.11.4.2.1: 5GSM cause information element
+
+| Cause value (octet 2) |
+|---|
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 |  | Operator determined barring |
+| 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 |  | Insufficient resources |
+| 0 | 0 | 0 | 1 | 1 | 0 | 1 | 1 |  | Missing or unknown DNN |
+| 0 | 0 | 0 | 1 | 1 | 1 | 0 | 0 |  | Unknown PDU session type |
+| 0 | 0 | 0 | 1 | 1 | 1 | 0 | 1 |  | User authentication or authorization failed |
+| 0 | 0 | 0 | 1 | 1 | 1 | 1 | 1 |  | Request rejected, unspecified |
+| 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 |  | Service option not supported |
+| 0 | 0 | 1 | 0 | 0 | 0 | 0 | 1 |  | Requested service option not subscribed |
+| 0 | 0 | 1 | 0 | 0 | 0 | 1 | 1 |  | PTI already in use |
+| 0 | 0 | 1 | 0 | 0 | 1 | 0 | 0 |  | Regular deactivation |
+| 0 | 0 | 1 | 0 | 0 | 1 | 0 | 1 |  | 5GS QoS not accepted |
+| 0 | 0 | 1 | 0 | 0 | 1 | 1 | 0 |  | Network failure |
+| 0 | 0 | 1 | 0 | 0 | 1 | 1 | 1 |  | Reactivation requested |
+| 0 | 0 | 1 | 0 | 1 | 0 | 0 | 1 |  | Semantic error in the TFT operation |
+| 0 | 0 | 1 | 0 | 1 | 0 | 1 | 0 |  | Syntactical error in the TFT operation |
+| 0 | 0 | 1 | 0 | 1 | 0 | 1 | 1 |  | Invalid PDU session identity |
+| 0 | 0 | 1 | 0 | 1 | 1 | 0 | 0 |  | Semantic errors in packet filter(s) |
+| 0 | 0 | 1 | 0 | 1 | 1 | 0 | 1 |  | Syntactical error in packet filter(s) |
+| 0 | 0 | 1 | 0 | 1 | 1 | 1 | 0 |  | Out of LADN service area |
+| 0 | 0 | 1 | 0 | 1 | 1 | 1 | 1 |  | PTI mismatch |
+| 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 |  | PDU session type IPv4 only allowed |
+| 0 | 0 | 1 | 1 | 0 | 0 | 1 | 1 |  | PDU session type IPv6 only allowed |
+| 0 | 0 | 1 | 1 | 0 | 1 | 1 | 0 |  | PDU session does not exist |
+| 0 | 0 | 1 | 1 | 1 | 0 | 0 | 1 |  | PDU sessiontype IPv4v6 only allowed |
+| 0 | 0 | 1 | 1 | 1 | 0 | 1 | 0 |  | PDU sessiontype Unstructured only allowed |
+| 0 | 0 | 1 | 1 | 1 | 0 | 1 | 1 |  | Unsupported 5QI value |
+| 0 | 0 | 1 | 1 | 1 | 1 | 0 | 1 |  | PDU session type Ethernet only allowed |
+| 0 | 1 | 0 | 0 | 0 | 0 | 1 | 1 |  | Insufficient resourcesfor specific slice and DNN |
+| 0 | 1 | 0 | 0 | 0 | 1 | 0 | 0 |  | Not supportedSSC mode |
+| 0 | 1 | 0 | 0 | 0 | 1 | 0 | 1 |  | Insufficient resources for specific slice |
+| 0 | 1 | 0 | 0 | 0 | 1 | 1 | 0 |  | Missing or unknown DNN in aslice |
+| 0 | 1 | 0 | 1 | 0 | 0 | 0 | 1 |  | Invalid PTI value |
+| 0 | 1 | 0 | 1 | 0 | 0 | 1 | 0 |  | Maximum data rate per UE for user-plane integrity protection is too low |
+| 0 | 1 | 0 | 1 | 0 | 0 | 1 | 1 |  | Semantic error in the QoS operation |
+| 0 | 1 | 0 | 1 | 0 | 1 | 0 | 0 |  | Syntactical error in the QoS operation |
+| 0 | 1 | 0 | 1 | 0 | 1 | 0 | 1 |  | Invalid mapped EPS bearer identity |
+| 0 | 1 | 0 | 1 | 0 | 1 | 1 | 0 |  | UAS services not allowed |
+| 0 | 1 | 0 | 1 | 1 | 1 | 1 | 1 |  | Semantically incorrect message |
+| 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 |  | Invalid mandatory information |
+| 0 | 1 | 1 | 0 | 0 | 0 | 0 | 1 |  | Message type non-existent or not implemented |
+| 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 |  | Message type not compatible with the protocol state |
+| 0 | 1 | 1 | 0 | 0 | 0 | 1 | 1 |  | Information element non-existent or not implemented |
+| 0 | 1 | 1 | 0 | 0 | 1 | 0 | 0 |  | Conditional IE error |
+| 0 | 1 | 1 | 0 | 0 | 1 | 0 | 1 |  | Message not compatible with the protocol state |
+| 0 | 1 | 1 | 0 | 1 | 1 | 1 | 1 |  | Protocol error, unspecified |
+|  |  |  |  |  |  |  |  |  |  |
+| Any other value received by the UE shall be treated as 0001 1111, " Request rejected, unspecified". Any other value received by the network shall be treated as 0110 1111, "protocol error, unspecified". |
 
 #### 9.11.4.3	Always-on PDU session indication
 
@@ -29271,9 +35068,23 @@ The Always-on PDU session indication information element is coded as shown in fi
 
 The Always-on PDU session indication is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Always-on PDU session indication IEI | 0Spare | 0Spare | 0Spare | APSI | octet 1 |
+
 Figure 9.11.4.3.1: Always-on PDU session indication
 
 Table 9.11.4.3.1: Always-on PDU session indication
+
+| Always-on PDU session indication (APSI) (octet 1) |
+|---|
+|  |
+| Bit |
+| 1 |  |
+| 0 | Always-on PDU session not allowed |
+| 1 | Always-on PDU session required |
+|  |
+| Bits 2, 3 and 4 are spare and shall be coded as zero, |
 
 #### 9.11.4.4	Always-on PDU session requested
 
@@ -29283,9 +35094,23 @@ The Always-on PDU session requested information element is coded as shown in fig
 
 The Always-on PDU session requested is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Always-on PDU session requested IEI | 0Spare | 0Spare | 0Spare | APSR | octet 1 |
+
 Figure 9.11.4.4.1: Always-on PDU session requested
 
 Table 9.11.4.4.1: Always-on PDU session requested
+
+| Always-on PDU session requested (APSR) (octet 1) |
+|---|
+|  |
+| Bit |
+| 1 |  |
+| 0 | Always-on PDU session not requested |
+| 1 | Always-on PDU session requested |
+|  |
+| Bits 2, 3 and 4 are spare and shall be coded as zero, |
 
 #### 9.11.4.5	Allowed SSC mode
 
@@ -29295,9 +35120,34 @@ The Allowed SSC mode information element is coded as shown in figure 9.11.4.5.1
 
 The Allowed SSC mode is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Allowed SSC mode IEI | 0Spare | SSC3 | SSC2 | SSC1 | octet 1 |
+
 Figure 9.11.4.5.1: Allowed SSC mode information element
 
 Table 9.11.4.5.1: Allowed SSC mode information element
+
+| SSC1(octet1, bit 1) |
+|---|
+| Bit |
+| 1 |  |
+| 0 | SSC mode 1 not allowed |
+| 1 | SSC mode 1 allowed |
+|  |  |
+| SSC2(octet1, bit 2) |
+| Bit |
+| 2 |  |
+| 0 | SSC mode 2 not allowed |
+| 1 | SSC mode 2 allowed |
+|  |  |
+| SSC3(octet1, bit 3) |
+| Bit |
+| 3 |  |
+| 0 | SSC mode 3 not allowed |
+| 1 | SSC mode 3 allowed |
+|  |
+| Bit 4 is spare and shall be encoded as zero. |
 
 #### 9.11.4.6	Extended protocol configuration options
 
@@ -29311,9 +35161,35 @@ The integrity protection maximum data rate is coded as shown in figure 9.11.4.7
 
 The integrity protection maximum data rate is a type 3 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Integrity protection maximum data rate IEI | octet 1 |
+| Maximum data rate per UE for user-plane integrity protectionfor uplink | octet 2 |
+| Maximum data rate per UE for user-plane integrity protection for downlink | octet 3 |
+
 Figure 9.11.4.7.1: Integrity protection maximum data rate information element
 
 Table 9.11.4.7.2: Integrity protection maximum data rate information element
+
+| Maximum data rate per UE for user-plane integrity protection for uplink (octet 2) |
+|---|
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  | 64 kbps (NOTE 3) |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  | NULL (NOTE 1) |
+| 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |  | Full data rate (NOTE 2) |
+| All other values are spare and shall not be used by a UE compliant to the present version of this specification. If received they shall be interpreted as "64 kbps". |
+|  |
+| Maximum data rate per UE for user-plane integrity protection for downlink (octet 3) |
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  | 64 kbps (NOTE 3) |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  | NULL (NOTE 1) |
+| 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |  | Full data rate (NOTE 2) |
+| All other values are spare and shall not be used by a UE compliant to the present version of this specification. If received they shall be interpreted as "64 kbps". |
+| NOTE 1:This value shall be used when N3 data transfer is not supported by the UEor when the UE does not support standalone NR connected to 5GCN. |
+| NOTE 2:If the UE supports N3 data transfer and supports standalone NR connected to 5GCN (thisincludes UEs supporting NR-NR dual connectivity, NR-E-UTRA dual connectivitywith MN terminated bearersor both of themas described in 3GPP TS 37.340 [51]), then the UE shall use this value. |
+| NOTE 3:The network can receive this value from a UE compliant to an earlier version of this specification. |
 
 #### 9.11.4.8	Mapped EPS bearer contexts
 
@@ -29323,13 +35199,47 @@ The mapped EPS bearer contexts information element is a type 6 information eleme
 
 The mapped EPS bearer contexts information element is coded as shown in figure 9.11.4.8.1, figure 9.11.4.8.2, figure 9.11.4.8.3 and table 9.11.4.8.1.
 
+|  | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|---|
+|  | Mapped EPSbearer contexts IEI | octet 1 |
+|  | Length ofMapped EPSbearer contexts contents | octet 2 |
+|  |  | octet 3 |
+|  | MappedEPSbearer context 1 | octet 4octet u |
+|  | MappedEPSbearer context 2 | octet u+1octet v |
+|  | … | octet v+1octet w |
+|  | MappedEPSbearer context n | octet w+1octet x |
+
 Figure 9.11.4.8.1: Mapped EPS bearer contexts
 
+|  | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|---|
+|  | EPS bearer identity | octet 4 |
+|  | Length ofMappedEPS bearer context | octet 5octet 6 |
+|  | Operation code | 0Spare | E bit | Number of EPS parameters | octet 7 |
+|  | EPS parameters list | octet 8*octet u* |
+
 Figure 9.11.4.8.2: Mapped EPS bearer context
+
+|  | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|---|
+|  | EPS parameter identifier 1 | octet8 |
+|  | Length of EPS parameter contents 1 | octet9 |
+|  | EPS parameter contents 1 | octet10octet h |
+|  | EPS parameter identifier 2 | octet h+1 |
+|  | Length of EPS parameter contents 2 | octet h+2 |
+|  | EPS parameter contents 2 | octet h+3octet i |
+|  | … | octet i+1octet j |
+|  | EPS parameter identifier N | octet j+1 |
+|  | Length of EPS parameter contents N | octet j+2 |
+|  | EPS parameter contents N | octet j+3octetu |
 
 Figure 9.11.4.8.3: EPS parameters list
 
 Table 9.11.4.8.1: Mapped EPS bearer contexts information element
+
+| EPS bearer identity (octet 4)Bits5to8 containthe EPS beareridentity,andarecoded as specified in subclause 9.3.2of 3GPP TS 24.301 [15].Bits1to4are spare and shall be coded as zero.Operation code (bits 8 to 7 of octet 7)Bits8 70 0 Reserved0 1 Create newEPS bearer1 0 Delete existingEPS bearer1 1 Modify existingEPS bearerBit 6 of octet 7 is spare and shall be coded as zero.E bit (bit 5 of octet 7)For the "create newEPS bearer" operation, the E bit is encoded as follows:Bit50parameters list is not included(NOTE)1parameters list is includedFor the "modify existingEPS bearer" operation, the E bit is encoded as follows:Bit50extension ofpreviously provided parameters list1replacement of allpreviously provided parameters listIf the E bit is set to "parameters list is included", the number ofEPSparameters field has non-zero value. If the E bit is set to "extension ofpreviously provided parameters list" or "replacement ofpreviously provided parameters list", the number of parameters fieldhasnon-zero value.If the E bit is set to "extension of previously provided parameters" and one of the parameters in the new parameters list already exists in the previously provided parameters, the parameter shall be set to the new value. If the E bit is set to "replacement of all previously provided parameters list" and a parameter in the previously provided parameters is not provided in the new parameters list, the parameter shall be deleted.For the "create new EPS bearer" operation and "delete existing EPS bearer" operation, bit 5 of octet 7 is ignored.Number ofEPSparameters (bits 4 to 1 of octet 7)The number ofEPSparameters contains the binary coding for the number ofEPSparameters in theEPSparameters list field. The number ofEPSparameters field is encoded in bits4through 1 of octet7where bit4is the most significant and bit 1 is the least significant bit.EPSparameters list (octets 8 to u)TheEPSparameters list contains a variable number ofEPSparameters.Each EPS parameter included in the EPS parameters list is of variable length and consists of:-an EPS parameter identifier (1 octet);-the length of the EPS parameter contents (1 octet); and-the EPS parameter contents itself (variable amount of octets).The EPS parameter identifier field is used to identify each EPS parameter included in the EPS parameters list and it contains the hexadecimal coding of the EPS parameter identifier. Bit 8 of the EPS parameter identifier field contains the most significant bit and bit 1 contains the least significant bit. In this version of the protocol, the following EPS parameter identifiers are specified:-01H (Mapped EPS QoSparameters);-02H (Mapped extended EPS QoSparameters); and-03H (Traffic flow template).-04H (APN-AMBR).-05H (extended APN-AMBR).If the EPS parameters list contains an EPS parameter identifier that is not supported by the receiving entity the corresponding EPS parameter shall be discarded.The length of EPS parameter contents field contains the binary coded representation of the length of the EPS parameter contents field. The first bit in transmission order is the most significant bit.When the parameter identifier indicatesmapped EPS QoSparameters,thelength andparameter contentsfield are coded as specified in subclause 9.9.4.3of 3GPP TS 24.301 [15].When the parameter identifier indicatesmapped extended EPS QoSparameters,thelength andparameter contentsfield are coded as specified in subclause 9.9.4.30of 3GPP TS 24.301 [15].When the parameter identifier indicatestraffic flow template,thelength and parameter contents fieldarecoded from octet 2 as shown figure 10.5.144 and table10.5.162of3GPP TS 24.008 [12].When the parameter identifier indicates APN-AMBR, the length and parameter contents field are coded as specified in subclause 9.9.4.2 of 3GPP TS 24.301 [15].When the parameter identifier indicates ExtendedAPN-AMBR, the length and parameter contents field are coded as specified in subclause 9.9.4.29 of 3GPP TS 24.301 [15]. |
+|---|
+| NOTE:This value shall not be usedIn this version of the specification. |
 
 #### 9.11.4.9	Maximum number of supported packet filters
 
@@ -29339,9 +35249,20 @@ The Maximum number of supported packet filters is coded as shown in figure 9.11
 
 The Maximum number of supported packet filters is a type 3 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Maximum number of supported packet filtersIEI | octet 1 |
+| Maximum number of supported packet filters | octet 2 |
+| Maximum number of supported packet filters (continued) | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | octet 3 |
+
 Figure 9.11.4.9.1: Maximum number of supported packet filters information element
 
 Table 9.11.4.9.1: Maximum number of supported packet filters information element
+
+| Maximum number of supported packet filters (octet 2 to 3) |
+|---|
+| In the Maximum number of supported packet filters field bit 8 of the first octet is the most significant bit and bit6of second octet is the least significant bit. Bit5to bit 1 of the second octet are spare bits and shall be coded as zero.The number of supported packet filters shall be in the range of 17 to 1024. |
+|  |
 
 #### 9.11.4.10	PDU address
 
@@ -29359,9 +35280,49 @@ The PDU address information element is coded as shown in figure 9.11.4.10.1 and
 
 The PDU address is a type 4 information element with minimum length of 7 octets and a maximum length of 31 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| PDU address IEI | octet 1 |
+| Length of PDU address contents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | SI6LLA | PDU session type value | octet 3 |
+| PDU address information | octet 4octet n |
+| SMF's IPv6 link local address | octet (n+1)*octet (n+16)* |
+
 Figure 9.11.4.10.1: PDU address information element
 
 Table 9.11.4.10.1: PDU address information element
+
+| PDU session type value (octet 3,bits 1 to 3) |
+|---|
+| Bits |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 1 |  | IPv4 |
+| 0 | 1 | 0 |  | IPv6 |
+| 0 | 1 | 1 |  | IPv4v6 |
+|  |
+| All other values are reserved. |
+|  |
+| SI6LLA (SMF's IPv6 link local address) bit (octet 3, bit 4) (see NOTE) |
+| Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | SMF's IPv6 link local address field is absent |
+| 1 |  |  |  | SMF's IPv6 link local address field is present |
+|  |
+| Bits5 to 8 of octet 3 are spare and shall be coded as zero. |
+|  |
+| PDU address information (octet 4 to n) |
+|  |
+| If the PDU session type value indicates IPv4, the PDU address information in octet 4 to octet 7 contains an IPv4 address. |
+|  |
+| If the PDU session type value indicates IPv6, the PDU address information in octet 4 to octet 11 contains an interface identifier for the IPv6 link local address. |
+|  |
+| If the PDU session type value indicates IPv4v6, the PDU address information in octet 4 to octet 11 contains an interface identifier for the IPv6 link local address and in octet 12 to octet 15 contains an IPv4 address. |
+|  |
+| SMF's IPv6 link local address (octet n+1 to n+16) |
+|  |
+| SMF's IPv6 link local address field contains SMF's IPv6 link local address. |
+|  |
+| NOTE:In the UE to network direction, the SI6LLA bit shall be set to "SMF's IPv6 link local address field is absent". |
 
 #### 9.11.4.11	PDU session type
 
@@ -29371,9 +35332,26 @@ The PDU session type information element is coded as shown in figure 9.11.4.11.
 
 The PDU session type is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| PDU session type IEI | 0Spare | PDU session type value | octet 1 |
+
 Figure 9.11.4.11.1: PDU session type information element
 
 Table 9.11.4.11.1: PDU session type information element
+
+| PDU session type value (octet 1, bit 1 to bit 3) |
+|---|
+| Bits |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 1 |  | IPv4 |
+| 0 | 1 | 0 |  | IPv6 |
+| 0 | 1 | 1 |  | IPv4v6 |
+| 1 | 0 | 0 |  | Unstructured |
+| 1 | 0 | 1 |  | Ethernet |
+| 1 | 1 | 1 |  | reserved |
+|  |
+| All other values are unused and shall be interpreted as "IPv4v6", if received by the UE or the network. |
 
 #### 9.11.4.12	QoS flow descriptions
 
@@ -29383,15 +35361,51 @@ The QoS flow descriptions information element is a type 6 information element wi
 
 The QoS flow descriptions information element is coded as shown in figure 9.11.4.12.1, figure 9.11.4.12.2, figure 9.11.4.12.3, figure 9.11.4.12.4, and table 9.11.4.12.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| QoS flow descriptions IEI | octet 1 |
+| Length of QoS flow descriptions contents | octet 2octet 3 |
+| QoS flow description 1 | octet 4octet u |
+| QoS flow description 2 | octet u+1octet v |
+| ... | octet v+1octet w |
+| QoS flow description n | octet w+1octet x |
+
 Figure 9.11.4.12.1: QoS flow descriptions information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | 0Spare | QFI | octet 4 |
+| Operation code | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | octet 5 |
+| 0Spare | E | Number of parameters | octet 6 |
+| Parameters list | octet 7*octet u* |
 
 Figure 9.11.4.12.2: QoS flow description
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Parameter 1 | octet 7octet m |
+| Parameter 2 | octet m+1octet n |
+| ... | octet n+1octet o |
+| Parameter n | octet o+1octet u |
+
 Figure 9.11.4.12.3: Parameters list
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Parameter identifier | octet 7 |
+| Length of parameter contents | octet 8 |
+| Parameter contents | octet 9octet m |
 
 Figure 9.11.4.12.4: Parameter
 
 Table 9.11.4.12.1: QoS flow descriptions information element
+
+| QoS flow identifier (QFI) (bits 6 to 1 of octet 4)QFI field contains the QoS flow identifier.Bits6 5 4 3 2 10 0 0 0 0 0no QoS flow identifier assigned0 0 0 0 01QFI 1to1 1 1 1 1 1QFI 63The network shall not set the QFI value to 0. |
+|---|
+| Operation code (bits 8 to 6 of octet 5)Bits8 7 60 0 1Create new QoS flow description0 1 0Delete existing QoS flow description0 1 1Modify existing QoS flow descriptionAll other values are reserved. |
+| E bit (bit 7 of octet 6)For the "create new QoS flow description" operation, the E bit is encoded as follows:Bit70reserved1parameters list is includedFor the "Delete existing QoS flow description" operation, the E bit is encoded as follows:Bit70parameters list is not included1reservedFor the "modify existing QoS flow description" operation, the E bit is encoded as follows:Bit70extension ofpreviously provided parameters1replacement of allpreviously provided parametersIf the E bit is set to "parameters list is not included", the number of parameters field has zero value. If the E bit is set to "parameters list is included", the number of parameters field has non-zero value. If the E bit is set to "extension ofpreviously provided parameters" or "replacement of allpreviously provided parameters", the number of parameters fieldhasnon-zero value.If the E bit is set to "extension of previously provided parameters" and one of the parameters in the new parameters list already exists in the previously provided parameters, the parameter shall be set to the new value.If the E bit is set to "replacement of all previously provided parameters list" and a parameter in the previously provided parameters is not provided in the new parameters list, the parameter shall be deleted.Number of parameters (bits 6 to 1 of octet6)The number of parameters field contains the binary coding for the number of parameters in the parameters list field. The number of parameters field is encoded in bits 6 through 1 of octet6where bit 6 is the most significant and bit 1 is the least significant bit.Parameters list (octets 7 to u)The parameters list contains a variable number of parameters.Each parameter included in the parameters list is of variable length and consists of:-a parameter identifier (1 octet);-the length of the parameter contents (1 octet); and-the parameter contents itself (variable amount of octets).The parameter identifier field is used to identify each parameter included in the parameters list and it contains the hexadecimal coding of the parameter identifier. Bit 8 of the parameter identifier field contains the most significant bit and bit 1 contains the least significant bit. In this version of the protocol, the following parameter identifiers are specified:-01H (5QI);-02H (GFBR uplink);-03H (GFBR downlink);-04H (MFBR uplink);-05H (MFBR downlink);-06H (Averaging window); and-07H (EPS bearer identity).If the parameters list contains a parameter identifier that is not supported by the receiving entity the corresponding parameter shall be discarded.The length of parameter contents field contains the binary coded representation of the length of the parameter contents field. The first bit in transmission order is the most significant bit.When the parameter identifier indicates 5QI, the parameter contents field contains the binary representation of 5G QoS identifier (5QI) that is one octet in length.5QI:Bits8 7 6 5 4 3 2 10 0 0 000 0 0Reserved0 0 0 000 0 15QI 10 0 0 00 0105QI 20 0 0 00 0 1 15QI 30 0 0 00 1 0 05QI 40 0 0 0 01 0 15QI 50 0 0 00 1 1 05QI 60 0 0 00 1 1 15QI 70 0 0 01 0 0 05QI 80 0 0 01 0 0 15QI 90 0 0 0 1 0 1 05QI 100 0 0 0 1 0 1 1toSpare0 1 0 00 0 0 00 1 0 00 0 0 15QI 650 1 0 00 0 1 05QI 660 1 0 00 0 1 15QI 670 1 0 00 1 0 0Spare0 1 0 00 1 0 15QI 690 1 0 00 1 1 05QI 700 1 0 00 1 1 15QI 710 1 0 01 0 0 05QI 720 1 0 0 10 0 15QI 730 1 0 01 0 1 05QI 740 1 0 01 0 1 15QI 750 1 0 01 1 0 05QI 760 1 0 0 1 1 01toSpare0 1 0 0 1 1 1 00 1 0 01 1 115QI 790 1 0 10 0 005QI 800 1 0 10 0 01Spare0 1 0 10 0 105QI 820 1 0 10 0 115QI 830 1 0 10 1 005QI 840 1 0 10 1 0 15QI 850 1 0 10 1 1 05QI 860 1 0 10 1 115QI 870 1 0 11 0 0 05QI 880 1 0 11 0 0 15QI 890 1 0 11 0 105QI 900 1 0 11 0 11toSpare0 1 1 1 1 1 1 11 0 0 0 0 0 0 0toOperator-specific 5QIs1 1 1 1 1 1 1 01 1 1 11 1 1 1ReservedThe network shallconsiderall other values not explicitly defined in this version of the protocolas unsupported.If the UE receives a 5QI value (excluding the reserved 5QI values) that it does not understand, the UE shall choose a 5QI value from the set of 5QI values defined in this version of the protocol (see 3GPP TS 23.501 [8]) and associated with:-GBR QoS flows, if the QoS flow includes a GFBR uplink parameter,a GFBR downlink parameter, a MFBR uplink parameter and a MFBR downlink parameter; and-non-GBR QoS flows, if the QoS flow does not includeany one ofa GFBR uplink parameter,a GFBR downlink parameter, a MFBR uplink parameterora MFBR downlink parameter.The UE shall use this chosen 5QI value for internal operations only. The UE shall use the received 5QI value in subsequent NAS signalling procedures.When the parameter identifier indicates "GFBR uplink", the parameter contents field contains one octet indicating the unit of theguaranteed flow bit rate for uplink followed by two octets containing the value oftheguaranteed flow bit rate for uplink.Unit of theguaranteed flow bit rate for uplink (octet 1)Bits8 7 6 5 4 3 2 10 0 0 0 0 0 0 0value is not used(see NOTE 2)0 0 0 0 0 0 0 1value is incremented in multiples of 1 Kbps0 0 0 0 0 0 1 0value is incremented in multiples of 4 Kbps0 0 0 0 0 0 1 1value is incremented in multiples of 16 Kbps0 0 0 0 0 1 0 0value is incremented in multiples of 64 Kbps0 0 0 0 0 1 0 1value is incremented in multiples of 256 Kbps0 0 0 0 0 1 1 0value is incremented in multiples of 1 Mbps0 0 0 0 0 1 1 1value is incremented in multiples of 4 Mbps0 0 0 0 1 0 0 0value is incremented in multiples of 16 Mbps0 0 0 0 1 0 0 1value is incremented in multiples of 64 Mbps0 0 0 0 1 0 1 0value is incremented in multiples of 256 Mbps0 0 0 0 1 0 1 1value is incremented in multiples of 1 Gbps0 0 0 0 1 1 0 0value is incremented in multiples of 4 Gbps0 0 0 0 1 1 0 1value is incremented in multiples of 16 Gbps0 0 0 0 1 1 1 0value is incremented in multiples of 64 Gbps0 0 0 0 1 1 1 1value is incremented in multiples of 256 Gbps0 0 0 1 0 0 0 0value is incremented in multiples of 1 Tbps0 0 0 1 0 0 0 1value is incremented in multiples of 4 Tbps0 0 0 1 0 0 1 0value is incremented in multiples of 16 Tbps0 0 0 1 0 0 1 1value is incremented in multiples of 64 Tbps0 0 0 1 0 1 0 0value is incremented in multiples of 256 Tbps0 0 0 1 0 1 0 1value is incremented in multiples of 1 Pbps0 0 0 1 0 1 1 0value is incremented in multiples of 4 Pbps0 0 0 1 0 1 1 1value is incremented in multiples of 16 Pbps0 0 0 1 1 0 0 0value is incremented in multiples of 64 Pbps0 0 0 1 1 0 0 1value is incremented in multiples of 256 PbpsOther values shall be interpreted as multiples of 256 Pbps in this version of the protocol.Value of the guaranteed flow bit rate for uplink(octets 2 and 3)Octets 2 and 3 represent the binary coded value of theguaranteed flow bit rate for uplinkin units defined by theunit of theguaranteed flow bit rate for uplink.When the UE indicates subscribed GFBR for uplink, the "GFBR uplink" parameter is not included in the "Parameters list".When the parameter identifier indicates "GFBR downlink", the parameter contents field contains one octet indicating the unit of theguaranteed flow bit rate for downlink followed by two octets containing the value oftheguaranteed flow bit rate for downlink.Unit of theguaranteed flow bit rate for downlink (octet 1)The coding is identical to that of the unit of theguaranteed flow bit rate for uplink.Value of the guaranteed flow bit rate for downlink(octets 2 and 3)Octets 2 and 3 represent the binary coded value of theguaranteed flow bit rate for downlinkin units defined by theunit of theguaranteed flow bit rate for downlink.When the UE indicates subscribed GFBR for downlink, the "GFBR downlink" parameter is not included in the "Parameters list".When the parameter identifier indicates "MFBR uplink", the parameter contents field contains the one octet indicating the unit of themaximum flow bit rate for uplink followed by two octets containing the value ofmaximum flow bit rate for uplink.Unit of themaximumflow bit rate for uplink (octet 1)The coding is identical to that of the unit of theguaranteed flow bit rate for uplink.Value of the maximum flow bit rate for uplink(octets 2 and 3)Octets 2 and 3 represent the binary coded value of themaximum flow bit rate for uplinkin units defined by theunit of themaximum flow bit rate for uplink.When the UE indicates subscribed MFBR for uplink, the "MFBR uplink" parameter is not included in the "Parameters list".When the parameter identifier indicates "MFBR downlink", the parameter contents field contains one octet indicating the unit of themaximum flow bit rate for downlink followed by two octets containing the value ofthemaximum flow bit rate for downlink.Unit of themaximumflow bit rate for downlink (octet 1)The coding is identical to that of the unit of theguaranteed flow bit rate for uplink.Value of the maximum flow bit rate for downlink(octets 2 and 3)Octets 2 and 3 represent the binary coded value of themaximum flow bit rate for downlinkin units defined by theunit of themaximum flow bit rate for downlink.When the UE indicates subscribed MFBR for downlink, the "MFBR downlink" parameter is not included in the "Parameters list".In this version of the protocol, for messages specified in the present document, the sending entity shall not request 0 kbps for both the maximum flow bit rate for downlink and the maximum flow bit rate for uplink at the same time. Any entity receiving a request for 0 kbps in both the maximum flow bit rate for downlink and the maximum flow bit rate for uplink shall consider that as a syntactical error (see clause7).When the parameter identifier indicates "averaging window", the parameter contents field contains the binary representation ofthe averaging window for bothuplink and downlinkin milliseconds andthe parameter contents field is two octets in length.When the parameter identifier indicatesEPS bearer identity, the length of EPS bearer identity is one octet,bits5to8of the parameter contents contain theEPS bearer identityas specified in subclause 9.3.2of 3GPP TS 24.301 [15]and bits1to4 of the parameter contentsare spare and shall be coded as zero.The UE shall not include theEPS bearer identityparameter in anymobile originated5GSM messages(seeNOTE 1). |
+|  |
+| NOTE1:The total number of EPS bearer identities included in all QoS flow descriptions of a UE cannot exceed fifteen.NOTE 2:In this release of the specifications if received it shall be interpreted as value is incremented in multiples of 1 Kbps.In earlier releases of specifications, the interpretation of this value is up to implementation. |
 
 #### 9.11.4.13	QoS rules
 
@@ -29409,15 +35423,65 @@ The QoS rules information element is a type 6 information element with a minimum
 
 The QoS rules information element is coded as shown in figure 9.11.4.13.1, figure 9.11.4.13.2, figure 9.11.4.13.3, figure 9.11.4.13.4 and table 9.11.4.13.1.
 
+|  | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|---|
+|  | QoS rules IEI | octet 1 |
+|  | Length of QoS rules IE | octet 2 |
+|  |  | octet 3 |
+|  | QoS rule 1 | octet 4octet u |
+|  | QoS rule 2 | octet u+1octet v |
+|  | … | octet v+1octet w |
+|  | QoS rule n | octet w+1octet x |
+
 Figure 9.11.4.13.1: QoS rules information element
+
+|  | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|---|
+|  | QoS rule identifier | octet 4 |
+|  | Length of QoS rule | octet 5 |
+|  |  | octet 6 |
+|  | Rule operation code | DQR bit | Number of packet filters | octet 7 |
+|  | Packet filter list | octet 8*octetm* |
+|  | QoS rule precedence | octetm+1* |
+|  | 0Spare | Segregation | QoS flow identifier (QFI) | octetm+2* |
 
 Figure 9.11.4.13.2: QoS rule (u=m+2)
 
+|  | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|---|
+|  | 0 | 0 | 0 | 0 | Packet filter identifier 1 | octet 8 |
+|  | Spare |  |  |
+|  | 0 | 0 | 0 | 0 | Packet filter identifier 2 | octet 9 |
+|  | Spare |  |  |
+|  | … |  |
+|  | 0 | 0 | 0 | 0 | Packet filter identifier N | octetN+7 |
+|  | Spare |  |  |
+
 Figure 9.11.4.13.3: Packet filter list when the rule operation is "modify existing QoS rule and delete packet filters" (m=N+7)
+
+|  | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|---|
+|  | 0 | 0 | Packet filter direction 1 | Packet filter identifier 1 | octet 8 |
+|  | Spare |  |  |  |
+|  | Length of packet filter contents 1 | octet 9 |
+|  | Packet filter contents 1 | octet 10octet m |
+|  | 0 | 0 | Packet filter direction 2 | Packet filter identifier 2 | octetk+1 |
+|  | Spare |  |  |  |
+|  | Length of packet filter contents 2 | octetk+2 |
+|  | Packet filter contents 2 | octetk+3octet n |
+|  | … | octet n+1octet y |
+|  | 0 | 0 | Packet filter direction N | Packet filter identifier N | octet y+1 |
+|  | Spare |  |  |  |
+|  | Length of packet filter contents N | octet y+2 |
+|  | Packet filter contents N | octet y+3octetm |
 
 Figure 9.11.4.13.4: Packet filter list when the rule operation is "create new QoS rule", or "modify existing QoS rule and add packet filters" or "modify existing QoS rule and replace all packet filters"
 
 Table 9.11.4.13.1: QoS rules information element
+
+| QoS rule identifier (octet 4)The QoS rule identifier field is used to identify the QoS rule.Bits8 7 6 5 4 3 2 10 0 0 0 0 0 0 0no QoS rule identifier assigned0 0 0 0 0 0 01QRI 1to1 1 1 1 1 1 1 1QRI 255The network shall not set the QRI value to 0.QoS rule precedence (octetm+1)The QoS rule precedence field is used to specify the precedence of the QoS rule among all QoS rules(both the signalled QoS rules as described in subclause 6.2.5.1.1.2andthederived QoS rulesas described in subclause 6.2.5.1.1.3)associated with the PDU session of the QoS flow. This field includes the binary coded value of the QoS rule precedence in the range from 0 to 255 (decimal). The higher the value of the QoS rule precedence field, the lower the precedence of that QoS rule is.For the "delete existing QoS rule" operation, the QoS rule precedence value field shall not be included. For the "create new QoS rule" operation, the QoS rule precedence value field shall be included.The value 80 (decimal) is reserved.Segregation bit (bit 7 of octet m+2)(seeNOTE1)In the UE to network direction the segregation bit indicates whether the UE is requesting the network to bind service data flows described by the QoS rule to a dedicated QoS Flow and it is encoded as follows. In the network to UE direction this bit is spare.Bit70Segregation not requested1Segregation requestedQoS flow identifier(QFI)(bits 6 to 1 ofoctetm+2)(seeNOTE1)The QoS flow identifier(QFI)fieldcontainsthe QoS flowidentifier.Bits6 5 4 3 2 10 0 0 0 0 0no QoS flow identifier assigned0 0 0 0 01QFI 1to1 1 1 1 1 1QFI 63The network shall not set the QFI value to 0.For the "delete existing QoS rule" operation, the QoS flow identifier value field shall not be included. For the "create new QoS rule" operation, the QoS flow identifier value field shall be included.DQR bit (bit 5 of octet 7)The DQR bit indicates whether the QoS rule is the default QoS rule and it is encoded as follows:Bit50the QoS rule is not the default QoS rule.1the QoS rule is the default QoS rule.Rule operation code (bits 8 to 6 of octet 7)Bits8 7 60 0 0Reserved0 0 1Create new QoS rule0 1 0Delete existing QoS rule0 1 1Modify existing QoS rule and add packet filters1 0 0Modify existing QoS rule and replaceallpacket filters1 0 1Modify existing QoS rule and delete packet filters1 1 0Modify existing QoS rule without modifying packet filters1 1 1ReservedNumber of packet filters (bits 4 to 1 of octet 7)The number of packet filters contains the binary coding for the number of packet filters in the packet filter list. The number of packet filters field is encoded in bits 4 through 1 of octet 7 where bit 4 is the most significant and bit 1 is the least significant bit. For the"delete existing QoS rule"operation and for the"modify existing QoS rule without modifying packet filters"operation, the number of packet filters shall be coded as 0. For the"create new QoS rule"operation and the"modify existing QoS rule and replaceallpacket filters"operation, the number of packet filters shall be greater than or equal to 0 and less than or equal to 15. For all other operations, the number of packet filters shall be greater than 0 and less than or equal to 15.Packet filter list (octets 8 tom)The packet filter list contains a variable number of packet filters.For the"delete existing QoS rule"operation, the length of QoS rule field is set to one.For the"delete existing QoS rule"operation and the"modify existing QoS rule without modifying packet filters"operation, the packet filter list shall be empty.For the"modify existing QoS rule and delete packet filters"operation, the packet filter list shall contain a variable number of packet filter identifiers. This number shall be derived from the coding of the number of packet filters field in octet 7.For the"create new QoS rule"operation and for the"modify existing QoS rule and replaceallpacket filters"operation, the packet filter list shall contain 0 or a variable number of packet filters. This number shall be derived from the coding of the number of packet filters field in octet 7.For the"modify existing QoS rule and add packet filters"operation, the packet filter list shall contain a variable number of packet filters. This number shall be derived from the coding of the number of packet filters field in octet 7.Each packet filter is of variable length and consists ofa packet filter direction (2 bits);-a packet filter identifier (4 bits);-the length of the packet filter contents (1 octet); and-the packet filter contents itself (variable amount of octets).Thepacket filter directionfield is used to indicate for what traffic direction the filter applies.Bits6 50 0reserved0 1downlink only(see NOTE 2)1 0uplink only1 1bidirectionalThe packet filter identifier field is used to identify each packet filter in a QoS rule. The least significant 4 bits are used. When the UE requests to "create new QoS rule", "modify existing QoS rule and replace all packet filters" or "modify existing QoS rule and add packet filters", the packet filter identifier values shall be set to 0.The length of the packet filter contents field contains the binary coded representation of the length of the packet filter contents field of a packet filter. The first bit in transmission order is the most significant bit.The packet filter contents field is of variable size and contains a variable number (at least one) of packet filter components. Each packet filter component shall be encoded as a sequence of a one octet packet filter component type identifier and a fixed length packet filter component value field. The packet filter component type identifier shall be transmitted first.In each packet filter, there shall not be more than one occurrence of each packet filter component type. Among the"IPv4 remote address type"and"IPv6 remote address/prefix length type"packet filter components, only one shall be present in one packet filter. Among the"IPv4 local address type"and"IPv6 local address/prefix length type"packet filter components, only one shall be present in one packet filter. Among the"single local port type"and"local port range type"packet filter components, only one shall be present in one packet filter. Among the"single remote port type"and"remote port range type"packet filter components, only one shall be present in one packet filter.Among the "destination MAC address type" and "destination MAC address range type" packet filter components, only one shall be present in one packet filter. Among the "source MAC address type" and "source MAC address range type" packet filter components, only one shall be present in one packet filter.If the "match-all type" packet filter component is present in the packet filter, no other packet filter component shall be present in the packet filter and the length of the packet filter contents field shall be set to one.If the "Ethertype type" packet filter component is present in the packet filter and the "Ethertype type" packet filter component value is neither "0800H" (forIPv4) nor "86DDH" (for IPv6), no IP packet filter component shall be present in the packet filter.The term "IP packet filter component" refers to "IPv4 remote address type", "IPv4 local address type", "IPv6 remote address/prefix length type", "IPv6 local address/prefix length type", "Protocol identifier/Next header type", "Single local port type", "Local port range type", "Single remote port type", "Remote port range type", "Security parameter index type", "Type of service/Traffic class type" and "Flow label type".The term "(S)RTPmultiplexedmediapacket filter component" refers to "synchronizationsource (SSRC)type"and"payloadtypetype".The"(S)RTPmultiplexedmediapacket filter component"packet filter componentcan not be presentin the packet filterwith no"IP packet filter component".The term local refers to the UE and the term remote refers to an external network entity.Packet filter component type identifierBits8 7 6 5 4 3 2 10 0 0 0 0 0 0 1Match-all type(see NOTE 2)0 0 0 1 0 0 0 0IPv4 remote address type0 0 0 1 0 0 0 1IPv4 local address type0 0 1 0 0 0 0 1IPv6 remote address/prefix length type0 0 1 0 0 0 1 1IPv6 local address/prefix length type0 0 1 1 0 0 0 0Protocol identifier/Next header type0 1 0 0 0 0 0 0Single local port type0 1 0 0 0 0 0 1Local port range type0 1 0 1 0 0 0 0Single remote port type0 1 0 1 0 0 0 1Remote port range type0 1 1 0 0 0 0 0Security parameter index type0 1 1 1 0 0 0 0Type of service/Traffic class type1 0 0 0 0 0 0 0Flow label type1 0 0 0 0 0 0 1Destination MAC address type1 0 0 0 0 0 1 0Source MAC address type1 0 0 0 0 0 1 1802.1Q C-TAG VID type1 0 0 0 0 1 0 0802.1Q S-TAG VID type1 0 0 0 0 1 0 1802.1Q C-TAG PCP/DEI type1 0 0 0 0 1 1 0802.1Q S-TAG PCP/DEI type1 0 0 0 0 1 1 1Ethertype type1 0 0 0 1 0 0 0Destination MAC address range type1 0 0 0 1 0 0 1Source MAC address range type1 0 0100 0 1Synchronizationsource (SSRC)type1 0 010010PayloadtypetypeAll other values are reserved.The description and valid combinations of packet filter component type identifiers in a packet filter are defined in 3GPP TS 23.501 [8].For "match-all type", the packet filter component shall not include the packet filter component value field.For"IPv4 remote address type", the packet filter component value field shall be encoded as a sequence of a four octet IPv4 address field and a four octet IPv4 address mask field. The IPv4 address field shall be transmitted first.For"IPv4 local address type", the packet filter component value field shall be encoded as defined for"IPv4 remote address type".For"IPv6 remote address/prefix length type", the packet filter component value field shall be encoded as a sequence of a sixteen octet IPv6 address field and one octet prefix length field. The IPv6 address field shall be transmitted first.For"IPv6 local address/prefix length type", the packet filter component value field shall be encoded as defined for"IPv6 remote address /prefix length".For"protocol identifier/Next header type", the packet filter component value field shall be encoded as one octet which specifies the IPv4 protocol identifier or Ipv6 next header.For"single local port type"and"single remote port type", the packet filter component value field shall be encoded as two octetswhich specifya port number.For"local port range type"and"remote port range type", the packet filter component value field shall be encoded as a sequence of a two octet port range low limit field and a two octet port range high limit field. The port range low limit field shall be transmitted first.For"security parameter index", the packet filter component value field shall be encoded as four octets which specifythe IPSec security parameter index.For"type of service/traffic class type", the packet filter component value field shall be encoded as a sequence of a one octet type-of-service/traffic class field and a one octet type-of-service/traffic class mask field. The type-of-service/traffic class field shall be transmitted first.For"flow label type", the packet filter component value field shall be encoded as three octets which specifythe IPv6 flow label. The bits 8 through 5 of the first octet shall be spare whereas the remaining 20 bits shall contain the IPv6 flow label.For"destination MAC address type"and"source MAC address type", the packet filter component value field shall be encoded as 6 octets which specify a MAC address.When thepacket filter directionfield indicates "bidirectional", the destination MAC address is the remote MAC address and the source MAC address is the local MAC address.For"802.1Q C-TAG VID type", the packet filter component value field shall be encoded as two octets which specify the VID of the customer-VLAN tag (C-TAG). The bits 8 through 5 of the first octet shall be spare whereas the remaining 12 bits shall contain the VID.If there are more than one C-TAG in the Ethernet frame header, the outermost C-TAG isevaluated.For"802.1Q S-TAG VID type", the packet filter component value field shall be encoded as two octets which specify the VID of the service-VLAN tag (S-TAG). The bits 8 through 5 of the first octet shall be spare whereas the remaining 12 bits shall contain the VID.If there are more than one S-TAG in the Ethernet frame header, the outermost S-TAG isevaluated.For"802.1Q C-TAG PCP/DEI type", the packet filter component value field shall be encoded as one octet which specifies the 802.1Q C-TAG PCP and DEI. The bits 8 through 5 of the octet shall be spare, the bits 4 through 2 contain the PCP and bit 1 contains the DEI.If there are more than one C-TAG in the Ethernet frame header, the outermost C-TAG isevaluated.For"802.1Q S-TAG PCP/DEI type", the packet filter component value field shall be encoded as one octet which specifies the 802.1Q S-TAG PCP. The bits 8 through 5 of the octet shall be spare, the bits 4 through 2 contain the PCP and bit 1 contains the DEI.If there are more than one S-TAG in the Ethernet frame header, the outermost S-TAG isevaluated.For"ethertype type", the packet filter component value field shall be encoded as two octets which specify an ethertype.For "destination MAC address range type", the packet filter component value field shall be encoded as a sequence of a 6 octet destination MAC address range low limit field and a 6 octet destination MAC address range high limit field. The destination MAC address range low limit field shall be transmitted first.When the packet filter direction field indicates "bidirectional", the destination MAC address range is the remote MAC address range.For "source MAC address range type", the packet filter component value field shall be encoded as a sequence of a 6 octet source MAC address range low limit field and a 6 octet source MAC address range high limit field. The source MAC address range low limit field shall be transmitted first.When the packet filter direction field indicates "bidirectional", the source MAC address is the local MAC address range.For "synchronizationsource (SSRC)type", the packet filter component value field shall be encoded as4 octet SSRC fieldwhich specifythesynchronization sourceidentifierin the RTP header as specified inIETFRFC3550[71].For "payloadtypetype", the packet filter component value field shall be encoded asoctet payloadtypefield which containsthe binary representationof aninteger between1(inclusive)and127(inclusive)as specified inIETFRFC3550[71]. |
+|---|
+| NOTE 1:Octet m+2 shall not be included without octet m+1.NOTE 2:The "Match-all type" packet filter component type identifier shall not be used with packet filter direction "downlink only". |
 
 Editor's note [WI: XRM_Ph2, CR 6576]:	Other packet filter component types are FFS.
 
@@ -29429,9 +35493,22 @@ The Session-AMBR information element is coded as shown in figure 9.11.4.14.1 an
 
 The Session-AMBR is a type 4 information element with a length of 8 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Session-AMBR IEI | octet 1 |
+| Length of Session-AMBR contents | octet 2 |
+| Unit for Session-AMBR for downlink | octet 3 |
+| Session-AMBR for downlink | octet 4-5 |
+| Unit for Session-AMBR for uplink | octet 6 |
+| Session-AMBR for uplink | octet 7-8 |
+
 Figure 9.11.4.14.1: Session-AMBR information element
 
 Table 9.11.4.14.1: Session-AMBR information element
+
+| Unit for Session-AMBR for downlink (octet 3)0 0 0 0 0 0 0 0value is not used(see NOTE)0 0 0 0 0 0 0 1value is incremented in multiples of 1 Kbps0 0 0 0 0 0 1 0value is incremented in multiples of 4 Kbps0 0 0 0 0 0 1 1value is incremented in multiples of 16 Kbps0 0 0 0 0 1 0 0value is incremented in multiples of 64 Kbps0 0 0 0 0 1 0 1value is incremented in multiples of 256 kbps0 0 0 0 0 1 1 0value is incremented in multiples of 1 Mbps0 0 0 0 0 1 1 1value is incremented in multiples of 4 Mbps0 0 0 0 1 0 0 0value is incremented in multiples of 16 Mbps0 0 0 0 1 0 0 1value is incremented in multiples of 64 Mbps0 0 0 0 1 0 1 0value is incremented in multiples of 256 Mbps0 0 0 0 1 0 1 1value is incremented in multiples of 1 Gbps0 0 0 0 1 1 0 0value is incremented in multiples of 4 Gbps0 0 0 0 1 1 0 1value is incremented in multiples of 16 Gbps0 0 0 0 1 1 1 0value is incremented in multiples of 64 Gbps0 0 0 0 1 1 1 1value is incremented in multiples of 256 Gbps0 0 0 1 0 0 0 0value is incremented in multiples of 1 Tbps0 0 0 1 0 0 0 1value is incremented in multiples of 4 Tbps0 0 0 1 0 0 1 0value is incremented in multiples of 16 Tbps0 0 0 1 0 0 1 1value is incremented in multiples of 64 Tbps0 0 0 1 0 1 0 0value is incremented in multiples of 256 Tbps0 0 0 1 0 1 0 1value is incremented in multiples of 1 Pbps0 0 0 1 0 1 1 0value is incremented in multiples of 4 Pbps0 0 0 1 0 1 1 1value is incremented in multiples of 16 Pbps0 0 0 1 1 0 0 0value is incremented in multiples of 64 Pbps0 0 0 1 1 0 0 1value is incremented in multiples of 256 PbpsOther values shall be interpreted as multiples of 256 Pbps in this version of the protocol.Session-AMBR for downlink(octets 4 and 5)Octets 4 and 5 represent the binary coded value of PDU session aggregated maximum bit rate for downlink in units defined by octet 3.Unit for Session-AMBR for uplink (octet 6)The coding is identical to the unit coding defined for Session-AMBR for downlink(octet 3)Session-AMBR for uplink(octets 7 and 8)Octets 7 and 8 represent the binary coded value of PDU session aggregated maximum bit rate for uplink in units defined by octet 6. |
+|---|
+| NOTE:In this release of the specifications if received it shall be interpreted as value is incremented in multiples of 1 Kbps.In earlier releases of specifications, the interpretation of this value is up to implementation. |
 
 #### 9.11.4.15	SM PDU DN request container
 
@@ -29441,9 +35518,18 @@ The SM PDU DN request container information element is coded as shown in figure�
 
 The SM PDU DN request container is a type 4 information element with minimal length of 3 octets and maximum length of 255 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| SM PDU DN request container informationIEI | octet 1 |
+| SM PDU DN request containerinformationlength | octet 2 |
+| DN-specific identity | octets 3*-n* |
+
 Figure 9.11.4.15.1: SM PDU DN request container information element
 
 Table 9.11.4.15.1: SM PDU DN request container information element
+
+| DN-specific identity(octet 3 to octet n)ADN-specific identity of the UE in the network access identifier (NAI) format according to IETF RFC 7542 [37], encoded as UTF-8 string. |
+|---|
 
 #### 9.11.4.16	SSC mode
 
@@ -29453,9 +35539,26 @@ The SSC mode information element is coded as shown in figure 9.11.4.16.1 and ta
 
 The SSC mode is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| SSC mode IEI | 0Spare | SSC mode value | octet 1 |
+
 Figure 9.11.4.16.1: SSC mode information element
 
 Table 9.11.4.16.1: SSC mode information element
+
+| SSC mode value (octet 1, bit 1 to bit 4) |
+|---|
+| Bits |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 1 |  | SSC mode 1 |
+| 0 | 1 | 0 |  | SSC mode 2 |
+| 0 | 1 | 1 |  | SSC mode 3 |
+| 1 | 0 | 0 |  | unused; shall be interpreted as "SSC mode 1", if received by the network |
+| 1 | 0 | 1 |  | unused; shall be interpreted as "SSC mode 2", if received by the network |
+| 1 | 1 | 0 |  | unused; shall be interpreted as "SSC mode 3", if received by the network |
+|  |
+| All other values are reserved. |
 
 #### 9.11.4.17	Re-attempt indicator
 
@@ -29465,9 +35568,30 @@ The Re-attempt indicator information element is coded as shown in figure 9.11.4
 
 The Re-attempt indicator is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Re-attempt indicator IEI | octet 1 |
+| Length of Re-attempt indicator contents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | EPLMNC | RATC | octet 3 |
+
 Figure 9.11.4.17.1: Re-attempt indicator
 
 Table 9.11.4.17.1: Re-attempt indicator
+
+| RATC (octet 3, bit 1) |
+|---|
+| Bit |
+| 1 |  |
+| 0 | UE is allowed to re-attempt the procedure in S1 mode |
+| 1 | UE is not allowed to re-attempt the procedure in S1 mode |
+|  |
+| EPLMNC (octet 3, bit 2) |
+| Bit |
+| 2 |  |
+| 0 | UE is allowed to re-attempt the procedure in an equivalent PLMNor equivalent SNPN |
+| 1 | UE is not allowed to re-attempt the procedure in an equivalent PLMNor equivalent SNPN |
+|  |
+| Bits 3 to 8 of octet 3 are spare and shall be encoded as zero. |
 
 #### 9.11.4.18	5GSM network feature support
 
@@ -29477,9 +35601,35 @@ The 5GSM network feature support information element is coded as shown in figure
 
 The 5GSM network feature support is a type 4 information element with a minimum length of 3 octets and a maximum length of 15 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GSM network feature supportIEI | octet 1 |
+| Length of5GSM network feature supportcontents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | NAPS | EPT-S1 | octet 3 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | octet 4* -15* |
+| Spare |  |
+
 Figure 9.11.4.18.1: 5GSM network feature support information element
 
 Table 9.11.4.18.1: 5GSM network feature support information element
+
+| 5GSMnetwork feature supportcontents |
+|---|
+| Ethernet PDN type in S1 mode (IEPT-S1)(octet 3, bit 1) |
+| This bit indicatesnetwork's capability for Ethernet PDN type in S1 mode. |
+| 0 |  |  |  | Ethernet PDN type in S1 mode not supported |
+| 1 |  |  |  | Ethernet PDN type in S1 mode supported |
+|  |
+|  |
+| Non-3GPP access path switching(NAPS) (octet3, bit2) |
+| This bit indicateswhethernon-3GPP access path switchingis supported. |
+| Bit |
+| 2 |
+| 0 |  |  |  | non-3GPP access path switchingnot supported |
+| 1 |  |  |  | non-3GPP access path switchingsupported |
+|  |
+| All other bits in octet 3 to 15 are spare and shall be coded as zero, if the respective octet is included in the information element. |
+|  |
 
 #### 9.11.4.20	Serving PLMN rate control
 
@@ -29493,9 +35643,27 @@ The 5GSM congestion re-attempt indicator information element is coded as shown i
 
 The 5GSM congestion re-attempt indicator is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 5GSM congestion re-attempt indicator IEI | octet 1 |
+| Length of 5GSM congestion re-attempt indicator contents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | CATBO | ABO | octet 3 |
+
 Figure 9.11.4.21.1: 5GSM congestion re-attempt indicator
 
 Table 9.11.4.21.1: 5GSM congestion re-attempt indicator
+
+| ABO (All PLMNs Back-off timer) (octet 3, bit 1) |
+|---|
+| Bit |
+| 1 |  |
+| 0 | The back-off timer is applied in the registered PLMNor registered SNPN. |
+| 1 | The back-off timer is applied in all PLMNsor all equivalent SNPNs. |
+|  |
+| CATBO (Current Access Type Back-off Timer) (octet 3, bit 2)Bit2 |
+| 0 | The back-off timer is applied in both 3GPP access type and non-3GPP access type |
+| 1 | The back-off timer is applied in the current access type |
+| Bits 3 to 8 of octet 3 are spare and shall be encoded as zero. |
 
 #### 9.11.4.22	ATSSS container
 
@@ -29505,9 +35673,18 @@ The ATSSS container information element is coded as shown in figure 9.11.4.22.1
 
 The ATSSS container is a type 6 information element with a minimum length of 3 octets and a maximum length of 65538 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| ATSSS container IEI | octet 1 |
+| Length of ATSSS container contents | octet 2octet 3 |
+| ATSSS container contents | octet 4*octet x* |
+
 Figure 9.11.4.22.1: ATSSS container information element
 
 Table 9.11.4.22.1: ATSSS container information element
+
+| ATSSS container contents are defined in 3GPP TS 24.193 [13B]. |
+|---|
 
 #### 9.11.4.23	Control plane only indication
 
@@ -29517,9 +35694,24 @@ The control plane only indication information element is coded as shown in figur
 
 The control plane only indication is a type 1 information element.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Control plane only indication IEI | 0Spare | 0Spare | 0Spare | CPOI value | octet 1 |
+
 Figure 9.11.4.23.1: Control plane only indication information element
 
 Table 9.11.4.23.1: Control plane only indication information element
+
+| Control plane only indication value (CPOI) (octet 1) |
+|---|
+| Bit |
+| 1 |  |
+| 0 | reserved |
+| 1 | PDUsessioncan be used for control plane CIoT5GSoptimization only |
+|  |
+| The value 0 is reserved. If received, it shall be interpreted as if thecontrol planeonlyindication IE was not included in the message. |
+| Bits 4 to 2 of octet 1 are spare and shall be all encoded as zero. |
+|  |
 
 #### 9.11.4.24	IP header compression configuration
 
@@ -29531,9 +35723,24 @@ The IP header compression configuration is a type 4 information element with a m
 
 The optional Additional IP header compression parameters container field conveys the additional header compression context setup parameters as specified in 3GPP TS 23.501 [8] in a generic container. This field corresponds to the profile-specific information in the header of the ROHC IR packet type in IETF RFC 5795 [39B].
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| IP header compression configuration IEI | octet 1 |
+| Length ofIP header compression configuration contents | octet 2 |
+| Spare | P0x0104 | P0x0103 | P0x0102 | P0x0006 | P0x0004 | P0x0003 | P0x0002 | octet 3 |
+| MAX_CID | octet 4 |
+|  | octet 5 |
+| AdditionalIPheader compression context setup parameters type | octet 6* |
+| AdditionalIPheader compression context setup parameters container | octet 7* |
+|  |  |
+|  | octet n* |
+
 Figure 9.11.4.24.1: IP header compression configuration information element
 
 Table 9.11.4.24.1: IP header compression configuration information element
+
+| ROHC Profiles (octet 3)The ROHC Profiles shall indicate which of the ROHC profiles is supported. When a particular bit is set to 1, this indicates that the corresponding profile is supported. The No Compression profile 0x0000 (see IETF RFC 5795[39B]) shall always be supported. When all the bits are set to 0, this indicates that only the No Compression profile 0x0000 is supported.Profile 0x0002 support indicator (see IETF RFC 3095[33A]and IETF RFC 4815[38A]) (octet 3 bit 1)0RoHC profile 0x0002 (UDP/IP) is not supported1RoHC profile 0x0002 (UDP/IP) is supportedProfile 0x0003 support indicator (see IETF RFC 3095[33A]and IETF RFC 4815[38A]) (octet 3 bit 2)0RoHC profile 0x0003 (ESP/IP) is not supported1RoHC profile 0x0003 (ESP/IP) is supportedProfile 0x0004 support indicator (see IETF RFC 3843[34A]and IETF RFC 4815[38A]) (octet 3 bit 3)0RoHC profile 0x0004 (IP) is not supported1RoHC profile 0x0004 (IP) is supportedProfile 0x0006 support indicator (see IETF RFC6846[40B]) (octet 3 bit 4)0RoHC profile 0x0006 (TCP/IP) is not supported1RoHC profile 0x0006 (TCP/IP) is supportedProfile 0x0102 support indicator (see IETF RFC 5225[39A]) (octet 3 bit 5)0RoHC profile 0x0102 (UDP/IP) is not supported1RoHC profile 0x0102 (UDP/IP) is supportedProfile 0x0103 support indicator (see IETF RFC 5225[39A]) (octet 3 bit 6)0RoHC profile 0x0103 (ESP/IP) is not supported1RoHC profile 0x0103 (ESP/IP) is supportedProfile 0x0104 support indicator (see IETF RFC 5225[39A]) (octet 3 bit 7)0RoHC profile 0x0104 (IP) is not supported1RoHC profile 0x0104 (IP) is supportedBits 8 is spare and shall be set to 0.MAX_CID (octet 4 and octet 5)This is the MAX_CID value as specified in 3GPP TS 36.323 [25]. It is encoded in binary coding with a value in the range from 1 to 16383.AdditionalIPheader compression context parameters type (octet 6).The AdditionalIPheader compression context parameters type octet indicates the profile associated with the profile-specific information in the AdditionalIPheader compression context parameters container.Bits8 7 6 54 3 2 1Type0 0 0 0 0 0 0 00x0000 (No Compression)0 0 0 0 0 0 0 10x0002 (UDP/IP)0 0 0 0 0 0 1 00x0003 (ESP/IP)0 0 0 0 0 0 1 10x0004 (IP)0 0 0 0 0 1 0 00x0006 (TCP/IP)0 0 0 0 0 1 0 10x0102 (UDP/IP)0 0 0 0 0 1 1 00x0103 (ESP/IP)0 0 0 0 0 1 1 10x0104 (IP)0 0 0 0 1 0 0 0Other0 0 0 0 1 0 0 1to1 1 1 1 1 1 1 1SpareAdditionalIPheader compression context parameters container (octets 7 to n).AdditionalIPheader compression context parameters container carries the profile-specific information (see IETF RFC 5795[39B]). The maximum size is 251 octets.NOTE:If the AdditionalIPheader compression context setup parameters container is included, then the AdditionalIPheader compression context parameters type shall be included in the octet 6. |
+|---|
 
 #### 9.11.4.25	DS-TT Ethernet port MAC address
 
@@ -29543,9 +35750,20 @@ The DS-TT Ethernet port MAC address information element is coded as shown in fig
 
 The DS-TT Ethernet port MAC address is a type 4 information element with a length of 8 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| DS-TT Ethernet port MAC address IEI | octet 1 |
+| Length of DS-TT Ethernet port MAC address contents | octet 2 |
+|  | octet 3 |
+| DS-TT Ethernet port MAC address contents |  |
+|  | octet 8 |
+
 Figure 9.11.4.25.1: DS-TT Ethernet port MAC address information element
 
 Table 9.11.4.25.1: DS-TT Ethernet port MAC address information element
+
+| DS-TT Ethernet port MAC address contents (octets 3 to8)The DS-TT Ethernet port MAC address contents consist of the binary representation of the MAC address of the DS-TT Ethernet port used for the PDU session, starting with the LSB bit of the first octet of the MAC address included in bit 1 of octet 3. |
+|---|
 
 #### 9.11.4.26	UE-DS-TT residence time
 
@@ -29555,9 +35773,20 @@ The UE- DS-TT residence time information element is coded as shown in figure 9.
 
 The UE-DS-TT residence time is a type 4 information element with a length of 10 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE-DS-TT residence time IEI | octet 1 |
+| Length ofUE-DS-TT residence time contents | octet 2 |
+|  | octet 3 |
+| UE-DS-TT residence time contents |  |
+|  | octet 10 |
+
 Figure 9.11.4.26.1: UE-DS-TT residence time information element
 
 Table 9.11.4.26.1: UE-DS-TT residence time information element
+
+| UE-DS-TT residence time contents (octets 3 to 10)TheUE-DS-TT residence time contents contain theUE-DS-TT residence time encoded as specified for the correctionField in IEEEStd1588-2019[43B], with the LSB bit of the first octet of theUE-DS-TT residence time included in bit 1 of octet 3. If theUE-DS-TT residence time.is too big to be represented, all bits of octets 3 to 10 shall be coded as "1" except the MSB bit of octet 10. |
+|---|
 
 #### 9.11.4.27	Port management information container
 
@@ -29567,9 +35796,19 @@ The Port management information container information element is coded as shown 
 
 The Port management information container is a type 6 information element with a minimum length of 4 octets and a maximum length of 65538 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Port management information container IEI | octet 1 |
+| Length of Port management information container contents | octet 2octet 3 |
+| Port management information container | octet 4octet n |
+
 Figure 9.11.4.27.1: Port management information container information element
 
 Table 9.11.4.27.1: Port management information container information element
+
+| Port management information container (octet 4 to n) |
+|---|
+| Aport management service messageasspecified inclause 8 of3GPPTS 24.539[19BA]. |
 
 #### 9.11.4.28	Ethernet header compression configuration
 
@@ -29579,9 +35818,26 @@ The Ethernet header compression configuration information element is coded as sh
 
 The Ethernet header compression configuration is a type 4 information element with the length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Ethernet header compression configuration IEI | octet 1 |
+| Length of Ethernet header compression configuration contents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | CID Length | octet 3 |
+
 Figure 9.11.4.28.1: Ethernet header compression configuration information element
 
 Table 9.11.4.28.1: Ethernet header compression configuration information element
+
+| Length of CID field value (CID Length) (octet 3 bits 1 and 2) |
+|---|
+|  |
+| Bit |
+| 2 | 1 |  |
+| 0 | 0 | Ethernet header compression not used |
+| 0 | 1 | 7 bits |
+| 1 | 0 | 15 bits |
+|  |
+| All other values shall be interpreted as "7 bits".Bits 3 to 8 of octet 3 are spare and shall be coded as zero. |
 
 #### 9.11.4.29	Remote UE context list
 
@@ -29591,13 +35847,94 @@ The Remote UE context list information element is coded as shown in figure 9.11
 
 The Remote UE context list is a type 6 information element with a minimum length of 16 octets and a maximum length of 65538 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Remote UE context list IEI | octet 1 |
+| Length of remote UE context list contents | octet 2 |
+|  | octet 3 |
+| Number of remote UE contexts | octet 4 |
+| Remote UE context 1 | octet 5 |
+|  |  |
+|  | octet a |
+| … | octet a+1*octet b* |
+| Remote UE context k | octet b+1* |
+|  |  |
+|  | octet c* |
+
 Figure 9.11.4.29.1: Remote UE context list
 
 Table 9.11.4.29.1: Remote UE context list
 
+| Remote UE context (octet 5 etc) |
+|---|
+|  |
+| The contents of remote UE context are applicable for one individual UE and are coded as shown infigure 9.11.4.29.2 and table 9.11.4.29.2. |
+|  |
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of remote UE context | octet 5 |
+| 0Spare | 0Spare | 0Spare | 0Spare | Remote UE ID format | Remote UE ID type | octet 6 |
+| Length of remote UE ID | octet 7 |
+| Remote UE ID | octet 8 |
+|  |  |
+|  | Octet j* |
+| Spare | UPRI4I | TPRI4I | Protocol used by remote UE | octet j+1* |
+| Address information | octet j+2*octet j+k* |
+| HPLMN ID | octet (j+k+1)*octet (j+k+3)* |
+
 Figure 9.11.4.29.2: Remote UE context
 
 Table 9.11.4.29.2: Remote UE context
+
+| Remote UE ID type (bits 1 to 3 of octet 6) |
+|---|
+| Bits |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 1 |  | UP-PRUK ID |
+| 0 | 1 | 0 |  | CP-PRUK ID |
+| 0 | 1 | 1 |  | IMEI |
+| 1 | 0 | 0 |  | IMEISV |
+| All other values are reserved. |
+|  |
+| Remote UE ID format (bit 4 of octet 6) (NOTE) |
+| Bit |
+| 4 |  |  |  |  |
+| 0 |  |  |  | Network access identifier (NAI) |
+| 1 |  |  |  | 64-bit string |
+|  |
+| Bits 5 to 8 of octet 6 are spare and shall be coded as zero. |
+|  |
+| Remote UE ID (octet 8 to octet j) |
+| The UP-PRUK IDas specified in 3GPP TS 33.503 [56],theCP-PRUK IDas specified in 3GPP TS 33.503 [56], the IMEI or the IMEISVof the 5G ProSe Remote UE.If theremote UE ID typefield indicates "UP-PRUK ID" or "CP-PRUK ID", and the remote UE ID formatfield indicates"NAI",the remote UE IDfieldcontainstheUP-PRUK IDor the CP-PRUK IDin the NAI format as defined in 3GPP TS 23.003 [4], encoded as UTF-8 string. If theremote UE ID typefield indicates "UP-PRUK ID", and the remote UE ID formatfield indicates"64-bit string",the remote UE IDfieldcontainstheUP-PRUK IDasa 64-bit string, encoded using binary encoding.If theremote UE ID typefield indicates "IMEI" or "IMEISV", the remote UE IDfieldcontainstheIMEI or the IMEISV encoded as5GS mobile identityinformation elementfor type of identity "IMEI" or "IMEISV"as specified in subclause9.11.3.4, starting with the fourth octet. |
+|  |
+| Protocol used by remote UE(octet j+1, bits 1 to 3)Bits |
+| 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 |  | No IP info |
+| 0 | 0 | 1 |  | IPv4 |
+| 0 | 1 | 0 |  | IPv6 |
+| 1 | 0 | 0 |  | Unstructured |
+| 1 | 0 | 1 |  | Ethernet |
+| All other values are reserved. |
+|  |
+| TCP port range for IPv4 indicator (TPRI4I)(octet j+1, bits4) |
+| Bit |
+| 4 |  |  |
+| 0 |  | TCP port range for IPv4 absent |
+| 1 |  | TCP port range for IPv4 present |
+|  |
+| UDP port range for IPv4 indicator (UPRI4I)(octet j+1, bits5) |
+| Bit |
+| 5 |  |  |
+| 0 |  | UDPport range for IPv4 absent |
+| 1 |  | UDPport range for IPv4 present |
+|  |
+| Bits4to 8 of octet j+1 are spare and shall be coded as zero. |
+|  |
+| The length of remote UE ID field contains the binary coded representation of the length of the remote UE ID field. The first bit in transmission order is the most significant bit. |
+| If the Protocol used by remote UE indicates IPv4 and:-TPRI4I bit indicates "TCP port range for IPv4 absent" and UPRI4I bit indicates "UDPport range for IPv4 absent",the Address information in octet j+2 to octet j+5 contains the IPv4 address.-TPRI4I bit indicates "TCP port range for IPv4 present" and UPRI4I bit indicates "UDPport range for IPv4 absent",the Address information in octet j+2 to octet j+9 contains the IPv4 address followed by the TCP port range field.-TPRI4I bit indicates "TCP port range for IPv4 absent" and UPRI4I bit indicates "UDPport range for IPv4 present",the Address information in octet j+2 to octet j+9 contains the IPv4 address followed by the UDP port range field.-TPRI4I bit indicates "TCP port range for IPv4 present" and UPRI4I bit indicates "UDPport range for IPv4 present",the Address information in octet j+2 to octet j+13 contains the IPv4 address followed by the UDP port range field followed by the TCP port range field.See NOTE.The UDP port rangefieldconsists of the lowest UDP port numberfieldfollowed by the highest UDP port numberfield, of the UDP port range assignedtothe remote UE in the NAT function of 5G ProSe layer-3 UE-to-networkrelay.The TCP port rangefieldconsists of the lowest TCP port numberfieldfollowed by highest TCP port numberfield, of the TCP port range assignedtothe remote UE in the NAT function of 5G ProSe layer-3 UE-to-networkrelay.Each port numberfieldis two octets long andbit 8 of first octet of the port number field represents the most significant bit of the port number and bit 1 of second octet of the port number field the least significant bit.If theProtocol used by remote UEindicates IPv6, the Address information in octet j+2 to octet j+9 contains the /64 IPv6 prefix of a remote UE. Bit 8 of octet j+2 represents the most significant bit of the /64 IPv6 prefix and bit 1 of octet j+9 the least significant bit.If theProtocol used by remote UEindicates Ethernet, the Address information in octet j+2 to octet j+7 contains the remote UE MAC address. Bit 8 of octet j+2 represents the most significant bit of the MAC address and bit 1 of octet j+7 the least significant bit.If theProtocol used by remote UEindicates Unstructured, the Address information octets are not included.If theProtocol used by remote UEindicates No IP info, the Address information octets are not included |
+| If the Remote UE ID type field indicates "PRUK ID" and the Remote UE ID format field indicates "64-bit string", then the HPLMN ID field is present otherwise the HPLMN ID field is absent. The HPLMN ID field indicates HPLMN ID of the 5G ProSe remote UE and is coded as value part of the PLMN ID information element as specified in 3GPP TS 24.554 [19E] subclause 11.3.33 starting with the second octet. |
+| NOTE:In the present release of the specification, providing information for IP protocols other than UDP or TCP is not specified |
 
 #### 9.11.4.30	Requested MBS container
 
@@ -29607,15 +35944,73 @@ The Requested MBS container information element is coded as shown in figure 9.1
 
 The Requested MBS container is a type 6 information element with a minimum length of 8 octets and a maximum length of 65538 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Requested MBS container IEI | octet 1 |
+| Length of Requested MBS container contents | octet 2octet 3 |
+| multicastMBS session information 1 | octet 4octet i |
+| multicastMBS session information 2 | octet i+1*octet l* |
+| … | octet l+1*octet m* |
+| multicastMBS session information p | octet m+1*octet n* |
+
 Figure 9.11.4.30.1: Requested MBS container information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0 | 0 | 0 | 0 | MBS operation | Type ofmulticastMBS session ID | octet 4 |
+| spare |  |  |  |
+| multicastMBS session ID | octet 5octet i |
 
 Figure 9.11.4.30.2: multicast MBS session information
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| TMGI | octet 5 |
+|  | octet i |
+
 Figure 9.11.4.30.3: multicast MBS session ID for Type of multicast MBS session ID = "Temporary Mobile Group Identity (TMGI)"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Source IP address information | octet 5octet v |
+| Destination IP address information | Octet v+1Octet i |
 
 Figure 9.11.4.30.4: multicast MBS session ID for Type of multicast MBS session ID = "Source specific IP multicast address for IPv4" or "Source specific IP multicast address for IPv6"
 
 Table 9.11.4.30.1: Requested MBS container information element
+
+| Type ofmulticastMBS session ID (bits 1 to 2 of octet 4) |
+|---|
+| Bits |
+| 2 | 1 |  |  |
+| 0 | 1 |  | Temporary Mobile Group Identity (TMGI) |
+| 1 | 0 |  | Source specific IP multicast address for IPv4 |
+| 1 | 1 |  | Source specific IP multicast address for IPv6 |
+| All other values are reserved. |
+|  |
+| MBS operation (bits 3 to 4 of octet 4) |
+| Bits |
+| 4 | 3 |  |  |
+| 0 | 1 |  | JoinmulticastMBS session |
+| 1 | 0 |  | LeavemulticastMBS session |
+| All other values are reserved. |
+|  |
+| Bits 5 to 8 of octet 4 are spare and shall be coded as zero. |
+|  |
+| If Type ofmulticastMBS session ID is set to "Temporary Mobile Group Identity (TMGI)", themulticastMBS session ID contains the TMGI (octet 5 to i) and is coded as described in subclause 10.5.6.13 in 3GPP TS 24.008 [12] starting from octet 2.The structure of theTMGIis defined in 3GPP TS 23.003 [4]. |
+|  |
+| If Type ofmulticastMBS session ID is set to "Source specific IP multicast address for IPv4" or " Source specific IP multicast address for IPv6", themulticastMBS session ID contains the Source IP address information and the Destination IP address information. |
+|  |
+| Source IP address information (octet 5 to v) |
+| This field contains the IP unicast address used as source address in IP packets for identifying the source of the multicast service. |
+|  |
+| If the type ofmulticastMBS session ID indicates "Source specific IP multicast address for IPv4", the Source IP address information in octet 5 to octet 8 contains an IPv4 address. If the type ofmulticastMBS session ID indicates "Source specific IP multicast address for IPv6", the Source IP address information in octet 5 to octet 20 contains an IPv6 address. |
+|  |
+| Destination IP address information (octet v+1 to i) |
+| This field contains the IP multicast address used as destination address in related IP packets for identifying a multicast service associated with the source. |
+|  |
+| If the type ofmulticastMBS session ID indicates "Source specific IP multicast address for IPv4", the Destination IP address information in octet v+1 to octet v+4 contains an IPv4 address. If the type ofmulticastMBS session ID indicates "Source specific IP multicast address for IPv6", the Source IP address information in octet v+1 to octet v+16 contains an IPv6 address. |
+|  |
 
 #### 9.11.4.31	Received MBS container
 
@@ -29625,29 +36020,228 @@ The Received MBS container information element is coded as shown in figure 9.11
 
 The Received MBS container is a type 6 information element with a minimum length of 9 octets and a maximum length of 65538 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Received MBS container IEI | octet 1 |
+| Length of Received MBS container contents | octet 2octet 3 |
+| Received MBS information1 | octet 4octete |
+| Received MBS information 2 | octet(e+1)*octet l* |
+| … | octet(l+1)*octet m* |
+| Received MBS information p | octet(m+1)*octet n* |
+
 Figure 9.11.4.31.1: Received MBS container information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Rejection cause | MSAI | MD | octet 4 |
+| 0 | 0 | 0 | IPAT | MSCI | MTI | IPAE | octet 5 |
+| spare |  |  |  |  |  |
+| TMGI | octet 6octet j |
+| Source IP address information | octet(j+1)*octet v* |
+| Destination IP address information | octet(v+1)*octet k* |
+| MBS service area | octet(k+1)*octet s* |
+| MBS timers | octet(s+1)*octet i* |
+| MBS security container | octet(i+1)*octet e* |
 
 Figure 9.11.4.31.2: Received MBS information
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MBS TAI list | Octet(k+1)*octets* |
+
 Figure 9.11.4.31.3: MBS service area for MBS service area indication = "MBS service area included as MBS TAI list"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| NR CGI list | octet(k+1)*octets* |
 
 Figure 9.11.4.31.4: MBS service area for MBS service area indication = "MBS service area included as NR CGI list"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MBS TAI list | octet(k+1)*octety* |
+| NR CGI list | octet(y+1)*octets* |
+
 Figure 9.11.4.31.5: MBS service area for MBS service area indication = "MBS service area included as MBS TAI list and NR CGI list"
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of NR CGI list contents | octet(k+1)* |
+| NR CGI 1 | octet(k+2)*octet(k+9)* |
+| NR CGI 2 | octet(k+10)*octet(k+17)* |
+| … | octet(k+18)*octet c* |
+| NR CGI w | octet(c+1)*octet s* |
 
 Figure 9.11.4.31.6: NR CGI list
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| NR Cell ID | Octet(k+2)* |
+|  | octet(k+6)* |
+| MCC digit 2 | MCC digit 1 | octet(k+7)* |
+| MNC digit 3 | MCC digit 3 | octet(k+8)* |
+| MNC digit 2 | MNC digit 1 | octet(k+9)* |
+
 Figure 9.11.4.31.7: NR CGI
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MBS start time | octet(s+1)*octet(s+6)* |
 
 Figure 9.11.4.31.8: MBS timers for MBS timer indication = "MBS start time"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| MBS back-off timer | octet(s+1)* |
+
 Figure 9.11.4.31.9: MBS timers for MBS timer indication = "MBS back-off timer"
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of MBS security keys sets | Octet(i+1)* |
+| MBS security keys set 1 | octet(i+2)*octet t* |
+| MBS security keys set 2 | octet(t+1)*octet g* |
+| … | octet(g+1)*octet v* |
+| MBS security keys set q | octet(v+1)*octet e* |
+
 Figure 9.11.4.31.10: MBS security container
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0spare | MTKI | Octet(i+2)* |
+| Key domain ID | octet(i+3)*octet(i+5)* |
+| MSK ID | octet(i+6)*octet(i+9)* |
+| MSK | octet(i+10)*octet(i+25)* |
+| MTK ID | octet(i+26)*octet(i+27)* |
+| Encrypted MTK | octet(i+28)*octet(i+43)* |
 
 Figure 9.11.4.31.11: MBS security keys set
 
 Table 9.11.4.31.1: Received MBS container information element
+
+| MBS decision (MD) (bits 1 to 3 of octet 4) |
+|---|
+| The MD indicates the network decision of the join requested by the UE, the network requests to remove the UE from themulticastMBS session or the network request toupdate theMBS service areaor the security informationofmulticastMBS session. |
+| Bits |
+| 3 | 2 | 1 |  |
+| 0 | 0 | 1 | MBS service area update |
+| 0 | 1 | 0 | MBS join is accepted |
+| 0 | 1 | 1 | MBS join is rejected |
+| 1 | 0 | 0 | Remove UE frommulticastMBS session |
+| 1 | 0 | 1 | MBS security information update |
+| All other values areunused in this version of the specification and interpreted as 000 if received. |
+|  |
+| If MD is set to "MBS join is rejected" or “Remove UE frommulticastMBS session”, bits 6 to 8 of octet 4 shall contain the Rejection cause which indicates the reason of rejecting the MBS join request or the reason of removing the UE frommulticastMBS session, respectively, otherwise bits 6 to 8 of octet 4 are spare and shall be coded as zero. |
+|  |
+| MBS service area indication (MSAI) (bits 4 and 5 of octet 4) |
+| The MSAI indicates whetherand howthe MBS service area is included in the IE. |
+| Bits |
+| 5 | 4 |  |
+| 0 | 0 | MBS service area not included |
+| 0 | 1 | MBS service area included as MBS TAI list |
+| 1 | 0 | MBS service area included as NR CGI list |
+| 1 | 1 | MBS service area included as MBS TAI list and NR CGI list |
+|  |
+| Rejection cause (bits 6 to 8 of octet 4) |
+| The Rejection cause indicates the reason of rejecting the join request or the reason of removing the UE from the MBS session. |
+| Bits |
+| 8 | 7 | 6 |  |  |
+| 0 | 0 | 0 |  | No additional information provided |
+| 0 | 0 | 1 |  | Insufficient resources |
+| 0 | 1 | 0 |  | User is not authorized to use MBS service |
+| 0 | 1 | 1 |  | multicastMBS session has not started or will not start soon |
+| 1 | 0 | 0 |  | User is outside of local MBS service area |
+| 1 | 0 | 1 |  | Session context not found |
+| 1 | 1 | 0 |  | multicastMBS session is released |
+| All other values areunused in this version of the specification and interpreted as 000 if received. |
+|  |
+| IP address existence (IPAE) (bit1 of octet 5) |
+| The IPAE indicates whether the Source IP address information and Destination IP address information are included in the IE or not. |
+| Bit |
+| 1 |  |  |
+| 0 |  | Source and destination IP address information not included |
+| 1 |  | Source and destination IP address information included |
+|  |
+| If IPAE is set to "Source and destination IP address information included", Source IP address information and Destination IP address information shall be included in the IE, otherwise Source IP address information and Destination IP address information shall not be included in the IE(NOTE 1). |
+|  |
+| MBS timer indication (MTI) (bits 2 and 3 of octet 5) |
+| The MTI indicates whether there is MBS timer included in the IE or not. |
+| Bit |
+| 3 | 2 |  |
+| 0 | 0 | No MBS timers included |
+| 0 | 1 | MBS start time included |
+| 1 | 0 | MBS back-off timer included |
+| All other values areunused in this version of the specification and interpreted as 00 if received |
+|  |
+| MBS security container indication (MSCI) (bit 4 of octet 5) |
+| The MSCI indicates whether the MBS security container is included in the IE or not |
+| Bit |
+| 4 |
+| 0 | MBS security container not included |
+| 1 | MBS security container included |
+| IP address type (IPAT) (bit 5 of octet 5) |
+| The IPAT indicates the type of the source IP address informationand destination IP address information.This field is ignoredwhenIPAE is set to "Source and destination IP address information not included". |
+| Bit |
+| 5 |
+| 0 | Source IP address information and destination IP address information are IPv4 |
+| 1 | Source IP address information and destination IP address information are IPv6 |
+| Bits6to 8 of octet 5 are spare and shall be coded as zero. |
+| TMGI (octets 6 to j) |
+| The TMGI is coded as described in subclause 10.5.6.13 in 3GPP TS 24.008 [12] starting from octet 2.The structure of the TMGI is defined in 3GPP TS 23.003 [4]. |
+|  |
+| Source IP address information (octet j+1 to v) |
+| This field contains the IP unicast address used as source address in IP packets for identifying the source of the multicast service. The value of this field is copied from the corresponding source IP address information in the requested MBS container.If the IPAT indicates "Source and destination IP address information are IPv4", the Source IP address information in octetj+1 to octet j+4 contains an IPv4 address. If the IPAT indicates "Source and destination IP address information are IPv6", the Source IP address information in octet j+1 to octet j+16 contains an IPv6 address |
+|  |
+| Destination IP address information (octet v+1 to k) |
+| This field contains the IP multicast address used as destination address in related IP packets for identifying a multicast service associated with the source. The value of this field is copied from the corresponding destination IP address information in the requested MBS container.If the IPAT indicates "Source and destination IP address information are IPv4", the Destination IP address information in octet v+1 to octet v+4 contains an IPv4 address. If the IPAT indicates "Source and destination IP address information are IPv6", the Destination IP address information in octet v+1 to octet v+16 contains an IPv6 address. |
+|  |
+| MBS service area (octet k+1 to s) |
+| The MBS service area contains the MBS TAI list, the NR CGI list or both, that identifies the service area(s) for a local MBS service. |
+|  |
+| MBS TAI list (octet k+1 to s) |
+| The MBS TAI list is coded asoctet 2 and above ofthe 5GS tracking area identity list IE defined in subclause 9.11.3.9. |
+|  |
+| NR CGI (octet k+2 to k+9) |
+| The NR CGI globally identifies an NR cell. It contains the NR Cell ID and the PLMN ID of that cell. |
+|  |
+| NR Cell ID (octet k+2 to k+6) |
+| The NR Cell ID consists of 36 bits identifying an NR Cell ID as specified in subclause 9.3.1.7 of 3GPP TS 38.413 [31], in hexadecimal representation. Bit 8 of octetk+2is the most significant bit and bit 5 of octetk+6is the least significant bit. Bits 1 to 4 of octetk+6are spare and shall be coded as zero. |
+| MCC, Mobile country code (octet k+7and bits 1 to 4 octet k+8)The MCC field is coded as in ITU-T Recommendation E.212 [42],annexA. |
+|  |
+| MNC, Mobile network code (bits 5 to 8 of octet k+8and octet k+9)The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, bits 5 to 8 of octet k+8shall be coded as "1111". |
+|  |
+| The MCC and MNC digits are coded as octets 6 to 8 of the Temporary mobile group identity IE in figure 10.5.154 of 3GPP TS 24.008 [12]. |
+|  |
+| MBS start time (octets s+1 to s+6) |
+| The MBS start time is coded as described in subclause 10.5.3.9 in 3GPP TS 24.008 [12] starting from octet 2 till octet 7. |
+|  |
+| MBS back-off timer (octet s+1) |
+| The MBS back-off timer is coded as octet 3 described in subclause 10.5.7.4a in 3GPP TS 24.008 [12]. |
+|  |
+| MTK indication (MTKI) (bit1 of octet i+2) |
+| The MTKI indicates whether the MTK ID and Encrypted MTK are included in the MBS security keys set or not. |
+| Bit |
+| 1 |
+| 0 | MTK ID and Encrypted MTK not included |
+| 1 | MTK ID and Encrypted MTK included |
+|  |
+| Bits 2 to 8 of octet i+2 are spare and shall be coded as zero |
+|  |
+| Key domain ID (octet i+3 to i+5)The key domain ID is 3 bytes long and is defined in 3GPP TS 33.246 [57](NOTE 2). |
+|  |
+| MBS Service Key Identifier (MSK ID) (octets i+6 to i+9) |
+| The MSK ID is 4 bytes long and is defined in 3GPP TS 33.246 [57]. |
+|  |
+| MBS Service Key (MSK) (octets i+10 to i+25) |
+| The MSK is 16 bytes long and is defined in 3GPP TS 33.246 [57]. |
+|  |
+| MBS Traffic Key Identifier (MTK ID) (octets i+26 to i+27) |
+| The MTK ID is 2 bytes long and is defined in 3GPP TS 33.246 [57]. |
+|  |
+| Encrypted MBS Traffic Key (Encrypted MTK) (octets i+28 to i+43) |
+| The Encrypted MTK is 16 bytes long and contains the encrypted version of MTK using MSK as defined in 3GPP TS 33.246 [57]. |
+|  |
+| NOTE1:The IPAE bit is not expected to be set to "Source and destination IP address information included"when theMBS decision (MD) indicates "Remove UE frommulticastMBS session".NOTE 2:As specified inannexW in 3GPP TS 33.501 [24], the UE should not try to use the MCC and MNC constructing the key domain ID in another context, e.g., the UE should not compare those MCC and MNC to parameters received from lower layers. |
 
 #### 9.11.4.32	PDU session pair ID
 
@@ -29657,9 +36251,25 @@ The PDU session pair ID information element is coded as shown in figure 9.11.4.
 
 The PDU session pair ID is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| PDU session pair ID IEI | octet 1 |
+| Length of PDU session pair ID IE | octet 2 |
+| PDU session pair ID | octet 3 |
+
 Figure 9.11.4.32.1: PDU session pair ID information element
 
 Table 9.11.4.32.1: PDU session pair ID information element
+
+| PDU session pair ID (octet 3) |
+|---|
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  | PDU session pair ID 0 |
+| to |  | to |
+| 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 |  | PDU session pair ID 6 |
+|  |  |  |  |  |  |  |  |  |  |
+| All other values are reserved. |
 
 #### 9.11.4.33	RSN
 
@@ -29669,9 +36279,24 @@ The RSN information element is coded as shown in figure 9.11.4.33.1 and table 
 
 The RSN is a type 4 information element with a length of 3 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| RSN IEI | octet 1 |
+| Length of RSN IE | octet 2 |
+| RSN | octet 3 |
+
 Figure 9.11.4.33.1: RSN information element
 
 Table 9.11.4.33.1: RSN information element
+
+| RSN (octet 3) |
+|---|
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  | v1 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  | v2 |
+|  |  |  |  |  |  |  |  |  |  |
+| All other values are spare and shall not be used by a UE compliant to the present version of this specification. |
 
 #### 9.11.4.34	ECS address
 
@@ -29681,27 +36306,144 @@ The ECS address information element is coded as shown in figure 9.11.4.34.1, fi
 
 The ECS address information element is a type 6 information element with minimum length of 8 octets and a maximum length of 65538 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| ECS address IEI | octet 1 |
+| Length of ECS address contents | octet 2octet 3 |
+| Type of ECS address | Type of spatial validity condition | octet 4 |
+| ECS address | octet 5octet a |
+| Spatial validity condition contents | octet (a+1)*octet n* |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | ESPILI | EAMI | Octetm* |
+| ECS authentication methods | octeto* |
+| ECS supported PLMNs information list | octetp*octetw* |
+
 Figure 9.11.4.34.1: ECS address information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of spatial validity condition contents | octet (a+1)octet (a+2) |
+| Spatial validity information 1 | octet boctet c |
+| Spatial validity information 2 | octet (c+1)*octet d* |
+| … | octet (d+1)*octet e* |
+| Spatial validity information N | octet (e+1)*octet n* |
 
 Figure 9.11.4.34.2: Spatial validity condition contents
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | TLSGI | TLSAI | TLSCSCI | octeto* |
+
 Figure 9.11.4.34.3: ECS authentication methods
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of ECS supported PLMNs information list contents | octetpoctet (p+2) |
+| Supported PLMN information 1 | octet(p+3)octetq |
+| Supported PLMN information 2 | octet (q+1)*octetu* |
+| … | octet (u+1)*octetv* |
+| Supported PLMN information N | octet (v+1)*octetw* |
 
 Figure 9.11.4.34.4: ECS supported PLMNs information list contents
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length ofSupported PLMN informationcontents | octet(q+1)octet (q+3) |
+| PLMN identity | octet (q+4)octet(q+6) |
+| ECSP information1 | octet (q+7)*octetr* |
+| ECSP information2 | octet (r+1)*octets* |
+| … | octet (s+1)*octett* |
+| ECSP information N | octet (t+1)*octetu* |
+
 Figure 9.11.4.34.5: Supported PLMN information contents
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of ECSP identifiercontents | octet (r+1)octet (r+2) |
+| ECSP identifier | octet (r+3)*octets* |
 
 Figure 9.11.4.34.6: ECSP information contents
 
 Table 9.11.4.34.1: ECS address information element
 
+| Type of ECS address (octet 4, bit 1 to 4) |
+|---|
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | IPv4 |
+| 0 | 0 | 0 | 1 | IPv6 |
+| 0 | 0 | 1 | 0 | FQDN |
+| 1 | 1 | 1 | 1 | Unspecified |
+|  |
+| All other values are spare. The receiving entity shall ignore an ECS address IE with type of ECS address containing a spare value. |
+|  |
+| Type of spatial validity condition (octet 4, bit 5 to 8) |
+| Bits |
+| 8 | 7 | 6 | 5 |  |
+| 0 | 0 | 0 | 0 | No spatial validity condition |
+| 0 | 0 | 0 | 1 | Geographical service area |
+| 0 | 0 | 1 | 0 | Tracking area |
+| 0 | 0 | 1 | 1 | Country-wide |
+|  |
+| All other values are spare. The receiving entity shall ignore a spatial validity condition with type of spatial validity condition containing an unknown value. |
+|  |
+| If thetype of ECS addressindicates IPv4, then theECS addressfield contains an IPv4 address in octet 5 to octet 8. |
+|  |
+| If thetype of ECS addressindicates IPv6, then theECS addressfield contains an IPv6 address in octet 5 to octet 20 and is encoded according to IETF RFC 4291 [66]. |
+|  |
+| If thetype of ECS addressindicates FQDN, then the ECS address field contains in octet 5 the length of FQDN value and in octet 6 to octet a an FQDN value encoded as defined in subclause 19.4.2in3GPP TS 23.003 [4]. |
+|  |
+| If thetype of ECS addressindicates unspecified, then theremaining fields of ECS address information element shall be passed to the upper layers. |
+|  |
+| Spatial validity condition contents (octet (a+1)* to n*) |
+| The spatial validity condition contents contain a variable number of spatial validity condition information. |
+|  |
+| ECS authentication methods indicator (EAMI)(octetm*, bit 1) |
+| Bits |
+| 1 |  |  |  |  |
+| 0 |  |  |  | ECS authentication methods field is not included |
+| 1 |  |  |  | ECS authentication methods field is included |
+| If the EAMI bit is set to "ECS authentication methods field is included" then the ECS authentication methods field is included otherwise the ECS authentication methods field is not included.ECS authentication methods is an optional field and is included based on operator requirements. |
+|  |
+| ECS supported PLMNsinformation list indication (ESPILI) (octetm*, bit2)Bits20ECS supported PLMNs information listfield is not included1ECS supported PLMNs information listfield is includedIf the ESPILIbit is set to "ECS supported PLMNsinformationlistfield is included" then the ECS supported PLMNs information list field is included otherwise the ECS supported PLMNSinformation list field is not included.ECS supported PLMNs information list (octetp* tow*)The ECS supported PLMNs information list contains a variable number ofsupported PLMN information field.Thesupported PLMN information field is coded according to figure 9.11.4.34.5. |
+
 Table 9.11.4.34.2: Spatial validity condition contents
+
+| If thetype ofspatial validity condition of the ECS address indicates No spatial validity condition, then thespatial validity condition informationfield is empty. |
+|---|
+| If thetype ofspatial validity condition of the ECS address indicates geographical service area, then thespatial validity condition informationfield contains a geographical service area which is specified by geographical descriptions as defined in3GPPTS23.032 [4B]. |
+|  |
+| If thetype ofspatial validity condition of the ECS address indicates tracking area, then thespatial validity condition informationfield contains a TAI as defined in subclause 9.11.3.8 starting from octet 2. |
+|  |
+| If thetype ofspatial validity condition of the ECS address indicates country-wide, then thespatial validity condition informationfield contains an MCC as defined in in ITU-T Recommendation E.212 [42], annex A. The first MCC digit is coded in bit 1 to 4 of the octet b, the second MCC digit is coded in bit 5 to 8 of the octet b, and the third MCC digit is coded in bit 1 to 4 of the octet b+1. Bit 5 to bit 8 of the octet b+1 shall be padded with 1.If only two digits are used for for MCC, octet b+1 shall be padded with 1. |
 
 Table 9.11.4.34.3: ECS authentication methods contents
 
+| ECSauthentication methods (octeto*) |
+|---|
+|  |
+| TLS client server certificate indicator (TLSCSCI) (octeto*, bit 1) |
+| 0 |  |  |  | TLS client server certificatenot supported |
+| 1 |  |  |  | TLS client server certificate supported |
+|  |
+| TLS with AKMA indicator (TLSAI) (octeto*, bit 2) |
+| 0 |  |  |  | TLS with AKMAnot supported |
+| 1 |  |  |  | TLS with AKMAsupported |
+|  |
+| TLS with GBA indicator (TLSGI) (octeto*, bit 3) |
+| 0 |  |  |  | TLS with GBAnot supported |
+| 1 |  |  |  | TLS with GBAsupported |
+|  |
+
 Table 9.11.4.34.4: Supported PLMN information contents
 
+| PLMN identity:The PLMN identity for whichtheEDN configuration information can be provided by the ECS. This is encoded as octet 3to octet5 in figure9.11.3.85.1. |
+|---|
+| ECSP information:The identifier of the ECSP(s) associated with the PLMN and whose information is available at the ECS. The ECSP information is coded according to figure 9.11.4.34.z. |
+
 Table 9.11.4.34.5: ECSP information contents
+
+| ECSP identifierThis field contains one ECSP identifier. The ECSP identifier is encoded as a UTF-8 string. |
+|---|
 
 #### 9.11.4.36	N3QAI
 
@@ -29711,15 +36453,51 @@ The N3QAI information element is a type 6 information element with a minimum len
 
 The N3QAI information element is coded as shown in figure 9.11.4.36.1, figure 9.11.4.36.2, figure 9.11.4.36.3, figure 9.11.4.36.4, and table 9.11.4.36.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| N3QAI IEI | octet 1 |
+| Length of N3QAI contents | octet 2octet 3 |
+| N3QAI 1 | octet 4octet u* |
+| N3QAI 2 | octet(u+1)*octet v* |
+| ... | octet(v+1)*octet w* |
+| N3QAI n | octet(w+1)*octet x* |
+
 Figure 9.11.4.36.1: N3QAI information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of QFIs | octet 4 |
+| List of QFIs | octet 5octet m |
+| Number of N3QAI parameters | octet (m+1) |
+| N3QAI parameters list | octet(m+2)octetu* |
 
 Figure 9.11.4.36.2: N3QAI
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| N3QAI parameter 1 | octet(m+2)octetn* |
+| N3QAI parameter 2 | octet(n+1)*octeto* |
+| ... | octet(o+1)*octetp* |
+| N3QAI parameter n | octet(p+1)*octetu* |
+
 Figure 9.11.4.36.3: N3QAI parameters list
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| N3QAI parameter identifier | octet(m+2) |
+| Length of N3QAI parameter contents | octet(m+3) |
+| N3QAI parameter contents | octet(m+4)octetn* |
 
 Figure 9.11.4.36.4: N3QAI parameter
 
 Table 9.11.4.36.1: N3QAI information element
+
+| Number of QFIs (octet 4)The number of QFIs field contains the binary coding for the number of QFIs associated with the same N3QAI parameters. This field is encoded in bits 8 through 1 of octet 4 where bit 8 is he most significant and bit 1 is the least significant bit.List of QFIs (octet 5 to octet m)This field indicates QoS flow(s) associated with the same N3QAI parameters. This field contains QFI values encoded as below:Bits8 7 6 5 4 3 2 10 0 0 0 0 0 0 0Reserved0 0 0 0 0 0 01QFI 1to0 0 1 1 1 1 1 1QFI 63The other values are spare. If spare value is used, the UE shall ignore the value. |
+|---|
+| Number of N3QAI parameters (bits 8 to 1 of octet (m+1))The number of N3QAI parameters field contains the binary coding for the number of N3QAI parameters in the N3QAI parameters list field. The number of N3QAI parameters field is encoded in bits 8 through 1 of octet(m+1)where bit 8 is the most significant and bit 1 is the least significant bit. |
+| N3QAIparameters list (octets (m+2) to q*)TheN3QAIparameters listfieldcontains a variable number of N3QAI parameters.Each N3QAI parameter included in the N3QAI parameters list is of variable length and consists of:-a N3QAI parameter identifier (1 octet);-the length of the N3QAI parameter contents (1 octet); and-the N3QAI parameter contents itself (variable number of octets).The N3QAI parameter identifier field is used to identify each parameter included in the N3QAI parameters list and it contains the hexadecimal coding of the parameter identifier. Bit 8 of the parameter identifier field contains the most significant bit and bit 1 contains the least significant bit. In this version of the protocol, the following parameter identifiers are specified:-01H (5QI);-02H (GFBR uplink);-03H (GFBR downlink);-04H (MFBR uplink);-05H (MFBR downlink);-06H (Averaging window);-07H (Resource type);-08H (Priority level);-09H (Packet delay budget);-0AH (Packet error rate);-0BH (Maximum data burst volume);-0CH (Maximum packet loss rate downlink);-0DH (Maximum packet loss rate uplink);-0EH (ARP); and-0FH (Periodicity).If the N3QAI parameters list contains a N3QAI parameter identifier that is not supported by the receiving entity,the corresponding parameter shall be discarded.The length of N3QAI parameter contents field contains the binary coded representation of the length of the parameter contents field. The first bit in transmission order is the most significant bit.For the N3QAI parameter identifiers indicating "5QI", "GFBR uplink", "GFBR downlink", "MFBR uplink", "MFBR downlink", and "Averaging window", the format of the N3QAI parameter contents follows the table9.11.4.12.1 of subclause 9.11.4.12 of this specification.For the N3QAI parameter identifiers indicating"Resource type", "Prioritylevel", "Packet delay budget", "Packet error rate", "Maximum data burst volume", "Maximum packet loss rate downlink", and "Maximum packet loss rate uplink", the format of the N3QAI parameter contents follows the table9.3.1.1-2 of subclause 9.3.1.1 of 3GPP TS 24.502 [18].When the N3QAI parameter identifier indicates "ARP", the N3QAI parameter contents field contains the binary representation of ARP that is one octet in length. The range of the ARP priority level is 1 to 15 with 1 as the highest priority as specified in subclause5.7.2.2 of 3GPP TS.23.501 [8].When the N3QAI parameter identifier indicates"Periodicity", the N3QAI parameter contents field contains the binary representation of the periodicity for the traffic with a unit of microsecond. (NOTE1) |
+|  |
+| NOTE 1:The periodicity refers to the time interval between start of two data bursts for supporting consumer real time applications e.g., XR. |
 
 #### 9.11.4.37	Non-3GPP delay budget
 
@@ -29729,11 +36507,45 @@ The Non-3GPP delay budget information element is a type 6 information element wi
 
 The Non-3GPP delay budget information element is coded as shown in figure 9.11.4.37.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Non-3GPPdelay budget IEI | octet 1 |
+| Length of non-3GPPdelay budget contents | octet 2octet 3 |
+| non-3GPPdelay budget 1 | octet 4octetu* |
+| non-3GPPdelay budget 2 | octet u+1*octetv* |
+| ... | octet v+1*octetw* |
+| non-3GPPdelay budget n | octet w+1*octetx* |
+
 Figure 9.11.4.37.1: Non-3GPP delay budget information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Non-3GPPdelay budget value | octet 4octet 5 |
+| 0spare | 0spare | 0spare | 0spare | 0spare | 0spare | QFIPI | PFPI | octet 6 |
+| Number of QFIs | octet n* |
+| List of QFIs | octet (n+1)*octet m* |
+| Packet filter list | octet o*octet u* |
 
 Figure 9.11.4.37.2: Non-3GPP delay budget
 
 Table 9.11.4.37.1: Non-3GPP delay budget information element
+
+| TheNon-3GPPdelay budget valuefield contains the binary representation of the Non-3gpp delay budget in units of 0.5ms.Bits8 7 6 5 4 3 2 1 8 7 6 5 4 3 2 10 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0thru1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+|---|
+| Packet filter presence indicator (PFPI) (bit 1 of octet 6)Bit1 |
+| 0 | Packet filter list associated with the Non-3GPPdelay budget value is not present |
+| 1 | Packet filter list associated with the Non-3GPPdelay budget value is present |
+|  |
+| QoS flow identifier presence indicator (QFIPI) (bit 2 of octet 6)Bit2 |
+| 0 | QoS flow identifier associated with the Non-3GPPdelay budget value is not present |
+| 1 | QoS flow identifier associated with the Non-3GPPdelay budget value is present |
+|  |
+| Number of QFIs (octetn*)The number of QFIs fieldis present if QFIPI is set to 1. If QFIPI is not set to 1, this field shall not be included in the non-3GPPdelay budget. The number of QFIs fieldcontains the binary coding for the number of QFIs associated with the samenon-3GPPdelay budget value. This field is encoded in bits 8 through 1 of octet 4 where bit 8 is he most significant and bit 1 is the least significant bit. |
+|  |
+| List of QFIs (octet(n+1)*to octet m*)The list of QFIs field is present if QFIPI is set to 1. If QFIPI is not set to 1, this field shall not be included in the non-3GPPdelay budget.This field indicates QoS flow(s) associated with the samenon-3GPPdelay budget value. This field contains QFI values encoded as belowBits8 7 6 5 4 3 2 10 0 0 0 0 0 0 0Reserved0 0 0 0 0 0 01QFI 1to0 0 1 1 1 1 1 1QFI 63The other values are spare. If spare value is used, the UE shall ignore the value. |
+|  |
+| Packet filter list (octet 7 to u)The packet filter list is present if PFPI is set to 1. If not present, this field shall not be included in the non-3GPPdelay budget. The encoding of the packet filter list followsthe figure 9.11.4.13.4 andthe table 9.11.4.13.1. |
+|  |
 
 #### 9.11.4.38	URSP rule enforcement reports
 
@@ -29743,11 +36555,38 @@ The URSP rule enforcement reports information element is coded as shown in figur
 
 The URSP rule enforcement reports is a type 4 information element with a minimum length of 4 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| URSP rule enforcement reportsIEI | octet 1 |
+| Length of URSP rule enforcement reportscontents | octet 2 |
+| URSP rule enforcement report 1 | octet 3octet a* |
+| URSP rule enforcement report 2 | octet (a+1)*octet b* |
+| … | octet (b+1)*octet g* |
+| URSP rule enforcement report n | octet (g+1)*octet h* |
+
 Figure 9.11.4.38.1: URSP rule enforcement reports information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of connection capability identifiers | octet 3 |
+| Connection capability identifier 1 | octet4 |
+| Connection capability identifier 2 | octet5* |
+| … |  |
+| Connection capability identifier n | octeta* |
 
 Figure 9.11.4.38.2: URSP rule enforcement report
 
 Table 9.11.4.38.1: URSP rule enforcement reports information element
+
+| URSP rule enforcement report(octet 3 to octeta) |
+|---|
+| The URSP rule enforcement report field containsallthe connection capabilitiescontainedin thetrafficdescriptorofone reportedURSPrule. |
+|  |
+| Number of connection capability identifiers (octet 3) |
+| The number of connection capability identifiers field indicates number of indicatedconnection capability identifiersin binary representation. Thevalue of this field shall be set to at least one,and the receiving entity shall ignore theURSP rule enforcement reports IE with "Number of connection capability identifiers" fieldset to zero. |
+|  |
+| Connection capability identifier |
+| Connection capability identifieris encodedas defined in 3GPP TS 24.526[19] table 5.2.1. |
 
 #### 9.11.4.39	Protocol description
 
@@ -29757,15 +36596,105 @@ The Protocol description information element is a type 6 information element wit
 
 The Protocol description information element is coded as shown in figure 9.11.4.39.1, figure 9.11.4.39.2, figure 9.11.4.39.3, figure 9.11.4.39.4, and table 9.11.4.39.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| ProtocoldescriptionIEI | octet 1 |
+| Length ofProtocoldescriptioncontents | octet 2octet 3 |
+| Protocoldescription 1 | octet 4octet u |
+| Protocoldescription 2 | octet(u+1)*octetw* |
+| ... |  |
+| Protocoldescription n | octet(w+1)*octets* |
+
 Figure 9.11.4.39.1: Protocol description information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length ofprotocoldescription | octet4octet5 |
+| QoSRuleIdentifier(QRI) | octet6 |
+| 0 | 0 | PILPI | HEIPI | Transport Protocol | octet7* |
+| Spare | Spare |  |  |  |  |
+| RTP header extensiontype | octet8* |
+| RTP header extensionid | octet9* |
+| RTP payload informationlist | octet10*octetu* |
 
 Figure 9.11.4.39.2: Protocol description
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length ofRTP payload informationlist | octet10octet11 |
+| RTP payload information1 | octet12octeto |
+| RTP payload information2 | octet(o+1)*octetp* |
+| ... |  |
+| RTP payload informationm | octetq*octetr* |
+
 Figure 9.11.4.39.3: RTP payload information list
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| RTP payload format | octet12 |
+| NumberofRTP payload type | octet13 |
+| RTP payload type1 | octet14 |
+| RTP payload type2 | octet15* |
+| ... |  |
+| RTP payload typet | octet(13+t)* |
 
 Figure 9.11.4.39.4: RTP payload information
 
 Table 9.11.4.39.1: Protocol description information element
+
+| Length ofprotocoldescription(octet4 andoctet5)(see NOTE1) |
+|---|
+| The length ofprotocoldescriptionfieldindicates the length of the protocoldescriptionentry. |
+|  |
+| QoSRuleIdentifier(QRI)(octet6) |
+| The QoSRuleIdentifier (QRI) field contains the QoSruleidentifierasspecified in subclause9.11.4.13. Each protocoldescriptionentry is associated with the QoS rule identified by the QRI field. |
+|  |
+| Transport Protocol(octet7, bits 1 to4)TheTransport Protocolfield indicates thetransport protocolused by themedia flow, e.g., RTP or SRTP as specified in3GPP TS 26.522 [69]. |
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 1 | RTP |
+| 0 | 0 | 1 | 0 | SRTP |
+| All other values arespare. |
+|  |
+| RTP header extensioninformationpresence indicator(HEIPI) (bit5of octet7) |
+| TheHEIPIfield indicates whether theRTP header extensioninformation (RTP header extensiontype field and RTP header extensionid field)isincluded in the IE or not. |
+| Bit |
+| 5 |  |  |
+| 0 |  | RTP header extensioninformationnot included |
+| 1 |  | RTP header extensioninformation included |
+|  |
+| RTP payload informationlistpresence indicator(PILPI) (bit6of octet7) |
+| ThePILPIfield indicates whether theRTP payload informationlistisincluded in the IE or not. |
+| Bit |
+| 6 |
+| 0 |  | RTP payload informationlistnot included |
+| 1 |  | RTP payload informationlistincluded |
+|  |
+| RTP header extensiontype(octet8) |
+| The RTP header extensiontype field contains the RTP header extensiontype, i.e the RTP Header Extension for PDU Set Marking as specified insubclause 4.2 of 3GPP TS 26.522 [69]. |
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | RTP Header Extension for PDU Set Marking |
+| All other values arespare. |
+|  |
+| RTP header extensionid(octet9) |
+| The RTP header extensionid field contains the RTP header extension idwhich is coded asbinary representationof aninteger between1(inclusive)and255(inclusive)as defined inIETFRFC 8285 [70]. |
+|  |
+| RTP payload informationlist(octets10 to u)(see NOTE2) |
+| The RTP payload informationlistcontains the RTP payload information for the RTP stream, which can be used to derive the PDUset information. |
+|  |
+| RTP payload format(octet12) |
+|  |
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | RTP payload format for H.264/AVC codec as specified insubclause A.2.2 of 3GPP TS 26.522 [69] |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | RTP payload format forH.265/HEVC codec as specified insubclause A.2.2 of 3GPP TS 26.522 [69] |
+| All other values arespare and not used. |
+|  |
+| RTP payload type(octet14) |
+| The RTP payload type field indicates theRTP or SRTP payload type, itcontainsthe binary representationof aninteger between1(inclusive)and127(inclusive). The other values are spare. If spare value is used, the UE shall ignore the value. |
+|  |
+| NOTE1:If the value of the length ofprotocoldescriptionfieldis set to 1, the protocoldescriptionentry is deleted for the associated QoS rule.If the value of the length ofprotocoldescriptionfieldis greater than 1, the protocoldescriptionentry isadded or replacedfor the associated QoS rule.NOTE2:In this release of the specification, the RTP payload informationlistcontains only one RTP payload informationentry. |
 
 #### 9.11.4.40	ECN marking for L4S indication
 
@@ -29775,9 +36704,28 @@ The ECN marking for L4S indication information element is a type 4 information e
 
 The ECN marking for L4S indication information element is coded as shown in figure 9.11.4.40.1 and table 9.11.4.40.1.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| ECN marking for L4SindicationIEI | octet 1 |
+| Length ofECN marking for L4Sindicationcontents | octet2 |
+| QoSruleidentifier1 | octet3* |
+| QoSruleidentifier2 | octet4* |
+| ... | ... |
+| QoSruleidentifiern | octetn* |
+
 Figure 9.11.4.40.1: ECN marking for L4S indication information element
 
 Table 9.11.4.40.1: ECN marking for L4S indication information element
+
+| Length ofECN marking for L4S indicationcontent(octet2)(see NOTE) |
+|---|
+| The length ofECN marking for L4S indicationfieldindicates the length of theECN marking for L4S indicationentry. |
+|  |
+| QoSruleidentifier(QRI)(octet3) |
+|  |
+| The QoSRuleIdentifier (QRI) field contains the QoSruleidentifierasspecified in subclause9.11.4.13. TheECN marking for L4S indicationentry only contains the QRI(s) required to perform theECN marking for L4S for 5G-RG. |
+|  |
+| NOTE:If the value of the length ofECN marking for L4S indicationfieldis set to 1, theECN marking for L4S indicationentry is deleted for all the QoS rules.If the value of the length ofECN marking for L4S indicationfieldis greater than 1, theECN marking for L4S indicationentry is eitheraddedordeleted for the associated QoS rule(s). |
 
 ## 9.12	3GPP specific coding information defined within present document
 
@@ -29855,7 +36803,45 @@ NOTE:	Timers T3324, T3346, T3245 and T3247 are defined in 3GPP TS 24.008 [12]
 
 Table 10.2.1: Timers of 5GS mobility management – UE side
 
+| TIMER NUM. | TIMER VALUE | STATE | CAUSE OF START | NORMAL STOP | ONEXPIRY |
+|---|---|---|---|---|---|
+| T3502 | Default 12 min.NOTE 1 | 5GMM-DEREGISTERED 5GMM-REGISTERED | At registration failure and the attempt counter is equal to 5 | Transmission of REGISTRATION REQUEST message | Initiation of the registration procedure, if still required |
+| T3510 | 15sNOTE 7NOTE 8In WB-N1/CE mode, 85sFor access via a satellite NG-RAN cell, 27sNOTE 12 | 5GMM-REGISTERED-INITIATED | Transmission of REGISTRATION REQUEST message | REGISTRATION ACCEPTmessagereceived or REGISTRATION REJECTmessagereceived | Start T3511 or T3502 as specified in subclause 5.5.1.2.7 if T3510 expired during registration procedure for initial registration.Start T3511 or T3502 as specified in subclause 5.5.1.3.7 if T3510 expired during the registration procedure for mobility and periodic registration update |
+| T3511 | 10s | 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION5GMM-REGISTERED.ATTEMPTING-REGISTRATION-UPDATE5GMM-REGISTERED.NORMAL-SERVICEor 5GMM-REGISTERED.NON-ALLOWED-SERVICE | At registration failure due to lower layer failure, T3510 timeout or registration rejected with other 5GMM cause values than those treated in subclause5.5.1.2.5 for initial registration or subclause5.5.1.3.5 for mobility and periodic registration | Transmission of REGISTRATION REQUEST message5GMM-CONNECTED mode entered (NOTE 5) | Retransmission of the REGISTRATION REQUESTmessage, if still required |
+| T3512 | Default 54 minNOTE 1NOTE 2 | 5GMM-REGISTERED | In 5GMM-REGISTERED, when 5GMM-CONNECTED mode is leftand if the NW does not indicate support for strictly periodic registration timer as specified in subclause 5.3.7.If the network indicates support for strictly periodic registration timer, T3512 is started after the successful completion of registration update procedure. T3512 is restarted if it expires in 5GMM-CONNECTED mode as specified in subclause 5.3.7. | When entering state 5GMM-DEREGISTEREDWhen entering 5GMM-CONNECTED modeif the NW does not indicate support for strictly periodic registration timer as specified in subclause 5.3.7. | In 5GMM-IDLE mode,Initiation of the periodic registration procedureif the UE is notregisteredfor emergency services.In 5GMM-CONNECTED mode, restart the timer T3512.Locally deregister ifthe UE isregisteredfor emergencyservices |
+| T3516 | 30sNOTE 7NOTE 8In WB-N1/CE mode, 48s For access via a satellite NG-RAN cell, 35sNOTE 12 | 5GMM-REGISTERED-INITIATED5GMM-REGISTERED5GMM-DEREGISTERED-INITIATED5GMM-SERVICE-REQUEST-INITIATED | RAND and RES*stored as a result of an 5G authentication challenge | SECURITY MODE COMMAND message receivedSERVICE REJECT message receivedREGISTRATION ACCEPT message receivedAUTHENTICATION REJECT message receivedAUTHENTICATION FAILURE message sent5GMM-DEREGISTERED, 5GMM-NULL or5GMM-IDLE mode entered | Delete the stored RAND and RES* |
+| T3517 | (a)5s for case h) in subclause 5.6.1.1; or(b)15sfor cases other than h) in subclause 5.6.1.1NOTE 7NOTE 8NOTE 10In WB-N1/CE mode, 61s For access via a satellite NG-RAN cell, 27sNOTE 12 | 5GMM-SERVICE-REQUEST-INITIATED | Transmission of SERVICE REQUEST message, or CONTROL PLANE SERVICE REQUEST message | (a)Indication from the lower layers that the UE has changed to S1 mode or E-UTRA connected to 5GCN for case h) in subclause 5.6.1.1; or(b)SERVICE ACCEPT message received, orSERVICE REJECT message receivedfor cases other than h) in subclause 5.6.1.1see subclause 5.6.1.4.2 | Abort the procedure |
+| T3519 | 60sNOTE 7NOTE 8In WB-N1/CE mode, 90sFor access via a satellite NG-RAN cell, 65sNOTE 12 | 5GMM-REGISTERED-INITIATED5GMM-REGISTERED5GMM-DEREGISTERED-INITIATED5GMM-SERVICE-REQUEST-INITIATED (NOTE 6) | Transmission of IDENTITY RESPONSE message,REGISTRATION REQUEST message,orDEREGISTRATION REQUESTmessage with freshly generated SUCI | REGISTRATION ACCEPT message with new 5G-GUTI receivedCONFIGURATION UPDATE COMMAND message with new 5G-GUTI receivedDEREGISTRATION ACCEPT message | Delete stored SUCI |
+| T3520 | 15sNOTE 7NOTE 8In WB-N1/CE mode, 33s For access via a satellite NG-RAN cell, 20sNOTE 12 | 5GMM-REGISTERED-INITIATED5GMM-REGISTERED5GMM-DEREGISTERED-INITIATED5GMM-SERVICE-REQUEST-INITIATED | Transmission of AUTHENTICATION FAILURE message with any of the 5GMM cause #20, #21, #26 or #71Transmission of AUTHENTICATION RESPONSE message with an EAP-response message after detection of an error as described in subclause 5.4.1.2.2.4 | AUTHENTICATION REQUEST message received or AUTHENTICATION REJECT message receivedorSECURITY MODE COMMAND message receivedwhen entering 5GMM-IDLE modeindication of transmission failure of AUTHENTICATION FAILURE message from lower layers | On first expiryduring a 5G AKA based primary authentication and key agreement procedure, the UE should consider the network as falseand follow item g of subclause 5.4.1.3.7, if the UE is not registered for emergency services.On first expiryduring a 5G AKA based primary authentication and key agreement procedure, the UE will follow subclause 5.4.1.3.7 under "For items c, d, e and f:", if the UE is registered for emergency services.On first expiry during an EAP based primary authentication and key agreement procedure, the UE should consider the network as falseand follow item e of subclause 5.4.1.2.4.5, if the UE is not registered for emergency services.On first expiryduring an EAP based primary authentication and key agreement procedure, the UE will follow subclause 5.4.1.2.4.5 under "For item e:", if the UE is registered for emergency services |
+| T3521 | 15sNOTE 7NOTE 8In WB-N1/CE mode, 45s For access via a satellite NG-RAN cell, 27sNOTE 12 | 5GMM-DEREGISTERED-INITIATED | Transmission ofDEREGISTRATION REQUEST messagewhende-registrationprocedureisnotdue to a "switch off" | DEREGISTRATION ACCEPTmessagereceived | Retransmission ofDEREGISTRATION REQUESTmessage |
+| T3525 | Default 60sNOTE 3NOTE 7NOTE 8In WB-N1/CE mode, default 120sFor access via a satellite NG-RAN cell,default72sNOTE 12 | 5GMM-REGISTERED.NORMAL-SERVICEor5GMM-REGISTERED.NON-ALLOWED-SERVICE | T3517 expires and service request attempt counter is greater than or equal to 5 | When entering state other than 5GMM-REGISTERED.NORMAL-SERVICE stateor5GMM-REGISTERED.NON-ALLOWED-SERVICE,orUE camped on a new PLMN other than the PLMN on which timer started,OrUE camped on a new SNPN other than the SNPN on which timer was started,orUser-plane resources established with the network | The UE may initiate service request procedure |
+| T3540 | 10sNOTE 7 (applicable to case f) in subclause 5.3.1.3)NOTE 8In WB-N1/CE mode, 34s (applicable to case f) in subclause 5.3.1.3)NOTE11For access via a satellite NG-RAN cell,default22s(applicable to case f) in subclause 5.3.1.3)NOTE 12NOTE13NOTE 14 | 5GMM-DEREGISTERED5GMM-REGISTERED | REGISTRATION REJECT message or DEREGISTRATION REQUEST message received with any of the 5GMM cause #3, #6, #7, #11, #12, #13, #15, #27, #31,#36,#62, #72, #73, #74, #75,#76or#78SERVICE REJECT message received with any of the 5GMM cause #3, #6, #7, #11, #12, #13, #15, #27,#36,#72, #73, #74, #75,#76or#78.REGISTRATION ACCEPT message received as described in subclause 5.3.1.3 case b) and case h)SERVICE ACCEPT message received as described in subclause 5.3.1.3 case f)AUTHENTICATION REJECT message receivedDEREGISTRATION ACCEPT messagereceived as described in subclause5.3.1.3case k) | N1 NAS signalling connection releasedPDU sessions have been set up except for the case the UE has set Request type to "NAS signalling connection release" in the UE request type IE in the REGISTRATION REQUEST message as described in subclause 5.3.1.3 case b)Other use casessee subclause 5.3.1.3 | Release the NAS signalling connection for the cases a),a1),b),c), d), e),f),g), h), i), j), k), l)as described in subclause 5.3.1.3 |
+|  |  | 5GMM-REGISTERED | CONFIGURATION UPDATE COMMAND message received as described in subclause 5.3.1.3 case e) and h)SERVICE ACCEPT message received as described in subclause 5.3.1.3 case i) | N1 NAS signalling connection releasedOther use casessee subclause 5.3.1.3 | Release the NAS signalling connection for the case e) as described in subclause 5.3.1.3 and perform a new registration procedure as described in subclause 5.5.1.3.2Release theNAS signalling connection for the case h)and i)as described in subclause 5.3.1.3 |
+|  |  | 5GMM-DEREGISTERED5GMM-DEREGISTERED.NORMAL-SERVICE5GMM-REGISTERED.NON-ALLOWED-SERVICE | REGISTRATION REJECT messagereceived with the 5GMM cause #9 or #10SERVICE REJECT message received with the 5GMM cause #9, #10 or #28 |  | Release the NAS signalling connection for the cases c) and d) as described in subclause 5.3.1.3 and initiation of the registration procedure as specified in subclause5.5.1.2.2or 5.5.1.3.2 |
+| Non-3GPP de-registration timer | Default 54 min.NOTE1NOTE2NOTE 4 | All 5GMM state over non-3GPP access except 5GMM-DEREGISTERED over non-3GPP access | Entering 5GMM-IDLE mode over non-3GPP access | N1 NAS signalling connection over non-3GPP access established or when entering state 5GMM-DEREGISTERED over non-3GPP access | Implicitly de-register the UE for non-3GPP access on 1st expiry |
+| T3526 | NOTE 9 | 5GMM-DEREGISTERED 5GMM-REGISTERED | Rejected S-NSSAIwith rejection cause"S-NSSAI not available due to maximum number of UEs reached"received. | AssociatedS-NSSAI in the rejected NSSAI for the maximum number of UEs reachedas specified in subclause4.6.2.2 deleted. | Remove the S-NSSAI in the rejected NSSAI for the maximum number of UEs reached associated with the T3526timer. |
+| T3527 | 15s | 5GMM-REGISTERED.NORMAL-SERVICE | Transmission of RELAY KEY REQUEST messageTransmission of RELAY AUTHENTICATION RESPONSE message | RELAY KEY REJECTmessagereceived orRELAY AUTHENTICATION REQUESTmessagereceived orRELAY KEY ACCEPT message received | Retransmission of RELAY KEY REQUEST message |
+| NOTE 1:The value of this timer is provided by the network operator during the registration procedure.NOTE 2:The default value of this timer is used if the network does not indicate a value in the REGISTRATION ACCEPT message and the UE does not have a stored value for this timer.NOTE 3:The value of this timer is UE implementation specific, with a minimum value of 60 seconds if not in NB-N1 mode and if not in WB-N1/CE mode.NOTE 4:If the T3346 value received in the mobility management messages is greater than the value of the non-3GPP de-registration timer, the UE sets the non-3GPP de-registration timer value to be 4 minutes greater than the value of timer T3346.NOTE 5:The conditions for which this applies are described in subclause 5.5.1.3.7.NOTE 6:The conditions for which this applies to the5GMM-SERVICE-REQUEST-INITIATEDstate are described in subclause 5.4.1.3.7 case c) and case d).NOTE 7:In NB-N1 mode, the timer value shall be calculated as described in subclause 4.17.NOTE 8:In WB-N1 mode, if the UE supports CE mode B and operates in either CE mode A or CE mode B, then the timer value is as described in this table for the case of WB-N1/CE mode (see subclause 4.19).NOTE 9:The value of this timer is provided by the network operator during the registration procedure or the generic UE configuration update procedure along with the rejected S-NSSAI with rejection cause "S-NSSAI not available due to maximum number of UEs reached". The default value of this timer is implementation specific with a minimum value of 12 minutes and used if the network does not provide a value in the REGISTRATION ACCEPT message, the REGISTRATION REJECT message, or the CONFIGURATION UPDATE COMMAND message along with the rejected S-NSSAI with rejection cause "S-NSSAI not available due to maximum number of UEs reached".NOTE 10:Based on implementation, the timer may be set to a value between250msand 15s when the MUSIM UE indicates "NAS signalling connection release" in the UE request type IE of the SERVICE REQUEST message or CONTROL PLANE SERVICE REQUEST message.NOTE11:Based on implementation, the timer may be set to a value between 250ms and10s when the MUSIM UE not inNB-N1 modeorWB-N1 modeindicated "NAS signalling connection release" or "Rejection of paging" in the UE request type IE of the SERVICE REQUEST message or CONTROL PLANE SERVICE REQUEST message; or indicated "NAS signalling connection release" in the UE request type IE of theREGISTRATION REQUEST message.NOTE 12:In satellite NG-RAN access, this value shallonlybe selected when satellite NG-RAN RAT type is NR(MEO) or NR(GEO).NOTE13:If the timer is started duethe reception of a 5GMM reject cause triggering aPLMN selection according to 3GPP TS 23.122 [5]or asearch for a suitable cell in another tracking area according to 3GPP TS 38.304[28], the UE may start the timer with an implementation specific value which is lower than the valuedescribed in this table.NOTE14:Fora UE configured for high priority access in selected PLMNor SNPN, the timer value shall be implementation specific but shall be less than 5 seconds. |
+
 Table 10.2.2: Timers of 5GS mobility management – AMF side
+
+| TIMER NUM. | TIMER VALUE | STATE | CAUSE OF START | NORMAL STOP | ONEXPIRY |
+|---|---|---|---|---|---|
+| T3513NOTE 7NOTE 9 | NOTE 4 | 5GMM-REGISTERED | Paging procedure initiated | Paging procedure completed as specified in subclause 5.6.2.2.1 | Network dependent |
+| T3522NOTE 6NOTE 8 | 6sIn WB-N1/CE mode, 24sFor access via a satellite NG-RAN cell, 11sNOTE 12 | 5GMM-DEREGISTERED-INITIATED | Transmission ofDEREGISTRATION REQUEST message | DEREGISTRATIONACCEPTmessage received | Retransmission ofDEREGISTRATIONREQUESTmessage |
+| T3550NOTE 6NOTE 8 | 6sIn WB-N1/CE mode, 18sFor access via a satellite NG-RAN cell, 11sNOTE 12 | 5GMM-COMMON-PROCEDURE-INITIATED | Transmission of REGISTRATION ACCEPT messageas specified in subclause 5.5.1.2.4and 5.5.1.3.4 | REGISTRATION COMPLETE message received | Retransmission of REGISTRATION ACCEPTmessage |
+| T3555NOTE 6NOTE 8 | 6sIn WB-N1/CE mode, 24sFor access via a satellite NG-RAN cell, 11sNOTE 12 | 5GMM-REGISTERED | Transmission of CONFIGURATION UPDATE COMMAND message with"acknowledgement requested" set in the Acknowledgement bit of the Configuration update indicationIE | CONFIGURATION UPDATE COMPLETE message received | Retransmission of CONFIGURATION UPDATE COMMAND message |
+| T3560NOTE 6NOTE 8 | 6sIn WB-N1/CE mode, 24sFor access via a satellite NG-RAN cell, 11sNOTE 12 | 5GMM-COMMON-PROCEDURE-INITIATED | Transmission of AUTHENTICATION REQUEST messageTransmission of SECURITY MODE COMMAND message | AUTHENTICATION RESPONSE message receivedAUTHENTICATION FAILURE message receivedSECURITY MODE COMPLETE message receivedSECURITY MODE REJECT message received | Retransmission of AUTHENTICATION REQUEST message or SECURITY MODE COMMAND message |
+| T3565NOTE 6NOTE 8 | 6sIn WB-N1/CE mode, 24s For access via a satellite NG-RAN cell, 11sNOTE 12 | 5GMM-REGISTERED | Transmission of NOTIFICATION message | SERVICE REQUEST message receivedCONTROL PLANE SERVICE REQUEST message receivedNOTIFICATION RESPONSE message receivedREGISTRATION REQUESTMessage receivedDEREGISTRATION REQUEST message receivedNGAPUE context resume request message as specified in3GPP TS 38.413 [31] received | Retransmission of NOTIFICATION message |
+| T3570NOTE 6NOTE 8 | 6sIn WB-N1/CE mode, 24sFor access via a satellite NG-RAN cell, 11sNOTE 12 | 5GMM-COMMON-PROCEDURE-INITIATED | Transmission of IDENTITY REQUEST message | IDENTITY RESPONSE message received | Retransmission of IDENTITY REQUEST message |
+| T3575NOTE 6NOTE 8 | 15sIn WB-N1/CE mode, 60sFor access via a satellite NG-RAN cell, 27sNOTE 12 | 5GMM-REGISTERED | Transmission of NETWORK SLICE-SPECIFIC AUTHENTICATION COMMAND message | NETWORK SLICE-SPECIFIC AUTHENTICATION COMPLETEmessagereceived | Retransmission of NETWORK SLICE-SPECIFIC AUTHENTICATION COMMAND message |
+| Active timer | NOTE 10 | All except 5GMM-DEREGISTERED | Entering 5GMM-IDLE mode after indicating MICO mode activation to the UE with an active timer value. | N1 NAS signallingconnection established | Activate MICO mode for the UE. |
+| Implicitde-registrationtimer | NOTE2 | All except 5GMM-DEREGISTERED | The mobile reachable timer expires while the network is in 5GMM-IDLE modeEntering 5GMM-IDLE mode over 3GPP access if the MICO mode is activated and strictly periodic monitoring timer is not runningThe strictly periodic monitoring timer expires while the network is in 5GMM-IDLE mode | N1 NAS signalling connection established | Implicitly de-register the UE on 1stexpiry |
+| Mobile reachable timer | NOTE 1 | All except 5GMM-DEREGISTERED | Entering 5GMM-IDLE mode | N1 NAS signalling connection established | Network dependent, but typically paging is halted on 1stexpiry, and start implicitde-registrationtimer,if the UE is notregisteredfor emergency services.Implicitlyde-registerthe UE which isregisteredfor emergency services |
+| Non-3GPP implicitde-registrationtimer | NOTE3 | All except 5GMM-DEREGISTERED | Entering 5GMM-IDLE mode over non-3GPP access | N1 NAS signalling connection over non-3GPP access established | Implicitly de-register the UE for non-3GPP access on 1sexpiry |
+| Strictly periodic monitoring timer | NOTE 5 | All except 5GMM-DEREGISTERED | At the successful completion of registration update procedure if strictly periodic registration timer indication is supported as specified in subclause 5.3.7. | Entering5GMM-DEREGISTERED. | In 5GMM-IDLE mode, start implicitde-registrationtimer as specified in subclause 5.3.7.In 5GMM-CONNECTED mode, Strictly periodic monitoring timer is started again as specified in subclause 5.3.7. |
+| Implementation specifictimer for onboarding services | NOTE11 | 5GMM-REGISTERED | At the successful completion of initial registrationfor onboarding services in SNPN or initial registration for the UEwhich the subscription is only for configuration of SNPN subscription parameters in PLMN via the user plane orsuccessful completion ofregistration procedure for mobility and periodic registration updateif theimplementation specifictimer for onboarding servicesis not running and:-the UE is registered for onboarding servicesin SNPN; or- the UE's subscription only allows forconfiguration of SNPN subscription parameters in PLMN via the user plane. | DEREGISTRATION REQUEST message received. | Network-initiated de-registration procedure performed |
+| NOTE 1:The default value of this timer is 4 minutes greater thanthe value of timerT3512. If the UE isregistered for emergency services, the value of this timer is set equal tothe value of timerT3512.If the T3346valueprovided in themobility managementmessagesis greater thanthe value of thetimer T3512,the AMF sets the mobile reachable timer and the implicit de-registration timer such that the sum of the timer values is greater than the value of timer T3346.NOTE 2:The value of this timer isnetwork dependent.IfMICOis activated, thedefaultvalue of this timer is 4 minutes greater thanthe value of timerT3512.NOTE 3:The value of this timer isnetwork dependent. The default value of this timer is 4 minutes greater than the non-3GPP de-registration timer.If the T3346valueprovided in themobility managementmessagesis greater thanthe value of thenon-3GPP de-registration timer,the AMF sets the non-3GPP implicit de-registration timer value to be 8 minutes greater than the value of timer T3346.NOTE 4:The value of this timer is network dependent.NOTE 5:The value of this timer is the same as the value of timer T3512.NOTE 6:In NB-N1 mode, the timer value shall be calculated as described in subclause 4.17.NOTE 7:In NB-N1 mode, the timer value shall be calculated by using an NAS timer value which is network dependent.NOTE 8:In WB-N1 mode, if the UE supports CE mode B and operates in either CE mode A or CE mode B, then the timer value is as described in this table for the case of WB-N1/CE mode (see subclause 4.19).NOTE 9:In WB-N1 mode, if the UE supports CE mode B, then the timer value shall be calculated by using an NAS timer value which value is network dependent.NOTE 10:Ifthe AMF includes timer T3324in theREGISTRATIONACCEPT message and if the UEis not registered for emergency services, the value of this timer is equal to the value of timer T3324.NOTE 11:The value of this timerneeds to be large enough to allow a UE to complete theconfiguration of one or more entries of the "list of subscriber data" and considering thatconfiguration of SNPN subscription parameters in PLMN via the user plane oronboarding services in SNPN involves third party entities outside of the operator's network.NOTE 12:In satellite NG-RAN access, this value shallonlybe selected when satellite NG-RAN RAT type is NR(MEO) or NR(GEO). |
 
 ## 10.3	Timers of 5GS session management
 
@@ -29865,11 +36851,33 @@ NOTE:	Timer T3396 is defined in 3GPP TS 24.008 [12].
 
 Table 10.3.1: Timers of 5GS session management – UE side
 
+| TIMER NUM. | TIMER VALUE | STATE | CAUSE OF START | NORMAL STOP | ONTHE1st, 2nd, 3rd, 4thEXPIRY (NOTE 1) |
+|---|---|---|---|---|---|
+| T3580NOTE 4NOTE 5 | 16sIn WB-N1/CE mode, 24sFor access via a satellite NG-RAN cell, 21sNOTE 7 | PDU SESSION ACTIVE PENDING | Transmission of PDU SESSION ESTABLISHMENT REQUEST message | PDU SESSION ESTABLISHMENT ACCEPTmessagereceived orPDU SESSION ESTABLISHMENT REJECTmessagereceivedorPDU SESSION ESTABLISHMENT REQUESTmessagereceived in a DL NAS TRANSPORT message with 5GMM cause #22, #28, #65. #67, #69, #90, #91 or #92 | Retransmission of PDU SESSION ESTABLISHMENT REQUEST message |
+| T3581NOTE 4NOTE 5 | 16sIn WB-N1/CE mode, 24sFor access via a satellite NG-RAN cell, 21sNOTE 7 | PDU SESSION MODIFICATION PENDING | Transmission of PDU SESSION MODIFICATION REQUEST message | PDU SESSION MODIFICATION COMMAND message with the same PTI is received or PDU SESSION MODIFICATION REJECT message receivedorPDU SESSION MODIFICATION REQUESTmessagereceived in a DL NAS TRANSPORT message with 5GMM cause #22, #28. #67, #69, or #90 | Retransmission of PDU SESSION MODIFICATION REQUEST message |
+| T3582NOTE 4NOTE 5 | 16sIn WB-N1/CE mode, 24sFor access via a satellite NG-RAN cell, 21sNOTE 7 | PDU SESSION INACTIVE PENDING | Transmission of PDU SESSION RELEASE REQUEST message | PDU SESSION RELEASE COMMAND message with the same PTI is received or PDU SESSION RELEASE REJECT message received | Retransmission of PDU SESSION RELEASE REQUEST message |
+| T3583 | Default 1 min.NOTE 2 | PDU SESSION ACTIVE | UE creates or updates a derived QoS rule | UE deletes the derived QoS rule (see subclause 6.2.5.1.4.5) | On 1stexpiry: Deletion of the derived QoS rule |
+| T3584 | NOTE 3 | PDU SESSION ACTIVE PENDINGPDU SESSION MODIFICATION PENDINGPDU SESSION ACTIVE orPDU SESSION INACTIVE PENDING | PDU SESSION ESTABLISHMENT REJECT, PDU SESSION MODIFICATION REJECT, or PDU SESSION RELEASE COMMAND received with 5GSM cause #67 and with a timer value for T3584PDU SESSION ESTABLISHMENT REQUEST, or PDU SESSION MODIFICATION REQUEST received in a DL NAS TRANSPORT message with 5GMM cause #67 and with a timer value for T3584 (see subclause 5.4.5.3.3) | PDU SESSION RELEASE COMMAND message (see NOTE 6) or PDU SESSION MODIFICATION COMMAND message or PDU SESSION AUTHENTICATION COMMAND message or DEREGISTRATION REQUEST message with theDe-registration typeIE indicating"re-registrationrequired"orREGISTRATION ACCEPT message orCONFIGURATION UPDATE COMMANDmessage (seesubclause 4.6.2.2) | None |
+| T3585 | NOTE 3 | PDU SESSION ACTIVE PENDINGPDU SESSION MODIFICATION PENDINGPDU SESSION ACTIVE orPDU SESSION INACTIVE PENDING | PDU SESSION ESTABLISHMENT REJECT, PDU SESSION MODIFICATION REJECT, or PDU SESSION RELEASE COMMAND received with 5GSM cause #69 and with a timer value for T3585PDU SESSION ESTABLISHMENT REQUEST, or PDU SESSION MODIFICATION REQUEST received in a DL NAS TRANSPORT message with 5GMM cause #69 and with a timer value for T3585(see subclause 5.4.5.3.3) | PDU SESSION RELEASE COMMAND message (see NOTE 6) or PDU SESSION MODIFICATION COMMAND message or PDU SESSION AUTHENTICATION COMMAND message or DEREGISTRATION REQUEST message with theDe-registration typeIE indicating"re-registrationrequired"orREGISTRATION ACCEPT message orCONFIGURATION UPDATE COMMANDmessage (seesubclause 4.6.2.2) | None |
+| Back-off timer |  |  | defined in 3GPP TS 24.008 [12] |  |  |
+| T3586NOTE 4NOTE 5 | 8sIn WB-N1/CE mode, 16sFor access via a satellite NG-RAN cell, 13sNOTE 7 | PDU SESSION ACTIVE | REMOTE UE REPORT messagesent | REMOTE UE REPORTRESPONSEmessagereceived | On the 1stand 2ndexpiry, retransmission ofREMOTE UE REPORT messageOn the 3rdexpiry, the procedure is aborted (see subclause 6.6.2.4). |
+| T3587 | NOTE 8 | PDU SESSION ACTIVE | PDU SESSION MODIFICATION COMMAND message orPDU SESSION ESTABLISHMENT ACCEPTmessage received with Received MBS information that includes MBS decision set to "MBS join is rejected" and Rejection cause set to "multicast MBS session has not started or will not start soon" and an MBS back-off timer value | None | Initiating a request to join the multicast MBS session associated with the PDU session if still needed |
+| NOTE1:Typically, the procedures are aborted on the fifth expiry of the relevant timer. Exceptions are described in the corresponding procedure description.NOTE 2:The network may provide the value of this timer applicable to the derived QoS rules of a specific PDU session as RQ timer value in the PDU SESSION ESTABLISHMENT ACCEPT message and PDU SESSION MODIFICATION COMMAND message. The maximum value of the timer is 30 min. If the network indicates a value greater than the maximum value, then the UE shall use the maximum value.NOTE 3:The value of this timer is provided by the network.NOTE 4:In NB-N1 mode, then the timer value shall be calculated as described in subclause 4.18.NOTE 5:In WB-N1 mode, if the UE supports CE mode B and operates in either CE mode A or CE mode B, then the timer value is as described in this table for the case of WB-N1/CE mode (see subclause 4.20).NOTE 6:If the PDU SESSION RELEASE COMMAND message includes the Back-off timer value IE where the timer value indicates neither zero nor deactivated and the 5GSM cause is not #39, the UE then starts the timer with the value provided in the Back-off timer value IE after stopping the existing timer (see subclause 6.3.3.3).NOTE 7:In satellite NG-RAN access, this value shallonlybe selected when satellite NG-RAN RAT type is NR(MEO) or NR(GEO).NOTE 8:The value of this timer is provided by the network inthe Received MBS container IE(see subclause 6.3.2.3,subclause6.4.1.3 and subclause9.11.4.31). |
+
 NOTE 1:	The back-off timer is used to describe a logical model of the required UE behaviour. This model does not imply any specific implementation, e.g. as a timer of timestamp.
 
 NOTE 2:	Reference to back-off timer in this section can either refer to use of timer T3396 or to use of a different packet system specific timer within the UE. Whether the UE uses T3396 as a back-off timer or it uses different packet system specific timers as back-off timers is left up to UE implementation.
 
 Table 10.3.2: Timers of 5GS session management – SMF side
+
+| TIMER NUM. | TIMER VALUE | STATE | CAUSE OF START | NORMAL STOP | ONTHE1st, 2nd, 3rd, 4thEXPIRY (NOTE 1) |
+|---|---|---|---|---|---|
+| T3590NOTE 3NOTE 4 | 15sIn WB-N1/CE mode, 23sFor access via a satellite NG-RAN cell, 21sNOTE 5 | PROCEDURE TRANSACTION PENDING | Transmission of PDU SESSION AUTHENTICATION COMMAND message | PDU SESSION AUTHENTICATION COMPLETEmessagereceived | Retransmission of PDU SESSION AUTHENTICATION COMMAND message |
+| T3591NOTE 3NOTE 4 | 16sIn WB-N1/CE mode, 24sFor access via a satellite NG-RAN cell, 22sNOTE 5 | PDU SESSION MODIFICATION PENDING | Transmission of PDU SESSION MODIFICATION COMMAND message | PDU SESSION MODIFICATION COMPLETEmessagereceived or PDU SESSION MODIFICATION COMMAND REJECTmessagereceived | Retransmission of PDU SESSION MODIFICATION COMMAND message |
+| T3592NOTE 3NOTE 4 | 16sIn WB-N1/CE mode, 24sFor access via a satellite NG-RAN cell, 22sNOTE 5 | PDU SESSION INACTIVE PENDING | Transmission of PDU SESSION RELEASE COMMAND message | PDU SESSION RELEASE COMPLETEmessagereceived orN1 SM delivery skipped indication received | Retransmission of PDU SESSION RELEASE COMMAND message |
+| T3593NOTE 3NOTE 4 | Default60s(NOTE 2) | PDU SESSION MODIFICATION PENDING | Reception of PDU SESSION MODIFICATION COMPLETE message for transmitted PDU SESSION MODIFICATION COMMAND message where the PDU SESSION MODIFICATION COMMAND message included 5GSM cause #39 | PDU SESSION RELEASE REQUEST message received | Network-requested PDU session release procedure performed |
+| T3594NOTE 3NOTE 4 | 15sIn WB-N1/CE mode, 23sFor access via a satellite NG-RAN cell, 21sNOTE 5 | PROCEDURE TRANSACTION PENDING | Transmission of SERVICE-LEVEL AUTHENTICATION COMMAND message | SERVICE-LEVEL AUTHENTICATION COMPLETEmessagereceived | Retransmission of SERVICE-LEVEL AUTHENTICATION COMMAND message |
+| NOTE1:Typically, the procedures are aborted on the fifth expiry of the relevant timer. Exceptions are described in the corresponding procedure description.NOTE 2:If the PDU Session Address Lifetime value is sent to the UE in the PDU SESSION MODIFICATION COMMAND message then timer T3593 shall be started with the same value, otherwise it shall use a default value.NOTE 3:In NB-N1 mode, the timer value shall be calculated as described in subclause 4.18.NOTE 4:In WB-N1 mode, if the UE supports CE mode B and operates in either CE mode A or CE mode B, then the timer value is as described in this table for the case of WB-N1/CE mode (see subclause 4.20).NOTE 5:In satellite NG-RAN access, this value shallonlybe selected when satellite NG-RAN RAT type is NR(MEO) or NR(GEO). |
 
 # A.1	Causes related to UE identification
 
@@ -30889,6 +37897,15 @@ Direction:	network to UE
 
 Table D.5.1.1.1: MANAGE UE POLICY COMMAND message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | MANAGEUE POLICY COMMAND message identity | UE policy deliveryservicemessage typeD.6.1 | M | V | 1 |
+|  | UE policy sectionmanagementlist | UE policy sectionmanagementlistD.6.2 | M | LV-E | 11-65533 |
+| 42 | UE policy network classmark | UE policy network classmarkD.6.7 | O | TLV | 3-5 |
+| 70 | VPS URSP configuration | VPS URSP configurationD.6.8 | O | TLV-E | 3-65533 |
+| NOTE:The total length of the MANAGE UE POLICY COMMAND message content cannot exceed 65535 octets (see Payload container contents maximum length as specified in subclause 9.11.3.39.1). |
+
 ### D.5.1.2	UE policy network classmark
 
 The UE policy network classmark is included when the PCF of a PLMN or an SNPN intends to provide the UE with information about the policy aspects of the network.
@@ -30911,6 +37928,11 @@ Direction:	UE to network
 
 Table D.5.2.1.1: MANAGE UE POLICY COMPLETE message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | MANAGEUE POLICY COMPLETE message identity | UE policy deliveryservicemessage typeD.6.1 | M | V | 1 |
+
 ## D.5.3	Manage UE policy command reject
 
 ### D.5.3.1	Message definition
@@ -30924,6 +37946,13 @@ Significance:	dual
 Direction:	UE to network
 
 Table D.5.3.1.1: MANAGE UE POLICY COMMAND REJECT message content
+
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | MANAGEUE POLICY COMMAND REJECT message identity | UE policy deliveryservicemessage typeD.6.1. | M | V | 1 |
+|  | UE policy sectionmanagementresult | UE policy sectionmanagement resultD.6.3 | M | LV-E | 11-65533 |
+| NOTE:The total length of the MANAGE UE POLICY COMMAND REJECT message content cannot exceed 65535 octets (see Payload container contents maximum length as specified in subclause 9.11.3.39.1). |
 
 ## D.5.4	UE state indication
 
@@ -30953,11 +37982,34 @@ Direction:	UE to network
 
 Table D.5.4.1.1: UE STATE INDICATION message content
 
+| IEI | Information Element | Type/Reference | Presence | Format | Length |
+|---|---|---|---|---|---|
+|  | PTI | Procedure transaction identity9.6 | M | V | 1 |
+|  | UE STATE INDICATIONmessage identity | UE policy deliveryservicemessage typeD.6.1 | M | V | 1 |
+|  | UPSI list | UPSI listD.6.4 | M | LV-E | 2-65531 |
+|  | UE policy classmark | UE policy classmarkD.6.5 | M | LV | 2-4 |
+| 41 | UE OS Id | OS IdD.6.6 | O | TLV | 18-242 |
+| NOTE:The total length of the UE STATE INDICATION message content cannot exceed 65535 octets (see Payload container contents maximum length as specified in subclause9.11.3.39.1). |
+
 # D.6	Information elements coding
 
 ## D.6.1	UE policy delivery service message type
 
 Table D.6.1.1: UE policy delivery service message type
+
+| Bits |
+|---|
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  | Reserved |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  | MANAGEUE POLICY COMMAND message |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |  | MANAGEUE POLICY COMPLETE message |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |  | MANAGEUE POLICY COMMAND REJECT message |
+| 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |  | UE STATE INDICATION message |
+| 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 |  | UE POLICY PROVISIONING REQUEST message (see NOTE) |
+| 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 |  | UE POLICY PROVISIONING REJECT message (see NOTE) |
+|  |
+| All other values are reserved |
+| NOTE:Coding ofUE POLICY PROVISIONING REQUESTmessage andUE POLICY PROVISIONING REJECT messageare specified in 3GPP TS 24.587[19B].Usage of UE POLICY PROVISIONING REQUEST message and UE POLICY PROVISIONING REJECT message for V2X policy is specified in3GPP TS 24.587[19B].Usage of UE POLICY PROVISIONING REQUEST message and UE POLICY PROVISIONING REJECT message for ProSeP policy is specified in3GPP TS 24.554[19E].Usage of UE POLICY PROVISIONING REQUEST message and UE POLICY PROVISIONING REJECT message for A2X policy is specified in3GPP TS 24.577[60].Usage of UE POLICY PROVISIONING REQUEST message and UE POLICY PROVISIONING REJECT message for RSLPP policy is specified in3GPP TS 24.514[62]. |
 
 ## D.6.2	UE policy section management list
 
@@ -30967,21 +38019,138 @@ The UE policy section management list information element is coded as shown in f
 
 The UE policy section management list information element has a minimum length of 12 octets and a maximum length of 65534 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE policy section management list IEI | octet 1 |
+| Length of UE policy section management list contents | octet 2octet 3 |
+| UE policy section management list contents | octet 4octet z |
+
 Figure D.6.2.1: UE policy section management list information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE policy section management sublist (PLMN 1) | octet 4octet a |
+| UE policy section management sublist (PLMN 2) | octet(a+1)*octet b* |
+| … | octet(b+1)*…octet c* |
+| UE policy section management sublist (PLMN N) | octet(c+1)*octet z* |
 
 Figure D.6.2.2: UE policy section management list contents
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of UE policy section management sublist | octet doctet d+1 |
+|  | MCC digit 1 | octet d+2 |
+| MCC digit 2 |  |  |
+|  | MCC digit 3 | octet d+3 |
+| MNC digit 3 |  |  |
+|  | MNC digit 1 | octet d+4 |
+| MNC digit 2 |  |  |
+| UE policy section management sublist contents | octet d+5octet y |
+
 Figure D.6.2.3: UE policy section management sublist
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Instruction 1 | octet d+5octet e |
+| Instruction 2 | octet(e+1)*octet f* |
+| … | octet(f+1)*…octet g* |
+| Instruction N | octet(g+1)*octet e* |
 
 Figure D.6.2.4: UE policy section management sublist contents
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Instruction contents length | octet d+5octet d+6 |
+| UPSC | octet d+7octet d+8 |
+| UE policy section contents | octet(d+9)*octet k* |
+
 Figure D.6.2.5: Instruction
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE policy part 1 | octet loctet m |
+| UE policy part 2 | octet(m+1)*octet n* |
+| … | octet(n+1)*…octet o* |
+| UE policy part N | octet(o+1)*octet p* |
+
 Figure D.6.2.6: UE policy section contents
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE policy part contents length | octet qoctet q+1 |
+| 0 | 0 | 0 | 0 | UE policy part type | octet q+2 |
+| Spare |  |  |
+| UE policy part contents | octet q+3octet r |
 
 Figure D.6.2.7: UE policy part
 
 Table D.6.2.1: UE policy section management list information element
+
+| Value part of the UE policy section management list information element (octets 4 to z) |
+|---|
+|  |
+| The value part of the UE policy section management list information element consists of one or several UE policy section management sublists. |
+|  |
+| UE policy section management sublist: |
+|  |
+| Length of UE policy section management sublist (octets d to d+1) |
+|  |
+| This field contains the binary encoding of the length of the UE policy section management sublist in units of octets. |
+|  |
+| MCC, Mobile country code (octet d+2, and bits 4 to 1 of octet d+3) |
+|  |
+| The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|  |
+| MNC, Mobile network code (bits 8 to 5 of octet d+3, and octet d+4) |
+|  |
+| The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, MNC digit 3 shall be coded as "1111".(NOTE 1) |
+|  |
+| UE policy section management sublist contents (octets d+5 to y) |
+|  |
+| The UE policy section management sublist contents consist of one or several instructions. |
+|  |
+| Instruction: |
+|  |
+| Instruction contents length (octets d+5 to d+6) |
+|  |
+| This field contains the binary encoding of the instruction contents length in units of octets. |
+|  |
+| UPSC (octets d+7 to d+8) |
+|  |
+| This field contains the binary encoding of the UPSC. The value of the UPSC is set by the PCF. |
+|  |
+| UE policy section contents (octets d+9 to k) |
+|  |
+| The UE policy section contents consist of one or several UE policy parts. |
+|  |
+| UE policy part: |
+|  |
+| UE policy part contents length (octets q to q+1) |
+|  |
+| This field contains the binary encoding of the UE policy part contents length in units of octets(NOTE2). |
+|  |
+| UE policy part type (bits 4 to 1 of octet q+2) |
+| Bits |
+| 4 | 3 | 2 | 1 |  |
+| 0 | 0 | 0 | 0 | Reserved |
+| 0 | 0 | 0 | 1 | URSP |
+| 0 | 0 | 1 | 0 | ANDSP |
+| 0 | 0 | 1 | 1 | V2XP |
+| 0 | 1 | 0 | 0 | ProSeP |
+| 0 | 1 | 0 | 1 | A2XP |
+| 0 | 1 | 1 | 0 | RSLPP |
+| All other values are reserved. |
+|  |
+| Bits 8 to 5 of octet q+2 are spare and shall be coded as zero. |
+|  |
+| UE policy part contents (octets q+3 to r) |
+|  |
+| This field contains a UE policy part encoded as specified in 3GPPTS24.526[19] for the UE policy part type field set to "URSP" or "ANDSP",in 3GPP TS 24.588 [19C] for the UE policy part type field set to "V2XP", in 3GPP TS 24.555[19F] for the UE policy part type field set to "ProSeP"and in 3GPP TS 24.514 [62] for the UE policy part type field set to "RSLPP"and in 3GPP TS 24.578 [61] for the UE policy part type field set to "A2XP"respectively. |
+|  |
+| NOTE 1:When the PCF is in an SNPN, the PCF shall include the PLMN ID part of the SNPN identity in theUE policy section management sublist. |
+|  |
+| NOTE 2:The UE policy part contents length indicates the length of the value part of the UE policy part field (i.e. octet q+2 to octet r). |
+|  |
 
 ## D.6.3	UE policy section management result
 
@@ -30991,17 +38160,95 @@ The UE policy section management result information element is coded as shown in
 
 The UE policy section management result information element has a minimum length of 12 octets and a maximum length of 65534 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE policy section management result IEI | octet 1 |
+| Length of UE policy section management result contents | octet 2octet 3 |
+| UE policy section management result contents | octet 4octet z |
+
 Figure D.6.3.1: UE policy section management result information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE policy section management subresult (PLMN 1) | octet 4octet a |
+| UE policy section management subresult (PLMN 2) | octet (a+1)*octet b* |
+| … | octet (b+1)*…octet c* |
+| UE policy section management subresult (PLMN N) | octet (c+1)*octet z* |
 
 Figure D.6.3.2: UE policy section management result contents
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of results | octet d |
+|  | MCC digit 1 | octet d+1 |
+| MCC digit 2 |  |  |
+|  | MCC digit 3 | octet d+2 |
+| MNC digit 3 |  |  |
+|  | MNC digit 1 | octet d+3 |
+| MNC digit 2 |  |  |
+| UE policy section management subresult contents | octet d+4octet y |
+
 Figure D.6.3.3: UE policy section management subresult
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Result 1 | octet d+4octet d+8 |
+| Result 2 | octet (d+9)*octet (d+13)* |
+| … | Octet (d+14)*…octet e* |
+| Result N | Octet (e+1)*octet (e+5)* |
+
 Figure D.6.3.4: UE policy section management subresult contents
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UPSC | octet foctet f+1 |
+| Failed instruction order | octet f+2octet f+3 |
+| Cause | octet f+4 |
 
 Figure D.6.3.5: Result
 
 Table D.6.3.1: UE policy section management result information element
+
+| Value part of the UE policy section management result information element (octets 4 to z) |
+|---|
+|  |
+| The value part of the UE policy section management result information element consists of one or several UE policy section management subresults. |
+|  |
+|  |
+| UE policy section management subresult: |
+|  |
+| Number of results (octet d) |
+|  |
+| This field contains the binary encoding of number of results included in the UE policy section management subresult. |
+|  |
+| MCC, Mobile country code (octet d+1, and bits 4 to 1 of octet d+2) |
+|  |
+| The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|  |
+| MNC, Mobile network code (bits 8 to 5 of octet d+2, and octet d+3) |
+|  |
+| The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, MNC digit 3 shall be coded as "1111".(NOTE) |
+|  |
+| UE policy section management subresult contents (octets d+4 to y) |
+| The UE policy section management subresult contents consist of one or several results. |
+|  |
+| Result (octet f to f+4) |
+|  |
+| UPSC (octet f to f+1) |
+|  |
+| This field contains the binary encoding of the UPSC. The value of the UPSC is set by the PCF |
+|  |
+| Failed instruction order (octets f+2 to f+3) |
+|  |
+| This field contains the binary encoding of the order of the instruction intheUE policy section management sublistcontents as specified in FigureD.6.2.4,which could not be executed successfully.The value of failed instruction orderset to one indicates that the first instruction in theUE policy section management sublistcontents could not be executed successfully. |
+|  |
+| Cause (octet f+4) |
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 1 | 1 | 0 | 1 | 1 | 1 | 1 |  | Protocol error, unspecified |
+| The receiving entity shall treat any other value as 0110 1111, "Protocol error, unspecified". |
+| NOTE:The UE operating in the SNPN access operation mode shall include the PLMN ID part of the SNPN identity of the SNPN in theUE policy section management subresult. |
+|  |
 
 ## D.6.4	UPSI list
 
@@ -31013,11 +38260,51 @@ The UPSI list information element has a minimum length of 3 octets and a maximum
 
 NOTE:	A PCF implementing a previous version of the present specification will expect the UPSI list information element to have a minimum length of 10 octets and could be unable to decode a UPSI list information element with a length of 3 octets i.e. a UPSI list information element not containing any UPSI.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UPSI list IEI | octet 1 |
+| Length of UPSI list contents | octet 2octet 3 |
+| UPSI sublist (PLMN 1) | octet 4*octet a* |
+| UPSI sublist (PLMN 2) | octet a+1*octet b* |
+| … | octet b+1*octet c* |
+| UPSI sublist (PLMN N) | octet c+1*octet z* |
+
 Figure D.6.4.1: UPSI list information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length of UPSI sublist | octet doctet d+1 |
+| MCC digit 2 | MCC digit 1 | octet d+2 |
+| MNC digit 3 | MCC digit 3 | octet d+3 |
+| MNC digit 2 | MNC digit 1 | octet d+4 |
+| UPSC 1 | octet d+5octet d+6 |
+| UPSC 2 | octet d+7*octet d+8* |
+| … | octet d+9*octet e* |
+| UPSC M | octet e+1*octete+2* |
 
 Figure D.6.4.2: UPSI sublist
 
 Table D.6.4.1: UPSI list information element
+
+| Length of UPSI list contents (octets 2 to 3) |
+|---|
+|  |
+| This field indicates the length of the UPSI list contents. If noUPSIsare included in the UPSI list, the UE shall set the length of UPSI list contents to zero. |
+|  |
+| MCC, Mobile country code (octet d+2, and bits 4 to 1 of octet d+3) |
+|  |
+| The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|  |
+| MNC, Mobile network code (bits 8 to 5 of octet d+3, and octet d+4) |
+|  |
+| The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, MNC digit 3 shall be coded as "1111".(NOTE) |
+|  |
+| UPSC (octets d+5 to d+6) |
+|  |
+| This field contains the binary encoding of the UPSC. The value of the UPSC is set by the PCF. |
+|  |
+| NOTE:The UE operating in the SNPN access operation mode shall include the PLMN ID part of the SNPN identity in the UPSI sublist. |
+|  |
 
 ## D.6.5	UE policy classmark
 
@@ -31027,9 +38314,43 @@ The UE policy classmark information element is coded as shown in figure D.6.5.1
 
 The UE policy classmark is a type 4 information element with a minimum length of 3 octets and a maximum length of 5 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Policy information IEI | octet 1 |
+| Length of Policy information contents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | SupportRURE | SVPSU | EPSURSP | SupportANDSP | octet 3 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | octet 4* -5* |
+| Spare |  |
+
 Figure D.6.5.1: UE policy classmark information element
 
 Table D.6.5.1: UE policy classmark information element
+
+| Support of ANDSP by the UE (SupportANDSP) (octet 3, bit 1) |
+|---|
+| Bit |
+| 1 |  |
+| 0 | ANDSP not supported by the UE |
+| 1 | ANDSP supported by the UE |
+|  |
+| Support of URSPprovisioning in EPS by the UE (EPSURSP) (octet 3, bit 2)(see NOTE) |
+| Bit |
+| 2 |  |
+| 0 | URSP provisioning in EPS not supported by the UE |
+| 1 | URSP provisioning in EPS supported by the UE |
+|  |  |
+| Support ofVPS URSP(SVPSU) (octet 3, bit3) |
+| Bit |
+| 3 |  |
+| 0 | VPS URSPnot supported by the UE |
+| 1 | VPS URSPsupported by the UE |
+| Support of ReportingURSPRuleEnforcementby the UE (SupportRURE) (octet 3, bit4)Bit4 |
+| 0 | Reporting URSP rule enforcement not supported by the UE |
+| 1 | Reporting URSP rule enforcement supported by the UE |
+|  |  |
+| All other bits in octet 3 to 5 are spare and shall be coded as zero, if the respective octet is included in the information element. |
+| NOTE:This indicator shall be ignored by an EPS receiving entity as the UE in EPS providing UE STATE INDICATION message, supports URSP provisioning in EPS. |
+|  |
 
 ## D.6.6	UE OS Id
 
@@ -31039,9 +38360,21 @@ The UE OS Id information element is coded as shown in figure D.6.6.1 and table�
 
 The UE OS Id is a type 4 information element with a minimum length of 18 octet and a maximum length of 242 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| OS Id IEI | octet 1 |
+| Length of OS Id information contents | octet 2 |
+| OS Id_1 | octets 3 - 18 |
+| … | … |
+| OS Id_15 | octets 227* -242* |
+
 Figure D.6.6.1: UE OS Id information element
 
 Table D.6.6.1: UE OS Id information element
+
+| OS Id: |
+|---|
+| The OS Id is coded as a sequence of a sixteen octet OS Id value field. The OS Id value field is defined as Universally Unique IDentifier (UUID) as specified in IETF RFC 4122 [35A]. |
 
 ## D.6.7	UE policy network classmark
 
@@ -31051,9 +38384,27 @@ The UE policy network classmark information element is coded as shown in figure�
 
 The UE policy network classmark is a type 4 information element with a minimum length of 3 octets and a maximum length of 5 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| UE policy network classmarkIEI | octet 1 |
+| Length ofUE policy network classmarkcontents | octet 2 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0 Spare | 0 Spare | NSSUI | octet 3 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | octet 4* -5* |
+| Spare |  |
+
 Figure D.6.7.1: UE policy network classmark information element
 
 Table D.6.7.1: UE policy network classmark information element
+
+| Non-subscribed SNPN signalled URSP handling indication (NSSUI) (octet 3, bit 1) (see NOTE) |
+|---|
+| Bits |
+| 1 |  |  |
+| 0 |  | UE is allowed to accept URSP signalled by non-subscribed SNPNs |
+| 1 |  | UE is not allowed toaccept URSP signalled by non-subscribed SNPNs |
+|  |
+| All other bits in octet 3 to 5 are spare and shall be coded as zero, if the respective octet is included in the information element. |
+| NOTE:ReceivingUEshall ignore this bit, ifi) UEhas anempty or non-presentEHPLMN listand the bit isreceived from the RPLMN which is not the HPLMN, ii) UEhasnon-emptyEHPLMN listand the bit isreceived from the RPLMN which is notanEHPLMNoriii) the bit is receivedfrom the RSNPN which is not the subscribed SNPN. |
 
 ## D.6.8	VPS URSP configuration
 
@@ -31063,31 +38414,138 @@ The VPS URSP configuration information element is coded as shown in figure D.6.
 
 The VPS URSP configuration is type 6 information element with a minimum length of 3 octets and a maximum length of 65533 octets.
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| VPS URSP configurationIEI | octet 1 |
+| Length ofVPS URSP configurationcontents | octet 2octet 3 |
+| 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | 0Spare | RT | octet 4 |
+| Tuple 1 | octet5*octet a* |
+| Tuple 2 | octet(a+1)*octet b* |
+| … | octet(b+1)*octet c* |
+| Tuple N | octet(c+1)*octet z* |
+
 Figure D.6.8.1: VPS URSP configuration information element
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Length oftuple contents | octeta+1octeta+2 |
+| Tuple ID | octeta+3 |
+| Network descriptor | octet a+4octet e |
+| UPSC1 | octet(e+1)*octet(e+2)* |
+| UPSC2 | octet(e+3)*octet(e+4)* |
+| … | octet (e+5)*octet (e+n*2e-2)* |
+| UPSCn | octet (e+n*2-1)*octet (e+n*2)* = octet b* |
 
 Figure D.6.8.2: Tuple
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of networkdescriptorentries | octeta+4 |
+| Networkdescriptorentry 1 | octet(a+5)octet f |
+| Networkdescriptorentry 2 | octet(f+1)*octet g* |
+| ... | octet(g+1)*octet h* |
+| Networkdescriptorentry m | octet(h+1)*octet e* |
+
 Figure D.6.8.3: Network descriptor
+
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Networkdescriptorentrytype | octetf+1 |
+| Networkdescriptorentry value | octet(f+2)*octet g* |
 
 Figure D.6.8.4: Network descriptor entry
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of PLMN IDs | octet(f+2) |
+| PLMN ID 1 | octet(f+3)octet (f+5) |
+| PLMN ID 2 | octet (f+6)*octet (f+8)* |
+| ... |  |
+| PLMN ID m | octet(m*3+f)*octet(m*3+f+2)* = octet g* |
+
 Figure D.6.8.5: Network descriptor entry value for network descriptor entry type set to "one or more VPLMNs"
+
+| MCC digit 2 | MCC digit 1 | octetf+6 |
+|---|---|---|
+| MNC digit 3 | MCC digit 3 | octetf+7 |
+| MNC digit 2 | MNC digit 1 | octetf+8 |
 
 Figure D.6.8.6: PLMN ID
 
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |
+|---|---|---|---|---|---|---|---|---|
+| Number of MCCs | octet(f+2) |
+| MCC pair 1 | octet(f+3)octet (f+5) |
+| MCC pair 2 | octet (f+6)*octet (f+8)* |
+| ... |  |
+| MCC pair m | octet(m*3+f)*octet (m*3+f+2)* |
+| Odd MCC | octet(m*3+f+3)*octet (m*3+f+4)* = octet g* |
+
 Figure D.6.8.7: Network descriptor entry value for network descriptor entry type set to "one or more MCCs"
 
+| MCC1digit 2 | MCC1digit 1 | octetf+6 |
+|---|---|---|
+| MCC2digit 3 | MCC1digit 3 | octetf+7 |
+| MCC2digit 2 | MCC2digit 1 | octetf+8 |
+
 Figure D.6.8.8: MCC pair
+
+| MCC digit 2 | MCC digit 1 | octet(m*3+f+3) |
+|---|---|---|
+| 0Spare | 0Spare | 0Spare | 0Spare | MCC digit 3 | octet (m*3+f+4) = octet g |
 
 Figure D.6.8.9: Odd MCC
 
 Table D.6.8.1: VPS URSP configuration information element
+
+| Replacementtype(octet 4, bits 1 and 2) |
+|---|
+| Bits |
+| 2 | 1 |  |  |  |  |
+| 0 | 1 |  |  |  | per-tuple replacement |
+| 1 | 0 |  |  |  | full list of tuples |
+| All other values are reserved. |
+|  |
+| Tuple ID (octet a+3) |
+| This field contains the binary encoding of thetuple ID. The value of thetuple IDis set by the PCF. |
+|  |
+| Networkdescriptorentry type(octet f+1) |
+| Bits |
+| 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |  |  |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |  | one or more VPLMNs |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |  | one or more MCCs |
+| 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |  | any VPLMN |
+| All other values are reserved. |
+|  |
+| If the networkdescriptorentry typefield is set to "one or more VPLMNs" or "one or more MCCs", then thenetworkdescriptorentry value field is present.If the networkdescriptorentry typefield is set to "any VPLMN", then thenetworkdescriptorentry value field is absent. |
+|  |
+| Number of PLMN IDs (octet(f+2) of thenetworkdescriptorentry value for networkdescriptorentry type set to "one or more VPLMNs") |
+| The number of PLMN IDsfield indicates the number of the PLMN IDs in the networkdescriptorentry value field. |
+|  |
+| MCC, Mobile country code (octetf+6and bits 4 to 1 of octetf+7 of thePLMN ID,octetf+6and bits 4 to 1 of octetf+7 of theMCC pair, andoctetf+8and bits8to5of octetf+7 of theMCC pair,octetm*3+f+3and bits 4 to 1 ofm*3+f+4 of the oddMCC) |
+| The MCC field is coded as in ITU-T Recommendation E.212 [42], annex A. |
+|  |
+| MNC, Mobile network code (bits 8 to 5 of octetf+7, and octetf+8) |
+| The coding of this field is the responsibility of each administration but BCD coding shall be used. The MNC shall consist of 2 or 3 digits. If a network operator decides to use only two digits in the MNC, MNC digit 3 shall be coded as "1111". |
+|  |
+| Number of MCCs (octet(f+2) of thenetworkdescriptorentry value for networkdescriptorentry type set to "one or more MCCs") |
+| The number of MCCsfield indicates the number of the MCCs in the networkdescriptorentry value field. If thenumber of MCCs field is an odd value, then theoddMCC field is present otherwise theoddMCC field is absent. |
+|  |
+| UPSC (octetse+3toe+4) |
+| This field contains the binary encoding of the UPSCof an UPSI of a UE policy section of the HPLMN (see NOTE),which contains solely one or more UE policy parts with theUE policy part typeset to "URSP", such that the URSP rules in thoseone or more UE policy parts are applicable to the VPLMN and its equivalent PLMN. |
+|  |
+| NOTE:PLMN ID of the UPSI is not indicated. |
 
 # D.7	Timers of UE policy delivery service
 
 Timers of UE policy delivery service are shown in table D.7.1.
 
 Table D.7.1: Timers of UE policy delivery service – PCF side
+
+| TIMER NUM. | TIMER VALUE | CAUSE OF START | NORMAL STOP | ONTHE1st, 2nd, 3rd, 4thEXPIRY |
+|---|---|---|---|---|
+| T3501 | NOTE1 | Transmission of MANAGE UE POLICY COMMAND | MANAGEUE POLICY COMMAND COMPLETE orMANAGEUE POLICY COMMAND REJECTmessage received | Retransmission of MANAGE UE POLICY COMMANDmessage |
+| NOTE 1:The value of this timer isnetwork dependent. |
 
 # D.8	Handling of unknown, unforeseen, and erroneous UPDS data
 

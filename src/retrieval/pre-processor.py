@@ -3,24 +3,27 @@ import sys
 import re
 from docx import Document
 from pathlib import Path
+
 # Add parent directory to Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.append(str(Path(__file__).parents[2].resolve()))
 
 from src.lib.logger import get_logger
 
 logger = get_logger(__name__)
 
+
 def clean_heading(text):
     """
     Clean a heading by removing leading numbers and spaces.
-    
+
     Args:
         text (str): The heading text.
-    
+
     Returns:
         str: Cleaned heading text in lowercase.
     """
-    return re.sub(r'^\d+(\.\d+)*\s*', '', text).strip().lower()
+    return re.sub(r"^\d+(\.\d+)*\s*", "", text).strip().lower()
+
 
 def is_excluded_heading(text, exclude_sections):
     """
@@ -36,65 +39,89 @@ def is_excluded_heading(text, exclude_sections):
     cleaned = clean_heading(text)
     return any(cleaned.startswith(section.lower()) for section in exclude_sections)
 
+
 def extract_paragraphs(doc):
     """
-    Extract paragraphs from the document with their styles.
-
-    Args:
-        doc (Document): The loaded document object.
-
-    Returns:
-        List[Dict]: List of paragraphs, each containing:
-            - text (str): The paragraph text.
-            - style (str): The paragraph style name.
-            - level (int): The heading level (if applicable).
+    Extract paragraphs and tables from the document in their natural order.
     """
     paragraphs = []
-    inside_contents_section = False  # Track if we're inside "Contents"
+    inside_contents_section = False
 
     for para in doc.paragraphs:
         text = para.text.strip()
-        if not text:
-            continue
 
-        style = para.style.name
-        level = int(style[-1]) if style.startswith("Heading") and style[-1].isdigit() else None
-
-        # If "Contents" appears (not a heading), start skipping lines
+        # Handle Contents section
         if text.lower() == "contents":
             inside_contents_section = True
-            logger.info("Skipping 'Contents' section")
             continue
-
-        # If a heading appears, stop skipping "Contents"
-        if style.startswith("Heading") and inside_contents_section:
+        if inside_contents_section and para.style.name.startswith("Heading"):
             inside_contents_section = False
-
-        # Skip all paragraphs under "Contents"
         if inside_contents_section:
             continue
 
-        paragraphs.append({"text": text, "style": style, "level": level})
+        # Get paragraph style and level
+        style = para.style.name
+        level = (
+            int(style[-1])
+            if style.startswith("Heading") and style[-1].isdigit()
+            else None
+        )
+
+        # Check for table after this paragraph
+        if hasattr(para._element, "getnext") and para._element.getnext() is not None:
+            next_elem = para._element.getnext()
+            if next_elem.tag.endswith("tbl"):
+                # Convert table to markdown directly using the table element
+                markdown_table = []
+                for row in next_elem.tr_lst:  # Access table rows
+                    cells = []
+                    for cell in row.tc_lst:  # Access cells in each row
+                        # Get text content from cell
+                        cell_text = "".join(
+                            t.text.strip() for t in cell.xpath(".//w:t")
+                        )
+                        cells.append(cell_text.replace("\n", " "))
+                    markdown_table.append("| " + " | ".join(cells) + " |")
+                    if len(markdown_table) == 1:  # After header row
+                        markdown_table.append(
+                            "|" + "|".join(["---" for _ in cells]) + "|"
+                        )
+
+                # Add paragraph if not empty
+                if text:
+                    paragraphs.append({"text": text, "style": style, "level": level})
+                # Add table
+                paragraphs.append(
+                    {"text": "\n".join(markdown_table), "style": "Table", "level": None}
+                )
+                continue
+
+        # Add regular paragraph if not empty
+        if text:
+            paragraphs.append({"text": text, "style": style, "level": level})
 
     return paragraphs
 
+
 def extract_filtered_content(paragraphs, exclude_sections):
     """
-    Extracts main content, excluding predefined sections.
-
-    Args:
-        paragraphs (list): List of paragraph dictionaries.
-        exclude_sections (set): Sections to be excluded.
-
-    Returns:
-        list: Filtered content.
+    Extracts main content with tables in their natural position.
     """
     filtered_content = []
     exclude_section = False
+    found_first_heading = False
 
     for para in paragraphs:
         text = para["text"]
         is_heading = para["style"].startswith("Heading")
+
+        # Mark first heading found
+        if is_heading:
+            found_first_heading = True
+
+        # Skip content until we find first heading
+        if not found_first_heading:
+            continue
 
         if is_heading and is_excluded_heading(text, exclude_sections):
             exclude_section = True
@@ -112,31 +139,64 @@ def extract_filtered_content(paragraphs, exclude_sections):
 
     return filtered_content
 
+
 def extract_excluded_content(paragraphs, exclude_sections):
     """
-    Extracts content from excluded sections.
-
-    Args:
-        paragraphs (list): List of paragraph dictionaries.
-        exclude_sections (set): Sections to be excluded.
-
-    Returns:
-        list: Excluded content.
+    Extracts content from excluded sections, maintaining proper heading formatting.
+    Captures all excluded content from the start of the document.
     """
     excluded_content = []
-    exclude_section = False
+    exclude_section = True
+    current_section = []
+    found_first_heading = False
 
     for para in paragraphs:
         text = para["text"]
         is_heading = para["style"].startswith("Heading")
 
-        if is_heading and is_excluded_heading(text, exclude_sections):
-            exclude_section = True
+        # Handle first heading case
+        if is_heading and not found_first_heading:
+            found_first_heading = True
+            # If first heading is not excluded, add previous content and stop excluding
+            if not is_excluded_heading(text, exclude_sections):
+                if current_section:
+                    excluded_content.extend(current_section)
+                    current_section = []
+                exclude_section = False
+                continue
 
+        # Handle excluded section start
+        if is_heading and is_excluded_heading(text, exclude_sections):
+            # Add previous section if exists
+            if current_section:
+                excluded_content.extend(current_section)
+            exclude_section = True
+            # Format heading with proper level
+            level = para["level"] or 2
+            current_section = [f"{'#' * level} {text}"]
+            continue
+
+        # Handle non-excluded heading
+        if is_heading and not is_excluded_heading(text, exclude_sections):
+            if exclude_section and current_section:
+                excluded_content.extend(current_section)
+                current_section = []
+            exclude_section = False
+            continue
+
+        # Collect content while in excluded section
         if exclude_section:
-            excluded_content.append(text)
+            if para["style"] == "Table":
+                current_section.append(text)  # Tables are already formatted
+            else:
+                current_section.append(text)
+
+    # Add any remaining excluded content
+    if current_section:
+        excluded_content.extend(current_section)
 
     return excluded_content
+
 
 def extract_toc(paragraphs):
     """
@@ -152,9 +212,10 @@ def extract_toc(paragraphs):
     for para in paragraphs:
         if para["style"].startswith("Heading"):
             level = para["level"] or 2
-            toc_content.append(f"{'  ' * (level-1)}- {para['text']}")
+            toc_content.append(f"{'  ' * (level - 1)}- {para['text']}")
 
     return toc_content
+
 
 def save_markdown_files(main_content, excluded_content, toc_content, output_folder):
     """
@@ -171,7 +232,7 @@ def save_markdown_files(main_content, excluded_content, toc_content, output_fold
     files = {
         "24501-filtered.md": main_content,
         "24501-excluded.md": excluded_content,
-        "24501-toc.md": toc_content
+        "24501-toc.md": toc_content,
     }
 
     for filename, content in files.items():
@@ -183,7 +244,8 @@ def save_markdown_files(main_content, excluded_content, toc_content, output_fold
         except Exception as e:
             logger.error(f"Error saving {filename}: {e}")
 
-def docx_to_markdown(file_path, save_markdown=False, output_folder="../../data/markdown"):
+
+def docx_to_markdown(file_path, save_markdown=False, output_folder="data/markdown"):
     """
     Main function to process DOCX file and extract structured content.
 
@@ -201,8 +263,8 @@ def docx_to_markdown(file_path, save_markdown=False, output_folder="../../data/m
         paragraphs = extract_paragraphs(doc)
 
         exclude_sections = {
-            "annex", 
-            "void",   
+            "annex",
+            "void",
             "foreword",
             "scope",
             "references",
@@ -216,13 +278,17 @@ def docx_to_markdown(file_path, save_markdown=False, output_folder="../../data/m
         toc_content = extract_toc(paragraphs)
 
         if save_markdown:
-            save_markdown_files(filtered_content, excluded_content, toc_content, output_folder)
+            save_markdown_files(
+                filtered_content, excluded_content, toc_content, output_folder
+            )
 
         return "\n\n".join(filtered_content)
     except Exception as e:
         logger.error(f"Error processing file {file_path}: {e}")
         return ""
 
+
 # Example usage
 if __name__ == "__main__":
-    markdown_text = docx_to_markdown("../../data/raw/24501-j11.docx", save_markdown=True)
+    file_path = "data/raw/24501-j11.docx"
+    markdown_text = docx_to_markdown(file_path, save_markdown=True)
