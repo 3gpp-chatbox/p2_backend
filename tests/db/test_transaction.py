@@ -5,7 +5,6 @@ rollbacks, and error handling using the transaction context manager.
 """
 
 import logging
-from typing import Generator
 
 import pytest
 from psycopg import Error, ProgrammingError
@@ -45,7 +44,7 @@ def test_should_commit_transaction_when_no_errors(
 
     # Reset any previous calls
     mock_connection.commit.reset_mock()
-    
+
     with db_handler.transaction():
         pass  # Just test the transaction commit
 
@@ -128,7 +127,7 @@ def test_should_handle_connection_loss_during_transaction(
 
     with pytest.raises(Error):
         with db_handler.transaction():
-                pass  # Just test the transaction behavior
+            pass  # Just test the transaction behavior
 
     assert "Transaction failed" in caplog.text
     mock_connection.rollback.assert_called_once()
@@ -148,7 +147,7 @@ def test_should_propagate_database_errors_from_transaction(
     """
     # Reset any previous calls
     mock_connection.commit.reset_mock()
-    
+
     # Set up the error
     mock_connection.commit.side_effect = Error("Database error")
 
@@ -157,6 +156,7 @@ def test_should_propagate_database_errors_from_transaction(
             pass
 
     assert "Database error" in str(exc_info.value)
+
 
 def test_should_convert_value_error_to_programming_error(
     db_handler: DatabaseHandler,

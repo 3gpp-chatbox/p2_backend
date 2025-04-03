@@ -12,6 +12,7 @@ from pytest_mock import MockerFixture
 
 from src.db.db_handler import DatabaseHandler
 
+
 @pytest.fixture
 def db_handler(mock_env_vars: None) -> DatabaseHandler:
     """Provides a DatabaseHandler instance with mocked environment variables.
@@ -23,6 +24,7 @@ def db_handler(mock_env_vars: None) -> DatabaseHandler:
         DatabaseHandler: Configured database handler instance.
     """
     return DatabaseHandler()
+
 
 def test_should_connect_on_context_entry(
     db_handler: DatabaseHandler,
@@ -47,6 +49,7 @@ def test_should_connect_on_context_entry(
         assert not db_handler.conn.closed
         assert "Database connection established successfully" in caplog.text
 
+
 def test_should_disconnect_on_context_exit(
     db_handler: DatabaseHandler,
     mock_connection: MockerFixture,
@@ -70,6 +73,7 @@ def test_should_disconnect_on_context_exit(
     assert "Database connection closed" in caplog.text
     mock_connection.close.assert_called_once()
 
+
 def test_should_cleanup_on_deletion(
     db_handler: DatabaseHandler,
     mock_connection: MockerFixture,
@@ -90,6 +94,7 @@ def test_should_cleanup_on_deletion(
 
     mock_connection.close.assert_called_once()
     assert db_handler.conn is None
+
 
 def test_should_handle_errors_during_context_exit(
     db_handler: DatabaseHandler,
@@ -116,6 +121,7 @@ def test_should_handle_errors_during_context_exit(
             pass  # Just test the exit behavior
 
     assert "Failed to close connection" in str(exc_info.value)
+
 
 def test_should_handle_nested_context_managers(
     db_handler: DatabaseHandler,

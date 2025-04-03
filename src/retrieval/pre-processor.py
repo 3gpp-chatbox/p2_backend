@@ -2,7 +2,7 @@ import os
 import sys
 import re
 from docx import Document
-from pathlib import Path
+
 # Add parent directory to Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
@@ -10,17 +10,19 @@ from src.lib.logger import get_logger
 
 logger = get_logger(__name__)
 
+
 def clean_heading(text):
     """
     Clean a heading by removing leading numbers and spaces.
-    
+
     Args:
         text (str): The heading text.
-    
+
     Returns:
         str: Cleaned heading text in lowercase.
     """
-    return re.sub(r'^\d+(\.\d+)*\s*', '', text).strip().lower()
+    return re.sub(r"^\d+(\.\d+)*\s*", "", text).strip().lower()
+
 
 def is_excluded_heading(text, exclude_sections):
     """
@@ -35,6 +37,7 @@ def is_excluded_heading(text, exclude_sections):
     """
     cleaned = clean_heading(text)
     return any(cleaned.startswith(section.lower()) for section in exclude_sections)
+
 
 def extract_paragraphs(doc):
     """
@@ -58,7 +61,11 @@ def extract_paragraphs(doc):
             continue
 
         style = para.style.name
-        level = int(style[-1]) if style.startswith("Heading") and style[-1].isdigit() else None
+        level = (
+            int(style[-1])
+            if style.startswith("Heading") and style[-1].isdigit()
+            else None
+        )
 
         # If "Contents" appears (not a heading), start skipping lines
         if text.lower() == "contents":
@@ -77,6 +84,7 @@ def extract_paragraphs(doc):
         paragraphs.append({"text": text, "style": style, "level": level})
 
     return paragraphs
+
 
 def extract_filtered_content(paragraphs, exclude_sections):
     """
@@ -112,6 +120,7 @@ def extract_filtered_content(paragraphs, exclude_sections):
 
     return filtered_content
 
+
 def extract_excluded_content(paragraphs, exclude_sections):
     """
     Extracts content from excluded sections.
@@ -138,6 +147,7 @@ def extract_excluded_content(paragraphs, exclude_sections):
 
     return excluded_content
 
+
 def extract_toc(paragraphs):
     """
     Extracts the table of contents based on headings.
@@ -152,9 +162,10 @@ def extract_toc(paragraphs):
     for para in paragraphs:
         if para["style"].startswith("Heading"):
             level = para["level"] or 2
-            toc_content.append(f"{'  ' * (level-1)}- {para['text']}")
+            toc_content.append(f"{'  ' * (level - 1)}- {para['text']}")
 
     return toc_content
+
 
 def save_markdown_files(main_content, excluded_content, toc_content, output_folder):
     """
@@ -171,7 +182,7 @@ def save_markdown_files(main_content, excluded_content, toc_content, output_fold
     files = {
         "24501-filtered.md": main_content,
         "24501-excluded.md": excluded_content,
-        "24501-toc.md": toc_content
+        "24501-toc.md": toc_content,
     }
 
     for filename, content in files.items():
@@ -183,7 +194,10 @@ def save_markdown_files(main_content, excluded_content, toc_content, output_fold
         except Exception as e:
             logger.error(f"Error saving {filename}: {e}")
 
-def docx_to_markdown(file_path, save_markdown=False, output_folder="../../data/markdown"):
+
+def docx_to_markdown(
+    file_path, save_markdown=False, output_folder="../../data/markdown"
+):
     """
     Main function to process DOCX file and extract structured content.
 
@@ -201,8 +215,8 @@ def docx_to_markdown(file_path, save_markdown=False, output_folder="../../data/m
         paragraphs = extract_paragraphs(doc)
 
         exclude_sections = {
-            "annex", 
-            "void",   
+            "annex",
+            "void",
             "foreword",
             "scope",
             "references",
@@ -216,13 +230,18 @@ def docx_to_markdown(file_path, save_markdown=False, output_folder="../../data/m
         toc_content = extract_toc(paragraphs)
 
         if save_markdown:
-            save_markdown_files(filtered_content, excluded_content, toc_content, output_folder)
+            save_markdown_files(
+                filtered_content, excluded_content, toc_content, output_folder
+            )
 
         return "\n\n".join(filtered_content)
     except Exception as e:
         logger.error(f"Error processing file {file_path}: {e}")
         return ""
 
+
 # Example usage
 if __name__ == "__main__":
-    markdown_text = docx_to_markdown("../../data/raw/24501-j11.docx", save_markdown=True)
+    markdown_text = docx_to_markdown(
+        "../../data/raw/24501-j11.docx", save_markdown=True
+    )
