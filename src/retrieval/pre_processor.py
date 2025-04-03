@@ -3,11 +3,13 @@ import sys
 import re
 from docx import Document
 from pathlib import Path
+
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
 
 from src.lib.logger import get_logger
 logger = get_logger(__name__)
+
 
 def clean_heading(text):
     """
@@ -15,11 +17,12 @@ def clean_heading(text):
      
     Args:
         text (str): The heading text.
-    
+
     Returns:
         str: Cleaned heading text in lowercase.
     """
-    return re.sub(r'^\d+(\.\d+)*\s*', '', text).strip().lower()
+    return re.sub(r"^\d+(\.\d+)*\s*", "", text).strip().lower()
+
 
 def is_excluded_heading(text, exclude_sections):
     """
@@ -34,6 +37,7 @@ def is_excluded_heading(text, exclude_sections):
     """
     cleaned = clean_heading(text)
     return any(cleaned.startswith(section.lower()) for section in exclude_sections)
+
 
 def extract_paragraphs(doc):
     """
@@ -87,8 +91,10 @@ def extract_paragraphs(doc):
 
     return paragraphs
 
+
 def extract_filtered_content(paragraphs, exclude_sections):
     """
+    Extracts main content with tables in their natural position.
     Extracts main content with tables in their natural position.
     """
     filtered_content = []
@@ -122,6 +128,7 @@ def extract_filtered_content(paragraphs, exclude_sections):
                 filtered_content.append(text)
 
     return filtered_content
+
 
 def extract_excluded_content(paragraphs, exclude_sections):
     """
@@ -180,6 +187,7 @@ def extract_excluded_content(paragraphs, exclude_sections):
 
     return excluded_content
 
+
 def extract_toc(paragraphs):
     """
     Extracts the table of contents based on headings.
@@ -194,9 +202,10 @@ def extract_toc(paragraphs):
     for para in paragraphs:
         if para["style"].startswith("Heading"):
             level = para["level"] or 2
-            toc_content.append(f"{'  ' * (level-1)}- {para['text']}")
+            toc_content.append(f"{'  ' * (level - 1)}- {para['text']}")
 
     return toc_content
+
 
 def save_markdown_files(main_content, excluded_content, toc_content, output_folder):
     """
@@ -213,7 +222,7 @@ def save_markdown_files(main_content, excluded_content, toc_content, output_fold
     files = {
         "24501-filtered.md": main_content,
         "24501-excluded.md": excluded_content,
-        "24501-toc.md": toc_content
+        "24501-toc.md": toc_content,
     }
 
     for filename, content in files.items():
@@ -243,8 +252,8 @@ def docx_to_markdown(file_path, save_markdown=False, output_folder="data/markdow
         paragraphs = extract_paragraphs(doc)
 
         exclude_sections = {
-            "annex", 
-            "void",   
+            "annex",
+            "void",
             "foreword",
             "scope",
             "references",
@@ -258,12 +267,15 @@ def docx_to_markdown(file_path, save_markdown=False, output_folder="data/markdow
         toc_content = extract_toc(paragraphs)
 
         if save_markdown:
-            save_markdown_files(filtered_content, excluded_content, toc_content, output_folder)
+            save_markdown_files(
+                filtered_content, excluded_content, toc_content, output_folder
+            )
 
         return "\n\n".join(filtered_content)
     except Exception as e:
         logger.error(f"Error processing file {file_path}: {e}")
         return ""
+
 
 # Example usage
 if __name__ == "__main__":
