@@ -1,8 +1,10 @@
 """Tests for DatabaseHandler cursor management functionality."""
 
 import logging
+
 import pytest
 from psycopg import Error, OperationalError, ProgrammingError
+
 from src.db.db_handler import DatabaseHandler
 
 
@@ -78,7 +80,7 @@ def test_cursor_operations_after_connection_loss(
     mock_connection.cursor.side_effect = OperationalError("Connection lost")
 
     with pytest.raises(OperationalError) as exc_info:
-        with db.get_cursor() as cursor:
+        with db.get_cursor():
             pass
 
     assert "Connection lost" in str(exc_info.value)
@@ -105,7 +107,7 @@ def test_cursor_error_propagation(
         with pytest.raises(
             error_class if isinstance(error_class, type(Error)) else ProgrammingError
         ) as exc_info:
-            with db.get_cursor() as cursor:
+            with db.get_cursor():
                 pass
 
         assert message in str(exc_info.value)
@@ -159,7 +161,7 @@ def test_cursor_logging(mock_env_vars, mock_psycopg_connect, mock_connection, ca
     mock_connection.cursor.side_effect = OperationalError("Cursor creation failed")
 
     with pytest.raises(OperationalError):
-        with db.get_cursor() as cursor:
+        with db.get_cursor():
             pass
 
     assert "Error while getting cursor: Cursor creation failed" in caplog.text

@@ -1,8 +1,10 @@
 """Tests for DatabaseHandler connection management functionality."""
 
 import logging
+
 import pytest
 from psycopg import OperationalError
+
 from src.db.db_handler import DatabaseHandler
 
 
@@ -94,7 +96,7 @@ def test_auto_reconnection(
     db = DatabaseHandler()
 
     # Initial connection
-    with db.get_cursor() as cursor:
+    with db.get_cursor() as _cursor:
         assert db.conn is not None
         assert not db.conn.closed
 
@@ -103,7 +105,7 @@ def test_auto_reconnection(
     assert db.conn is None
 
     # Should auto-reconnect
-    with db.get_cursor() as cursor:
+    with db.get_cursor() as _cursor:
         assert db.conn is not None
         assert not db.conn.closed
         assert "Establishing database connection..." in caplog.text
