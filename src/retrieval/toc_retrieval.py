@@ -134,4 +134,4 @@ if __name__ == "__main__":
         else:
             logger.info(f"Found top-level sections: {result}")
     except Exception as e:
-        logger.error(f"Error processing document '{file_path}': {e}", exc_info=True)
+        logger.error(f"Error loading document: {e}", exc_info=True)
