@@ -8,33 +8,45 @@ def escape_node_text(text):
 def escape_edge_text(text):
     return text.replace("(", "&#40;").replace(")", "&#41;").replace('"', "&quot;")
 
-# Load JSON data from a file
-with open("data/version_1/step3.json", "r", encoding="utf-8") as f:
-    graph_data = json.load(f)
+def convert_json_to_mermaid(input_file, output_file):
+    """Convert JSON graph data to Mermaid diagram format.
+    
+    Args:
+        input_file (str): Path to input JSON file
+        output_file (str): Path to output Mermaid markdown file
+    """
+    # Load JSON data from a file
+    with open(input_file, "r", encoding="utf-8") as f:
+        graph_data = json.load(f)
 
-# Initialize Mermaid diagram
-mermaid_code = "```mermaid\ngraph TD;\n"
+    # Initialize Mermaid diagram
+    mermaid_code = "```mermaid\ngraph TD;\n"
 
-# Add nodes
-node_map = {}  # Store node descriptions
-for node in graph_data["graph"]["nodes"]:
-    node_id = node["id"]
-    description = escape_node_text(node["description"])  # Escape text for nodes
-    node_map[node_id] = description
-    mermaid_code += f'  {node_id}["{description}"];\n'
+    # Add nodes
+    node_map = {}  # Store node descriptions
+    for node in graph_data["graph"]["nodes"]:
+        node_id = node["id"]
+        description = escape_node_text(node["description"])  # Escape text for nodes
+        node_map[node_id] = description
+        mermaid_code += f'  {node_id}["{description}"];\n'
 
-# Add edges
-for edge in graph_data["graph"]["edges"]:
-    from_node = edge["from"]
-    to_node = edge["to"]
-    edge_label = escape_edge_text(edge["description"])  # Escape text for edge labels
-    mermaid_code += f'  {from_node} -->|{edge_label}| {to_node};\n'
+    # Add edges
+    for edge in graph_data["graph"]["edges"]:
+        from_node = edge["from"]
+        to_node = edge["to"]
+        edge_label = escape_edge_text(edge["description"])  # Escape text for edge labels
+        mermaid_code += f'  {from_node} -->|{edge_label}| {to_node};\n'
 
-# Close the Mermaid code block
-mermaid_code += "```\n"
+    # Close the Mermaid code block
+    mermaid_code += "```\n"
 
-# Save to file
-with open("data/version_1/mermaid.md", "w", encoding="utf-8") as f:
-    f.write(mermaid_code)
+    # Save to file
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(mermaid_code)
 
-print("Mermaid diagram saved to mermaid.md")
+if __name__ == "__main__":
+    # When run as a script, process version_1 by default
+    input_file = "data/version_1/step3.json"
+    output_file = "data/version_1/mermaid.md"
+    convert_json_to_mermaid(input_file, output_file)
+    print(f"Mermaid diagram saved to {output_file}")
