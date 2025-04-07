@@ -1,7 +1,7 @@
 {
     "summary": {
-        "validity_status": "invalid",
-        "validation_reason": "There are unmatched nodes or edges",
+        "validity_status": "invalid (min 50%)",
+        "validation_reason": "There are less than 50% matched nodes or edges",
         "node_stats": {
             "total": 16,
             "matched": 7,
@@ -10,10 +10,11 @@
         },
         "edge_stats": {
             "total": 17,
-            "matched": 6,
-            "unmatched": 11,
-            "match_percentage": 35.294117647058826
-        }
+            "matched": 5,
+            "unmatched": 12,
+            "match_percentage": 29.411764705882355
+        },
+        "overall_match_percentage": 36.36363636363637
     },
     "node_matches": [
         {
@@ -28,48 +29,48 @@
             "id_1": "event_reg_req_sent",
             "description_1": "UE sends REGISTRATION REQUEST Type: event",
             "id_2": "event_reg_req",
-            "description_2": "UE sends REGISTRATION REQUEST to AMF Type: event",
-            "cosine_similarity": 0.8476064205169678,
+            "description_2": "UE sends REGISTRATION REQUEST message to AMF Type: event",
+            "cosine_similarity": 0.8469803333282471,
             "valid": true
         },
         {
-            "id_1": "timer_t3502_stop",
-            "description_1": "UE stops timer T3502 (if running) Type: event",
-            "id_2": "state_timers_stopped",
-            "description_2": "UE has T3502 and T3511 stopped (if running) Type: state",
-            "cosine_similarity": 0.748803973197937,
+            "id_1": "state_common_proc",
+            "description_1": "AMF may initiate 5GMM common procedures Type: state",
+            "id_2": "state_amf_registered",
+            "description_2": "AMF in 5GMM-REGISTERED state Type: state",
+            "cosine_similarity": 0.8017871379852295,
             "valid": true
         },
         {
             "id_1": "event_reg_accept_sent",
             "description_1": "AMF sends REGISTRATION ACCEPT Type: event",
             "id_2": "event_reg_accept",
-            "description_2": "AMF sends REGISTRATION ACCEPT to UE Type: event",
-            "cosine_similarity": 0.9216248393058777,
+            "description_2": "AMF sends REGISTRATION ACCEPT message to UE Type: event",
+            "cosine_similarity": 0.9080725312232971,
+            "valid": true
+        },
+        {
+            "id_1": "state_registered",
+            "description_1": "UE enters 5GMM-REGISTERED state Type: state",
+            "id_2": "state_registered",
+            "description_2": "UE in 5GMM-REGISTERED state Type: state",
+            "cosine_similarity": 0.9708125591278076,
             "valid": true
         },
         {
             "id_1": "event_reg_complete_sent",
             "description_1": "UE sends REGISTRATION COMPLETE Type: event",
             "id_2": "event_reg_complete",
-            "description_2": "UE sends REGISTRATION COMPLETE to AMF (if conditions met) Type: event",
-            "cosine_similarity": 0.8249678611755371,
-            "valid": true
-        },
-        {
-            "id_1": "timer_t3550_stop",
-            "description_1": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: event",
-            "id_2": "state_amf_registered",
-            "description_2": "AMF stops T3550 and enters 5GMM-REGISTERED state Type: state",
-            "cosine_similarity": 0.8467047214508057,
+            "description_2": "UE sends REGISTRATION COMPLETE message to AMF Type: event",
+            "cosine_similarity": 0.8488024473190308,
             "valid": true
         },
         {
             "id_1": "event_reg_reject_sent",
             "description_1": "AMF sends REGISTRATION REJECT Type: event",
             "id_2": "event_reg_reject",
-            "description_2": "AMF sends REGISTRATION REJECT to UE Type: event",
-            "cosine_similarity": 0.9261400103569031,
+            "description_2": "AMF sends REGISTRATION REJECT message to UE Type: event",
+            "cosine_similarity": 0.9155623912811279,
             "valid": true
         }
     ],
@@ -91,25 +92,17 @@
             "valid": true
         },
         {
-            "id_1": "state_deregistered->timer_t3502_stop",
-            "description_1": "UE stops timer T3502 if running Type: trigger",
-            "id_2": "state_t3510_running->state_timers_stopped",
-            "description_2": "UE stops timers T3502 and T3511 (if running) Type: trigger",
-            "cosine_similarity": 0.9667418599128723,
-            "valid": true
-        },
-        {
             "id_1": "event_reg_req_sent->state_common_proc",
             "description_1": "AMF receives REGISTRATION REQUEST Type: trigger",
-            "id_2": "event_reg_complete->state_amf_registered",
-            "description_2": "AMF receives REGISTRATION COMPLETE Type: trigger",
-            "cosine_similarity": 0.9178601503372192,
+            "id_2": "state_t3510_running->state_amf_processing",
+            "description_2": "REGISTRATION REQUEST received by AMF Type: trigger",
+            "cosine_similarity": 0.9735296964645386,
             "valid": true
         },
         {
             "id_1": "state_common_proc->decision_reg_accepted",
             "description_1": "Initial registration request processing Type: condition",
-            "id_2": "event_auth_sec->event_reg_accept",
+            "id_2": "state_amf_processing->event_reg_accept",
             "description_2": "Initial registration request accepted by network Type: condition",
             "cosine_similarity": 0.7793754935264587,
             "valid": true
@@ -118,8 +111,8 @@
             "id_1": "state_registered->decision_net_slice_ind",
             "description_1": "REGISTRATION ACCEPT contains Network slicing indication IE with new network slicing information? Type: condition",
             "id_2": "state_registered->event_reg_complete",
-            "description_2": "If Network slicing indication IE with Network slicing subscription change indication set to \"Network slicing subscription changed\" is included in REGISTRATION ACCEPT Type: condition",
-            "cosine_similarity": 0.8890153169631958,
+            "description_2": "Conditions met to send REGISTRATION COMPLETE (e.g., Network slicing indication changed) Type: condition",
+            "cosine_similarity": 0.8382899761199951,
             "valid": true
         }
     ],
@@ -130,13 +123,13 @@
             "dataset": "Dataset 1"
         },
         {
-            "id": "timer_t3511_stop",
-            "description": "UE stops timer T3511 (if running) Type: event",
+            "id": "timer_t3502_stop",
+            "description": "UE stops timer T3502 (if running) Type: event",
             "dataset": "Dataset 1"
         },
         {
-            "id": "state_common_proc",
-            "description": "AMF may initiate 5GMM common procedures Type: state",
+            "id": "timer_t3511_stop",
+            "description": "UE stops timer T3511 (if running) Type: event",
             "dataset": "Dataset 1"
         },
         {
@@ -150,13 +143,13 @@
             "dataset": "Dataset 1"
         },
         {
-            "id": "state_registered",
-            "description": "UE enters 5GMM-REGISTERED state Type: state",
+            "id": "decision_net_slice_ind",
+            "description": "Decision: REGISTRATION ACCEPT contains Network slicing indication IE with new network slicing information? Type: event",
             "dataset": "Dataset 1"
         },
         {
-            "id": "decision_net_slice_ind",
-            "description": "Decision: REGISTRATION ACCEPT contains Network slicing indication IE with new network slicing information? Type: event",
+            "id": "timer_t3550_stop",
+            "description": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED Type: event",
             "dataset": "Dataset 1"
         },
         {
@@ -171,6 +164,11 @@
         }
     ],
     "unmatched_edges": [
+        {
+            "id": "state_deregistered->timer_t3502_stop",
+            "description": "UE stops timer T3502 if running Type: trigger",
+            "dataset": "Dataset 1"
+        },
         {
             "id": "state_deregistered->timer_t3511_stop",
             "description": "UE stops timer T3511 if running Type: trigger",

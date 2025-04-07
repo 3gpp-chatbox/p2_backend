@@ -165,8 +165,17 @@ def compare_two_datasets(
     unmatched_nodes = v1_to_v2_nodes["unmatched"]
     unmatched_edges = v1_to_v2_edges["unmatched"]
 
+    node_match_percent = (
+        (len(node_matches) / len(nodes_1)) * 100 if len(nodes_1) > 0 else 0
+    )
+    edge_match_percent = (
+        (len(edge_matches) / len(edges_1)) * 100 if len(edges_1) > 0 else 0
+    )
+
     validity = (
-        "valid" if len(unmatched_nodes) + len(unmatched_edges) == 0 else "invalid"
+        "valid"
+        if node_match_percent >= 50 and edge_match_percent >= 50
+        else "invalid (min 50%)"
     )
 
     total_node_matches = len(node_matches)
@@ -176,27 +185,40 @@ def compare_two_datasets(
     total_nodes = total_node_matches + total_unmatched_nodes
     total_edges = total_edge_matches + total_unmatched_edges
 
+    node_match_percentage = (
+        (total_node_matches / total_nodes * 100) if total_nodes > 0 else 0
+    )
+    edge_match_percentage = (
+        (total_edge_matches / total_edges * 100) if total_edges > 0 else 0
+    )
+
+    # New: Overall similarity (weighted average)
+    overall_similarity = (
+        (total_node_matches + total_edge_matches) / (total_nodes + total_edges) * 100
+        if (total_nodes + total_edges) > 0
+        else 0
+    )
+
     summary = {
         "validity_status": validity,
-        "validation_reason": "There are unmatched nodes or edges"
-        if validity == "invalid"
-        else "All nodes and edges are matched",
+        "validation_reason": (
+            "There are less than 50% matched nodes or edges"
+            if node_match_percent < 50 or edge_match_percent < 50
+            else "At least 50% of nodes and edges matched"
+        ),
         "node_stats": {
             "total": total_nodes,
             "matched": total_node_matches,
             "unmatched": total_unmatched_nodes,
-            "match_percentage": (total_node_matches / total_nodes * 100)
-            if total_nodes > 0
-            else 0,
+            "match_percentage": node_match_percentage,
         },
         "edge_stats": {
             "total": total_edges,
             "matched": total_edge_matches,
             "unmatched": total_unmatched_edges,
-            "match_percentage": (total_edge_matches / total_edges * 100)
-            if total_edges > 0
-            else 0,
+            "match_percentage": edge_match_percentage,
         },
+        "overall_match_percentage": overall_similarity,
     }
 
     return {
@@ -228,6 +250,10 @@ def save_results(results: Dict[str, Any], output_path: str):
         f"Matched Edges: {summary['edge_stats']['matched']} ({summary['edge_stats']['match_percentage']:.2f}%)"
     )
     print(f"Unmatched Edges: {summary['edge_stats']['unmatched']}")
+
+    print("\nOverall Similarity:")
+    print(f"Overall Match Percentage: {summary['overall_match_percentage']:.2f}%")
+
     print("=======================\n")
 
     # Save detailed results to file
@@ -241,7 +267,7 @@ if __name__ == "__main__":
     data_dir = "data"
     dataset_files = {
         "v1": os.path.join(data_dir, "version_1/step3.json"),
-        "v2": os.path.join(data_dir, "version_2/v02-step3.json"),
+        "v2": os.path.join(data_dir, "version_4/step3-v4.json"),
     }
 
     # Load the datasets
