@@ -74,7 +74,7 @@ def compute_sbert_embeddings(descriptions: List[str]) -> np.ndarray:
 def find_best_matches(
     node_set_1: List[Dict[str, Any]],
     node_set_2: List[Dict[str, Any]],
-    fixed_threshold: float = 0.7,
+    fixed_threshold: float = 0.5,
 ) -> Dict[str, Any]:
     descriptions_1 = [node["description"] for node in node_set_1]
     descriptions_2 = [node["description"] for node in node_set_2]

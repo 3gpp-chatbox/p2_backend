@@ -23,7 +23,7 @@
             "id_2": "state_deregistered",
             "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
             "dataset_2": "v2",
-            "cosine_similarity": 1.0,
+            "cosine_similarity": 1.0000001192092896,
             "valid": true
         },
         {
@@ -33,7 +33,7 @@
             "id_2": "event_reg_req",
             "description_2": "UE sends REGISTRATION REQUEST to AMF Type: event",
             "dataset_2": "v2",
-            "cosine_similarity": 0.8476061224937439,
+            "cosine_similarity": 0.8476064205169678,
             "valid": true
         },
         {
@@ -43,7 +43,7 @@
             "id_2": "state_timers_stopped",
             "description_2": "UE has T3502 and T3511 stopped (if running) Type: state",
             "dataset_2": "v2",
-            "cosine_similarity": 0.7488042116165161,
+            "cosine_similarity": 0.748803973197937,
             "valid": true
         },
         {
@@ -53,7 +53,7 @@
             "id_2": "event_reg_accept",
             "description_2": "AMF sends REGISTRATION ACCEPT to UE Type: event",
             "dataset_2": "v2",
-            "cosine_similarity": 0.9216248989105225,
+            "cosine_similarity": 0.9216248393058777,
             "valid": true
         },
         {
@@ -83,7 +83,7 @@
             "id_2": "event_reg_reject",
             "description_2": "AMF sends REGISTRATION REJECT to UE Type: event",
             "dataset_2": "v2",
-            "cosine_similarity": 0.9261401891708374,
+            "cosine_similarity": 0.9261400103569031,
             "valid": true
         },
         {
@@ -93,7 +93,7 @@
             "id_2": "state_deregistered",
             "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
             "dataset_2": "v3",
-            "cosine_similarity": 1.0,
+            "cosine_similarity": 1.0000001192092896,
             "valid": true
         },
         {
@@ -103,7 +103,7 @@
             "id_2": "event_reg_req",
             "description_2": "UE sends REGISTRATION REQUEST to AMF Type: event",
             "dataset_2": "v3",
-            "cosine_similarity": 0.8476061224937439,
+            "cosine_similarity": 0.8476064205169678,
             "valid": true
         },
         {
@@ -113,7 +113,7 @@
             "id_2": "state_common_proc_initiated",
             "description_2": "AMF in 5GMM-COMMON-PROCEDURE-INITIATED state Type: state",
             "dataset_2": "v3",
-            "cosine_similarity": 0.9197993278503418,
+            "cosine_similarity": 0.9197992086410522,
             "valid": true
         },
         {
@@ -123,7 +123,7 @@
             "id_2": "event_reg_accept",
             "description_2": "AMF sends REGISTRATION ACCEPT to UE Type: event",
             "dataset_2": "v3",
-            "cosine_similarity": 0.9216248989105225,
+            "cosine_similarity": 0.9216248393058777,
             "valid": true
         },
         {
@@ -153,7 +153,7 @@
             "id_2": "state_deregistered",
             "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
             "dataset_2": "v4",
-            "cosine_similarity": 1.0,
+            "cosine_similarity": 1.0000001192092896,
             "valid": true
         },
         {
@@ -163,7 +163,7 @@
             "id_2": "event_reg_req",
             "description_2": "UE sends REGISTRATION REQUEST message to AMF Type: event",
             "dataset_2": "v4",
-            "cosine_similarity": 0.8469802141189575,
+            "cosine_similarity": 0.8469803333282471,
             "valid": true
         },
         {
@@ -173,7 +173,7 @@
             "id_2": "state_amf_registered",
             "description_2": "AMF in 5GMM-REGISTERED state Type: state",
             "dataset_2": "v4",
-            "cosine_similarity": 0.801787257194519,
+            "cosine_similarity": 0.8017871379852295,
             "valid": true
         },
         {
@@ -183,7 +183,7 @@
             "id_2": "event_reg_accept",
             "description_2": "AMF sends REGISTRATION ACCEPT message to UE Type: event",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9080724716186523,
+            "cosine_similarity": 0.9080725312232971,
             "valid": true
         },
         {
@@ -203,7 +203,7 @@
             "id_2": "event_reg_complete",
             "description_2": "UE sends REGISTRATION COMPLETE message to AMF Type: event",
             "dataset_2": "v4",
-            "cosine_similarity": 0.848802387714386,
+            "cosine_similarity": 0.8488024473190308,
             "valid": true
         },
         {
@@ -213,7 +213,7 @@
             "id_2": "event_reg_reject",
             "description_2": "AMF sends REGISTRATION REJECT message to UE Type: event",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9155625104904175,
+            "cosine_similarity": 0.9155623912811279,
             "valid": true
         },
         {
@@ -223,7 +223,7 @@
             "id_2": "state_deregistered",
             "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
             "dataset_2": "v3",
-            "cosine_similarity": 1.0,
+            "cosine_similarity": 1.0000001192092896,
             "valid": true
         },
         {
@@ -233,7 +233,7 @@
             "id_2": "event_reg_req",
             "description_2": "UE sends REGISTRATION REQUEST to AMF Type: event",
             "dataset_2": "v3",
-            "cosine_similarity": 0.9999998807907104,
+            "cosine_similarity": 0.9999999403953552,
             "valid": true
         },
         {
@@ -253,7 +253,7 @@
             "id_2": "event_reg_complete",
             "description_2": "UE sends REGISTRATION COMPLETE to AMF Type: event",
             "dataset_2": "v3",
-            "cosine_similarity": 0.9539054036140442,
+            "cosine_similarity": 0.9539052248001099,
             "valid": true
         },
         {
@@ -263,7 +263,7 @@
             "id_2": "state_common_proc_initiated",
             "description_2": "AMF in 5GMM-COMMON-PROCEDURE-INITIATED state Type: state",
             "dataset_2": "v3",
-            "cosine_similarity": 0.7081564664840698,
+            "cosine_similarity": 0.7081563472747803,
             "valid": true
         },
         {
@@ -273,7 +273,7 @@
             "id_2": "state_deregistered",
             "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
             "dataset_2": "v4",
-            "cosine_similarity": 1.0,
+            "cosine_similarity": 1.0000001192092896,
             "valid": true
         },
         {
@@ -283,7 +283,7 @@
             "id_2": "event_reg_req",
             "description_2": "UE sends REGISTRATION REQUEST message to AMF Type: event",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9730929732322693,
+            "cosine_similarity": 0.9730930328369141,
             "valid": true
         },
         {
@@ -293,7 +293,7 @@
             "id_2": "state_t3510_running",
             "description_2": "UE with T3510 running Type: state",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9607345461845398,
+            "cosine_similarity": 0.960734486579895,
             "valid": true
         },
         {
@@ -303,7 +303,7 @@
             "id_2": "event_network_procedures",
             "description_2": "Network initiates 5GMM common procedures (e.g., identification, authentication, security) Type: event",
             "dataset_2": "v4",
-            "cosine_similarity": 0.7099865674972534,
+            "cosine_similarity": 0.709986686706543,
             "valid": true
         },
         {
@@ -313,7 +313,7 @@
             "id_2": "event_reg_accept",
             "description_2": "AMF sends REGISTRATION ACCEPT message to UE Type: event",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9737899303436279,
+            "cosine_similarity": 0.9737898111343384,
             "valid": true
         },
         {
@@ -323,7 +323,7 @@
             "id_2": "state_amf_registered",
             "description_2": "AMF in 5GMM-REGISTERED state Type: state",
             "dataset_2": "v4",
-            "cosine_similarity": 0.7683718204498291,
+            "cosine_similarity": 0.7683717608451843,
             "valid": true
         },
         {
@@ -333,7 +333,7 @@
             "id_2": "event_reg_reject",
             "description_2": "AMF sends REGISTRATION REJECT message to UE Type: event",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9822003245353699,
+            "cosine_similarity": 0.9822004437446594,
             "valid": true
         },
         {
@@ -343,7 +343,7 @@
             "id_2": "state_deregistered",
             "description_2": "UE in 5GMM-DEREGISTERED state Type: state",
             "dataset_2": "v4",
-            "cosine_similarity": 1.0,
+            "cosine_similarity": 1.0000001192092896,
             "valid": true
         },
         {
@@ -353,7 +353,7 @@
             "id_2": "event_reg_req",
             "description_2": "UE sends REGISTRATION REQUEST message to AMF Type: event",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9730929732322693,
+            "cosine_similarity": 0.9730930328369141,
             "valid": true
         },
         {
@@ -373,7 +373,7 @@
             "id_2": "event_reg_accept",
             "description_2": "AMF sends REGISTRATION ACCEPT message to UE Type: event",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9737899303436279,
+            "cosine_similarity": 0.9737898111343384,
             "valid": true
         },
         {
@@ -383,7 +383,7 @@
             "id_2": "state_amf_registered",
             "description_2": "AMF in 5GMM-REGISTERED state Type: state",
             "dataset_2": "v4",
-            "cosine_similarity": 0.8697433471679688,
+            "cosine_similarity": 0.8697431087493896,
             "valid": true
         },
         {
@@ -403,7 +403,7 @@
             "id_2": "event_reg_complete",
             "description_2": "UE sends REGISTRATION COMPLETE message to AMF Type: event",
             "dataset_2": "v4",
-            "cosine_similarity": 0.962253987789154,
+            "cosine_similarity": 0.9622541069984436,
             "valid": true
         }
     ],
@@ -415,7 +415,7 @@
             "id_2": "state_deregistered->event_reg_req",
             "description_2": "UE initiates registration Type: trigger",
             "dataset_2": "v2",
-            "cosine_similarity": 0.9410258531570435,
+            "cosine_similarity": 0.9410257935523987,
             "valid": true
         },
         {
@@ -425,7 +425,7 @@
             "id_2": "event_reg_req->state_t3510_running",
             "description_2": "UE starts timer T3510 Type: trigger",
             "dataset_2": "v2",
-            "cosine_similarity": 1.0000001192092896,
+            "cosine_similarity": 1.0,
             "valid": true
         },
         {
@@ -435,7 +435,7 @@
             "id_2": "state_t3510_running->state_timers_stopped",
             "description_2": "UE stops timers T3502 and T3511 (if running) Type: trigger",
             "dataset_2": "v2",
-            "cosine_similarity": 0.9667417407035828,
+            "cosine_similarity": 0.9667418599128723,
             "valid": true
         },
         {
@@ -445,7 +445,7 @@
             "id_2": "event_reg_complete->state_amf_registered",
             "description_2": "AMF receives REGISTRATION COMPLETE Type: trigger",
             "dataset_2": "v2",
-            "cosine_similarity": 0.917860209941864,
+            "cosine_similarity": 0.9178601503372192,
             "valid": true
         },
         {
@@ -455,7 +455,7 @@
             "id_2": "event_auth_sec->event_reg_accept",
             "description_2": "Initial registration request accepted by network Type: condition",
             "dataset_2": "v2",
-            "cosine_similarity": 0.7793756723403931,
+            "cosine_similarity": 0.7793754935264587,
             "valid": true
         },
         {
@@ -465,7 +465,7 @@
             "id_2": "state_registered->event_reg_complete",
             "description_2": "If Network slicing indication IE with Network slicing subscription change indication set to \"Network slicing subscription changed\" is included in REGISTRATION ACCEPT Type: condition",
             "dataset_2": "v2",
-            "cosine_similarity": 0.8890154361724854,
+            "cosine_similarity": 0.8890153169631958,
             "valid": true
         },
         {
@@ -475,7 +475,7 @@
             "id_2": "event_reg_req->state_auth_proc",
             "description_2": "AMF receives REGISTRATION REQUEST Type: trigger",
             "dataset_2": "v3",
-            "cosine_similarity": 1.0000001192092896,
+            "cosine_similarity": 0.9999998807907104,
             "valid": true
         },
         {
@@ -485,7 +485,7 @@
             "id_2": "event_reg_accept->state_common_proc_initiated",
             "description_2": "REGISTRATION ACCEPT contains specific IEs Type: condition",
             "dataset_2": "v3",
-            "cosine_similarity": 0.7098727226257324,
+            "cosine_similarity": 0.709872841835022,
             "valid": true
         },
         {
@@ -495,7 +495,7 @@
             "id_2": "event_reg_complete->state_reg_complete_received",
             "description_2": "UE sends REGISTRATION COMPLETE Type: trigger",
             "dataset_2": "v3",
-            "cosine_similarity": 1.0000001192092896,
+            "cosine_similarity": 0.9999998807907104,
             "valid": true
         },
         {
@@ -505,7 +505,7 @@
             "id_2": "state_deregistered->event_reg_req",
             "description_2": "UE initiates registration Type: trigger",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9410258531570435,
+            "cosine_similarity": 0.9410257935523987,
             "valid": true
         },
         {
@@ -515,7 +515,7 @@
             "id_2": "event_reg_req->state_t3510_running",
             "description_2": "UE starts timer T3510 Type: trigger",
             "dataset_2": "v4",
-            "cosine_similarity": 1.0000001192092896,
+            "cosine_similarity": 1.0,
             "valid": true
         },
         {
@@ -525,7 +525,7 @@
             "id_2": "state_t3510_running->state_amf_processing",
             "description_2": "REGISTRATION REQUEST received by AMF Type: trigger",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9735298752784729,
+            "cosine_similarity": 0.9735296964645386,
             "valid": true
         },
         {
@@ -535,7 +535,7 @@
             "id_2": "state_amf_processing->event_reg_accept",
             "description_2": "Initial registration request accepted by network Type: condition",
             "dataset_2": "v4",
-            "cosine_similarity": 0.7793756723403931,
+            "cosine_similarity": 0.7793754935264587,
             "valid": true
         },
         {
@@ -545,7 +545,7 @@
             "id_2": "state_registered->event_reg_complete",
             "description_2": "Conditions met to send REGISTRATION COMPLETE (e.g., Network slicing indication changed) Type: condition",
             "dataset_2": "v4",
-            "cosine_similarity": 0.8382900357246399,
+            "cosine_similarity": 0.8382899761199951,
             "valid": true
         },
         {
@@ -555,7 +555,7 @@
             "id_2": "event_reg_complete->state_reg_complete_received",
             "description_2": "UE sends REGISTRATION COMPLETE Type: trigger",
             "dataset_2": "v3",
-            "cosine_similarity": 0.8935622572898865,
+            "cosine_similarity": 0.8935621976852417,
             "valid": true
         },
         {
@@ -585,7 +585,7 @@
             "id_2": "event_reg_req->state_t3510_running",
             "description_2": "UE starts timer T3510 Type: trigger",
             "dataset_2": "v4",
-            "cosine_similarity": 1.0000001192092896,
+            "cosine_similarity": 1.0,
             "valid": true
         },
         {
@@ -595,7 +595,7 @@
             "id_2": "state_amf_processing->event_reg_accept",
             "description_2": "Initial registration request accepted by network Type: condition",
             "dataset_2": "v4",
-            "cosine_similarity": 1.0000001192092896,
+            "cosine_similarity": 1.0,
             "valid": true
         },
         {
@@ -605,7 +605,7 @@
             "id_2": "state_amf_processing->event_reg_reject",
             "description_2": "Initial registration request cannot be accepted by network Type: condition",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9999999403953552,
+            "cosine_similarity": 1.0000001192092896,
             "valid": true
         },
         {
@@ -615,7 +615,7 @@
             "id_2": "event_reg_accept->state_registered",
             "description_2": "UE receives REGISTRATION ACCEPT message Type: trigger",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9491708278656006,
+            "cosine_similarity": 0.949170708656311,
             "valid": true
         },
         {
@@ -625,7 +625,7 @@
             "id_2": "state_registered->event_reg_complete",
             "description_2": "Conditions met to send REGISTRATION COMPLETE (e.g., Network slicing indication changed) Type: condition",
             "dataset_2": "v4",
-            "cosine_similarity": 0.734843909740448,
+            "cosine_similarity": 0.7348437309265137,
             "valid": true
         },
         {
@@ -645,7 +645,7 @@
             "id_2": "event_reg_reject->state_deregistered",
             "description_2": "UE receives REGISTRATION REJECT message Type: trigger",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9627474546432495,
+            "cosine_similarity": 0.9627472758293152,
             "valid": true
         },
         {
@@ -655,7 +655,7 @@
             "id_2": "state_t3510_running->state_amf_processing",
             "description_2": "REGISTRATION REQUEST received by AMF Type: trigger",
             "dataset_2": "v4",
-            "cosine_similarity": 0.9735298752784729,
+            "cosine_similarity": 0.9735296964645386,
             "valid": true
         },
         {
@@ -665,7 +665,7 @@
             "id_2": "state_deregistered->event_reg_req",
             "description_2": "UE initiates registration Type: trigger",
             "dataset_2": "v4",
-            "cosine_similarity": 0.8935622572898865,
+            "cosine_similarity": 0.8935621976852417,
             "valid": true
         }
     ],
