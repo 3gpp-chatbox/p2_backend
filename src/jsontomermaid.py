@@ -52,7 +52,7 @@ def convert_json_to_mermaid(input_file, output_file):
 
 if __name__ == "__main__":
     # When run as a script, process version_1 by default
-    input_file = "data/test_input.json"
-    output_file = "data/test_output.md"
+    input_file = "data/test_converter.json"
+    output_file = "data/test_converteroutput.md"
     convert_json_to_mermaid(input_file, output_file)
     print(f"Mermaid diagram saved to {output_file}")
