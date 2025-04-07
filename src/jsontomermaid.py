@@ -1,16 +1,19 @@
 import json
 
+
 # Function to escape text for nodes
 def escape_node_text(text):
-    return text.replace("(", "\(").replace(")", "\)").replace('"', "&quot;")
+    return text.replace("(", r"\(").replace(")", r"\)").replace('"', "&quot;")
+
 
 # Function to escape text for edge labels
 def escape_edge_text(text):
     return text.replace("(", "&#40;").replace(")", "&#41;").replace('"', "&quot;")
 
+
 def convert_json_to_mermaid(input_file, output_file):
     """Convert JSON graph data to Mermaid diagram format.
-    
+
     Args:
         input_file (str): Path to input JSON file
         output_file (str): Path to output Mermaid markdown file
@@ -34,8 +37,10 @@ def convert_json_to_mermaid(input_file, output_file):
     for edge in graph_data["graph"]["edges"]:
         from_node = edge["from"]
         to_node = edge["to"]
-        edge_label = escape_edge_text(edge["description"])  # Escape text for edge labels
-        mermaid_code += f'  {from_node} -->|{edge_label}| {to_node};\n'
+        edge_label = escape_edge_text(
+            edge["description"]
+        )  # Escape text for edge labels
+        mermaid_code += f"  {from_node} -->|{edge_label}| {to_node};\n"
 
     # Close the Mermaid code block
     mermaid_code += "```\n"
@@ -44,9 +49,10 @@ def convert_json_to_mermaid(input_file, output_file):
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(mermaid_code)
 
+
 if __name__ == "__main__":
     # When run as a script, process version_1 by default
-    input_file = "data/version_1/step3.json"
-    output_file = "data/version_1/mermaid.md"
+    input_file = "data/test_input.json"
+    output_file = "data/test_output.md"
     convert_json_to_mermaid(input_file, output_file)
     print(f"Mermaid diagram saved to {output_file}")
