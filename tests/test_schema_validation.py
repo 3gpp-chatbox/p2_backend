@@ -11,7 +11,7 @@ from src.schema_validation import validate_data
 
 # Path to mock data directory
 MOCK_DATA_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "data", "mock_data"
+    os.path.dirname(os.path.dirname(__file__)), "data", "mock_pydantic"
 )
 
 
@@ -32,7 +32,7 @@ def mock_step2_data():
 def test_mock_data_extraction():
     """Test that mock data can be processed and validated."""
     # Import here to avoid circular imports
-    from data.mock_data.mockstep3 import extract_procedural_info
+    from data.mock_pydantic.mockstep3 import extract_procedural_info
 
     section_name = "Registration procedure for initial registration"
     with open(os.path.join(MOCK_DATA_DIR, "mockstep1.json"), "r") as f:
@@ -50,7 +50,7 @@ def test_mock_data_extraction():
 
 def test_node_structure(mock_step1_data, mock_step2_data):
     """Test that generated nodes have valid structure."""
-    from data.mock_data.mockstep3 import extract_procedural_info
+    from data.mock_pydantic.mockstep3 import extract_procedural_info
 
     section_name = "Registration procedure for initial registration"
     result = extract_procedural_info(section_name, mock_step1_data, mock_step2_data)
@@ -70,7 +70,7 @@ def test_node_structure(mock_step1_data, mock_step2_data):
 
 def test_edge_structure(mock_step1_data, mock_step2_data):
     """Test that generated edges have valid structure."""
-    from data.mock_data.mockstep3 import extract_procedural_info
+    from data.mock_pydantic.mockstep3 import extract_procedural_info
 
     section_name = "Registration procedure for initial registration"
     result = extract_procedural_info(section_name, mock_step1_data, mock_step2_data)
@@ -93,7 +93,7 @@ def test_edge_structure(mock_step1_data, mock_step2_data):
 
 def test_complete_graph_validation(mock_step1_data, mock_step2_data):
     """Test complete graph structure validation."""
-    from data.mock_data.mockstep3 import extract_procedural_info
+    from data.mock_pydantic.mockstep3 import extract_procedural_info
 
     section_name = "Registration procedure for initial registration"
     result = extract_procedural_info(section_name, mock_step1_data, mock_step2_data)

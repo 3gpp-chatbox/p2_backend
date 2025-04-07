@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 # Add p2_backend/src to Python path
 sys.path.append(
-    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "src")
+    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 )
 from src.schema_validation import validate_data
 
