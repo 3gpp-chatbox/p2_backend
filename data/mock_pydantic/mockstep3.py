@@ -1,23 +1,25 @@
 import json
 import os
-import sys
 
-import google.generativeai as genai
 from dotenv import load_dotenv
-
-# Add p2_backend/src to Python path
-sys.path.append(
-    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-)
-from src.schema_validation import validate_data
+from google import genai
 
 load_dotenv()
 
-# Configure API key
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+flash_model = "gemini-2.0-flash"
+pro_model = "gemini-2.0-pro-exp-02-05"
 
-# Initialize Gemini model
-model = genai.GenerativeModel("gemini-2.0-flash")
+# Load the Google API Key from the .env file
+load_dotenv(override=True)
+
+# Get API key from environment
+api_key = os.getenv("GOOGLE_API_KEY")
+if not api_key:
+    raise ValueError(
+        "GOOGLE_API_KEY not found in environment variables. Please set it in your .env file."
+    )
+
+client = genai.Client(api_key=api_key)
 
 
 def read_json_file(file_path):
@@ -40,30 +42,122 @@ def extract_procedural_info(section_name, step1_data, step2_data):
     """Generates a structured **flow property graph** using data from step1.json and step2.json"""
 
     prompt = f"""
-You are an expert in telecom procedures and standards, particularly in 3GPP specifications.
-Your task is to extract the **Initial Registration Procedure** based on the TS 24.501 specification.
-The procedure should be structured in the following way:
+You are a **graph generation tool**. Using your knowledge of 3GPP procedures but strictly based on the provided input data, construct a **structured flow property graph** for the procedure **"{section_name}"**.
 
-1. **States and Events(Nodes)**: Represent different stages in the process (e.g., 'UE Registered', 'Authentication Successful').
-   - For each state, provide a **unique identifier**, **description**, and **type** (either 'state' or 'event').
-   - Example: {{'id': 'state1', 'type': 'state', 'description': 'UE Registered'}}
+---
 
-2. **Triggers and Conditions (Edges)**: Represent the relationships between states.
-   - For each edge, provide the **starting node** (from_node), **target node** (to), **type** (either 'trigger' or 'condition'),
-     and a **description** of the trigger or condition.
-   - Example: {{'from': 'state1', 'to': 'state2', 'type': 'trigger', 'description': 'Authentication Success'}}
+## **🔹 Graph Representation Rules**
+**Nodes** represent:  
+✔ **Procedural Steps** (e.g., UE sends request, AMF processes message).  
+✔ **Decision Points** (e.g., conditions leading to different paths).  
+✔ **Timers** (started/stopped due to events).  
 
-Please format your output as a structured JSON object (without any markdown code block markers):
+**Edges** represent:  
+✔ **Flow transitions** (sequential, conditional, retry, fallback).  
+✔ **Decision paths** (if-else branches, error handling, alternative flows).  
+✔ **Dependencies** (where one step is dependent on another).  
 
+🚨 **Strict Rule**: Extract information **only from the provided input data**. Do **not** infer or add missing details.
+
+---
+
+## **🔹 Output Format (Structured JSON)**
+The extracted graph must be in the following format:
+
+```json
 {{
   "graph": {{
     "nodes": [
-      {{"id": "state1", "type": "state", "description": "UE Registered"}},
-      {{"id": "event1", "type": "event", "description": "UE Sends Registration Request"}}
+      {{
+        "id": "start",
+        "type": "start",
+        "description": "Procedure starts",
+        "properties": {{}}
+      }},
+      {{
+        "id": "1",
+        "type": "process",
+        "description": "UE sends REGISTRATION REQUEST",
+        "properties": {{
+          "state_change": "N/A",
+          "entity": "UE",
+          "messages": ["REGISTRATION REQUEST"]
+        }}
+      }},
+      {{
+        "id": "2",
+        "type": "timer",
+        "description": "Timer T3510 starts",
+        "properties": {{
+          "action": "start",
+          "timeout": "5 seconds"
+        }}
+      }},
+      {{
+        "id": "3",
+        "type": "decision",
+        "description": "Decision based on timer expiration",
+        "properties": {{
+          "condition": "Timer T3510 expires",
+          "outcomes": [
+            {{
+              "outcome": "Success",
+              "next_step": 4
+            }},
+            {{
+              "outcome": "Failure - Retry",
+              "next_step": 2,
+              "reason": "Timeout"
+            }}
+          ]
+        }}
+      }},
+      {{
+        "id": "4",
+        "type": "process",
+        "description": "AMF processes REGISTRATION REQUEST",
+        "properties": {{
+          "state_change": "5GMM-DEREGISTERED → 5GMM-REGISTERED",
+          "entity": "AMF",
+          "messages": ["REGISTRATION ACCEPT"]
+        }}
+      }}
     ],
     "edges": [
-      {{"from": "state1", "to": "event1", "type": "trigger", "description": "Power On"}},
-      {{"from": "event1", "to": "state2", "type": "condition", "description": "Authentication Success"}}
+      {{
+        "from": "start",
+        "to": "1",
+        "type": "sequential",
+        "properties": {{
+          "trigger": "UE sends REGISTRATION REQUEST"
+        }}
+      }},
+      {{
+        "from": "1",
+        "to": "2",
+        "type": "sequential",
+        "properties": {{
+          "trigger": "Timer T3510 starts"
+        }}
+      }},
+      {{
+        "from": "2",
+        "to": "3",
+        "type": "conditional",
+        "properties": {{
+          "condition": "Timer T3510 expires",
+          "error_type": "Timeout",
+          "retry_count": 3
+        }}
+      }},
+      {{
+        "from": "3",
+        "to": "4",
+        "type": "sequential",
+        "properties": {{
+          "trigger": "AMF sends REGISTRATION ACCEPT"
+        }}
+      }}
     ]
   }}
 }}
@@ -74,51 +168,38 @@ Please format your output as a structured JSON object (without any markdown code
 
 #### Decision Points & Dependencies:
 {json.dumps(step2_data, indent=2)}
+
+
+
 """
 
-    # Generate content using Gemini model
-    response = model.generate_content(
+    model_to_use = flash_model  # or pro_model depending on your requirement
+    response = client.models.generate_content(
+        model=model_to_use,
         contents=prompt,
-        generation_config={
+        config={
             "temperature": 0,
         },
     )
 
-    # Print the raw response to inspect its structure
-    print(f"Raw response from model:\n{response.text}")
+    # Extract the text content from the response
+    procedural_info = (
+        response.text.strip() if hasattr(response, "text") else str(response)
+    )
 
-    # Check if response is empty
-    if not response.text:
-        print("Error: Empty response received.")
-        return None
+    # Strip any ```json ... ``` wrappers if present
+    if procedural_info.startswith("```json"):
+        procedural_info = procedural_info[len("```json") :].strip()
+    if procedural_info.endswith("```"):
+        procedural_info = procedural_info[: -len("```")].strip()
 
-    # Clean up the response by removing markdown code block markers
-    cleaned_response = response.text.strip()
-    if cleaned_response.startswith("```"):
-        cleaned_response = cleaned_response.split("\n", 1)[1]  # Remove first line
-    if cleaned_response.endswith("```"):
-        cleaned_response = cleaned_response.rsplit("\n", 1)[0]  # Remove last line
-    if cleaned_response.startswith("json"):
-        cleaned_response = cleaned_response.split("\n", 1)[1]  # Remove "json" line
-
-    # Try to parse the JSON response
-    try:
-        parsed_response = json.loads(cleaned_response)
-        # Validate the parsed response using Pydantic models
-        if validate_data(parsed_response):
-            return parsed_response
-        else:
-            print("Error: Validation failed.")
-            return None
-    except json.JSONDecodeError as e:
-        print(f"✗ Failed to decode JSON from the extracted data: {e}")
-        return None
+    return procedural_info
 
 
 def save_to_json(data, file_path):
     """Saves procedural info to a JSON file."""
     with open(file_path, "w", encoding="utf-8") as file:
-        json.dump(data, file, indent=2, ensure_ascii=False)
+        file.write(data)
     print(f"Procedural info saved to {file_path}")
 
 
