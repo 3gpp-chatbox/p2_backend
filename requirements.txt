@@ -7,3 +7,4 @@ pytest-mock # For mocking in tests
 pytest-cov # For test coverage reporting
 pre-commit # For pre-commit hooks
 ruff # For manual linting/formatting/sorting
+pydantic # For data validation
