@@ -1,8 +1,9 @@
 import os
-import sys
 import re
-from docx import Document
+import sys
 from pathlib import Path
+
+from docx import Document
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))

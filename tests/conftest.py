@@ -1,7 +1,8 @@
 """Test configuration and shared fixtures for database handler tests."""
 
+from unittest.mock import MagicMock, PropertyMock, patch
+
 import pytest
-from unittest.mock import MagicMock, patch, PropertyMock
 from psycopg import Connection, Cursor
 from psycopg.rows import dict_row
 
