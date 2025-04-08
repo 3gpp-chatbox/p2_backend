@@ -13,25 +13,25 @@ Version x.y.z
 
 where:
 
-x	the first digit:
+x the first digit:
 
-1	presented to TSG for information;
+1 presented to TSG for information;
 
-2	presented to TSG for approval;
+2 presented to TSG for approval;
 
-3	or greater indicates TSG approved document under change control.
+3 or greater indicates TSG approved document under change control.
 
-y	the second digit is incremented for all changes of substance, i.e. technical enhancements, corrections, updates, etc.
+y the second digit is incremented for all changes of substance, i.e. technical enhancements, corrections, updates, etc.
 
-z	the third digit is incremented when editorial only changes have been incorporated in the document.
+z the third digit is incremented when editorial only changes have been incorporated in the document.
 
-# 1	Scope
+# 1 Scope
 
 The present document specifies the non-access stratum (NAS) procedures in the 5G system (5GS) used by the protocols for:
 
--	mobility management between the user equipment (UE) and the access and mobility management function (AMF) for both 3GPP access and non-3GPP access; and
+- mobility management between the user equipment (UE) and the access and mobility management function (AMF) for both 3GPP access and non-3GPP access; and
 
--	session management between the user equipment (UE) and the session management function (SMF) for both 3GPP access and non-3GPP access.
+- session management between the user equipment (UE) and the session management function (SMF) for both 3GPP access and non-3GPP access.
 
 The 5GS mobility management (5GMM) protocol defined in the present document provides procedures for the control of mobility when the user equipment (UE) is using the NG radio access network (NG-RAN), non-3GPP access network, or both. The 5GMM protocol also provides control of security for the NAS protocols.
 
@@ -47,371 +47,371 @@ The present document is applicable to the UE, the access and mobility management
 
 The clauses and subclauses in the present document are common for both 3GPP access and non-3GPP access unless it is explicitly stated that they apply to 3GPP access only or non-3GPP access only.
 
-# 2	References
+# 2 References
 
 The following documents contain provisions which, through reference in this text, constitute provisions of the present document.
 
--	References are either specific (identified by date of publication, edition number, version number, etc.) or non-specific.
+- References are either specific (identified by date of publication, edition number, version number, etc.) or non-specific.
 
--	For a specific reference, subsequent revisions do not apply.
+- For a specific reference, subsequent revisions do not apply.
 
--	For a non-specific reference, the latest version applies. In the case of a reference to a 3GPP document (including a GSM document), a non-specific reference implicitly refers to the latest version of that document in the same Release as the present document.
+- For a non-specific reference, the latest version applies. In the case of a reference to a 3GPP document (including a GSM document), a non-specific reference implicitly refers to the latest version of that document in the same Release as the present document.
 
-[1]	3GPP TR 21.905: "Vocabulary for 3GPP Specifications".
+[1] 3GPP TR 21.905: "Vocabulary for 3GPP Specifications".
 
-[1A]	3GPP TS 22.011: "Service accessibility".
+[1A] 3GPP TS 22.011: "Service accessibility".
 
-[2]	3GPP TS 22.101: "Service aspects; Service principles".
+[2] 3GPP TS 22.101: "Service aspects; Service principles".
 
-[3]	3GPP TS 22.261: "Service requirements for the 5G system; Stage 1".
+[3] 3GPP TS 22.261: "Service requirements for the 5G system; Stage 1".
 
-[4]	3GPP TS 23.003: "Numbering, addressing and identification".
+[4] 3GPP TS 23.003: "Numbering, addressing and identification".
 
-[4A]	3GPP TS 23.040: "Technical realization of Short Message Service (SMS)".
+[4A] 3GPP TS 23.040: "Technical realization of Short Message Service (SMS)".
 
-[4B]	3GPP TS 23.032: "Universal Geographical Area Description (GAD)".
+[4B] 3GPP TS 23.032: "Universal Geographical Area Description (GAD)".
 
-[5]	3GPP TS 23.122: "Non-Access-Stratum functions related to Mobile Station (MS) in idle mode".
+[5] 3GPP TS 23.122: "Non-Access-Stratum functions related to Mobile Station (MS) in idle mode".
 
-[6]	3GPP TS 23.167: "IP Multimedia Subsystem (IMS) emergency sessions".
+[6] 3GPP TS 23.167: "IP Multimedia Subsystem (IMS) emergency sessions".
 
-[6A]	3GPP TS 23.216: "Single Radio Voice Call Continuity (SRVCC); Stage 2".
+[6A] 3GPP TS 23.216: "Single Radio Voice Call Continuity (SRVCC); Stage 2".
 
-[6AB]	3GPP TS 23.256: "Support of Uncrewed Aerial Systems (UAS) connectivity, identification and tracking; Stage 2".
+[6AB] 3GPP TS 23.256: "Support of Uncrewed Aerial Systems (UAS) connectivity, identification and tracking; Stage 2".
 
-[6B]	3GPP TS 23.273: "5G System (5GS) Location Services (LCS); Stage 2".
+[6B] 3GPP TS 23.273: "5G System (5GS) Location Services (LCS); Stage 2".
 
-[6C]	3GPP TS 23.287: "Architecture enhancements for 5G System (5GS) to support Vehicle-to-Everything (V2X) services".
+[6C] 3GPP TS 23.287: "Architecture enhancements for 5G System (5GS) to support Vehicle-to-Everything (V2X) services".
 
-[6D]	3GPP TS 23.316: "Wireless and wireline convergence access support for the 5G System (5GS)".
+[6D] 3GPP TS 23.316: "Wireless and wireline convergence access support for the 5G System (5GS)".
 
-[6E]	3GPP TS 23.304: "Proximity based Services (ProSe) in the 5G System (5GS)".
+[6E] 3GPP TS 23.304: "Proximity based Services (ProSe) in the 5G System (5GS)".
 
-[7]	3GPP TS 23.401: "GPRS enhancements for E-UTRAN access".
+[7] 3GPP TS 23.401: "GPRS enhancements for E-UTRAN access".
 
-[8]	3GPP TS 23.501: "System Architecture for the 5G System; Stage 2".
+[8] 3GPP TS 23.501: "System Architecture for the 5G System; Stage 2".
 
-[9]	3GPP TS 23.502: "Procedures for the 5G System; Stage 2".
+[9] 3GPP TS 23.502: "Procedures for the 5G System; Stage 2".
 
-[10]	3GPP TS 23.503: "Policy and Charging Control Framework for the 5G System; Stage 2".
+[10] 3GPP TS 23.503: "Policy and Charging Control Framework for the 5G System; Stage 2".
 
-[10A]	3GPP TS 23.548: "5G System Enhancements for Edge Computing; Stage 2".
+[10A] 3GPP TS 23.548: "5G System Enhancements for Edge Computing; Stage 2".
 
-[11]	3GPP TS 24.007: "Mobile radio interface signalling layer 3; General aspects".
+[11] 3GPP TS 24.007: "Mobile radio interface signalling layer 3; General aspects".
 
-[12]	3GPP TS 24.008: "Mobile Radio Interface Layer 3 specification; Core Network Protocols; Stage 3".
+[12] 3GPP TS 24.008: "Mobile Radio Interface Layer 3 specification; Core Network Protocols; Stage 3".
 
-[13]	3GPP TS 24.011: "Point-to-Point Short Message Service (SMS) support on mobile radio interface".
+[13] 3GPP TS 24.011: "Point-to-Point Short Message Service (SMS) support on mobile radio interface".
 
-[13A]	3GPP TS 24.080: "Mobile radio interface layer 3 Supplementary services specification; Formats and coding".
+[13A] 3GPP TS 24.080: "Mobile radio interface layer 3 Supplementary services specification; Formats and coding".
 
-[13B]	3GPP TS 24.193: "Access Traffic Steering, Switching and Splitting; Stage 3".
+[13B] 3GPP TS 24.193: "Access Traffic Steering, Switching and Splitting; Stage 3".
 
-[13C]	3GPP TS 24.173: "IMS Multimedia telephony communication service and supplementary services; Stage 3".
+[13C] 3GPP TS 24.173: "IMS Multimedia telephony communication service and supplementary services; Stage 3".
 
-[13D]	3GPP TS 24.174: "Support of multi-device and multi-identity in the IP Multimedia Subsystem (IMS); Stage 3".
+[13D] 3GPP TS 24.174: "Support of multi-device and multi-identity in the IP Multimedia Subsystem (IMS); Stage 3".
 
-[14]	3GPP TS 24.229: "IP multimedia call control protocol based on Session Initiation Protocol (SIP) and Session Description Protocol (SDP); Stage 3".
+[14] 3GPP TS 24.229: "IP multimedia call control protocol based on Session Initiation Protocol (SIP) and Session Description Protocol (SDP); Stage 3".
 
-[14AA]	3GPP TS 24.237: "IP Multimedia (IM) Core Network (CN) subsystem IP Multimedia Subsystem (IMS) service continuity; Stage 3".
+[14AA] 3GPP TS 24.237: "IP Multimedia (IM) Core Network (CN) subsystem IP Multimedia Subsystem (IMS) service continuity; Stage 3".
 
-[14A]	3GPP TS 24.250: "Protocol for Reliable Data Service; Stage 3".
+[14A] 3GPP TS 24.250: "Protocol for Reliable Data Service; Stage 3".
 
-[15]	3GPP TS 24.301: "Non-Access-Stratum (NAS) protocol for Evolved Packet System (EPS); Stage 3".
+[15] 3GPP TS 24.301: "Non-Access-Stratum (NAS) protocol for Evolved Packet System (EPS); Stage 3".
 
-[16]	3GPP TS 24.302: "Access to the 3GPP Evolved Packet Core (EPC) via non-3GPP access networks; Stage 3"
+[16] 3GPP TS 24.302: "Access to the 3GPP Evolved Packet Core (EPC) via non-3GPP access networks; Stage 3"
 
-[17]	3GPP TS 24.368: "Non-Access Stratum (NAS) configuration Management Object (MO)".
+[17] 3GPP TS 24.368: "Non-Access Stratum (NAS) configuration Management Object (MO)".
 
-[18]	3GPP TS 24.502: "Access to the 3GPP 5G System (5GS) via non-3GPP access networks; Stage 3".
+[18] 3GPP TS 24.502: "Access to the 3GPP 5G System (5GS) via non-3GPP access networks; Stage 3".
 
-[19]	3GPP TS 24.526: "UE policies for 5G System (5GS); Stage 3".
+[19] 3GPP TS 24.526: "UE policies for 5G System (5GS); Stage 3".
 
-[19BA]	3GPP TS 24.539: "5G System (5GS); Network to TSN translator (TT) protocol aspects; Stage 3".
+[19BA] 3GPP TS 24.539: "5G System (5GS); Network to TSN translator (TT) protocol aspects; Stage 3".
 
-[19A]	3GPP TS 24.535: "Device-Side Time-Sensitive Networking (TSN) Translator (DS-TT) to Network-Side TSN Translator (NW-TT) protocol aspects; Stage 3".
+[19A] 3GPP TS 24.535: "Device-Side Time-Sensitive Networking (TSN) Translator (DS-TT) to Network-Side TSN Translator (NW-TT) protocol aspects; Stage 3".
 
-[19B]	3GPP TS 24.587: "Vehicle-to-Everything (V2X) services in 5G System (5GS); Protocol aspects; Stage 3"
+[19B] 3GPP TS 24.587: "Vehicle-to-Everything (V2X) services in 5G System (5GS); Protocol aspects; Stage 3"
 
-[19C]	3GPP TS 24.588: "Vehicle-to-Everything (V2X) services in 5G System (5GS); User Equipment (UE) policies; Stage 3"
+[19C] 3GPP TS 24.588: "Vehicle-to-Everything (V2X) services in 5G System (5GS); User Equipment (UE) policies; Stage 3"
 
-[19D]	Void.
+[19D] Void.
 
-[19E]	3GPP TS 24.554: "Proximity-service (ProSe) in 5G System (5GS) protocol aspects; Stage 3".
+[19E] 3GPP TS 24.554: "Proximity-service (ProSe) in 5G System (5GS) protocol aspects; Stage 3".
 
-[19F]	3GPP TS 24.555: "Proximity-services (ProSe) in 5G System (5GS); User Equipment (UE) policies; Stage 3".
+[19F] 3GPP TS 24.555: "Proximity-services (ProSe) in 5G System (5GS); User Equipment (UE) policies; Stage 3".
 
-[20]	3GPP TS 24.623: "Extensive Markup Language (XML) Configuration Access Protocol (XCAP) over the Ut interface for Manipulating Supplementary Services".
+[20] 3GPP TS 24.623: "Extensive Markup Language (XML) Configuration Access Protocol (XCAP) over the Ut interface for Manipulating Supplementary Services".
 
-[20AA]	3GPP TS 29.500: "5G System; Technical Realization of Service Based Architecture; Stage 3".
+[20AA] 3GPP TS 29.500: "5G System; Technical Realization of Service Based Architecture; Stage 3".
 
-[20A]	3GPP TS 29.502: "5G System; Session Management Services; Stage 3".
+[20A] 3GPP TS 29.502: "5G System; Session Management Services; Stage 3".
 
-[20AB]	3GPP TS 29.503: "5G System; Unified Data Management Services; Stage 3".
+[20AB] 3GPP TS 29.503: "5G System; Unified Data Management Services; Stage 3".
 
-[20B]	3GPP TS 29.518: "5G System; Access and Mobility Management Services; Stage 3".
+[20B] 3GPP TS 29.518: "5G System; Access and Mobility Management Services; Stage 3".
 
-[21]	3GPP TS 29.525: "5G System; UE Policy Control Service; Stage 3".
+[21] 3GPP TS 29.525: "5G System; UE Policy Control Service; Stage 3".
 
-[21A]	3GPP TS 29.526: "5G System; Network Slice-Specific Authentication and Authorization (NSSAA) services; Stage 3".
+[21A] 3GPP TS 29.526: "5G System; Network Slice-Specific Authentication and Authorization (NSSAA) services; Stage 3".
 
-[21B]	3GPP TS 29.256: "5G System; Uncrewed Aerial Systems Network Function (UAS-NF); Aerial Management Services; Stage 3.
+[21B] 3GPP TS 29.256: "5G System; Uncrewed Aerial Systems Network Function (UAS-NF); Aerial Management Services; Stage 3.
 
-[22]	3GPP TS 31.102: "Characteristics of the Universal Subscriber Identity Module (USIM) application".
+[22] 3GPP TS 31.102: "Characteristics of the Universal Subscriber Identity Module (USIM) application".
 
-[22A]	3GPP TS 31.111: "USIM Application Toolkit (USAT)".
+[22A] 3GPP TS 31.111: "USIM Application Toolkit (USAT)".
 
-[22B]	3GPP TS 31.115: "Secured packet structure for (Universal) Subscriber Identity Module (U)SIM Toolkit applications".
+[22B] 3GPP TS 31.115: "Secured packet structure for (Universal) Subscriber Identity Module (U)SIM Toolkit applications".
 
-[23]	3GPP TS 33.102: "3G security; Security architecture".
+[23] 3GPP TS 33.102: "3G security; Security architecture".
 
-[23A]	3GPP TS 33.401: "3GPP System Architecture Evolution; Security architecture".
+[23A] 3GPP TS 33.401: "3GPP System Architecture Evolution; Security architecture".
 
-[24]	3GPP TS 33.501: "Security architecture and procedures for 5G System".
+[24] 3GPP TS 33.501: "Security architecture and procedures for 5G System".
 
-[24A]	3GPP TS 33.535: "Authentication and Key Management for Applications (AKMA) based on 3GPP credentials in the 5G System (5GS)".
+[24A] 3GPP TS 33.535: "Authentication and Key Management for Applications (AKMA) based on 3GPP credentials in the 5G System (5GS)".
 
-[24B]	3GPP TS 33.256: "Security aspects of Uncrewed Aerial Systems (UAS)".
+[24B] 3GPP TS 33.256: "Security aspects of Uncrewed Aerial Systems (UAS)".
 
-[25]	3GPP TS 36.323: "NR; Packet Data Convergence Protocol (PDCP) specification".
+[25] 3GPP TS 36.323: "NR; Packet Data Convergence Protocol (PDCP) specification".
 
-[25A]	3GPP TS 36.331: "Evolved Universal Terrestrial Radio Access (E-UTRA); Radio Resource Control (RRC) protocol specification".
+[25A] 3GPP TS 36.331: "Evolved Universal Terrestrial Radio Access (E-UTRA); Radio Resource Control (RRC) protocol specification".
 
-[25B]	3GPP TS 36.300: "Evolved Universal Terrestrial Radio Access (E-UTRA) and Evolved Universal Terrestrial Radio Access Network (E-UTRAN); Overall description".
+[25B] 3GPP TS 36.300: "Evolved Universal Terrestrial Radio Access (E-UTRA) and Evolved Universal Terrestrial Radio Access Network (E-UTRAN); Overall description".
 
-[25C]	3GPP TS 36.304: "Evolved Universal Terrestrial Radio Access (E-UTRA); User Equipment (UE) procedures in idle mode".
+[25C] 3GPP TS 36.304: "Evolved Universal Terrestrial Radio Access (E-UTRA); User Equipment (UE) procedures in idle mode".
 
-[25D]	3GPP TS 36.306: "Evolved Universal Terrestrial Radio Access (E-UTRA); User Equipment (UE) radio access capabilities".
+[25D] 3GPP TS 36.306: "Evolved Universal Terrestrial Radio Access (E-UTRA); User Equipment (UE) radio access capabilities".
 
-[25E]	3GPP TS 36.321: "Evolved Universal Terrestrial Radio Access (E-UTRA); Medium Access Control (MAC) protocol specification".
+[25E] 3GPP TS 36.321: "Evolved Universal Terrestrial Radio Access (E-UTRA); Medium Access Control (MAC) protocol specification".
 
-[26]	3GPP TS 37.355: "LTE Positioning Protocol (LPP)".
+[26] 3GPP TS 37.355: "LTE Positioning Protocol (LPP)".
 
-[26A]	3GPP TS 38.355: "Sidelink Positioning Protocol (SLPP); Protocol specification".
+[26A] 3GPP TS 38.355: "Sidelink Positioning Protocol (SLPP); Protocol specification".
 
-[27]	3GPP TS 38.300: "NR; NR and NG-RAN Overall Description; Stage 2".
+[27] 3GPP TS 38.300: "NR; NR and NG-RAN Overall Description; Stage 2".
 
-[28]	3GPP TS 38.304: "New Generation Radio Access Network; User Equipment (UE) procedures in Idle mode".
+[28] 3GPP TS 38.304: "New Generation Radio Access Network; User Equipment (UE) procedures in Idle mode".
 
-[28A]	3GPP TS 38.306: "New Generation Radio Access Network; User Equipment (UE) radio access capabilities".
+[28A] 3GPP TS 38.306: "New Generation Radio Access Network; User Equipment (UE) radio access capabilities".
 
-[29]	3GPP TS 38.323: "Evolved Universal Terrestrial Radio Access (E-UTRA); Packet Data Convergence Protocol (PDCP) specification".
+[29] 3GPP TS 38.323: "Evolved Universal Terrestrial Radio Access (E-UTRA); Packet Data Convergence Protocol (PDCP) specification".
 
-[30]	3GPP TS 38.331: "NR; Radio Resource Control (RRC); Protocol Specification".
+[30] 3GPP TS 38.331: "NR; Radio Resource Control (RRC); Protocol Specification".
 
-[31]	3GPP TS 38.413: "NG Radio Access Network (NG-RAN); NG Application Protocol (NGAP)".
+[31] 3GPP TS 38.413: "NG Radio Access Network (NG-RAN); NG Application Protocol (NGAP)".
 
-[31A]	IEEE Std 802.3™-2022: "Ethernet".
+[31A] IEEE Std 802.3™-2022: "Ethernet".
 
-[31AA]	3GPP TS 38.509: "Special conformance testing functions for User Equipment (UE)".
+[31AA] 3GPP TS 38.509: "Special conformance testing functions for User Equipment (UE)".
 
-[32]	IETF RFC 768: "User Datagram Protocol".
+[32] IETF RFC 768: "User Datagram Protocol".
 
-[33]	IETF RFC 793: "Transmission Control Protocol."
+[33] IETF RFC 793: "Transmission Control Protocol."
 
-[33A]	IETF RFC 3095: "RObust Header Compression (ROHC): Framework and four profiles: RTP, UDP, ESP and uncompressed".
+[33A] IETF RFC 3095: "RObust Header Compression (ROHC): Framework and four profiles: RTP, UDP, ESP and uncompressed".
 
-[33B]	Void.
+[33B] Void.
 
-[33C]	Void.
+[33C] Void.
 
-[33D]	IETF RFC 8415: "Dynamic Host Configuration Protocol for IPv6 (DHCPv6)".
+[33D] IETF RFC 8415: "Dynamic Host Configuration Protocol for IPv6 (DHCPv6)".
 
-[33E]	IETF RFC 2131: "Dynamic Host Configuration Protocol".
+[33E] IETF RFC 2131: "Dynamic Host Configuration Protocol".
 
-[33F]	IETF RFC 2132: "DHCP Options and BOOTP Vendor Extensions".
+[33F] IETF RFC 2132: "DHCP Options and BOOTP Vendor Extensions".
 
-[34]	IETF RFC 3748: "Extensible Authentication Protocol (EAP)".
+[34] IETF RFC 3748: "Extensible Authentication Protocol (EAP)".
 
-[34A]	IETF RFC 3843: "RObust Header Compression (ROHC): A Compression Profile for IP".
+[34A] IETF RFC 3843: "RObust Header Compression (ROHC): A Compression Profile for IP".
 
-[35]	Void.
+[35] Void.
 
-[35A]	IETF RFC 4122: "A Universally Unique IDentifier (UUID) URN Namespace".
+[35A] IETF RFC 4122: "A Universally Unique IDentifier (UUID) URN Namespace".
 
-[36]	IETF RFC 4191: "Default Router Preferences and More-Specific Routes".
+[36] IETF RFC 4191: "Default Router Preferences and More-Specific Routes".
 
-[36A]	IETF RFC 5905: "Network Time Protocol Version 4: Protocol and Algorithms Specification".
+[36A] IETF RFC 5905: "Network Time Protocol Version 4: Protocol and Algorithms Specification".
 
-[37]	IETF RFC 7542: "The Network Access Identifier".
+[37] IETF RFC 7542: "The Network Access Identifier".
 
-[38]	IETF RFC 4303: "IP Encapsulating Security Payload (ESP)".
+[38] IETF RFC 4303: "IP Encapsulating Security Payload (ESP)".
 
-[38A]	IETF RFC 4815: "RObust Header Compression (ROHC): Corrections and Clarifications to RFC 3095".
+[38A] IETF RFC 4815: "RObust Header Compression (ROHC): Corrections and Clarifications to RFC 3095".
 
-[38B]	IETF RFC 4861: "Neighbor Discovery for IP version 6 (IPv6)".
+[38B] IETF RFC 4861: "Neighbor Discovery for IP version 6 (IPv6)".
 
-[39]	IETF RFC 4862: "IPv6 Stateless Address Autoconfiguration".
+[39] IETF RFC 4862: "IPv6 Stateless Address Autoconfiguration".
 
-[39A]	IETF RFC 5225: "RObust Header Compression (ROHC) Version 2: Profiles for RTP, UDP, IP, ESP and UDP Lite".
+[39A] IETF RFC 5225: "RObust Header Compression (ROHC) Version 2: Profiles for RTP, UDP, IP, ESP and UDP Lite".
 
-[39B]	IETF RFC 5795: "The RObust Header Compression (ROHC) Framework".
+[39B] IETF RFC 5795: "The RObust Header Compression (ROHC) Framework".
 
-[40]	IETF RFC 5448: "Improved Extensible Authentication Protocol Method for 3rd Generation Authentication and Key Agreement (EAP-AKA')".
+[40] IETF RFC 5448: "Improved Extensible Authentication Protocol Method for 3rd Generation Authentication and Key Agreement (EAP-AKA')".
 
-[40A]	IETF RFC 6603: "Prefix Exclude Option for DHCPv6-based Prefix Delegation".
+[40A] IETF RFC 6603: "Prefix Exclude Option for DHCPv6-based Prefix Delegation".
 
-[40B]	IETF RFC 6846: "RObust Header Compression (ROHC): A Profile for TCP/IP (ROHC-TCP)".
+[40B] IETF RFC 6846: "RObust Header Compression (ROHC): A Profile for TCP/IP (ROHC-TCP)".
 
-[41]	IETF RFC 7296: "Internet Key Exchange Protocol Version 2 (IKEv2)".
+[41] IETF RFC 7296: "Internet Key Exchange Protocol Version 2 (IKEv2)".
 
-[42]	ITU-T Recommendation E.212: "The international identification plan for public networks and subscriptions", 2016-09-23.
+[42] ITU-T Recommendation E.212: "The international identification plan for public networks and subscriptions", 2016-09-23.
 
-[43]	IEEE Std 802-2014: "IEEE Standard for Local and Metropolitan Area Networks: Overview and Architecture" (30 June 2014).
+[43] IEEE Std 802-2014: "IEEE Standard for Local and Metropolitan Area Networks: Overview and Architecture" (30 June 2014).
 
-[43A]	Void
+[43A] Void
 
-[43B]	IEEE Std 1588™-2019: "IEEE Standard for a Precision Clock Synchronization Protocol for Networked Measurement and Control Systems".
+[43B] IEEE Std 1588™-2019: "IEEE Standard for a Precision Clock Synchronization Protocol for Networked Measurement and Control Systems".
 
-[43C]	Void.
+[43C] Void.
 
-[43D]	Void.
+[43D] Void.
 
-[43E]	Void.
+[43E] Void.
 
-[44]	Void.
+[44] Void.
 
-[45]	Void.
+[45] Void.
 
-[46]	Void.
+[46] Void.
 
-[47]	Void.
+[47] Void.
 
-[48]	IEEE: "Guidelines for Use of Extended Unique Identifier (EUI), Organizationally Unique Identifier (OUI), and Company ID (CID)".
+[48] IEEE: "Guidelines for Use of Extended Unique Identifier (EUI), Organizationally Unique Identifier (OUI), and Company ID (CID)".
 
-[49]	BBF TR-069: "CPE WAN Management Protocol".
+[49] BBF TR-069: "CPE WAN Management Protocol".
 
-[50]	BBF TR-369: "User Services Platform (USP)".
+[50] BBF TR-369: "User Services Platform (USP)".
 
-[51]	3GPP TS 37.340: "Evolved Universal Terrestrial Radio Access (E-UTRA) and NR; Multi-connectivity; Stage 2".
+[51] 3GPP TS 37.340: "Evolved Universal Terrestrial Radio Access (E-UTRA) and NR; Multi-connectivity; Stage 2".
 
-[52]	IETF RFC 8106:"IPv6 Router Advertisement Options for DNS Configuration".
+[52] IETF RFC 8106:"IPv6 Router Advertisement Options for DNS Configuration".
 
-[53]	3GPP TS 23.247: "Architectural enhancements for 5G multicast-broadcast services; Stage 2".
+[53] 3GPP TS 23.247: "Architectural enhancements for 5G multicast-broadcast services; Stage 2".
 
-[54]	3GPP TS 23.380: "IMS Restoration Procedures".
+[54] 3GPP TS 23.380: "IMS Restoration Procedures".
 
-[55]	IETF RFC 3948: "UDP Encapsulation of IPsec ESP Packets".
+[55] IETF RFC 3948: "UDP Encapsulation of IPsec ESP Packets".
 
-[56]	3GPP TS 33.503: "Security Aspects of Proximity based Services (ProSe) in the 5G System (5GS)".
+[56] 3GPP TS 33.503: "Security Aspects of Proximity based Services (ProSe) in the 5G System (5GS)".
 
-[57]	3GPP TS 33.246: "Security of Multimedia Broadcast/Multicast Service (MBMS)".
+[57] 3GPP TS 33.246: "Security of Multimedia Broadcast/Multicast Service (MBMS)".
 
-[58]	3GPP TS 38.321: "NR; Medium Access Control (MAC); Protocol specification".
+[58] 3GPP TS 38.321: "NR; Medium Access Control (MAC); Protocol specification".
 
-[59]	IEEE Std 802.11™-2020: "Information Technology- Telecommunications and information exchange between systems-Local and metropolitan area networks-Specific requirements-Part 11: Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications".
+[59] IEEE Std 802.11™-2020: "Information Technology- Telecommunications and information exchange between systems-Local and metropolitan area networks-Specific requirements-Part 11: Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications".
 
-[60]	3GPP TS 24.577: "Aircraft-to-Everything (A2X) services in 5G System (5GS) protocol aspects; Stage 3".
+[60] 3GPP TS 24.577: "Aircraft-to-Everything (A2X) services in 5G System (5GS) protocol aspects; Stage 3".
 
-[61]	3GPP TS 24.578: "Aircraft-to-Everything (A2X) services in 5G System (5GS); UE policies".
+[61] 3GPP TS 24.578: "Aircraft-to-Everything (A2X) services in 5G System (5GS); UE policies".
 
-[62]	3GPP TS 24.514: "Ranging based services and sidelink positioning in 5G system (5GS); Stage 3".
+[62] 3GPP TS 24.514: "Ranging based services and sidelink positioning in 5G system (5GS); Stage 3".
 
-[63]	3GPP TS 23.586: "Architectural Enhancements to support Ranging based services and Sidelink Positioning".
+[63] 3GPP TS 23.586: "Architectural Enhancements to support Ranging based services and Sidelink Positioning".
 
-[64]	3GPP TS 24.572: "User Plane Location Services (LCS) Protocols And Procedures; Stage 3".
+[64] 3GPP TS 24.572: "User Plane Location Services (LCS) Protocols And Procedures; Stage 3".
 
-[65]	3GPP TS 24.575: "5G System; Multicast/Broadcast UE pre-configuration Management Object (MO)".
+[65] 3GPP TS 24.575: "5G System; Multicast/Broadcast UE pre-configuration Management Object (MO)".
 
-[66]	IETF RFC 4291:" IP Version 6 Addressing Architecture".
+[66] IETF RFC 4291:" IP Version 6 Addressing Architecture".
 
-[67]	3GPP TS 38.305: "Stage 2 functional specification of User Equipment (UE) positioning in NG-RAN".
+[67] 3GPP TS 38.305: "Stage 2 functional specification of User Equipment (UE) positioning in NG-RAN".
 
-[68]	3GPP TS 23.271: "Functional stage 2 description of Location Services (LCS)".
+[68] 3GPP TS 23.271: "Functional stage 2 description of Location Services (LCS)".
 
-[69]	3GPP TS 26.522: "5G Real-time Media Transport Protocol Configurations".
+[69] 3GPP TS 26.522: "5G Real-time Media Transport Protocol Configurations".
 
-[70]	IETF RFC 8285: "A General Mechanism for RTP Header Extensions".
+[70] IETF RFC 8285: "A General Mechanism for RTP Header Extensions".
 
-[71]	IETF RFC 3550: "RTP: A Transport Protocol for Real-Time Applications".
+[71] IETF RFC 3550: "RTP: A Transport Protocol for Real-Time Applications".
 
-# 3	Definitions and abbreviations
+# 3 Definitions and abbreviations
 
-## 3.1	Definitions
+## 3.1 Definitions
 
-For the purposes of the present document, the terms and definitions given in 3GPP TR 21.905 [1] and the following apply. A term defined in the present document takes precedence over the definition of the same term, if any, in 3GPP TR 21.905 [1].
+For the purposes of the present document, the terms and definitions given in 3GPP TR 21.905 [1] and the following apply. A term defined in the present document takes precedence over the definition of the same term, if any, in 3GPP TR 21.905 [1].
 
-4G-GUTI: A GUTI defined in 3GPP TS 24.301 [15].
+4G-GUTI: A GUTI defined in 3GPP TS 24.301 [15].
 
 5GMM-IDLE mode: In this specification, if the term is used standalone, a UE in 5GMM-IDLE mode means the UE can be either in 5GMM-IDLE mode over 3GPP access or in 5GMM-IDLE mode over non-3GPP access.
 
 5GMM-CONNECTED mode: In this specification, if the term is used standalone, a UE in 5GMM-CONNECTED mode means the UE can be either in 5GMM-CONNECTED mode over 3GPP access or in 5GMM-CONNECTED mode over non-3GPP access.
 
-5GMM-IDLE mode over 3GPP access: A UE is in 5GMM-IDLE mode over 3GPP access when no N1 NAS signalling connection between the UE and network over 3GPP access exists. The term 5GMM-IDLE mode over 3GPP access used in the present document corresponds to the term CM-IDLE state for 3GPP access used in 3GPP TS 23.501 [8].
+5GMM-IDLE mode over 3GPP access: A UE is in 5GMM-IDLE mode over 3GPP access when no N1 NAS signalling connection between the UE and network over 3GPP access exists. The term 5GMM-IDLE mode over 3GPP access used in the present document corresponds to the term CM-IDLE state for 3GPP access used in 3GPP TS 23.501 [8].
 
-5GMM-CONNECTED mode over 3GPP access: A UE is in 5GMM-CONNECTED mode over 3GPP access when an N1 NAS signalling connection between the UE and network over 3GPP access exists. The term 5GMM-CONNECTED mode over 3GPP access used in the present document corresponds to the term CM-CONNECTED state for 3GPP access used in 3GPP TS 23.501 [8].
+5GMM-CONNECTED mode over 3GPP access: A UE is in 5GMM-CONNECTED mode over 3GPP access when an N1 NAS signalling connection between the UE and network over 3GPP access exists. The term 5GMM-CONNECTED mode over 3GPP access used in the present document corresponds to the term CM-CONNECTED state for 3GPP access used in 3GPP TS 23.501 [8].
 
-5GMM-IDLE mode over non-3GPP access: A UE is in 5GMM-IDLE mode over non-3GPP access when no N1 NAS signalling connection between the UE and network over non-3GPP access exists. The term 5GMM-IDLE mode over non-3GPP access used in the present document corresponds to the term CM-IDLE state for non-3GPP access used in 3GPP TS 23.501 [8].
+5GMM-IDLE mode over non-3GPP access: A UE is in 5GMM-IDLE mode over non-3GPP access when no N1 NAS signalling connection between the UE and network over non-3GPP access exists. The term 5GMM-IDLE mode over non-3GPP access used in the present document corresponds to the term CM-IDLE state for non-3GPP access used in 3GPP TS 23.501 [8].
 
-5GMM-CONNECTED mode over non-3GPP access: A UE is in 5GMM-CONNECTED mode over non-3GPP access when an N1 NAS signalling connection between the UE and network over non-3GPP access exists. The term 5GMM-CONNECTED mode over non-3GPP access used in the present document corresponds to the term CM-CONNECTED state for non-3GPP access used in 3GPP TS 23.501 [8].
+5GMM-CONNECTED mode over non-3GPP access: A UE is in 5GMM-CONNECTED mode over non-3GPP access when an N1 NAS signalling connection between the UE and network over non-3GPP access exists. The term 5GMM-CONNECTED mode over non-3GPP access used in the present document corresponds to the term CM-CONNECTED state for non-3GPP access used in 3GPP TS 23.501 [8].
 
 5GS services: Services provided by PS domain. Within the context of this specification, 5GS services is used as a synonym for EPS services.
 
-5G-EA: 5GS encryption algorithms. The term 5G-EA, 5G-EA0, 128-5G-EA1, 128-5G-EA2, 128-5G-EA3, 5G-EA4, 5G-EA5, 5G-EA6 and 5G-EA7 used in the present document corresponds to the term NEA, NEA0, 128-NEA1, 128-NEA2, 128-NEA3, NEA4, NEA5, NEA6 and NEA7 defined in 3GPP TS 33.501 [24].
+5G-EA: 5GS encryption algorithms. The term 5G-EA, 5G-EA0, 128-5G-EA1, 128-5G-EA2, 128-5G-EA3, 5G-EA4, 5G-EA5, 5G-EA6 and 5G-EA7 used in the present document corresponds to the term NEA, NEA0, 128-NEA1, 128-NEA2, 128-NEA3, NEA4, NEA5, NEA6 and NEA7 defined in 3GPP TS 33.501 [24].
 
-5G-IA: 5GS integrity algorithms. The term 5G-IA, 5G-IA0, 128-5G-IA1, 128-5G-IA2, 128-5G-IA3, 5G-IA4, 5G-IA5, 5G-IA6 and 5G-IA7 used in the present document corresponds to the term NIA, NIA0, 128-NIA1, 128-NIA2, 128-NIA3, NIA4, NIA5, NIA6 and NIA7 defined in 3GPP TS 33.501 [24].
+5G-IA: 5GS integrity algorithms. The term 5G-IA, 5G-IA0, 128-5G-IA1, 128-5G-IA2, 128-5G-IA3, 5G-IA4, 5G-IA5, 5G-IA6 and 5G-IA7 used in the present document corresponds to the term NIA, NIA0, 128-NIA1, 128-NIA2, 128-NIA3, NIA4, NIA5, NIA6 and NIA7 defined in 3GPP TS 33.501 [24].
 
 Access stratum connection: A peer to peer access stratum connection:
 
--	between the UE and the NG-RAN for 3GPP access;
+- between the UE and the NG-RAN for 3GPP access;
 
--	between the UE and the N3IWF for untrusted non-3GPP access;
+- between the UE and the N3IWF for untrusted non-3GPP access;
 
--	between the UE and the TNGF for trusted non-3GPP access used by the UE;
+- between the UE and the TNGF for trusted non-3GPP access used by the UE;
 
--	within the TWIF acting on behalf of the N5CW device for trusted non-3GPP access used by the N5CW device;
+- within the TWIF acting on behalf of the N5CW device for trusted non-3GPP access used by the N5CW device;
 
--	between the 5G-RG and the W-AGF for wireline access used by the 5G-RG;
+- between the 5G-RG and the W-AGF for wireline access used by the 5G-RG;
 
--	within the W-AGF acting on behalf of the FN-RG for wireline access used by the FN-RG; or
+- within the W-AGF acting on behalf of the FN-RG for wireline access used by the FN-RG; or
 
--	within the W-AGF acting on behalf of the N5GC device for wireline access used by the N5GC device.
+- within the W-AGF acting on behalf of the N5GC device for wireline access used by the N5GC device.
 
-The access stratum connection for 3GPP access corresponds to an RRC connection via the Uu reference point. The creation of the access stratum connection for untrusted non-3GPP access corresponds to the completion of the IKE_SA_INIT exchange (see IETF RFC 7296 [41]) via the NWu reference point. The creation of the access stratum connection for trusted non-3GPP access used by the UE corresponds to the UE reception of an EAP-request/5G-start via NWt reference point (see 3GPP TS 23.502 [9]). The creation of the access stratum connection for trusted non-3GPP access used by the N5CW device corresponds to the TWIF's start of acting on behalf of the N5CW device. The creation of the access stratum connection for wireline access used by the 5G-RG corresponds to establishment of signalling connection using W-CP protocol stack via the Y4 reference point (see 3GPP TS 23.316 [6D]). The creation of the access stratum connection for wireline access used by the FN-RG corresponds to the W-AGF's start of acting on behalf of the FN-RG. The creation of the access stratum connection for wireline access used by the N5GC device corresponds to the W-AGF's start of acting on behalf of the N5GC device.
+The access stratum connection for 3GPP access corresponds to an RRC connection via the Uu reference point. The creation of the access stratum connection for untrusted non-3GPP access corresponds to the completion of the IKE_SA_INIT exchange (see IETF RFC 7296 [41]) via the NWu reference point. The creation of the access stratum connection for trusted non-3GPP access used by the UE corresponds to the UE reception of an EAP-request/5G-start via NWt reference point (see 3GPP TS 23.502 [9]). The creation of the access stratum connection for trusted non-3GPP access used by the N5CW device corresponds to the TWIF's start of acting on behalf of the N5CW device. The creation of the access stratum connection for wireline access used by the 5G-RG corresponds to establishment of signalling connection using W-CP protocol stack via the Y4 reference point (see 3GPP TS 23.316 [6D]). The creation of the access stratum connection for wireline access used by the FN-RG corresponds to the W-AGF's start of acting on behalf of the FN-RG. The creation of the access stratum connection for wireline access used by the N5GC device corresponds to the W-AGF's start of acting on behalf of the N5GC device.
 
 Access to SNPN services via a PLMN/To access SNPN services via a PLMN: A UE is accessing SNPN services via a PLMN when the UE is connecting to the 5GCN of the SNPN using the 3GPP access of the PLMN.
 
-Aggregate maximum bit rate: The maximum bit rate that limits the aggregate bit rate of a set of non-GBR bearers of a UE. Definition derived from 3GPP TS 23.501 [8].
+Aggregate maximum bit rate: The maximum bit rate that limits the aggregate bit rate of a set of non-GBR bearers of a UE. Definition derived from 3GPP TS 23.501 [8].
 
 Alternative NSSAI: A list of mapping information between the S-NSSAI to be replaced and the alternative S-NSSAI.
 
 Always-on PDU session: A PDU session for which user-plane resources have to be established during every transition from 5GMM-IDLE mode to 5GMM-CONNECTED mode. A UE requests a PDU session to be established as an always-on PDU session based on indication from upper layers and the network decides whether a PDU session is established as an always-on PDU session.
 
-NOTE 1:	How the upper layers in the UE are configured to provide an indication is outside the scope of the present document.
+NOTE 1: How the upper layers in the UE are configured to provide an indication is outside the scope of the present document.
 
 Applicable UE radio capability ID for the current UE radio configuration in the selected network: The UE has an applicable UE radio capability ID for the current UE radio configuration in the selected network if:
 
-a)	the UE supports RACS; and
+a) the UE supports RACS; and
 
-b)	the UE has:
+b) the UE has:
 
-1)	a stored network-assigned UE radio capability ID which is associated with the PLMN ID or SNPN identity of the serving network and which maps to the set of radio capabilities currently enabled at the UE; or
+1) a stored network-assigned UE radio capability ID which is associated with the PLMN ID or SNPN identity of the serving network and which maps to the set of radio capabilities currently enabled at the UE; or
 
-2)	a manufacturer-assigned UE radio capability ID which maps to the set of radio capabilities currently enabled at the UE.
+2) a manufacturer-assigned UE radio capability ID which maps to the set of radio capabilities currently enabled at the UE.
 
-Backhaul PLMN or backhaul SNPN (BH PLMN or BH SNPN): The term backhaul PLMN or backhaul SNPN (BH PLMN or BH SNPN) used in the present document corresponds to the term backhaul PLMN/SNPN (BH PLMN/SNPN) used in 3GPP TS 23.501 [8].
+Backhaul PLMN or backhaul SNPN (BH PLMN or BH SNPN): The term backhaul PLMN or backhaul SNPN (BH PLMN or BH SNPN) used in the present document corresponds to the term backhaul PLMN/SNPN (BH PLMN/SNPN) used in 3GPP TS 23.501 [8].
 
 CAG cell: A cell in which only members of the CAG can get normal service. Depending on local regulation, the CAG cell can provide emergency services and emergency services fallback also to subscribers who are not members of the CAG.
 
-CAG-ID: A CAG-ID is a unique identifier within the scope of one PLMN defined in 3GPP TS 23.003 [4] which identifies a Closed Access Group (CAG) in the PLMN associated with a cell or group of cells to which access is restricted to members of the CAG.
+CAG-ID: A CAG-ID is a unique identifier within the scope of one PLMN defined in 3GPP TS 23.003 [4] which identifies a Closed Access Group (CAG) in the PLMN associated with a cell or group of cells to which access is restricted to members of the CAG.
 
 CAG restrictions: Restrictions applied to a UE in accessing a PLMN's 5GCN via:
 
-a)	a non-CAG cell if the entry for the PLMN in the UE's "CAG information list" includes an "indication that the UE is only allowed to access 5GS via CAG cells"; or
+a) a non-CAG cell if the entry for the PLMN in the UE's "CAG information list" includes an "indication that the UE is only allowed to access 5GS via CAG cells"; or
 
-b)	a CAG cell if none of the CAG-ID(s) supported by the CAG cell is authorized based on the "allowed CAG list" for the PLMN in the UE's "CAG information list".
+b) a CAG cell if none of the CAG-ID(s) supported by the CAG cell is authorized based on the "allowed CAG list" for the PLMN in the UE's "CAG information list".
 
 The CAG restrictions are not applied in a PLMN when a UE accesses the PLMN due to emergency services or emergency services fallback.
 
-Cleartext IEs: Information elements that can be sent without confidentiality protection in initial NAS messages as specified in subclause 4.4.6.
+Cleartext IEs: Information elements that can be sent without confidentiality protection in initial NAS messages as specified in subclause 4.4.6.
 
 Configuration of SNPN subscription parameters in PLMN via the user plane: Configuration of a UE in a PLMN with one or more entries of the "list of subscriber data” via the user plane.
 
 Control plane CIoT 5GS optimization: Signalling optimizations to enable efficient transport of user data (IP, Ethernet, Unstructured or SMS) over control plane via the AMF including optional header compression of IP data and Ethernet data.
 
-Current TAI: A TAI of a selected PLMN broadcast in the cell on which the UE is camping. If the cell is a satellite NG-RAN cell broadcasting multiple TACs of the selected PLMN, the UE NAS layer selects the current TAI from these multiple TACs of the selected PLMN as specified in subclause 4.23.5.
+Current TAI: A TAI of a selected PLMN broadcast in the cell on which the UE is camping. If the cell is a satellite NG-RAN cell broadcasting multiple TACs of the selected PLMN, the UE NAS layer selects the current TAI from these multiple TACs of the selected PLMN as specified in subclause 4.23.5.
 
-NOTE 2:	For the purpose of this definition, the selected PLMN can either be the registered PLMN or a PLMN selected according to PLMN selection rules as specified in 3GPP TS 23.122 [5].
+NOTE 2: For the purpose of this definition, the selected PLMN can either be the registered PLMN or a PLMN selected according to PLMN selection rules as specified in 3GPP TS 23.122 [5].
 
 DNN based congestion control: Type of congestion control at session management level that is applied to reject session management requests from UEs or release PDU sessions when the associated DNN is congested. DNN based congestion control can be activated at the SMF over session management level and also activated at the AMF over mobility management level.
 
@@ -427,37 +427,37 @@ Emergency PDU session: A PDU session established with the request type "initial 
 
 General NAS level congestion control: Type of congestion control at mobility management level that is applied at a general overload or congestion situation in the network, e.g. lack of processing resources.
 
-Globally-unique SNPN identity: An SNPN identity with an NID whose assignment mode is not set to 1 (see 3GPP TS 23.003 [4]).
+Globally-unique SNPN identity: An SNPN identity with an NID whose assignment mode is not set to 1 (see 3GPP TS 23.003 [4]).
 
-Home country:	The country of the HPLMN (see 3GPP TS 23.122 [5] for the definition of country).
+Home country: The country of the HPLMN (see 3GPP TS 23.122 [5] for the definition of country).
 
 HPLMN S-NSSAI: An S-NSSAI applicable in the HPLMN without any further mapping by the network. If the UE has an EHPLMN list which is not empty, then the HPLMN S-NSSAIs are applicable without any further mapping in the PLMN whose PLMN code is derived from the IMSI, regardless of whether or not this PLMN is included in the EHPLMN list.
 
 The UE considers as HPLMN S-NSSAIs at least the following S-NSSAIs:
 
-a)	any S-NSSAI included in the configured NSSAI or allowed NSSAI for a PLMN or SNPN if it is provided by
+a) any S-NSSAI included in the configured NSSAI or allowed NSSAI for a PLMN or SNPN if it is provided by
 
-1)	the PLMN whose PLMN code is derived from the IMSI; or
+1) the PLMN whose PLMN code is derived from the IMSI; or
 
-2)	the subscribed SNPN;
+2) the subscribed SNPN;
 
-b)	any S-NSSAI provided as mapped S-NSSAI for the configured NSSAI or allowed NSSAI or partially allowed NSSAI for a PLMN or SNPN;
+b) any S-NSSAI provided as mapped S-NSSAI for the configured NSSAI or allowed NSSAI or partially allowed NSSAI for a PLMN or SNPN;
 
-c)	any S-NSSAI associated with a PDU session if there is no mapped S-NSSAI associated with the PDU session and the UE is
+c) any S-NSSAI associated with a PDU session if there is no mapped S-NSSAI associated with the PDU session and the UE is
 
-1)	in the PLMN whose PLMN code is derived from the IMSI; or
+1) in the PLMN whose PLMN code is derived from the IMSI; or
 
-2)	in the subscribed SNPN; and
+2) in the subscribed SNPN; and
 
-d)	any mapped S-NSSAI associated with a PDU session.
+d) any mapped S-NSSAI associated with a PDU session.
 
-NOTE 3:	The above list is not intended to be complete. E.g., also in case of PLMN the S-NSSAIs included in URSP rules or in the signalling messages for network slice-specific authentication and authorization are HPLMN S-NSSAIs.
+NOTE 3: The above list is not intended to be complete. E.g., also in case of PLMN the S-NSSAIs included in URSP rules or in the signalling messages for network slice-specific authentication and authorization are HPLMN S-NSSAIs.
 
-In NB-N1 mode: Indicates this paragraph applies only to a system which operates in NB-N1 mode. For a multi-access system this case applies if the current serving radio access network provides access to network services via E-UTRA connected to 5GCN by NB-IoT (see 3GPP TS 36.300 [25B], 3GPP TS 36.331 [25A], 3GPP TS 36.306 [25D]).
+In NB-N1 mode: Indicates this paragraph applies only to a system which operates in NB-N1 mode. For a multi-access system this case applies if the current serving radio access network provides access to network services via E-UTRA connected to 5GCN by NB-IoT (see 3GPP TS 36.300 [25B], 3GPP TS 36.331 [25A], 3GPP TS 36.306 [25D]).
 
 In WB-N1 mode: Indicates this paragraph applies only to a system which operates in WB-N1 mode. For a multi-access system this case applies if the system operates in N1 mode with E-UTRA connected to 5GCN, but not in NB-N1 mode.
 
-In WB-N1/CE mode: Indicates this paragraph applies only when a UE, which is a CE mode B capable UE (see 3GPP TS 36.306 [25D]), is operating in CE mode A or B in WB-N1 mode.Initial NAS message: A NAS message is considered as an initial NAS message, if this NAS message can trigger the establishment of an N1 NAS signalling connection. For instance, the REGISTRATION REQUEST message is an initial NAS message.
+In WB-N1/CE mode: Indicates this paragraph applies only when a UE, which is a CE mode B capable UE (see 3GPP TS 36.306 [25D]), is operating in CE mode A or B in WB-N1 mode.Initial NAS message: A NAS message is considered as an initial NAS message, if this NAS message can trigger the establishment of an N1 NAS signalling connection. For instance, the REGISTRATION REQUEST message is an initial NAS message.
 
 Initial registration for emergency services: A registration performed with 5GS registration type "emergency registration" in the REGISTRATION REQUEST message.
 
@@ -465,7 +465,7 @@ Initial registration for onboarding services in SNPN: A registration performed w
 
 Initial registration for disaster roaming services: A registration performed with 5GS registration type "disaster roaming initial registration" in the REGISTRATION REQUEST message.
 
-Initial small data rate control parameters: Parameters that, if received by the UE during the establishment of a PDU session, are used as initial parameters to limit the allowed data for the PDU session according to small data rate control after establishment of a PDU session as described in subclause 6.2.13. At expiry of the associated validity period, the initial small data rate control parameters are no longer valid and the small data rate control parameters apply.
+Initial small data rate control parameters: Parameters that, if received by the UE during the establishment of a PDU session, are used as initial parameters to limit the allowed data for the PDU session according to small data rate control after establishment of a PDU session as described in subclause 6.2.13. At expiry of the associated validity period, the initial small data rate control parameters are no longer valid and the small data rate control parameters apply.
 
 Initial small data rate control parameters for exception data: Parameters corresponding to initial small data rate control parameters for small data rate control of exception data.
 
@@ -473,9 +473,9 @@ Last visited registered TAI: A TAI which is contained in the registration area t
 
 Local release: Release of a PDU session without peer-to-peer signalling between the network and the UE.
 
-NOTE 3A:	Local release can include communication among network entities.
+NOTE 3A: Local release can include communication among network entities.
 
-Mapped 5G-GUTI: A 5G-GUTI which is mapped from a 4G-GUTI previously allocated by an MME. Mapping rules are defined in 3GPP TS 23.003 [4].
+Mapped 5G-GUTI: A 5G-GUTI which is mapped from a 4G-GUTI previously allocated by an MME. Mapping rules are defined in 3GPP TS 23.003 [4].
 
 Mapped S-NSSAI: An S-NSSAI in the subscribed S-NSSAIs for the HPLMN or the subscribed SNPN, to which an S-NSSAI of the registered PLMN (in case of a roaming scenario) or the registered non-subscribed SNPN is mapped.
 
@@ -483,19 +483,19 @@ MBSR-UE: a UE that is operating as a MBSR and supporting UE NAS functionalities 
 
 Mobility registration for disaster roaming services: A registration performed with 5GS registration type "disaster roaming mobility registration updating" in the REGISTRATION REQUEST message.
 
-MUSIM UE: A UE with multiple valid USIMs, capable of initiating and maintaining simultaneous separate registration states over 3GPP access with PLMN(s) using identities and credentials associated with those USIMs and supporting one or more of the N1 NAS signalling connection release, the paging indication for voice services, the reject paging request, the paging restriction and the paging timing collision control (see 3GPP TS 23.501 [8]).
+MUSIM UE: A UE with multiple valid USIMs, capable of initiating and maintaining simultaneous separate registration states over 3GPP access with PLMN(s) using identities and credentials associated with those USIMs and supporting one or more of the N1 NAS signalling connection release, the paging indication for voice services, the reject paging request, the paging restriction and the paging timing collision control (see 3GPP TS 23.501 [8]).
 
-MWAB broadcasted PLMN or MWAB broadcasted SNPN: The term MWAB broadcasted PLMN or MWAB broadcasted SNPN used in the present document corresponds to the term MWAB broadcasted PLMN/SNPN used in 3GPP TS 23.501 [8].
+MWAB broadcasted PLMN or MWAB broadcasted SNPN: The term MWAB broadcasted PLMN or MWAB broadcasted SNPN used in the present document corresponds to the term MWAB broadcasted PLMN/SNPN used in 3GPP TS 23.501 [8].
 
 MWAB-UE: a UE that is operating as part of MWAB and supporting UE NAS functionalities specified in this specification.
 
 N1 mode: A mode of a UE allowing access to the 5G core network via the 5G access network.
 
-Native 4G-GUTI: A native GUTI defined in 3GPP TS 24.301 [15].
+Native 4G-GUTI: A native GUTI defined in 3GPP TS 24.301 [15].
 
 Native 5G-GUTI: A 5G-GUTI previously allocated by an AMF.
 
-Non 5G capable over WLAN (N5CW) device: A device that is not capable to operate as a UE supporting NAS signalling with the 5GCN over a WLAN access network. However, this device may be capable to operate as a UE supporting NAS signalling with 5GCN using the N1 reference point as specified in this specification over 3GPP access. An N5CW device may be allowed to access the 5GCN via trusted WLAN access network (TWAN) that supports a trusted WLAN interworking function (TWIF) as specified in 3GPP TS 24.502 [18].
+Non 5G capable over WLAN (N5CW) device: A device that is not capable to operate as a UE supporting NAS signalling with the 5GCN over a WLAN access network. However, this device may be capable to operate as a UE supporting NAS signalling with 5GCN using the N1 reference point as specified in this specification over 3GPP access. An N5CW device may be allowed to access the 5GCN via trusted WLAN access network (TWAN) that supports a trusted WLAN interworking function (TWIF) as specified in 3GPP TS 24.502 [18].
 
 Non-CAG Cell: An NR cell which does not broadcast any Closed Access Group identity or an E-UTRA cell connected to 5GCN.
 
@@ -503,7 +503,7 @@ Non-equivalent PLMN: A PLMN which is not an equivalent PLMN.
 
 Non-equivalent SNPN: An SNPN which is not an equivalent SNPN.
 
-Non-globally-unique SNPN identity: An SNPN identity with an NID whose assignment mode is set to 1 (see 3GPP TS 23.003 [4]).
+Non-globally-unique SNPN identity: An SNPN identity with an NID whose assignment mode is set to 1 (see 3GPP TS 23.003 [4]).
 
 N1 NAS signalling connection: A peer to peer N1 mode connection between UE and AMF. An N1 NAS signalling connection is either the concatenation of an RRC connection via the Uu reference point and an NG connection via the N2 reference point for 3GPP access, or the concatenation of an IPsec tunnel via the NWu reference point and an NG connection via the N2 reference point for non-3GPP access.
 
@@ -515,57 +515,57 @@ NEF PDU session: A PDU session established between the UE and the Network Exposu
 
 Network slicing information: information stored at the UE consisting of one or more of the following:
 
-a)	default configured NSSAI for PLMN or SNPN;
+a) default configured NSSAI for PLMN or SNPN;
 
-b)	configured NSSAI for a PLMN or an SNPN;
+b) configured NSSAI for a PLMN or an SNPN;
 
-b1)	NSSRG information for the configured NSSAI for a PLMN or an SNPN;
+b1) NSSRG information for the configured NSSAI for a PLMN or an SNPN;
 
-b2)	S-NSSAI location validity information for the configured NSSAI for a PLMN or an SNPN;
+b2) S-NSSAI location validity information for the configured NSSAI for a PLMN or an SNPN;
 
-b3)	S-NSSAI time validity information for the configured NSSAI for a PLMN or an SNPN;
+b3) S-NSSAI time validity information for the configured NSSAI for a PLMN or an SNPN;
 
-c)	mapped S-NSSAI(s) for the configured NSSAI for a PLMN or an SNPN;
+c) mapped S-NSSAI(s) for the configured NSSAI for a PLMN or an SNPN;
 
-d)	pending NSSAI for a PLMN or an SNPN;
+d) pending NSSAI for a PLMN or an SNPN;
 
-e)	mapped S-NSSAI(s) for the pending NSSAI for a PLMN or an SNPN;
+e) mapped S-NSSAI(s) for the pending NSSAI for a PLMN or an SNPN;
 
-f)	rejected NSSAI for the current PLMN or SNPN;
+f) rejected NSSAI for the current PLMN or SNPN;
 
-g)	mapped S-NSSAI(s) for the rejected NSSAI for the current PLMN or an SNPN;
+g) mapped S-NSSAI(s) for the rejected NSSAI for the current PLMN or an SNPN;
 
-h)	rejected NSSAI for the failed or revoked NSSAA;
+h) rejected NSSAI for the failed or revoked NSSAA;
 
-i)	for each access type:
+i) for each access type:
 
-1)	allowed NSSAI for a PLMN or an SNPN;
+1) allowed NSSAI for a PLMN or an SNPN;
 
-2)	mapped S-NSSAI(s) for the allowed NSSAI for a PLMN;
+2) mapped S-NSSAI(s) for the allowed NSSAI for a PLMN;
 
-3)	rejected NSSAI for the current registration area;
+3) rejected NSSAI for the current registration area;
 
-4)	mapped S-NSSAI(s) for the rejected NSSAI for the current registration area;
+4) mapped S-NSSAI(s) for the rejected NSSAI for the current registration area;
 
-5)	rejected NSSAI for the maximum number of UEs reached;
+5) rejected NSSAI for the maximum number of UEs reached;
 
-6)	mapped S-NSSAI(s) for the rejected NSSAI for the maximum number of UEs reached;
+6) mapped S-NSSAI(s) for the rejected NSSAI for the maximum number of UEs reached;
 
-7)	alternative NSSAI for a PLMN or an SNPN; and
+7) alternative NSSAI for a PLMN or an SNPN; and
 
-8)	on-demand NSSAI for a PLMN or an SNPN; and
+8) on-demand NSSAI for a PLMN or an SNPN; and
 
-j)	for 3GPP access type:
+j) for 3GPP access type:
 
-1)	NSAG information for the configured NSSAI for a PLMN or an SNPN;
+1) NSAG information for the configured NSSAI for a PLMN or an SNPN;
 
-2)	partially allowed NSSAI for a PLMN or an SNPN;
+2) partially allowed NSSAI for a PLMN or an SNPN;
 
-3)	mapped S-NSSAI(s) for the partially allowed NSSAI for a PLMN or an SNPN;
+3) mapped S-NSSAI(s) for the partially allowed NSSAI for a PLMN or an SNPN;
 
-4)	partially rejected NSSAI for a PLMN or an SNPN; and
+4) partially rejected NSSAI for a PLMN or an SNPN; and
 
-5)	mapped S-NSSAI(s) for the partially rejected NSSAI for a PLMN or an SNPN;
+5) mapped S-NSSAI(s) for the partially rejected NSSAI for a PLMN or an SNPN;
 
 NG-RAN cell: A cell with NG-RAN access technology or satellite NG-RAN access technology.
 
@@ -595,19 +595,19 @@ PDU session with suspended user-plane resources: A PDU session for which user-pl
 
 Persistent PDU session: Either a non-emergency PDU session contains a GBR QoS flow with QoS equivalent to QoS of teleservice 11 and where there is a radio bearer associated with that PDU session over 3GPP access, or an emergency PDU session where there is a radio bearer associated with that PDU session over 3GPP access.
 
-NOTE 4:	An example of a persistent PDU session is a non-emergency PDU session which includes 5QI set to 5QI 1 where there is a radio bearer associated with that context.
+NOTE 4: An example of a persistent PDU session is a non-emergency PDU session which includes 5QI set to 5QI 1 where there is a radio bearer associated with that context.
 
-PLMN ID representing the participating operator: A PLMN ID broadcasted in the area of indirect network sharing deployment to enable the UE of the participating operator to select it based on the existing PLMN selection procedures as specified in 3GPP TS 23.122 [5]. PLMN ID representing the participating operator can be:
+PLMN ID representing the participating operator: A PLMN ID broadcasted in the area of indirect network sharing deployment to enable the UE of the participating operator to select it based on the existing PLMN selection procedures as specified in 3GPP TS 23.122 [5]. PLMN ID representing the participating operator can be:
 
-a)	PLMN ID of the HPLMN of UE of the participating operator;
+a) PLMN ID of the HPLMN of UE of the participating operator;
 
-b)	PLMN ID of the EHPLMN of UE of the participating operator; or
+b) PLMN ID of the EHPLMN of UE of the participating operator; or
 
-c)	PLMN ID included in the list of equivalent PLMNs, when the UE of participating operator registers in the HPLMN (i.e. PLMN ID different from the PLMN ID of case a and case b above).
+c) PLMN ID included in the list of equivalent PLMNs, when the UE of participating operator registers in the HPLMN (i.e. PLMN ID different from the PLMN ID of case a and case b above).
 
 Procedure transaction identity: An identity which is dynamically allocated by the UE for the UE-requested 5GSM procedures or allocated by the UE or the PCF for the UE policy delivery procedures. The procedure transaction identity is released when the procedure is completed but it should not be released immediately.
 
-RAT frequency selection priority index: A parameter provided by the AMF to the NG-RAN via the N2 reference point. The AMF selects an RFSP index for a particular UE based on the subscribed RFSP index, the locally configured operator's policies, the allowed NSSAI, the partially allowed NSSAI, the partially rejected NSSAI, the rejected NSSAI for the current registration area, the pending NSSAI and the UE context information, including the UE's usage setting, if received during the registration procedure. Definition derived from 3GPP TS 23.501 [8].
+RAT frequency selection priority index: A parameter provided by the AMF to the NG-RAN via the N2 reference point. The AMF selects an RFSP index for a particular UE based on the subscribed RFSP index, the locally configured operator's policies, the allowed NSSAI, the partially allowed NSSAI, the partially rejected NSSAI, the rejected NSSAI for the current registration area, the pending NSSAI and the UE context information, including the UE's usage setting, if received during the registration procedure. Definition derived from 3GPP TS 23.501 [8].
 
 Registered for 5GS services with CIoT 5GS optimization: A UE is registered for 5GS services with control plane CIoT 5GS optimization or registered for 5GS services with user plane CIoT 5GS optimization.
 
@@ -625,7 +625,7 @@ Registered PLMN: The PLMN on which the UE performed the last successful registra
 
 Rejected NSSAI: Rejected NSSAI for the current PLMN or SNPN, rejected NSSAI for the current registration area, rejected NSSAI for the failed or revoked NSSAA or rejected NSSAI for the maximum number of UEs reached.
 
-NOTE 5:	Rejected NSSAI for the current PLMN or SNPN, rejected NSSAI for the current registration area or rejected NSSAI for the maximum number of UEs reached contains a set of S-NSSAI(s) associated with a PLMN identity or SNPN identity for the current PLMN or SNPN and in roaming scenarios also contains a set of mapped S-NSSAI(s) if available. Rejected NSSAI for the failed or revoked NSSAA only contains a set of S-NSSAI(s) associated with a PLMN identity or SNPN identity for the HPLMN or RSNPN.
+NOTE 5: Rejected NSSAI for the current PLMN or SNPN, rejected NSSAI for the current registration area or rejected NSSAI for the maximum number of UEs reached contains a set of S-NSSAI(s) associated with a PLMN identity or SNPN identity for the current PLMN or SNPN and in roaming scenarios also contains a set of mapped S-NSSAI(s) if available. Rejected NSSAI for the failed or revoked NSSAA only contains a set of S-NSSAI(s) associated with a PLMN identity or SNPN identity for the HPLMN or RSNPN.
 
 Rejected NSSAI for the current PLMN or SNPN: A set of S-NSSAI(s) which was included in the requested NSSAI by the UE and is sent by the AMF with the rejection cause "S-NSSAI not available in the current PLMN or SNPN".
 
@@ -635,25 +635,25 @@ Rejected NSSAI for the failed or revoked NSSAA: A set of S-NSSAI(s) which is sen
 
 Rejected NSSAI for the maximum number of UEs reached: A set of S-NSSAI(s) which was included in the requested NSSAI by the UE and is sent by the AMF with the rejection cause "S-NSSAI not available due to maximum number of UEs reached".
 
-Removal of eCall only mode restriction: All the limitations as described in 3GPP TS 22.101 [2] for the eCall only mode do not apply any more.
+Removal of eCall only mode restriction: All the limitations as described in 3GPP TS 22.101 [2] for the eCall only mode do not apply any more.
 
 Satellite NG-RAN cell: A cell with satellite NG-RAN access technology.
 
-Satellite NG-RAN RAT type: In case of satellite NG-RAN access, RAT types are used to distinguish different types of satellite NG-RAN access, as defined in 3GPP TS 38.413 [31]. In this version of the specification, the defined satellite NG-RAN RAT types are "NR(LEO)", "NR(MEO)" and "NR(GEO)".
+Satellite NG-RAN RAT type: In case of satellite NG-RAN access, RAT types are used to distinguish different types of satellite NG-RAN access, as defined in 3GPP TS 38.413 [31]. In this version of the specification, the defined satellite NG-RAN RAT types are "NR(LEO)", "NR(MEO)" and "NR(GEO)".
 
 Selected core network type information: A type of core network (EPC or 5GCN) selected by the UE NAS layer in case of an E-UTRA cell connected to both EPC and 5GCN.
 
 SNPN access operation mode: A UE operating in SNPN access operation mode only selects SNPNs. This includes the case when the UE is accessing an SNPN over 3GPP access, the case when the UE is accessing an SNPN over non-3GPP access and the case where the UE is accessing SNPN services via a PLMN
 
-NOTE 7:	In this release of specification, the term "SNPN access operation mode" is the same as the term "SNPN access mode" used in 3GPP TS 23.501 [8].
+NOTE 7: In this release of specification, the term "SNPN access operation mode" is the same as the term "SNPN access mode" used in 3GPP TS 23.501 [8].
 
 S-NSSAI based congestion control: Type of congestion control at session management level that is applied to reject session management requests from UEs or release PDU sessions when the associated S-NSSAI and optionally the associated DNN are congested. S-NSSAI based congestion control can be activated at the SMF over session management level and also activated at the AMF over mobility management level.
 
-UE configured for high priority access in selected PLMN: A UE configured with one or more access identities equal to 1, 2, or 11-15 applicable in the selected PLMN as specified in subclause 4.5.2. Definition derived from 3GPP TS 22.261 [3].
+UE configured for high priority access in selected PLMN: A UE configured with one or more access identities equal to 1, 2, or 11-15 applicable in the selected PLMN as specified in subclause 4.5.2. Definition derived from 3GPP TS 22.261 [3].
 
-UE configured for high priority access in selected SNPN: A UE configured with one or more access identities equal to 1, 2, or 11-15 applicable in the selected SNPN as specified in subclause 4.5.2A.
+UE configured for high priority access in selected SNPN: A UE configured with one or more access identities equal to 1, 2, or 11-15 applicable in the selected SNPN as specified in subclause 4.5.2A.
 
-UE operating in single-registration mode in a network supporting N26 interface: A UE, supporting both N1 mode and S1 mode. During the last attach, tracking area update (see 3GPP TS 24.301 [15]) or registration procedures, the UE has received either a 5GS network feature support IE with IWK N26 bit set to "interworking without N26 interface not supported" or an EPS network feature support IE with IWK N26 bit set to "interworking without N26 interface not supported".
+UE operating in single-registration mode in a network supporting N26 interface: A UE, supporting both N1 mode and S1 mode. During the last attach, tracking area update (see 3GPP TS 24.301 [15]) or registration procedures, the UE has received either a 5GS network feature support IE with IWK N26 bit set to "interworking without N26 interface not supported" or an EPS network feature support IE with IWK N26 bit set to "interworking without N26 interface not supported".
 
 UE supporting CIoT 5GS optimizations: A UE that supports control plane CIoT 5GS optimization or user plane CIoT 5GS optimization and one or more other CIoT 5GS optimizations when the UE is in N1 mode.
 
@@ -663,31 +663,31 @@ UE using 5GS services with control plane CIoT 5GS optimization: A UE that is reg
 
 User plane CIoT 5GS optimization: Signalling optimizations to enable efficient transport of user data (IP, Ethernet or Unstructured) over the user plane.
 
-User Plane Positioning Connection Management Information (UPP-CMI): The messages defined in clause 6 of 3GPP TS 24.572 [64] that are utilized to manage the user plane connection between the UE and the LMF for LCS-UPP.
+User Plane Positioning Connection Management Information (UPP-CMI): The messages defined in clause 6 of 3GPP TS 24.572 [64] that are utilized to manage the user plane connection between the UE and the LMF for LCS-UPP.
 
 User-plane resources: Resources established between the UE and the UPF. The user-plane resources consist of one of the following:
 
--	user plane radio bearers via the Uu reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for 3GPP access;
+- user plane radio bearers via the Uu reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for 3GPP access;
 
--	IPsec tunnels via the NWu reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for untrusted non-3GPP access;
+- IPsec tunnels via the NWu reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for untrusted non-3GPP access;
 
--	IPsec tunnels via the NWt reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for trusted non-3GPP access used by the UE;
+- IPsec tunnels via the NWt reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for trusted non-3GPP access used by the UE;
 
--	a layer-2 connection via the Yt reference point, a layer-2 or layer-3 connection via the Yw reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for trusted non-3GPP access used by the N5CW device;
+- a layer-2 connection via the Yt reference point, a layer-2 or layer-3 connection via the Yw reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for trusted non-3GPP access used by the N5CW device;
 
--	W-UP resources via Y4 reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for wireline access used by the 5G-RG; and
+- W-UP resources via Y4 reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for wireline access used by the 5G-RG; and
 
--	L-W-UP resources via Y5 reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for wireline access used by the FN-RG.
+- L-W-UP resources via Y5 reference point, a tunnel via the N3 reference point and a tunnel via the N9 reference point (if any) for wireline access used by the FN-RG.
 
 UE policy section identifier: A UE policy section identifier (UPSI) is an identifier of a UE policy section, which is composed of the MCC and MNC of:
 
--	the PLMN ID of a PLMN of the PCF which provides the UE policy section, and a UE policy section code (UPSC), assigned by the PCF in that PLMN; or
+- the PLMN ID of a PLMN of the PCF which provides the UE policy section, and a UE policy section code (UPSC), assigned by the PCF in that PLMN; or
 
--	the PLMN ID part of an SNPN of the PCF which provides the UE policy section, and a UPSC, assigned by the PCF in that SNPN.
+- the PLMN ID part of an SNPN of the PCF which provides the UE policy section, and a UPSC, assigned by the PCF in that SNPN.
 
 W-AGF acting on behalf of the N5GC device: A W-AGF that enables an N5GC device behind a 5G-CRG or an FN-CRG to connect to the 5G Core.
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 22.261 [3] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 22.261 [3] apply:
 
 Disaster Roaming
 
@@ -695,7 +695,7 @@ Non-public network
 
 satellite NG-RAN
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.003 [4] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.003 [4] apply:
 
 5G-GUTI
 
@@ -721,7 +721,7 @@ SUPI
 
 SUCI
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.122 [5] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.122 [5] apply:
 
 Access Technology
 
@@ -765,19 +765,19 @@ UE determined PLMN with disaster condition
 
 VPLMN
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.167 [6] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.167 [6] apply:
 
 eCall over IMS
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.216 [6A] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.216 [6A] apply:
 
 SRVCC
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.401 [7] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.401 [7] apply:
 
 eCall only mode
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.501 [8] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.501 [8] apply:
 
 5G access network
 
@@ -899,13 +899,13 @@ UE-Slice-MBR
 
 UE presence in LADN service area
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.503 [10] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.503 [10] apply:
 
 UE local configuration
 
 VPLMN specific (VPS) URSP
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.008 [12] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.008 [12] apply:
 
 A/Gb mode
 
@@ -919,7 +919,7 @@ MM
 
 Non-GPRS
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.301 [15] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.301 [15] apply:
 
 CIoT EPS optimization
 
@@ -969,7 +969,7 @@ User plane CIoT EPS optimization
 
 WB-S1 mode
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 33.501 [24] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 33.501 [24] apply:
 
 5G security context
 
@@ -1005,13 +1005,13 @@ Partial native 5G NAS security context
 
 RES*
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 38.413 [31] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 38.413 [31] apply:
 
 NG connection
 
 User Location Information
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.587 [19B] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.587 [19B] apply:
 
 E-UTRA-PC5
 
@@ -1019,7 +1019,7 @@ NR-PC5
 
 V2X
 
-For the purposes of the present document, the following terms and its definitions given in 3GPP TS 23.256 [6AB] apply:
+For the purposes of the present document, the following terms and its definitions given in 3GPP TS 23.256 [6AB] apply:
 
 3GPP UAV ID
 
@@ -1047,17 +1047,17 @@ UUAA-MM
 
 UUAA-SM
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.554 [19E] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.554 [19E] apply:
 
 5G ProSe
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.548 [10A] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.548 [10A] apply:
 
 Edge Application Server
 
 Edge DNS Client
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.526 [19] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.526 [19] apply:
 
 Non-subscribed SNPN signalled URSP
 
@@ -1067,521 +1067,515 @@ VPLMN specific (VPS) URSP of the RPLMN
 
 VPLMN specific (VPS) URSP of the equivalent PLMN of the RPLMN
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.577 [60] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.577 [60] apply:
 
 A2X
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.514 [62] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.514 [62] apply:
 
 A2XP
 
 RSLPP
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.316 [6D] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.316 [6D] apply:
 
 Authenticable Non-3GPP (AUN3) device
 
 Non-Authenticable Non-3GPP (NAUN3) device
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.586 [63] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 23.586 [63] apply:
 
 SL Positioning Server UE
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 38.300 [27] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 38.300 [27] apply:
 
 NCR-MT
 
-For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.572 [64] apply:
+For the purposes of the present document, the following terms and definitions given in 3GPP TS 24.572 [64] apply:
 
 LCS-UPP
 
-## 3.2	Abbreviations
+## 3.2 Abbreviations
 
-For the purposes of the present document, the abbreviations given in 3GPP TR 21.905 [1] and the following apply. An abbreviation defined in the present document takes precedence over the definition of the same abbreviation, if any, in 3GPP TR 21.905 [1].
+For the purposes of the present document, the abbreviations given in 3GPP TR 21.905 [1] and the following apply. An abbreviation defined in the present document takes precedence over the definition of the same abbreviation, if any, in 3GPP TR 21.905 [1].
 
-4G-GUTI	4G-Globally Unique Temporary Identifier
+4G-GUTI 4G-Globally Unique Temporary Identifier
 
-5GCN	5G Core Network
+5GCN 5G Core Network
 
-5G-GUTI	5G-Globally Unique Temporary Identifier
+5G-GUTI 5G-Globally Unique Temporary Identifier
 
-5GMM	5GS Mobility Management
+5GMM 5GS Mobility Management
 
-5G-RG	5G Residential Gateway
+5G-RG 5G Residential Gateway
 
-5G-BRG	5G Broadband Residential Gateway
+5G-BRG 5G Broadband Residential Gateway
 
-5G-CRG	5G Cable Residential Gateway
+5G-CRG 5G Cable Residential Gateway
 
-5GS	5G System
+5GS 5G System
 
-5GSM	5GS Session Management
+5GSM 5GS Session Management
 
-5G-S-TMSI	5G S-Temporary Mobile Subscription Identifier
+5G-S-TMSI 5G S-Temporary Mobile Subscription Identifier
 
-5G-TMSI	5G Temporary Mobile Subscription Identifier
+5G-TMSI 5G Temporary Mobile Subscription Identifier
 
-5QI	5G QoS Identifier
+5QI 5G QoS Identifier
 
-ABBA	Anti-Bidding down Between Architectures
+ABBA Anti-Bidding down Between Architectures
 
-ACS	Auto-Configuration Server
+ACS Auto-Configuration Server
 
-AKA	Authentication and Key Agreement
+AKA Authentication and Key Agreement
 
-AKMA	Authentication and Key Management for Applications
+AKMA Authentication and Key Management for Applications
 
-A-KID	AKMA Key Identifier
+A-KID AKMA Key Identifier
 
-A-TID	AKMA Temporary Identifier
+A-TID AKMA Temporary Identifier
 
-AMBR	Aggregate Maximum Bit Rate
+AMBR Aggregate Maximum Bit Rate
 
-AMF	Access and Mobility Management Function
+AMF Access and Mobility Management Function
 
-ANDSP	Access Network Discovery and Selection Policy
+ANDSP Access Network Discovery and Selection Policy
 
-APN	Access Point Name
+APN Access Point Name
 
-AS	Access stratum
+AS Access stratum
 
-ATSSS	Access Traffic Steering, Switching and Splitting
+ATSSS Access Traffic Steering, Switching and Splitting
 
-AUN3	Authenticable Non-3GPP
+AUN3 Authenticable Non-3GPP
 
-AUSF	Authentication Server Function
+AUSF Authentication Server Function
 
-AVC	Advanced Video Coding
+AVC Advanced Video Coding
 
-BH	BackHaul
+BH BackHaul
 
-CAG	Closed access group
+CAG Closed access group
 
-CGI	Cell Global Identity
+CGI Cell Global Identity
 
-CHAP	Challenge Handshake Authentication Protocol
+CHAP Challenge Handshake Authentication Protocol
 
-DDX	Downlink Data Expected
+DDX Downlink Data Expected
 
-DEI	Drop Eligible Indicator
+DEI Drop Eligible Indicator
 
-DL	Downlink
+DL Downlink
 
-DN	Data Network
+DN Data Network
 
-DNN	Data Network Name
+DNN Data Network Name
 
-DNS	Domain Name System
+DNS Domain Name System
 
-DS-TT	Device-Side TSN Translator
+DS-TT Device-Side TSN Translator
 
-eDRX	Extended DRX cycle
+eDRX Extended DRX cycle
 
-ePDG	Evolved Packet Data Gateway
+ePDG Evolved Packet Data Gateway
 
-EUI	Extended Unique Identifier
+EUI Extended Unique Identifier
 
-E-UTRAN	Evolved Universal Terrestrial Radio Access Network
+E-UTRAN Evolved Universal Terrestrial Radio Access Network
 
-EAC	Early Admission Control
+EAC Early Admission Control
 
-EAP-AKA'	Improved Extensible Authentication Protocol method for 3rd generation Authentication and Key Agreement
+EAP-AKA' Improved Extensible Authentication Protocol method for 3rd generation Authentication and Key Agreement
 
-EAS	Edge Application Server
+EAS Edge Application Server
 
-EASDF	Edge Application Server Discovery Function
+EASDF Edge Application Server Discovery Function
 
-ECIES	Elliptic Curve Integrated Encryption Scheme
+ECIES Elliptic Curve Integrated Encryption Scheme
 
-ECN	Explicit Congestion Notification
+ECN Explicit Congestion Notification
 
-ECS	Edge Configuration Server
+ECS Edge Configuration Server
 
-ECSP	Edge Computing Service Provider
+ECSP Edge Computing Service Provider
 
-EDC	Edge DNS Client
+EDC Edge DNS Client
 
-EEC	Edge Enabler Client
+EEC Edge Enabler Client
 
-EPD	Extended Protocol Discriminator
+EPD Extended Protocol Discriminator
 
-EMM	EPS Mobility Management
+EMM EPS Mobility Management
 
-EPC	Evolved Packet Core Network
+EPC Evolved Packet Core Network
 
-EPS	Evolved Packet System
+EPS Evolved Packet System
 
-EPS-UPIP	User-plane integrity protection in EPS
+EPS-UPIP User-plane integrity protection in EPS
 
-ESM	EPS Session Management
+ESM EPS Session Management
 
-FN-RG	Fixed Network RG
+FN-RG Fixed Network RG
 
-FN-BRG	Fixed Network Broadband RG
+FN-BRG Fixed Network Broadband RG
 
-FN-CRG	Fixed Network Cable RG
+FN-CRG Fixed Network Cable RG
 
-FQDN	Fully Qualified Domain Name
+FQDN Fully Qualified Domain Name
 
-Gbps	Gigabits per second
+Gbps Gigabits per second
 
-GEO	Geostationary Orbit
+GEO Geostationary Orbit
 
-GFBR	Guaranteed Flow Bit Rate
+GFBR Guaranteed Flow Bit Rate
 
-GUAMI	Globally Unique AMF Identifier
+GUAMI Globally Unique AMF Identifier
 
-HEVC	High Efficiency Video Coding
+HEVC High Efficiency Video Coding
 
-IAB	Integrated access and backhaul
+IAB Integrated access and backhaul
 
-IMEI	International Mobile station Equipment Identity
+IMEI International Mobile station Equipment Identity
 
-IMEISV	International Mobile station Equipment Identity and Software Version number
+IMEISV International Mobile station Equipment Identity and Software Version number
 
-IMSI	International Mobile Subscriber Identity
+IMSI International Mobile Subscriber Identity
 
-IP-CAN	IP-Connectivity Access Network
+IP-CAN IP-Connectivity Access Network
 
-KSI	Key Set Identifier
+KSI Key Set Identifier
 
-L4S	Low Latency, Low Loss and Scalable Throughput
+L4S Low Latency, Low Loss and Scalable Throughput
 
-LADN	Local Area Data Network
+LADN Local Area Data Network
 
-LCS	LoCation Services
+LCS LoCation Services
 
-LCS-UPP	Location Services User Plane Protocol
+LCS-UPP Location Services User Plane Protocol
 
-LEO	Low Earth Orbit
+LEO Low Earth Orbit
 
-LMF	Location Management Function
+LMF Location Management Function
 
-LPP	LTE Positioning Protocol
+LPP LTE Positioning Protocol
 
-MAC	Message Authentication Code
+MAC Message Authentication Code
 
-MA PDU	Multi-Access PDU
+MA PDU Multi-Access PDU
 
-MBS	Multicast/Broadcast Services
+MBS Multicast/Broadcast Services
 
-MBSR	Mobile Base Station Relay
+MBSR Mobile Base Station Relay
 
-Mbps	Megabits per second
+Mbps Megabits per second
 
-MCS	Mission Critical Service
+MCS Mission Critical Service
 
-MEO	Medium Earth Orbit
+MEO Medium Earth Orbit
 
-MFBR	Maximum Flow Bit Rate
+MFBR Maximum Flow Bit Rate
 
-MICO	Mobile Initiated Connection Only
+MICO Mobile Initiated Connection Only
 
-MINT	Minimization of Service Interruption
+MINT Minimization of Service Interruption
 
-MPS	Multimedia Priority Service
+MPS Multimedia Priority Service
 
-MSK	MBS Service Key
+MSK MBS Service Key
 
-MTK	MBS Traffic Key
+MTK MBS Traffic Key
 
-MUSIM	Multi-USIM
+MUSIM Multi-USIM
 
-MWAB	Mobile gNB with Wireless Access Backhauling
+MWAB Mobile gNB with Wireless Access Backhauling
 
-N3IWF	Non-3GPP Inter-Working Function
+N3IWF Non-3GPP Inter-Working Function
 
-N3QAI	Non-3GPP QoS Assistance Information
+N3QAI Non-3GPP QoS Assistance Information
 
-N5CW	Non-5G-Capable over WLAN
+N5CW Non-5G-Capable over WLAN
 
-N5GC	Non-5G Capable
+N5GC Non-5G Capable
 
-NAI	Network Access Identifier
+NAI Network Access Identifier
 
-NAUN3	Non-Authenticable Non-3GPP
+NAUN3 Non-Authenticable Non-3GPP
 
-NITZ	Network Identity and Time Zone
+NITZ Network Identity and Time Zone
 
-ngKSI	Key Set Identifier for Next Generation Radio Access Network
+ngKSI Key Set Identifier for Next Generation Radio Access Network
 
-NPN	Non-public network
+NPN Non-public network
 
-NR	New Radio
+NR New Radio
 
-NSAC	Network Slice Admission Control
+NSAC Network Slice Admission Control
 
-NSACF	Network Slice Admission Control Function
+NSACF Network Slice Admission Control Function
 
-NSAG	Network slice AS group
+NSAG Network slice AS group
 
-NS-AoS	Network slice area of service
+NS-AoS Network slice area of service
 
-NSSAA	Network slice-specific authentication and authorization
+NSSAA Network slice-specific authentication and authorization
 
-NSSAAF	Network Slice-Specific and SNPN authentication and authorization Function
+NSSAAF Network Slice-Specific and SNPN authentication and authorization Function
 
-NSSAI	Network Slice Selection Assistance Information
+NSSAI Network Slice Selection Assistance Information
 
-NSSRG	Network Slice Simultaneous Registration Group
+NSSRG Network Slice Simultaneous Registration Group
 
-NTZ	No-Transmit Zone
+NTZ No-Transmit Zone
 
-ON-SNPN	Onboarding Standalone Non-Public Network
+ON-SNPN Onboarding Standalone Non-Public Network
 
-OS	Operating System
+OS Operating System
 
-OS Id	OS Identity
+OS Id OS Identity
 
-PAP	Password Authentication Protocol
+PAP Password Authentication Protocol
 
-PCO	Protocol Configuration Option
+PCO Protocol Configuration Option
 
-PCP	Priority Code Point
+PCP Priority Code Point
 
-PEI	Permanent Equipment Identifier
+PEI Permanent Equipment Identifier
 
-PEIPS	Paging Early Indication with Paging Subgrouping
+PEIPS Paging Early Indication with Paging Subgrouping
 
-PEGC	PIN Element with Gateway Capability
+PEGC PIN Element with Gateway Capability
 
-PEMC	PIN Element with Management Capability
+PEMC PIN Element with Management Capability
 
-PIN	Personal IoT Network
+PIN Personal IoT Network
 
-PINE	PIN Element
+PINE PIN Element
 
-PMF	Performance Measurement Function
+PMF Performance Measurement Function
 
-PNI-NPN	Public Network Integrated Non-Public Network
+PNI-NPN Public Network Integrated Non-Public Network
 
-ProSe	Proximity based Services
+ProSe Proximity based Services
 
-ProSeP	5G ProSe policy
+ProSeP 5G ProSe policy
 
-PG	PLMN Generic
+PG PLMN Generic
 
-PTI	Procedure Transaction Identity
+PTI Procedure Transaction Identity
 
-PTP	Precision Time Protocol
+PTP Precision Time Protocol
 
-PVS	Provisioning Server
+PVS Provisioning Server
 
-QFI	QoS Flow Identifier
+QFI QoS Flow Identifier
 
-QoS	Quality of Service
+QoS Quality of Service
 
-QRI	QoS Rule Identifier
+QRI QoS Rule Identifier
 
-RACS	Radio Capability Signalling Optimisation
+RACS Radio Capability Signalling Optimisation
 
-(R)AN	(Radio) Access Network
+(R)AN (Radio) Access Network
 
-RFSP	RAT Frequency Selection Priority
+RFSP RAT Frequency Selection Priority
 
-RG	Residential Gateway
+RG Residential Gateway
 
-RPLMN	Registered PLMN
+RPLMN Registered PLMN
 
-RQA	Reflective QoS Attribute
+RQA Reflective QoS Attribute
 
-RQI	Reflective QoS Indication
+RQI Reflective QoS Indication
 
-RSC	Relay Service Code
+RSC Relay Service Code
 
-RSN	Redundancy Sequence Number
+RSN Redundancy Sequence Number
 
-RSNPN	Registered SNPN
+RSNPN Registered SNPN
 
-RTT	Round Trip Time
+RTT Round Trip Time
 
-S-NSSAI	Single NSSAI
+S-NSSAI Single NSSAI
 
-SA	Security Association
+SA Security Association
 
-SDF	Service Data Flow
+SDF Service Data Flow
 
-SDNAEPC	Secondary DN authentication and authorization over EPC
+SDNAEPC Secondary DN authentication and authorization over EPC
 
-SDT	Small Data Transmission
+SDT Small Data Transmission
 
-SMF	Session Management Function
+SMF Session Management Function
 
-SGC	Service Gap Control
+SGC Service Gap Control
 
-SLPP	SideLink Positioning Protocol
+SLPP SideLink Positioning Protocol
 
-SNN	Serving Network Name
+SNN Serving Network Name
 
-SNPN	Stand-alone Non-Public Network
+SNPN Stand-alone Non-Public Network
 
-SOR	Steering of Roaming
+SOR Steering of Roaming
 
-SOR-CMCI	Steering of Roaming Connected Mode Control Information
+SOR-CMCI Steering of Roaming Connected Mode Control Information
 
-SRTP	Secure Real-time Transport Protocol
+SRTP Secure Real-time Transport Protocol
 
-SUCI	Subscription Concealed Identifier
+SUCI Subscription Concealed Identifier
 
-SUPI	Subscription Permanent Identifier
+SUPI Subscription Permanent Identifier
 
-TA	Tracking Area
+TA Tracking Area
 
-TAC	Tracking Area Code
+TAC Tracking Area Code
 
-TAI	Tracking Area Identity
+TAI Tracking Area Identity
 
-Tbps	Terabits per second
+Tbps Terabits per second
 
-TMGI	Temporary Mobile Group Identity
+TMGI Temporary Mobile Group Identity
 
-TNAN	Trusted Non-3GPP Access Network
+TNAN Trusted Non-3GPP Access Network
 
-TNGF	Trusted Non-3GPP Gateway Function
+TNGF Trusted Non-3GPP Gateway Function
 
-TSC	Time Sensitive Communication
+TSC Time Sensitive Communication
 
-TSCTSF	Time Sensitive Communication and Time Synchronization Function
+TSCTSF Time Sensitive Communication and Time Synchronization Function
 
-TWIF	Trusted WLAN Interworking Function
+TWIF Trusted WLAN Interworking Function
 
-TSN	Time-Sensitive Networking
+TSN Time-Sensitive Networking
 
-UAS	Uncrewed Aerial System
+UAS Uncrewed Aerial System
 
-UAV	Uncrewed Aerial Vehicle
+UAV Uncrewed Aerial Vehicle
 
-UAV-C	Uncrewed Aerial Vehicle-Controller
+UAV-C Uncrewed Aerial Vehicle-Controller
 
-UDM	Unified Data Management
+UDM Unified Data Management
 
-UL	Uplink
+UL Uplink
 
-UPDS	UE policy delivery service
+UPDS UE policy delivery service
 
-UPF	User Plane Function
+UPF User Plane Function
 
-UP-PRUK	User Plane ProSe Remote User Key
+UP-PRUK User Plane ProSe Remote User Key
 
-UPP-CMI	User Plane Positioning Connection Management Information
+UPP-CMI User Plane Positioning Connection Management Information
 
-UPSC	UE Policy Section Code
+UPSC UE Policy Section Code
 
-UPSI	UE Policy Section Identifier
+UPSI UE Policy Section Identifier
 
-URN	Uniform Resource Name
+URN Uniform Resource Name
 
-URSP	UE Route Selection Policy
+URSP UE Route Selection Policy
 
-USS	UAS Service Supplier
+USS UAS Service Supplier
 
-UUAA	USS UAV Authorization/Authentication
+UUAA USS UAV Authorization/Authentication
 
-V2X	Vehicle-to-Everything
+V2X Vehicle-to-Everything
 
-V2XP	V2X policy
+V2XP V2X policy
 
-VID	VLAN Identifier
+VID VLAN Identifier
 
-VPS	VPLMN Specific
+VPS VPLMN Specific
 
-W-AGF	Wireline Access Gateway Function
+W-AGF Wireline Access Gateway Function
 
-WLAN	Wireless Local Area Network
+WLAN Wireless Local Area Network
 
-WUS	Wake-up signal
+WUS Wake-up signal
 
-### 4.15.2	Void
+### 4.15.2 Void
 
-#### 4.15.2.1	Void
+#### 4.15.2.1 Void
 
-#### 4.15.2.2	Void
+#### 4.15.2.2 Void
 
-#### 4.15.2.3	Void
+#### 4.15.2.3 Void
 
-### 4.22.4	Void
+### 4.22.4 Void
 
-#### 8.2.1.4	Void
+#### 8.2.1.4 Void
 
-#### 8.2.6.31	Void
+#### 8.2.6.31 Void
 
-##### 8.2.7.54.4	Void
+##### 8.2.7.54.4 Void
 
-#### 8.2.20.2	Void
+#### 8.2.20.2 Void
 
-#### 8.2.25.3	Void
+#### 8.2.25.3 Void
 
-#### 8.3.1.6	Void
+#### 8.3.1.6 Void
 
-#### 8.3.2.13	Void
+#### 8.3.2.13 Void
 
-#### 8.3.4.3	Void
+#### 8.3.4.3 Void
 
-#### 8.3.5.3	Void
+#### 8.3.5.3 Void
 
-#### 8.3.9.10	Void
+#### 8.3.9.10 Void
 
-#### 8.3.20.2	Void
+#### 8.3.20.2 Void
 
-#### 8.3.20.3	Void
+#### 8.3.20.3 Void
 
-#### 8.3.20.4	Void
+#### 8.3.20.4 Void
 
-#### 9.11.2.16	Void
+#### 9.11.2.16 Void
 
-#### 9.11.3.11	Void
+#### 9.11.3.11 Void
 
-#### 9.11.3.21	Void
+#### 9.11.3.21 Void
 
-#### 9.11.3.22	Void
+#### 9.11.3.22 Void
 
-#### 9.11.3.27	Void
+#### 9.11.3.27 Void
 
-#### 9.11.3.58	Void
+#### 9.11.3.58 Void
 
-#### 9.11.3.59	Void
+#### 9.11.3.59 Void
 
-#### 9.11.3.60	Void
+#### 9.11.3.60 Void
 
-#### 9.11.3.61	Void
+#### 9.11.3.61 Void
 
-#### 9.11.3.62	Void
+#### 9.11.3.62 Void
 
-#### 9.11.3.63	Void
+#### 9.11.3.63 Void
 
-#### 9.11.3.64	Void
+#### 9.11.3.64 Void
 
-#### 9.11.3.65	Void
+#### 9.11.3.65 Void
 
-#### 9.11.3.66	Void
+#### 9.11.3.66 Void
 
-#### 9.11.3.67	Void
+#### 9.11.3.67 Void
 
-#### 9.11.3.78	Void
+#### 9.11.3.78 Void
 
-#### 9.11.4.19	Void
+#### 9.11.4.19 Void
 
-#### 9.11.4.35	Void
+#### 9.11.4.35 Void
 
-## 10.4	Void
+## 10.4 Void
 
-######## Annex A (informative):
-Cause values for 5GS mobility management
+######## Annex A (informative): Cause values for 5GS mobility management
 
-######## Annex B (informative):
-Cause values for 5GS session management
+######## Annex B (informative): Cause values for 5GS session management
 
-######## Annex C (normative):
-Storage of 5GMM information
+######## Annex C (normative): Storage of 5GMM information
 
-######## Annex D (normative):
-UE policy delivery service
+######## Annex D (normative): UE policy delivery service
 
-######## Annex E (informative):
-Void
+######## Annex E (informative): Void
 
-######## Annex F (informative):
-Change history
+######## Annex F (informative): Change history
 
 | Change history |
 |---|
