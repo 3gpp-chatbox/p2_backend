@@ -24,3 +24,4 @@ INSERT INTO section (document_id, heading, level, content, parent, path) VALUES
   
   ((SELECT id FROM doc_ids OFFSET 1 LIMIT 1), '5.1.1 Specifics', 3, 'Specific details.', '5.1 Main Points',
    (encode_for_ltree('5 Introduction') || '.' || encode_for_ltree('5.1 Main Points') || '.' || encode_for_ltree('5.1.1 Specifics'))::ltree);
+
