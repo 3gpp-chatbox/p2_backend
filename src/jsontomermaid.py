@@ -8,7 +8,15 @@ def escape_node_text(text):
 
 # Function to escape text for edge labels
 def escape_edge_text(text):
-    return text.replace("(", "&#40;").replace(")", "&#41;").replace('"', "&quot;")
+    # Escape problematic characters
+    return (
+        text.replace("(", "&#40;")
+        .replace(")", "&#41;")
+        .replace('"', "&quot;")
+        .replace("|", "&#124;")
+        .replace("[", "&#91;")
+        .replace("]", "&#93;")
+    )
 
 
 def convert_json_to_mermaid(input_file, output_file):
@@ -52,7 +60,7 @@ def convert_json_to_mermaid(input_file, output_file):
 
 if __name__ == "__main__":
     # When run as a script, process version_1 by default
-    input_file = "data/test_converter.json"
-    output_file = "data/test_converteroutput.md"
+    input_file = "data/version_1/step4.json"
+    output_file = "data/version_1/step4.md"
     convert_json_to_mermaid(input_file, output_file)
     print(f"Mermaid diagram saved to {output_file}")

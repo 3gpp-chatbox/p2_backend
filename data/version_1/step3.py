@@ -1,26 +1,33 @@
-import os
 import json
-from dotenv import load_dotenv
-import google.generativeai as genai
-from pydantic import ValidationError
-import sys
+import os
 
-# Add data directory to path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from schema_validation import Graph, Node, Edge, validate_data
+from dotenv import load_dotenv
+from google import genai
 
 load_dotenv()
 
-# Configure API key
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+flash_model = "gemini-2.0-flash"
+pro_model = "gemini-2.0-pro-exp-02-05"
+new_model = "gemini-2.5-pro-exp-03-25"
 
-# Initialize Gemini model
-model = genai.GenerativeModel('gemini-2.0-flash')
+# Load the Google API Key from the .env file
+load_dotenv(override=True)
+
+
+# Get API key from environment
+api_key = os.getenv("GOOGLE_API_KEY")
+if not api_key:
+    raise ValueError(
+        "GOOGLE_API_KEY not found in environment variables. Please set it in your .env file."
+    )
+
+client = genai.Client(api_key=api_key)
+
 
 def read_json_file(file_path):
     """Reads content from a JSON file and returns the parsed JSON object."""
     try:
-        with open(file_path, 'r', encoding='utf-8') as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             return json.load(file)
     except FileNotFoundError:
         print(f"Error: File not found at {file_path}")
@@ -32,102 +39,126 @@ def read_json_file(file_path):
         print(f"Error reading file: {e}")
         return None
 
-def extract_procedural_info(section_name, step1_data, step2_data):
+
+def read_text_file(file_path):
+    """Reads content from a text file."""
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            return file.read()
+    except FileNotFoundError:
+        print(f"Error: File not found at {file_path}")
+        return None
+    except Exception as e:
+        print(f"Error reading file: {e}")
+        return None
+
+
+def extract_procedural_info(section_name, extracted_data, evaluation):
     """Generates a structured **flow property graph** using data from step1.json and step2.json"""
-    
+
     prompt = f"""
-You are an expert in telecom procedures and standards, particularly in 3GPP specifications.
-Your task is to extract the **Initial Registration Procedure** based on the TS 24.501 specification.
-The procedure should be structured in the following way:
+You are a 3GPP procedure analysis expert.
 
-1. **States and Events(Nodes)**: Represent different stages in the process (e.g., 'UE Registered', 'Authentication Successful').
-   - For each state, provide a **unique identifier**, **description**, and **type** (either 'state' or 'event').
-   - Example: {{'id': 'state1', 'type': 'state', 'description': 'UE Registered'}}
+You are given:
+1. A **flow property graph** extracted from the 3GPP procedure: "{section_name}".
+2. A **professional evaluation report** that identifies structural and semantic issues in the graph.
 
-2. **Triggers and Conditions (Edges)**: Represent the relationships between states.
-   - For each edge, provide the **starting node** (from_node), **target node** (to), **type** (either 'trigger' or 'condition'),
-     and a **description** of the trigger or condition.
-   - Example: {{'from': 'state1', 'to': 'state2', 'type': 'trigger', 'description': 'Authentication Success'}}
+---
 
-Please format your output as a structured JSON object (without any markdown code block markers):
+### 🎯 Your task:
+- Correct the flow graph based **only on the information in the evaluation report**.
+- Return **only** the corrected flow graph as a JSON object.
+- Do **not** return any commentary or explanation.
 
+
+####  What You Must Do:
+- Apply **all corrections** listed in the evaluation report.
+- **Fix or replace** nodes and edges that are flagged.
+- **Add** any missing states, events, or transitions explicitly described.
+- **Correct edge types** if needed (e.g., `condition` → `trigger`).
+- **Remove** nodes or edges if the evaluation marks them as invalid or incorrect.
+- If a **conflicting node type** is detected, keep the one suggested in the report.
+- If a **fatal error** is indicated, return an empty graph with an explanatory note.
+
+---
+
+###  What You Must NOT Do:
+- Do **not** invent new states, events, or transitions beyond those described.
+- Do **not** make assumptions or corrections that are not supported by the evaluation.
+
+---
+
+###  Output Format (JSON):
+Return ONLY the corrected graph in this format:
+
+```json
 {{
+  "procedure_name": "{section_name}",
   "graph": {{
-    "nodes": [
-      {{"id": "state1", "type": "state", "description": "UE Registered"}},
-      {{"id": "event1", "type": "event", "description": "UE Sends Registration Request"}}
-    ],
-    "edges": [
-      {{"from": "state1", "to": "event1", "type": "trigger", "description": "Power On"}},
-      {{"from": "event1", "to": "state2", "type": "condition", "description": "Authentication Success"}}
-    ]
+    "nodes": [...],
+    "edges": [...]
   }}
 }}
 
-### Input Data:
-#### Extracted Procedure Steps:
-{json.dumps(step1_data, indent=2)}
+---
+STRICT RULE: Return **only** a valid JSON object. No commentary, no explanation, no text before or after the JSON.
 
-#### Decision Points & Dependencies:
-{json.dumps(step2_data, indent=2)}
+Lets begin .
+
+#### **Extracted procedure flow property graph info:**  
+
+{json.dumps(extracted_data, indent=2)}
+
+------------------
+#### **Evaluation Report:**  
+{evaluation}
+
 """
 
-    # Generate content using Gemini model
-    response = model.generate_content(
+    model_to_use = new_model  # or pro_model depending on your requirement
+    response = client.models.generate_content(
+        model=model_to_use,
         contents=prompt,
-        generation_config={
+        config={
             "temperature": 0,
+            "response_mime_type": "application/json",
         },
     )
 
-    # Print the raw response to inspect its structure
-    print(f"Raw response from model:\n{response.text}")
+    # Extract the text content from the response
+    procedural_info = (
+        response.text.strip() if hasattr(response, "text") else str(response)
+    )
 
-    # Check if response is empty
-    if not response.text:
-        print("Error: Empty response received.")
-        return None
+    # Remove code block markdown ```json ... ``` if present
+    if procedural_info.startswith("```json"):
+        procedural_info = procedural_info[7:]  # Remove ```json\n
+    if procedural_info.endswith("```"):
+        procedural_info = procedural_info[:-3]  # Remove trailing ```
 
-    # Clean up the response by removing markdown code block markers
-    cleaned_response = response.text.strip()
-    if cleaned_response.startswith("```"):
-        cleaned_response = cleaned_response.split("\n", 1)[1]  # Remove first line
-    if cleaned_response.endswith("```"):
-        cleaned_response = cleaned_response.rsplit("\n", 1)[0]  # Remove last line
-    if cleaned_response.startswith("json"):
-        cleaned_response = cleaned_response.split("\n", 1)[1]  # Remove "json" line
+    return procedural_info
 
-    # Try to parse the JSON response
-    try:
-        parsed_response = json.loads(cleaned_response)
-        # Validate the parsed response using Pydantic models
-        if validate_data(parsed_response):
-            return parsed_response
-        else:
-            print("Error: Validation failed.")
-            return None
-    except json.JSONDecodeError as e:
-        print(f"✗ Failed to decode JSON from the extracted data: {e}")
-        return None
 
 def save_to_json(data, file_path):
     """Saves procedural info to a JSON file."""
-    with open(file_path, "w", encoding='utf-8') as file:
-        json.dump(data, file, indent=2, ensure_ascii=False)
+    with open(file_path, "w", encoding="utf-8") as file:
+        file.write(data)
     print(f"Procedural info saved to {file_path}")
+
 
 def process_procedure(section_name):
     """Processes the procedure using step1.json and step2.json as input."""
-    
-    step1_data = read_json_file("data/version_1/step1.json")
-    step2_data = read_json_file("data/version_1/step2.json")
 
-    if step1_data is None or step2_data is None:
-        print("Failed to load step1.json or step2.json")
+    extracted_data = read_json_file("data/version_1/step1.json")
+    evaluation = read_text_file("data/version_1/step2.json")
+
+    if extracted_data is None or evaluation is None:
+        print("Failed to load extracted_data or evaluation")
         return None
 
-    procedural_info = extract_procedural_info(section_name, step1_data, step2_data)
+    procedural_info = extract_procedural_info(section_name, extracted_data, evaluation)
     return procedural_info
+
 
 # Example usage: Processing the procedure with step1.json and step2.json
 section_name = "Registration procedure for initial registration"
@@ -137,4 +168,4 @@ procedural_info = process_procedure(section_name)
 if procedural_info:
     save_to_json(procedural_info, "data/version_1/step3.json")
 else:
-    print("Failed to extract procedural information")
+    print("Failed to correct")

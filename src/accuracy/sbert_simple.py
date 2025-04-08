@@ -266,8 +266,8 @@ if __name__ == "__main__":
     # Use absolute paths
     data_dir = "data"
     dataset_files = {
-        "v1": os.path.join(data_dir, "version_1/step3.json"),
-        "v2": os.path.join(data_dir, "version_4/step3-v4.json"),
+        "v1": os.path.join(data_dir, "consolidated_output/run1_step4.json"),
+        "v2": os.path.join(data_dir, "consolidated_output/run2_step4.json"),
     }
 
     # Load the datasets

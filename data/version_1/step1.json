@@ -1,111 +1,194 @@
-
 {
   "procedure_name": "Registration procedure for initial registration",
-  "steps": [
-    {
-      "id": 1,
-      "step": "UE, in state 5GMM-DEREGISTERED, initiates the registration procedure for initial registration by sending a REGISTRATION REQUEST message to the AMF.",
-      "state_before": "5GMM-DEREGISTERED",
-      "entity": "UE"
-    },
-    {
-      "id": 2,
-      "step": "UE starts timer T3510",
-      "state_before": "5GMM-DEREGISTERED",
-      "entity": "UE"
-    },
-    {
-      "id": 3,
-      "step": "UE stops timer T3502 if it is running",
-      "state_before": "5GMM-DEREGISTERED",
-      "entity": "UE"
-    },
-    {
-      "id": 4,
-      "step": "UE stops timer T3511 if it is running",
-      "state_before": "5GMM-DEREGISTERED",
-      "entity": "UE"
-    },
-    {
-      "id": 5,
-      "step": "AMF may initiate 5GMM common procedures (e.g., identification, authentication, security mode control).",
-      "entity": "AMF"
-    },
-    {
-      "id": 6,
-      "step": "If the initial registration request is accepted, the AMF sends a REGISTRATION ACCEPT message to the UE.",
-      "entity": "AMF"
-    },
-    {
-      "id": 7,
-      "step": "AMF starts timer T3550 and enters state 5GMM-COMMON-PROCEDURE-INITIATED, if the REGISTRATION ACCEPT message includes a 5G-GUTI, the SOR transparent container IE, the Operator-defined access category definitions IE, the Extended emergency number list IE, the CAG information list IE or the Extended CAG information list IE are included in the REGISTRATION ACCEPT message, or the RCMAP bit is set in the 5GMM capability IE and the Negotiated PEIPS assistance information IE is included in the REGISTRATION ACCEPT message,or the UE radio capability ID IE or the UE radio capability ID deletion indication IE is included in the REGISTRATION ACCEPT message.",
-      "entity": "AMF"
-    },
-        {
-      "id": 8,
-      "step": "UE, upon receipt of the REGISTRATION ACCEPT message, shall reset the registration attempt counter, enter state 5GMM-REGISTERED and set the 5GS update status to 5U1 UPDATED",
-      "state_after": "5GMM-REGISTERED",
-      "entity": "UE"
-    },
-    {
-      "id": 9,
-      "step": "If the REGISTRATION ACCEPT message contains a Network slicing indication IE with a new network slicing information, the UE shall return a REGISTRATION COMPLETE message to the AMF",
-      "entity": "UE"
-    },
-    {
-      "id": 10,
-      "step": "AMF stops timer T3550 and changes to state 5GMM-REGISTERED after receiving REGISTRATION COMPLETE",
-      "entity": "AMF",
-      "state_after": "5GMM-REGISTERED"
-    }
-  ],
-  "messages": [
-    {
-      "name": "REGISTRATION REQUEST",
-      "from": "UE",
-      "to": "AMF"
-    },
-    {
-      "name": "REGISTRATION ACCEPT",
-      "from": "AMF",
-      "to": "UE"
-    },
-     {
-      "name": "REGISTRATION REJECT",
-      "from": "AMF",
-      "to": "UE"
-    },
-        {
-      "name": "REGISTRATION COMPLETE",
-      "from": "UE",
-      "to": "AMF"
-    }
-  ],
-  "timers": [
-    {
-      "name": "T3510",
-      "action": "start",
-      "step_id": 2
-    },
-    {
-      "name": "T3502",
-      "action": "stop",
-      "step_id": 3
-    },
-    {
-      "name": "T3511",
-      "action": "stop",
-      "step_id": 4
-    },
-    {
-      "name": "T3550",
-      "action": "start",
-      "step_id": 7
-    },
-    {
-      "name": "T3550",
-      "action": "stop",
-      "step_id": 10
-    }
-  ]
+  "graph": {
+    "nodes": [
+      { "id": "UE_Deregistered", "type": "state" },
+      { "id": "UE_Attempting_Initial_Registration", "type": "state" },
+      { "id": "UE_Sending_RegComplete", "type": "state" },
+      { "id": "UE_Registered", "type": "state" },
+      { "id": "UE_Registration_Rejected", "type": "state" },
+      { "id": "AMF_Idle", "type": "state" },
+      { "id": "AMF_Processing_Initial_Registration", "type": "state" },
+      { "id": "AMF_Waiting_Registration_Complete", "type": "state" },
+      { "id": "AMF_Registered", "type": "state" },
+      { "id": "E_REGISTRATION_REQUEST", "type": "event" },
+      { "id": "E_REGISTRATION_ACCEPT_ReqComplete", "type": "event" },
+      { "id": "E_REGISTRATION_ACCEPT_NoComplete", "type": "event" },
+      { "id": "E_REGISTRATION_REJECT", "type": "event" },
+      { "id": "E_REGISTRATION_COMPLETE", "type": "event" },
+      { "id": "E_T3510_Timeout_Retry", "type": "event" },
+      { "id": "E_T3510_Timeout_Max", "type": "event" },
+      { "id": "E_T3550_Timeout_Retry", "type": "event" },
+      { "id": "E_T3550_Timeout_Max", "type": "event" },
+      { "id": "E_Failure_UE", "type": "event" },
+      { "id": "E_Failure_AMF", "type": "event" }
+    ],
+    "edges": [
+      {
+        "from": "UE_Deregistered",
+        "to": "E_REGISTRATION_REQUEST",
+        "type": "trigger"
+      },
+      {
+        "from": "E_REGISTRATION_REQUEST",
+        "to": "UE_Attempting_Initial_Registration",
+        "type": "condition"
+      },
+      {
+        "from": "AMF_Idle",
+        "to": "E_REGISTRATION_REQUEST",
+        "type": "trigger"
+      },
+      {
+        "from": "E_REGISTRATION_REQUEST",
+        "to": "AMF_Processing_Initial_Registration",
+        "type": "condition"
+      },
+      {
+        "from": "AMF_Processing_Initial_Registration",
+        "to": "E_REGISTRATION_ACCEPT_ReqComplete",
+        "type": "trigger"
+      },
+      {
+        "from": "E_REGISTRATION_ACCEPT_ReqComplete",
+        "to": "AMF_Waiting_Registration_Complete",
+        "type": "condition"
+      },
+      {
+        "from": "AMF_Processing_Initial_Registration",
+        "to": "E_REGISTRATION_ACCEPT_NoComplete",
+        "type": "trigger"
+      },
+      {
+        "from": "E_REGISTRATION_ACCEPT_NoComplete",
+        "to": "AMF_Registered",
+        "type": "condition"
+      },
+      {
+        "from": "AMF_Processing_Initial_Registration",
+        "to": "E_REGISTRATION_REJECT",
+        "type": "trigger"
+      },
+      {
+        "from": "E_REGISTRATION_REJECT",
+        "to": "AMF_Idle",
+        "type": "condition"
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_REGISTRATION_ACCEPT_ReqComplete",
+        "type": "trigger"
+      },
+      {
+        "from": "E_REGISTRATION_ACCEPT_ReqComplete",
+        "to": "UE_Sending_RegComplete",
+        "type": "condition"
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_REGISTRATION_ACCEPT_NoComplete",
+        "type": "trigger"
+      },
+      {
+        "from": "E_REGISTRATION_ACCEPT_NoComplete",
+        "to": "UE_Registered",
+        "type": "condition"
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_REGISTRATION_REJECT",
+        "type": "trigger"
+      },
+      {
+        "from": "E_REGISTRATION_REJECT",
+        "to": "UE_Registration_Rejected",
+        "type": "condition"
+      },
+      {
+        "from": "UE_Sending_RegComplete",
+        "to": "E_REGISTRATION_COMPLETE",
+        "type": "trigger"
+      },
+      {
+        "from": "E_REGISTRATION_COMPLETE",
+        "to": "UE_Registered",
+        "type": "condition"
+      },
+      {
+        "from": "AMF_Waiting_Registration_Complete",
+        "to": "E_REGISTRATION_COMPLETE",
+        "type": "trigger"
+      },
+      {
+        "from": "E_REGISTRATION_COMPLETE",
+        "to": "AMF_Registered",
+        "type": "condition"
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_T3510_Timeout_Retry",
+        "type": "trigger"
+      },
+      {
+        "from": "E_T3510_Timeout_Retry",
+        "to": "UE_Registration_Rejected",
+        "type": "condition"
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_T3510_Timeout_Max",
+        "type": "trigger"
+      },
+      {
+        "from": "E_T3510_Timeout_Max",
+        "to": "UE_Registration_Rejected",
+        "type": "condition"
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_Failure_UE",
+        "type": "trigger"
+      },
+      {
+        "from": "E_Failure_UE",
+        "to": "UE_Registration_Rejected",
+        "type": "condition"
+      },
+      {
+        "from": "UE_Sending_RegComplete",
+        "to": "E_Failure_UE",
+        "type": "trigger"
+      },
+      {
+        "from": "AMF_Waiting_Registration_Complete",
+        "to": "E_T3550_Timeout_Retry",
+        "type": "trigger"
+      },
+      {
+        "from": "E_T3550_Timeout_Retry",
+        "to": "AMF_Waiting_Registration_Complete",
+        "type": "condition"
+      },
+      {
+        "from": "AMF_Waiting_Registration_Complete",
+        "to": "E_T3550_Timeout_Max",
+        "type": "trigger"
+      },
+      {
+        "from": "E_T3550_Timeout_Max",
+        "to": "AMF_Registered",
+        "type": "condition"
+      },
+      {
+        "from": "AMF_Waiting_Registration_Complete",
+        "to": "E_Failure_AMF",
+        "type": "trigger"
+      },
+      {
+        "from": "E_Failure_AMF",
+        "to": "AMF_Registered",
+        "type": "condition"
+      }
+    ]
+  }
 }
