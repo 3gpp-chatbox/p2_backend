@@ -1,0 +1,7 @@
+Dataset Pair,SBERT Cosine Similarity,Jaccard Edge Similarity,Weighted Final Score
+v1 vs v2,0.3531,0.0,0.2472
+v1 vs v3,0.3741,0.0,0.2619
+v1 vs v4,0.392,0.0,0.2744
+v2 vs v3,0.3543,0.0385,0.2595
+v2 vs v4,0.3933,0.25,0.3503
+v3 vs v4,0.4565,0.1,0.3495

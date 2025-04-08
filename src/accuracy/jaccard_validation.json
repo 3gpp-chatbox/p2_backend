@@ -1,50 +1,68 @@
-[
-    {
-        "comparison": "Version 1 vs Version 2",
-        "overall_similarity": 0.033,
-        "valid": false,
-        "reasons": [
-            "Overall similarity is 3.30%."
-        ]
-    },
-    {
-        "comparison": "Version 1 vs Version 3",
-        "overall_similarity": 0.0577,
-        "valid": false,
-        "reasons": [
-            "Overall similarity is 5.77%."
-        ]
-    },
-    {
-        "comparison": "Version 1 vs Version 4",
-        "overall_similarity": 0.04,
-        "valid": false,
-        "reasons": [
-            "Overall similarity is 4.00%."
-        ]
-    },
-    {
-        "comparison": "Version 2 vs Version 3",
-        "overall_similarity": 0.0714,
-        "valid": false,
-        "reasons": [
-            "Overall similarity is 7.14%."
-        ]
-    },
-    {
-        "comparison": "Version 2 vs Version 4",
-        "overall_similarity": 0.1061,
-        "valid": false,
-        "reasons": [
-            "Overall similarity is 10.61%."
-        ]
-    },
-    {
-        "comparison": "Version 3 vs Version 4",
-        "overall_similarity": 0.0526,
-        "valid": false,
-        "reasons": [
-            "Overall similarity is 5.26%."
-        ]
+{
+    "results": [
+        {
+            "comparison": "Version 1 vs Version 2",
+            "overall_similarity": 0.033,
+            "valid": false,
+            "reasons": [
+                "Overall similarity is 3.30%."
+            ],
+            "version1": 1,
+            "version2": 2
+        },
+        {
+            "comparison": "Version 1 vs Version 3",
+            "overall_similarity": 0.0577,
+            "valid": false,
+            "reasons": [
+                "Overall similarity is 5.77%."
+            ],
+            "version1": 1,
+            "version2": 3
+        },
+        {
+            "comparison": "Version 1 vs Version 4",
+            "overall_similarity": 0.04,
+            "valid": false,
+            "reasons": [
+                "Overall similarity is 4.00%."
+            ],
+            "version1": 1,
+            "version2": 4
+        },
+        {
+            "comparison": "Version 2 vs Version 3",
+            "overall_similarity": 0.0714,
+            "valid": false,
+            "reasons": [
+                "Overall similarity is 7.14%."
+            ],
+            "version1": 2,
+            "version2": 3
+        },
+        {
+            "comparison": "Version 2 vs Version 4",
+            "overall_similarity": 0.1061,
+            "valid": false,
+            "reasons": [
+                "Overall similarity is 10.61%."
+            ],
+            "version1": 2,
+            "version2": 4
+        },
+        {
+            "comparison": "Version 3 vs Version 4",
+            "overall_similarity": 0.0526,
+            "valid": false,
+            "reasons": [
+                "Overall similarity is 5.26%."
+            ],
+            "version1": 3,
+            "version2": 4
+        }
+    ],
+    "most_reliable_version": {
+        "version": 2,
+        "average_similarity": 0.07016666666666667
     }
-]
+}

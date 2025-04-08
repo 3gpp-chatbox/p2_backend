@@ -1,0 +1,128 @@
+{
+    "results": [
+        {
+            "comparison": "Version 1 vs Version 2",
+            "node_similarity": 0.0357,
+            "edge_similarity": 0.0,
+            "overall_similarity": 0.0179,
+            "valid": false,
+            "node_count_v1": 16,
+            "edge_count_v1": 17,
+            "node_count_v2": 13,
+            "edge_count_v2": 22,
+            "reasons": [
+                "Node similarity is 3.57%.",
+                "Edge similarity is 0.00%.",
+                "Overall similarity is 1.79%.",
+                "Version 1 has 16 nodes and 17 edges.",
+                "Version 2 has 13 nodes and 22 edges."
+            ],
+            "version1": 1,
+            "version2": 2
+        },
+        {
+            "comparison": "Version 1 vs Version 3",
+            "node_similarity": 0.0385,
+            "edge_similarity": 0.0,
+            "overall_similarity": 0.0192,
+            "valid": false,
+            "node_count_v1": 16,
+            "edge_count_v1": 17,
+            "node_count_v2": 11,
+            "edge_count_v2": 12,
+            "reasons": [
+                "Node similarity is 3.85%.",
+                "Edge similarity is 0.00%.",
+                "Overall similarity is 1.92%.",
+                "Version 1 has 16 nodes and 17 edges.",
+                "Version 3 has 11 nodes and 12 edges."
+            ],
+            "version1": 1,
+            "version2": 3
+        },
+        {
+            "comparison": "Version 1 vs Version 4",
+            "node_similarity": 0.04,
+            "edge_similarity": 0.0,
+            "overall_similarity": 0.02,
+            "valid": false,
+            "node_count_v1": 16,
+            "edge_count_v1": 17,
+            "node_count_v2": 10,
+            "edge_count_v2": 10,
+            "reasons": [
+                "Node similarity is 4.00%.",
+                "Edge similarity is 0.00%.",
+                "Overall similarity is 2.00%.",
+                "Version 1 has 16 nodes and 17 edges.",
+                "Version 4 has 10 nodes and 10 edges."
+            ],
+            "version1": 1,
+            "version2": 4
+        },
+        {
+            "comparison": "Version 2 vs Version 3",
+            "node_similarity": 0.1429,
+            "edge_similarity": 0.0,
+            "overall_similarity": 0.0714,
+            "valid": false,
+            "node_count_v1": 13,
+            "edge_count_v1": 22,
+            "node_count_v2": 11,
+            "edge_count_v2": 12,
+            "reasons": [
+                "Node similarity is 14.29%.",
+                "Edge similarity is 0.00%.",
+                "Overall similarity is 7.14%.",
+                "Version 2 has 13 nodes and 22 edges.",
+                "Version 3 has 11 nodes and 12 edges."
+            ],
+            "version1": 2,
+            "version2": 3
+        },
+        {
+            "comparison": "Version 2 vs Version 4",
+            "node_similarity": 0.0455,
+            "edge_similarity": 0.0667,
+            "overall_similarity": 0.0561,
+            "valid": false,
+            "node_count_v1": 13,
+            "edge_count_v1": 22,
+            "node_count_v2": 10,
+            "edge_count_v2": 10,
+            "reasons": [
+                "Node similarity is 4.55%.",
+                "Edge similarity is 6.67%.",
+                "Overall similarity is 5.61%.",
+                "Version 2 has 13 nodes and 22 edges.",
+                "Version 4 has 10 nodes and 10 edges."
+            ],
+            "version1": 2,
+            "version2": 4
+        },
+        {
+            "comparison": "Version 3 vs Version 4",
+            "node_similarity": 0.1053,
+            "edge_similarity": 0.0,
+            "overall_similarity": 0.0526,
+            "valid": false,
+            "node_count_v1": 11,
+            "edge_count_v1": 12,
+            "node_count_v2": 10,
+            "edge_count_v2": 10,
+            "reasons": [
+                "Node similarity is 10.53%.",
+                "Edge similarity is 0.00%.",
+                "Overall similarity is 5.26%.",
+                "Version 3 has 11 nodes and 12 edges.",
+                "Version 4 has 10 nodes and 10 edges."
+            ],
+            "version1": 3,
+            "version2": 4
+        }
+    ],
+    "reliable_version": {
+        "most_reliable_version": 2,
+        "average_similarity": 0.048466666666666665
+    }
+}

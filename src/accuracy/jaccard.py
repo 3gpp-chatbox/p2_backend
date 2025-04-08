@@ -55,19 +55,48 @@ for (i, v1), (j, v2) in itertools.combinations(enumerate(versions, start=1), 2):
     reasons = []
     reasons.append(f"Overall similarity is {overall_similarity * 100:.2f}%.")
 
+    # Add result to the list
     results.append(
         {
             "comparison": f"Version {i} vs Version {j}",
             "overall_similarity": round(overall_similarity, 4),
             "valid": valid,
             "reasons": reasons,
+            "version1": i,
+            "version2": j,
         }
     )
 
+# Calculate the most reliable dataset based on average similarity
+version_similarities = {i: [] for i in range(1, 5)}  # For versions 1, 2, 3, 4
+
+# Populate similarities for each version
+for res in results:
+    version_similarities[res["version1"]].append(res["overall_similarity"])
+    version_similarities[res["version2"]].append(res["overall_similarity"])
+
+# Calculate average similarity for each version
+average_similarities = {
+    version: sum(similarities) / len(similarities)
+    for version, similarities in version_similarities.items()
+}
+
+# Determine the most reliable version (highest average similarity)
+most_reliable_version = max(average_similarities, key=average_similarities.get)
+most_reliable_avg_similarity = average_similarities[most_reliable_version]
+
 # Save results to JSON file
+output_data = {
+    "results": results,
+    "most_reliable_version": {
+        "version": most_reliable_version,
+        "average_similarity": most_reliable_avg_similarity,
+    },
+}
+
 output_file = "src/accuracy/jaccard_validation.json"
 with open(output_file, "w") as f:
-    json.dump(results, f, indent=4)
+    json.dump(output_data, f, indent=4)
 
 # Print summary
 total_valid_comparisons = sum(1 for res in results if res["valid"])
@@ -86,3 +115,6 @@ for res in results:
     print("   📌 Reason:", "; ".join(res["reasons"]))
 
 print(f"\n📁 Results saved to {output_file}")
+print(
+    f"\n📊 The most reliable version is Version {most_reliable_version} with an average similarity of {most_reliable_avg_similarity * 100:.2f}%"
+)

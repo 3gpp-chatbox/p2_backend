@@ -1,0 +1,38 @@
+{
+    "summary": {
+        "nodes": {
+            "min": 10,
+            "max": 16,
+            "mean": 12.5,
+            "stdev": 2.6457513110645907
+        },
+        "edges": {
+            "min": 10,
+            "max": 22,
+            "mean": 15.25,
+            "stdev": 5.377421934967226
+        }
+    },
+    "datasets": [
+        {
+            "file": "data/version_1/step3.json",
+            "nodes": 16,
+            "edges": 17
+        },
+        {
+            "file": "data/version_2/v02-step3.json",
+            "nodes": 13,
+            "edges": 22
+        },
+        {
+            "file": "data/version_3/step3-v3.json",
+            "nodes": 11,
+            "edges": 12
+        },
+        {
+            "file": "data/version_4/step3-v4.json",
+            "nodes": 10,
+            "edges": 10
+        }
+    ]
+}
