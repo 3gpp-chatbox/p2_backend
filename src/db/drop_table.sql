@@ -1,6 +1,7 @@
 -- Drop tables in correct order due to foreign key constraints
 DROP TABLE IF EXISTS section;
 DROP TABLE IF EXISTS document;
+DROP TABLE IF EXISTS procedure;
 
 -- Drop functions
 DROP FUNCTION IF EXISTS encode_for_ltree(text);

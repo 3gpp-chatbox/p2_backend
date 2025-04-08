@@ -41,3 +41,31 @@ CREATE TABLE section (
 -- Indexes for optimization
 CREATE INDEX idx_section_document_id ON section(document_id);
 CREATE INDEX idx_section_path ON section USING GIST (path);
+
+---------------------------------------------------
+-- Procedure table
+---------------------------------------------------
+-- Create a function to auto-update the timestamp
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+   NEW.updated_at = NOW();
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create the trigger
+CREATE TRIGGER update_procedure_updated_at
+BEFORE UPDATE ON procedure
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+-- Procedure table
+CREATE TABLE procedure (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT NOT NULL,
+    document_id UUID REFERENCES document(id) ON DELETE CASCADE,
+    graph JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
