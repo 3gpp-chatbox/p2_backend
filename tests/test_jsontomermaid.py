@@ -3,8 +3,7 @@
 import json
 
 import pytest
-
-from src.jsontomermaid import escape_edge_text, escape_node_text
+from lib.jsontomermaid import escape_edge_text, escape_node_text
 
 
 def test_escape_node_text():
@@ -68,7 +67,7 @@ def test_mermaid_conversion(tmp_path):
     output_file = tmp_path / "test_mermaid.md"
 
     # Import the conversion function
-    from src.jsontomermaid import convert_json_to_mermaid
+    from lib.jsontomermaid import convert_json_to_mermaid
 
     # Convert JSON to Mermaid
     convert_json_to_mermaid(str(json_file), str(output_file))
@@ -97,7 +96,7 @@ def test_invalid_json(tmp_path):
     output_file = tmp_path / "invalid_output.md"
 
     # Import the conversion function
-    from src.jsontomermaid import convert_json_to_mermaid
+    from lib.jsontomermaid import convert_json_to_mermaid
 
     # Test that it raises an exception for invalid JSON
     with pytest.raises(json.JSONDecodeError):
@@ -106,7 +105,7 @@ def test_invalid_json(tmp_path):
 
 def test_missing_file():
     """Test handling of missing input file."""
-    from src.jsontomermaid import convert_json_to_mermaid
+    from lib.jsontomermaid import convert_json_to_mermaid
 
     # Test that it raises an exception for missing file
     with pytest.raises(FileNotFoundError):
