@@ -55,7 +55,7 @@
 - All functions must include type annotations.
 - Must provide clear, Google-style docstrings.
 - Key logic should be annotated with comments.
-- Provide usage examples (e.g., in the `tests/` directory or as a `__main__` section).
+- Provide usage examples (e.g., as a `__main__` section).
 - Include error handling.
 - Use `ruff` for code formatting.
 - When creating a new file **ALWAYS** check if this functionality/file already exists.
