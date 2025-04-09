@@ -4,10 +4,11 @@ from statistics import mean, stdev
 
 # Paths to all LLM output files
 version_files = [
-    "data/version_1/step3.json",
-    "data/version_2/v02-step3.json",
-    "data/version_3/step3-v3.json",
-    "data/version_4/step3-v4.json",
+    "data/consolidated_output/run1_step4.json",
+    "data/consolidated_output/run2_step4.json",
+    "data/consolidated_output/run3_step4.json",
+    "data/consolidated_output/run4_step4.json",
+    "data/consolidated_output/run5_step4.json",
 ]
 
 # Extract node and edge counts

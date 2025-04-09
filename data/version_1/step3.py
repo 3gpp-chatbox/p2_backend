@@ -131,10 +131,11 @@ Lets begin .
     )
 
     # Remove code block markdown ```json ... ``` if present
-    if procedural_info.startswith("```json"):
-        procedural_info = procedural_info[7:]  # Remove ```json\n
+    # Clean up any leading/trailing markdown-style code blocks
+    if "```json" in procedural_info:
+        procedural_info = procedural_info.split("```json", 1)[-1].strip()
     if procedural_info.endswith("```"):
-        procedural_info = procedural_info[:-3]  # Remove trailing ```
+        procedural_info = procedural_info.rsplit("```", 1)[0].strip()
 
     return procedural_info
 

@@ -1,0 +1,10 @@
+{
+    "ground_truth": "dataset1",
+    "comparisons": [
+        {
+            "dataset": "dataset2",
+            "node_metrics": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1_score": 1.0,
+                "sbert_similarity": 

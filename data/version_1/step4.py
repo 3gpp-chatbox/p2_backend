@@ -1,12 +1,13 @@
 import json
 import os
-from typing import List, Literal
+import sys
 
 from dotenv import load_dotenv
 from google import genai
-from pydantic import BaseModel, Field
 
-load_dotenv()
+# Add data directory to path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from schema_validation import validate_data
 
 flash_model = "gemini-2.0-flash"
 pro_model = "gemini-2.0-pro-exp-02-05"
@@ -24,41 +25,6 @@ if not api_key:
     )
 
 client = genai.Client(api_key=api_key)
-
-
-class Node(BaseModel):
-    """Represents a State or Event in the process"""
-
-    id: str = Field(
-        ...,
-        description="Unique identifier for the node (e.g., number, 'start', 'end').",
-    )
-    type: Literal["state", "event"] = Field(
-        ..., description="Type of the node, either 'state' or 'event'."
-    )
-    description: str = Field(
-        ..., description="Brief explanation of the state or event."
-    )
-
-
-class Edge(BaseModel):
-    """Represents a Trigger or Condition connecting Nodes"""
-
-    from_node: str = Field(..., alias="from", description="ID of the starting node.")
-    to: str = Field(..., description="ID of the target node.")
-    type: str = Field(
-        ..., description="Type of the edge, either 'trigger' or 'condition'."
-    )
-    description: str = Field(
-        ..., description="Explanation of the trigger or condition."
-    )
-
-
-class Graph(BaseModel):
-    """Graph structure containing all States, Events, Triggers, and Conditions"""
-
-    nodes: List[Node] = Field(..., description="List of all states and events.")
-    edges: List[Edge] = Field(..., description="List of all triggers and conditions.")
 
 
 def read_json_file(file_path):
@@ -200,8 +166,6 @@ Original Content from the 3GPP Specification:
         contents=prompt,
         config={
             "temperature": 0,
-            "response_mime_type": "application/json",
-            "response_schema": Graph,
         },
     )
 
@@ -216,7 +180,18 @@ Original Content from the 3GPP Specification:
     if procedural_info.endswith("```"):
         procedural_info = procedural_info[:-3]  # Remove trailing ```
 
-    return procedural_info
+    # Try to parse the JSON response
+    try:
+        parsed_response = json.loads(procedural_info)
+        # Validate the parsed response using Pydantic models
+        if validate_data(parsed_response):
+            return json.dumps(parsed_response, indent=2)
+        else:
+            print("Error: Validation failed.")
+            return None
+    except json.JSONDecodeError as e:
+        print(f"✗ Failed to decode JSON from the extracted data: {e}")
+        return None
 
 
 def save_to_json(data, file_path):
@@ -248,6 +223,6 @@ section_name = "Registration procedure for initial registration"
 procedural_info = process_procedure(section_name)
 
 if procedural_info:
-    save_to_json(procedural_info, "data/consolidated_output/run2_step4.json")
+    save_to_json(procedural_info, "data/consolidated_output/run5_step4.json")
 else:
     print("Failed to extract")

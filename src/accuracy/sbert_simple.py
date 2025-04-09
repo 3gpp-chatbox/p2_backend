@@ -112,7 +112,7 @@ def find_best_matches(
 def find_best_edge_matches(
     edge_set_1: List[Dict[str, Any]],
     edge_set_2: List[Dict[str, Any]],
-    fixed_threshold: float = 0.7,
+    fixed_threshold: float = 0.01,
 ) -> Dict[str, Any]:
     descriptions_1 = [edge["description"] for edge in edge_set_1]
     descriptions_2 = [edge["description"] for edge in edge_set_2]
@@ -148,13 +148,17 @@ def find_best_edge_matches(
 
 
 def compare_two_datasets(
-    dataset_1: Dict[str, Any], dataset_2: Dict[str, Any], fixed_threshold: float = 0.7
+    dataset_1: Dict[str, Any],
+    dataset_2: Dict[str, Any],
+    dataset_1_name: str,
+    dataset_2_name: str,
+    fixed_threshold: float = 0.7,
 ) -> Dict[str, Any]:
-    nodes_1 = extract_node_descriptions(dataset_1, "Dataset 1")
-    nodes_2 = extract_node_descriptions(dataset_2, "Dataset 2")
+    nodes_1 = extract_node_descriptions(dataset_1, dataset_1_name)
+    nodes_2 = extract_node_descriptions(dataset_2, dataset_2_name)
 
-    edges_1 = extract_edge_descriptions(dataset_1, "Dataset 1")
-    edges_2 = extract_edge_descriptions(dataset_2, "Dataset 2")
+    edges_1 = extract_edge_descriptions(dataset_1, dataset_1_name)
+    edges_2 = extract_edge_descriptions(dataset_2, dataset_2_name)
 
     v1_to_v2_nodes = find_best_matches(nodes_1, nodes_2, fixed_threshold)
     v1_to_v2_edges = find_best_edge_matches(edges_1, edges_2, fixed_threshold)
@@ -174,8 +178,8 @@ def compare_two_datasets(
 
     validity = (
         "valid"
-        if node_match_percent >= 50 and edge_match_percent >= 50
-        else "invalid (min 50%)"
+        if node_match_percent >= 70 and edge_match_percent >= 70
+        else "invalid (min 70%)"
     )
 
     total_node_matches = len(node_matches)
@@ -202,10 +206,11 @@ def compare_two_datasets(
     summary = {
         "validity_status": validity,
         "validation_reason": (
-            "There are less than 50% matched nodes or edges"
-            if node_match_percent < 50 or edge_match_percent < 50
-            else "At least 50% of nodes and edges matched"
+            "There are less than 70% matched nodes or edges"
+            if node_match_percent < 70 or edge_match_percent < 70
+            else "At least 70% of nodes and edges matched"
         ),
+        "dataset_comparing": f"Comparing {dataset_1_name} and {dataset_2_name}",
         "node_stats": {
             "total": total_nodes,
             "matched": total_node_matches,
@@ -236,6 +241,7 @@ def save_results(results: Dict[str, Any], output_path: str):
     print("\n=== VALIDATION SUMMARY ===")
     print(f"Status: {summary['validity_status'].upper()}")
     print(f"Reason: {summary['validation_reason']}")
+    print(f"Dataset Comparing: {summary['dataset_comparing']}")
 
     print("\nNode Statistics:")
     print(f"Total Nodes: {summary['node_stats']['total']}")
@@ -267,14 +273,16 @@ if __name__ == "__main__":
     data_dir = "data"
     dataset_files = {
         "v1": os.path.join(data_dir, "consolidated_output/run1_step4.json"),
-        "v2": os.path.join(data_dir, "consolidated_output/run2_step4.json"),
+        "v2": os.path.join(data_dir, "consolidated_output/run5_step4.json"),
     }
 
     # Load the datasets
     datasets = {key: load_dataset(file) for key, file in dataset_files.items()}
 
     # Compare datasets
-    results = compare_two_datasets(datasets["v1"], datasets["v2"])
+    results = compare_two_datasets(
+        datasets["v1"], datasets["v2"], "Dataset 1", "Dataset 2"
+    )
 
     # Save the results
     save_results(results, "src/accuracy/sbert_simple.json")

@@ -3,10 +3,11 @@ import json
 
 # Load all four versions
 version_files = [
-    "data/version_1/step3.json",
-    "data/version_2/v02-step3.json",
-    "data/version_3/step3-v3.json",
-    "data/version_4/step3-v4.json",
+    "data/consolidated_output/run1_step4.json",
+    "data/consolidated_output/run2_step4.json",
+    "data/consolidated_output/run3_step4.json",
+    "data/consolidated_output/run4_step4.json",
+    "data/consolidated_output/run5_step4.json",
 ]
 
 versions = []
@@ -21,7 +22,8 @@ def extract_sets(graph):
         (node["type"], node["description"].strip().lower()) for node in graph["nodes"]
     }
     edges = {
-        (edge["type"], edge["description"].strip().lower()) for edge in graph["edges"]
+        (edge["from"], edge["to"], edge["type"], edge["description"].strip().lower())
+        for edge in graph["edges"]
     }
     return nodes, edges
 
@@ -68,7 +70,7 @@ for (i, v1), (j, v2) in itertools.combinations(enumerate(versions, start=1), 2):
     )
 
 # Calculate the most reliable dataset based on average similarity
-version_similarities = {i: [] for i in range(1, 5)}  # For versions 1, 2, 3, 4
+version_similarities = {i: [] for i in range(1, 6)}  # For versions 1-5
 
 # Populate similarities for each version
 for res in results:

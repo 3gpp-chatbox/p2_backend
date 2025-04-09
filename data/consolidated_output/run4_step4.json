@@ -1,0 +1,407 @@
+{
+  "procedure_name": "Registration procedure for initial registration",
+  "graph": {
+    "nodes": [
+      {
+        "id": "UE_Deregistered",
+        "type": "state",
+        "description": "UE is in state 5GMM-DEREGISTERED."
+      },
+      {
+        "id": "UE_Attempting_Initial_Registration",
+        "type": "state",
+        "description": "UE has sent a REGISTRATION REQUEST and is waiting for a response (Timer T3510 running)."
+      },
+      {
+        "id": "UE_Sending_RegComplete",
+        "type": "state",
+        "description": "UE has received REGISTRATION ACCEPT requiring acknowledgement and is preparing to send REGISTRATION COMPLETE."
+      },
+      {
+        "id": "UE_Registered",
+        "type": "state",
+        "description": "UE is in state 5GMM-REGISTERED with 5GS update status 5U1 UPDATED."
+      },
+      {
+        "id": "UE_Registration_Rejected",
+        "type": "state",
+        "description": "UE's registration attempt was rejected by the network or failed due to internal errors/timeouts."
+      },
+      {
+        "id": "AMF_Idle",
+        "type": "state",
+        "description": "AMF is idle with respect to the UE's registration procedure."
+      },
+      {
+        "id": "AMF_Processing_Initial_Registration",
+        "type": "state",
+        "description": "AMF has received the REGISTRATION REQUEST and is processing it."
+      },
+      {
+        "id": "AMF_Waiting_Registration_Complete",
+        "type": "state",
+        "description": "AMF has sent REGISTRATION ACCEPT requiring acknowledgement and is waiting for REGISTRATION COMPLETE (Timer T3550 running)."
+      },
+      {
+        "id": "AMF_Registered",
+        "type": "state",
+        "description": "AMF considers the UE to be in state 5GMM-REGISTERED."
+      },
+      {
+        "id": "E_REGISTRATION_REQUEST",
+        "type": "event",
+        "description": "REGISTRATION REQUEST message is sent by UE or received by AMF."
+      },
+      {
+        "id": "E_REGISTRATION_ACCEPT_ReqComplete",
+        "type": "event",
+        "description": "REGISTRATION ACCEPT message requiring REGISTRATION COMPLETE is sent by AMF or received by UE."
+      },
+      {
+        "id": "E_REGISTRATION_ACCEPT_NoComplete",
+        "type": "event",
+        "description": "REGISTRATION ACCEPT message not requiring REGISTRATION COMPLETE is sent by AMF or received by UE."
+      },
+      {
+        "id": "E_REGISTRATION_REJECT",
+        "type": "event",
+        "description": "REGISTRATION REJECT message is sent by AMF or received by UE."
+      },
+      {
+        "id": "E_REGISTRATION_COMPLETE",
+        "type": "event",
+        "description": "REGISTRATION COMPLETE message is sent by UE or received by AMF."
+      },
+      {
+        "id": "E_T3510_Timeout_Retry",
+        "type": "event",
+        "description": "UE's timer T3510 expires and registration attempt counter is less than 5."
+      },
+      {
+        "id": "E_T3510_Timeout_Max",
+        "type": "event",
+        "description": "UE's timer T3510 expires and registration attempt counter is equal to 5."
+      },
+      {
+        "id": "E_T3550_Timeout_Retry",
+        "type": "event",
+        "description": "AMF's timer T3550 expires (1st to 4th time)."
+      },
+      {
+        "id": "E_T3550_Timeout_Max",
+        "type": "event",
+        "description": "AMF's timer T3550 expires for the 5th time."
+      },
+      {
+        "id": "E_Failure_UE",
+        "type": "event",
+        "description": "Lower layer failure or NAS signalling connection release at UE side."
+      },
+      {
+        "id": "E_Failure_AMF",
+        "type": "event",
+        "description": "Lower layer failure at AMF side while waiting for REGISTRATION COMPLETE."
+      },
+      {
+        "id": "E_T3511_Timeout",
+        "type": "event",
+        "description": "UE's timer T3511 expires (used for retry delay after failure)."
+      },
+      {
+        "id": "E_T3502_Timeout",
+        "type": "event",
+        "description": "UE's timer T3502 expires (started after max registration attempts)."
+      },
+      {
+        "id": "E_T3346_Timeout",
+        "type": "event",
+        "description": "UE's back-off timer T3346 expires (started after rejection due to congestion)."
+      },
+      {
+        "id": "AMF_Common_Procedure_Execution",
+        "type": "state",
+        "description": "AMF is executing common procedures like identification, authentication, security mode control."
+      },
+      {
+        "id": "E_REJECT_CAUSE_PLMN_SELECTION",
+        "type": "event",
+        "description": "REGISTRATION REJECT received with a cause requiring PLMN/SNPN selection."
+      }
+    ],
+    "edges": [
+      {
+        "from": "UE_Deregistered",
+        "to": "E_REGISTRATION_REQUEST",
+        "type": "trigger",
+        "description": "Triggered when the UE in state 5GMM-DEREGISTERED initiates the initial registration procedure by sending a REGISTRATION REQUEST message.",
+        "conditions": "UE needs to perform initial registration for 5GS services, emergency services, SMS over NAS, mobility from GERAN/UTRAN, onboarding in SNPN, disaster roaming, or resuming normal services after unavailability (as specified in 5.5.1.2.2)."
+      },
+      {
+        "from": "E_REGISTRATION_REQUEST",
+        "to": "UE_Attempting_Initial_Registration",
+        "type": "condition",
+        "description": "UE transitions to attempting registration after sending the REGISTRATION REQUEST message and starting timer T3510.",
+        "conditions": "UE sends REGISTRATION REQUEST message and starts timer T3510. Timers T3502 and T3511 are stopped if running (5.5.1.2.2)."
+      },
+      {
+        "from": "AMF_Idle",
+        "to": "E_REGISTRATION_REQUEST",
+        "type": "trigger",
+        "description": "Triggered when the AMF receives a REGISTRATION REQUEST message from the UE.",
+        "conditions": "AMF is in an idle state regarding this UE's registration."
+      },
+      {
+        "from": "E_REGISTRATION_REQUEST",
+        "to": "AMF_Processing_Initial_Registration",
+        "type": "condition",
+        "description": "AMF transitions to processing the initial registration upon receiving the REGISTRATION REQUEST message.",
+        "conditions": "AMF receives REGISTRATION REQUEST message (5.5.1.2.2)."
+      },
+      {
+        "from": "AMF_Processing_Initial_Registration",
+        "to": "AMF_Common_Procedure_Execution",
+        "type": "condition",
+        "description": "AMF proceeds to execute common procedures (e.g., identification, authentication, security) as part of processing the registration request.",
+        "conditions": "Execution depends on information received in the REGISTRATION REQUEST message and network policy (5.5.1.2.3)."
+      },
+      {
+        "from": "AMF_Common_Procedure_Execution",
+        "to": "E_REGISTRATION_ACCEPT_ReqComplete",
+        "type": "trigger",
+        "description": "Triggered when the AMF accepts the registration and sends a REGISTRATION ACCEPT message that requires a REGISTRATION COMPLETE acknowledgement from the UE.",
+        "conditions": "Initial registration accepted (5.5.1.2.4), and REGISTRATION ACCEPT includes specific IEs requiring acknowledgement (e.g., 5G-GUTI reallocation, SOR container, Operator-defined access category definitions, Extended emergency number list, CAG information list, Extended CAG information list, Negotiated PEIPS assistance information (if RCMAP supported), UE radio capability ID/deletion indication (if RACS supported), Truncated 5G-S-TMSI configuration, service-level-AA pending indication, Network slicing subscription change indication, new Configured NSSAI, new NSSRG information, new Alternative NSSAI, new S-NSSAI location validity information, new S-NSSAI time validity information, new On-demand NSSAI, or NSAG information (if RCMAN supported)) (5.5.1.2.4)."
+      },
+      {
+        "from": "E_REGISTRATION_ACCEPT_ReqComplete",
+        "to": "AMF_Waiting_Registration_Complete",
+        "type": "condition",
+        "description": "AMF transitions to waiting for REGISTRATION COMPLETE after sending REGISTRATION ACCEPT (requiring completion) and starting timer T3550.",
+        "conditions": "AMF sends REGISTRATION ACCEPT requiring completion and starts timer T3550 (5.5.1.2.4)."
+      },
+      {
+        "from": "AMF_Common_Procedure_Execution",
+        "to": "E_REGISTRATION_ACCEPT_NoComplete",
+        "type": "trigger",
+        "description": "Triggered when the AMF accepts the registration and sends a REGISTRATION ACCEPT message that does not require a REGISTRATION COMPLETE acknowledgement.",
+        "conditions": "Initial registration accepted (5.5.1.2.4), and REGISTRATION ACCEPT does not include any IEs requiring acknowledgement (see conditions for E_REGISTRATION_ACCEPT_ReqComplete trigger)."
+      },
+      {
+        "from": "E_REGISTRATION_ACCEPT_NoComplete",
+        "to": "AMF_Registered",
+        "type": "condition",
+        "description": "AMF transitions to registered state after sending REGISTRATION ACCEPT (not requiring completion).",
+        "conditions": "AMF sends REGISTRATION ACCEPT not requiring completion (5.5.1.2.4)."
+      },
+      {
+        "from": "AMF_Common_Procedure_Execution",
+        "to": "E_REGISTRATION_REJECT",
+        "type": "trigger",
+        "description": "Triggered when the AMF rejects the initial registration request by sending a REGISTRATION REJECT message.",
+        "conditions": "Registration cannot be accepted by the network due to various reasons specified in 5.5.1.2.5 (e.g., congestion, illegal UE, PLMN not allowed, etc.)."
+      },
+      {
+        "from": "E_REGISTRATION_REJECT",
+        "to": "AMF_Idle",
+        "type": "condition",
+        "description": "AMF transitions back to idle after sending REGISTRATION REJECT.",
+        "conditions": "AMF sends REGISTRATION REJECT message (5.5.1.2.5)."
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_REGISTRATION_ACCEPT_ReqComplete",
+        "type": "trigger",
+        "description": "Triggered when the UE receives a REGISTRATION ACCEPT message that requires a REGISTRATION COMPLETE acknowledgement.",
+        "conditions": "UE receives REGISTRATION ACCEPT containing specific IEs requiring acknowledgement (see conditions for AMF sending E_REGISTRATION_ACCEPT_ReqComplete) (5.5.1.2.4)."
+      },
+      {
+        "from": "E_REGISTRATION_ACCEPT_ReqComplete",
+        "to": "UE_Sending_RegComplete",
+        "type": "condition",
+        "description": "UE transitions to sending REGISTRATION COMPLETE after receiving REGISTRATION ACCEPT (requiring completion).",
+        "conditions": "UE receives REGISTRATION ACCEPT requiring completion. UE stops timer T3510 (implicitly by receiving ACCEPT/REJECT) and prepares to send REGISTRATION COMPLETE (5.5.1.2.4)."
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_REGISTRATION_ACCEPT_NoComplete",
+        "type": "trigger",
+        "description": "Triggered when the UE receives a REGISTRATION ACCEPT message that does not require a REGISTRATION COMPLETE acknowledgement.",
+        "conditions": "UE receives REGISTRATION ACCEPT not containing IEs requiring acknowledgement (5.5.1.2.4)."
+      },
+      {
+        "from": "E_REGISTRATION_ACCEPT_NoComplete",
+        "to": "UE_Registered",
+        "type": "condition",
+        "description": "UE transitions to registered state after receiving REGISTRATION ACCEPT (not requiring completion).",
+        "conditions": "UE receives REGISTRATION ACCEPT not requiring completion. UE stops timer T3510 (implicitly), resets registration attempt counter, enters state 5GMM-REGISTERED, and sets 5GS update status to 5U1 UPDATED (5.5.1.2.4)."
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_REGISTRATION_REJECT",
+        "type": "trigger",
+        "description": "Triggered when the UE receives a REGISTRATION REJECT message from the AMF.",
+        "conditions": "UE receives REGISTRATION REJECT message (5.5.1.2.5)."
+      },
+      {
+        "from": "E_REGISTRATION_REJECT",
+        "to": "UE_Registration_Rejected",
+        "type": "condition",
+        "description": "UE transitions to a rejected state after receiving REGISTRATION REJECT. Specific actions and subsequent state depend on the 5GMM cause value.",
+        "conditions": "UE receives REGISTRATION REJECT message. UE stops timer T3510 (implicitly). UE follows procedures based on the 5GMM cause value (5.5.1.2.5)."
+      },
+      {
+        "from": "UE_Sending_RegComplete",
+        "to": "E_REGISTRATION_COMPLETE",
+        "type": "trigger",
+        "description": "Triggered when the UE sends the REGISTRATION COMPLETE message.",
+        "conditions": "UE has received REGISTRATION ACCEPT requiring completion and sends the REGISTRATION COMPLETE message (5.5.1.2.4)."
+      },
+      {
+        "from": "E_REGISTRATION_COMPLETE",
+        "to": "UE_Registered",
+        "type": "condition",
+        "description": "UE transitions to registered state after successfully sending REGISTRATION COMPLETE.",
+        "conditions": "UE sends REGISTRATION COMPLETE message. UE is already in 5GMM-REGISTERED state (transitioned upon receiving ACCEPT) (5.5.1.2.4)."
+      },
+      {
+        "from": "AMF_Waiting_Registration_Complete",
+        "to": "E_REGISTRATION_COMPLETE",
+        "type": "trigger",
+        "description": "Triggered when the AMF receives the REGISTRATION COMPLETE message from the UE.",
+        "conditions": "AMF is in state AMF_Waiting_Registration_Complete (T3550 running) and receives REGISTRATION COMPLETE (5.5.1.2.4)."
+      },
+      {
+        "from": "E_REGISTRATION_COMPLETE",
+        "to": "AMF_Registered",
+        "type": "condition",
+        "description": "AMF transitions to registered state after receiving REGISTRATION COMPLETE.",
+        "conditions": "AMF receives REGISTRATION COMPLETE message. AMF stops timer T3550 and changes state to 5GMM-REGISTERED (5.5.1.2.4)."
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_T3510_Timeout_Retry",
+        "type": "trigger",
+        "description": "Triggered when timer T3510 expires and the registration attempt counter is less than 5.",
+        "conditions": "Timer T3510 expires, registration attempt counter < 5 (5.5.1.2.7 case c)."
+      },
+      {
+        "from": "E_T3510_Timeout_Retry",
+        "to": "UE_Attempting_Initial_Registration",
+        "type": "condition",
+        "description": "UE increments the registration attempt counter and re-initiates the registration procedure after T3510 timeout (potentially after T3511 expiry).",
+        "conditions": "Registration attempt counter incremented (< 5), registration still required. UE starts T3511, and restarts the procedure upon T3511 expiry (5.5.1.2.7 case c)."
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_T3510_Timeout_Max",
+        "type": "trigger",
+        "description": "Triggered when timer T3510 expires and the registration attempt counter reaches 5.",
+        "conditions": "Timer T3510 expires, registration attempt counter = 5 (5.5.1.2.7 case c)."
+      },
+      {
+        "from": "E_T3510_Timeout_Max",
+        "to": "UE_Registration_Rejected",
+        "type": "condition",
+        "description": "UE considers registration failed after maximum T3510 timeouts/retries.",
+        "conditions": "Registration attempt counter reached 5 after T3510 expiry. UE deletes TAI list, last visited registered TAI, potentially 5G-GUTI/ngKSI, starts T3502 (if > 0), sets 5GS update status to 5U2 NOT UPDATED, and enters 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION or PLMN-SEARCH (5.5.1.2.7 case c)."
+      },
+      {
+        "from": "UE_Attempting_Initial_Registration",
+        "to": "E_Failure_UE",
+        "type": "trigger",
+        "description": "Triggered by lower layer failure or NAS signalling connection release before receiving REGISTRATION ACCEPT or REGISTRATION REJECT.",
+        "conditions": "Lower layer failure or connection release occurs (5.5.1.2.7 case e)."
+      },
+      {
+        "from": "E_Failure_UE",
+        "to": "UE_Registration_Rejected",
+        "type": "condition",
+        "description": "UE aborts registration due to lower layer failure and proceeds based on the registration attempt counter.",
+        "conditions": "Lower layer failure occurred. UE stops T3510, increments attempt counter, and follows retry/max retry logic (5.5.1.2.7 case e)."
+      },
+      {
+        "from": "UE_Sending_RegComplete",
+        "to": "E_Failure_UE",
+        "type": "trigger",
+        "description": "Triggered by lower layer failure during transmission of REGISTRATION COMPLETE.",
+        "conditions": "Lower layer indicates transmission failure for REGISTRATION COMPLETE message (5.5.1.2.7 case i or j)."
+      },
+      {
+        "from": "AMF_Waiting_Registration_Complete",
+        "to": "E_T3550_Timeout_Retry",
+        "type": "trigger",
+        "description": "Triggered when timer T3550 expires at the AMF (1st to 4th time).",
+        "conditions": "Timer T3550 expires, retransmission count < 5 (5.5.1.2.8 case c)."
+      },
+      {
+        "from": "E_T3550_Timeout_Retry",
+        "to": "AMF_Waiting_Registration_Complete",
+        "type": "condition",
+        "description": "AMF retransmits REGISTRATION ACCEPT and restarts T3550, remaining in the waiting state.",
+        "conditions": "T3550 expired (1st to 4th time). AMF retransmits REGISTRATION ACCEPT and restarts T3550 (5.5.1.2.8 case c)."
+      },
+      {
+        "from": "AMF_Waiting_Registration_Complete",
+        "to": "E_T3550_Timeout_Max",
+        "type": "trigger",
+        "description": "Triggered on the fifth expiry of timer T3550 at the AMF.",
+        "conditions": "Timer T3550 expires for the 5th time (5.5.1.2.8 case c)."
+      },
+      {
+        "from": "E_T3550_Timeout_Max",
+        "to": "AMF_Registered",
+        "type": "condition",
+        "description": "AMF aborts waiting and considers the UE registered after maximum T3550 timeouts.",
+        "conditions": "5th expiry of T3550. AMF aborts procedure and enters 5GMM-REGISTERED state (5.5.1.2.8 case c)."
+      },
+      {
+        "from": "AMF_Waiting_Registration_Complete",
+        "to": "E_Failure_AMF",
+        "type": "trigger",
+        "description": "Triggered by lower layer failure at the AMF while waiting for REGISTRATION COMPLETE.",
+        "conditions": "Lower layer failure occurs while T3550 is running (5.5.1.2.8 case a)."
+      },
+      {
+        "from": "E_Failure_AMF",
+        "to": "AMF_Registered",
+        "type": "condition",
+        "description": "AMF aborts waiting due to lower layer failure and considers the UE registered.",
+        "conditions": "Lower layer failure occurred while T3550 was running. AMF aborts procedure and enters 5GMM-REGISTERED state (5.5.1.2.8 case a)."
+      },
+      {
+        "from": "UE_Registration_Rejected",
+        "to": "E_T3346_Timeout",
+        "type": "trigger",
+        "description": "Triggered when back-off timer T3346 expires.",
+        "conditions": "Timer T3346 expires. T3346 was started upon receiving REGISTRATION REJECT with 5GMM cause #22 'congestion' (5.5.1.2.5)."
+      },
+      {
+        "from": "E_T3346_Timeout",
+        "to": "UE_Attempting_Initial_Registration",
+        "type": "condition",
+        "description": "UE re-attempts initial registration after T3346 expires, if registration is still needed.",
+        "conditions": "Timer T3346 expired or stopped, and initial registration is still required (5.5.1.2.5, 5.5.1.2.7 case a)."
+      },
+      {
+        "from": "UE_Registration_Rejected",
+        "to": "E_REJECT_CAUSE_PLMN_SELECTION",
+        "type": "trigger",
+        "description": "Triggered after receiving a REGISTRATION REJECT with specific causes that require the UE to perform PLMN/SNPN selection.",
+        "conditions": "Receiving REGISTRATION REJECT with 5GMM cause #3, #6, #7, #11, #13, #36, #62 (partly), #73, #74, #75, #76 (partly), #78, #80 (5.5.1.2.5)."
+      },
+      {
+        "from": "E_REJECT_CAUSE_PLMN_SELECTION",
+        "to": "UE_Deregistered",
+        "type": "condition",
+        "description": "UE enters a deregistered state (specifically 5GMM-DEREGISTERED.PLMN-SEARCH) requiring PLMN/SNPN selection based on the rejection cause.",
+        "conditions": "Specific rejection cause received (see conditions for E_REJECT_CAUSE_PLMN_SELECTION trigger). UE performs PLMN/SNPN selection according to 3GPP TS 23.122 (5.5.1.2.5)."
+      },
+      {
+        "from": "UE_Registration_Rejected",
+        "to": "E_T3502_Timeout",
+        "type": "trigger",
+        "description": "Triggered when timer T3502 expires.",
+        "conditions": "Timer T3502 expires. T3502 is started after the registration attempt counter reaches 5 due to repeated failures (e.g., T3510 expiry, lower layer failure) (5.5.1.2.7 case c)."
+      }
+    ]
+  }
+}

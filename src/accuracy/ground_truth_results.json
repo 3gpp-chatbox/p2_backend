@@ -1,0 +1,29 @@
+[
+    {
+        "version1": "v1",
+        "version2": "v2",
+        "node_similarity": 0.15949038043403516,
+        "edge_similarity": 0.1372663496760431,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+    },
+    {
+        "version1": "v1",
+        "version2": "v3",
+        "node_similarity": 0.14453542818198142,
+        "edge_similarity": 0.11164646487151851,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+    },
+    {
+        "version1": "v1",
+        "version2": "v4",
+        "node_similarity": 0.14453542818198142,
+        "edge_similarity": 0.11164646487151851,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+    }
+]

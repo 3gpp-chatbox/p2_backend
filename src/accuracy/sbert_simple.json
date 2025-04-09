@@ -1,20 +1,21 @@
 {
     "summary": {
         "validity_status": "valid",
-        "validation_reason": "At least 50% of nodes and edges matched",
+        "validation_reason": "At least 70% of nodes and edges matched",
+        "dataset_comparing": "Comparing Dataset 1 and Dataset 2",
         "node_stats": {
             "total": 34,
-            "matched": 34,
-            "unmatched": 0,
-            "match_percentage": 100.0
+            "matched": 27,
+            "unmatched": 7,
+            "match_percentage": 79.41176470588235
         },
         "edge_stats": {
             "total": 55,
-            "matched": 55,
-            "unmatched": 0,
-            "match_percentage": 100.0
+            "matched": 39,
+            "unmatched": 16,
+            "match_percentage": 70.9090909090909
         },
-        "overall_match_percentage": 100.0
+        "overall_match_percentage": 74.15730337078652
     },
     "node_matches": [
         {
@@ -26,267 +27,211 @@
             "valid": true
         },
         {
-            "id_1": "UE_Attempting_Initial_Registration",
-            "description_1": "UE has sent a REGISTRATION REQUEST for initial registration and is waiting for a response or performing common procedures (e.g., authentication, security). Type: state",
-            "id_2": "UE_Attempting_Initial_Registration",
-            "description_2": "UE has sent a REGISTRATION REQUEST for initial registration and is waiting for a response or performing common procedures (e.g., authentication, security). Type: state",
-            "cosine_similarity": 1.0,
-            "valid": true
-        },
-        {
-            "id_1": "UE_Authenticating_Securing",
-            "description_1": "UE is actively involved in authentication or security mode control procedures initiated by the AMF. Type: state",
-            "id_2": "UE_Authenticating_Securing",
-            "description_2": "UE is actively involved in authentication or security mode control procedures initiated by the AMF. Type: state",
-            "cosine_similarity": 1.0000001192092896,
-            "valid": true
-        },
-        {
             "id_1": "UE_Sending_RegComplete",
             "description_1": "UE has received a REGISTRATION ACCEPT requiring acknowledgment and is preparing to send the REGISTRATION COMPLETE message. Type: state",
             "id_2": "UE_Sending_RegComplete",
-            "description_2": "UE has received a REGISTRATION ACCEPT requiring acknowledgment and is preparing to send the REGISTRATION COMPLETE message. Type: state",
-            "cosine_similarity": 0.9999999403953552,
-            "valid": true
-        },
-        {
-            "id_1": "UE_Registered",
-            "description_1": "UE has successfully completed the initial registration procedure and is in 5GMM-REGISTERED state. Type: state",
-            "id_2": "UE_Registered",
-            "description_2": "UE has successfully completed the initial registration procedure and is in 5GMM-REGISTERED state. Type: state",
-            "cosine_similarity": 1.0000001192092896,
-            "valid": true
-        },
-        {
-            "id_1": "UE_Retry_After_Rejection",
-            "description_1": "UE received a REGISTRATION REJECT with a cause requiring a backoff period (T3346) before retrying registration. Type: state",
-            "id_2": "UE_Retry_After_Rejection",
-            "description_2": "UE received a REGISTRATION REJECT with a cause requiring a backoff period (T3346) before retrying registration. Type: state",
-            "cosine_similarity": 0.9999999403953552,
+            "description_2": "UE has received REGISTRATION ACCEPT requiring acknowledgment and is preparing/sending REGISTRATION COMPLETE. Type: state",
+            "cosine_similarity": 0.9779359102249146,
             "valid": true
         },
         {
             "id_1": "UE_Deregistered_PLMN_Search",
             "description_1": "UE received a REGISTRATION REJECT with a cause requiring PLMN/SNPN reselection. Type: state",
             "id_2": "UE_Deregistered_PLMN_Search",
-            "description_2": "UE received a REGISTRATION REJECT with a cause requiring PLMN/SNPN reselection. Type: state",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "UE received REGISTRATION REJECT with a cause requiring PLMN/SNPN selection and is performing the selection process. Type: state",
+            "cosine_similarity": 0.9228552579879761,
             "valid": true
         },
         {
             "id_1": "UE_Waiting_T3511",
             "description_1": "UE is waiting for timer T3511 to expire after a T3510 timeout before retrying registration (attempt < 5). Type: state",
             "id_2": "UE_Waiting_T3511",
-            "description_2": "UE is waiting for timer T3511 to expire after a T3510 timeout before retrying registration (attempt < 5). Type: state",
-            "cosine_similarity": 0.9999998807907104,
-            "valid": true
-        },
-        {
-            "id_1": "UE_Waiting_T3502",
-            "description_1": "UE is waiting for timer T3502 to expire after reaching the maximum number of registration attempts (T3510 timeout, attempt = 5). Type: state",
-            "id_2": "UE_Waiting_T3502",
-            "description_2": "UE is waiting for timer T3502 to expire after reaching the maximum number of registration attempts (T3510 timeout, attempt = 5). Type: state",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "UE experienced T3510 timeout (retries < 5) and is waiting for T3511 timer to expire before retrying registration. Type: state",
+            "cosine_similarity": 0.9695689678192139,
             "valid": true
         },
         {
             "id_1": "AMF_Idle",
             "description_1": "AMF is idle, not processing any registration procedure for this UE. Type: state",
             "id_2": "AMF_Idle",
-            "description_2": "AMF is idle, not processing any registration procedure for this UE. Type: state",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "AMF is idle with respect to this UE's registration procedure. Type: state",
+            "cosine_similarity": 0.8937855958938599,
             "valid": true
         },
         {
             "id_1": "AMF_Processing_Initial_Registration",
             "description_1": "AMF has received the REGISTRATION REQUEST and is processing it (e.g., context retrieval, initiating common procedures). Type: state",
             "id_2": "AMF_Processing_Initial_Registration",
-            "description_2": "AMF has received the REGISTRATION REQUEST and is processing it (e.g., context retrieval, initiating common procedures). Type: state",
-            "cosine_similarity": 1.0,
+            "description_2": "AMF has received REGISTRATION REQUEST and is processing it, potentially initiating common procedures. Type: state",
+            "cosine_similarity": 0.9442815184593201,
             "valid": true
         },
         {
             "id_1": "AMF_Authenticating_Securing",
             "description_1": "AMF is performing authentication or security mode control procedures with the UE. Type: state",
             "id_2": "AMF_Authenticating_Securing",
-            "description_2": "AMF is performing authentication or security mode control procedures with the UE. Type: state",
-            "cosine_similarity": 1.0,
+            "description_2": "AMF is performing authentication and/or security procedures with the UE. Type: state",
+            "cosine_similarity": 0.9705572128295898,
             "valid": true
         },
         {
             "id_1": "AMF_Waiting_Registration_Complete",
             "description_1": "AMF has sent REGISTRATION ACCEPT requiring acknowledgment and is waiting for the REGISTRATION COMPLETE message from the UE (timer T3550 running). Type: state",
             "id_2": "AMF_Waiting_Registration_Complete",
-            "description_2": "AMF has sent REGISTRATION ACCEPT requiring acknowledgment and is waiting for the REGISTRATION COMPLETE message from the UE (timer T3550 running). Type: state",
-            "cosine_similarity": 1.0,
+            "description_2": "AMF has sent REGISTRATION ACCEPT requiring acknowledgment and is waiting for REGISTRATION COMPLETE (timer T3550 running). Type: state",
+            "cosine_similarity": 0.9632123112678528,
             "valid": true
         },
         {
             "id_1": "AMF_Registered",
             "description_1": "AMF considers the UE successfully registered (either after receiving REGISTRATION COMPLETE or sending REGISTRATION ACCEPT not requiring completion). Type: state",
             "id_2": "AMF_Registered",
-            "description_2": "AMF considers the UE successfully registered (either after receiving REGISTRATION COMPLETE or sending REGISTRATION ACCEPT not requiring completion). Type: state",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "AMF considers the UE successfully registered (5GMM-REGISTERED state). Type: state",
+            "cosine_similarity": 0.854627251625061,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_REQUEST",
             "description_1": "A REGISTRATION REQUEST message is sent by the UE or received by the AMF. Type: event",
             "id_2": "E_REGISTRATION_REQUEST",
-            "description_2": "A REGISTRATION REQUEST message is sent by the UE or received by the AMF. Type: event",
-            "cosine_similarity": 1.0,
+            "description_2": "REGISTRATION REQUEST message is sent by UE or received by AMF. Type: event",
+            "cosine_similarity": 0.9758614301681519,
             "valid": true
         },
         {
             "id_1": "E_AUTHENTICATION_REQUEST",
             "description_1": "An AUTHENTICATION REQUEST message is sent by the AMF or received by the UE. Type: event",
             "id_2": "E_AUTHENTICATION_REQUEST",
-            "description_2": "An AUTHENTICATION REQUEST message is sent by the AMF or received by the UE. Type: event",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "AUTHENTICATION REQUEST message is sent by AMF or received by UE. Type: event",
+            "cosine_similarity": 0.9775029420852661,
             "valid": true
         },
         {
             "id_1": "E_SECURITY_MODE_COMMAND",
             "description_1": "A SECURITY MODE COMMAND message is sent by the AMF or received by the UE. Type: event",
             "id_2": "E_SECURITY_MODE_COMMAND",
-            "description_2": "A SECURITY MODE COMMAND message is sent by the AMF or received by the UE. Type: event",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "SECURITY MODE COMMAND message is sent by AMF or received by UE. Type: event",
+            "cosine_similarity": 0.9770022630691528,
             "valid": true
         },
         {
             "id_1": "E_AUTHENTICATION_RESPONSE",
             "description_1": "An AUTHENTICATION RESPONSE message is sent by the UE or received by the AMF. Type: event",
             "id_2": "E_AUTHENTICATION_RESPONSE",
-            "description_2": "An AUTHENTICATION RESPONSE message is sent by the UE or received by the AMF. Type: event",
-            "cosine_similarity": 1.0,
+            "description_2": "AUTHENTICATION RESPONSE message is sent by UE or received by AMF. Type: event",
+            "cosine_similarity": 0.9792802333831787,
             "valid": true
         },
         {
             "id_1": "E_SECURITY_MODE_COMPLETE",
             "description_1": "A SECURITY MODE COMPLETE message is sent by the UE or received by the AMF. Type: event",
             "id_2": "E_SECURITY_MODE_COMPLETE",
-            "description_2": "A SECURITY MODE COMPLETE message is sent by the UE or received by the AMF. Type: event",
-            "cosine_similarity": 1.0,
+            "description_2": "SECURITY MODE COMPLETE message is sent by UE or received by AMF. Type: event",
+            "cosine_similarity": 0.9766768217086792,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_ACCEPT_ReqComplete",
             "description_1": "A REGISTRATION ACCEPT message requiring a REGISTRATION COMPLETE response is sent by the AMF or received by the UE. Type: event",
             "id_2": "E_REGISTRATION_ACCEPT_ReqComplete",
-            "description_2": "A REGISTRATION ACCEPT message requiring a REGISTRATION COMPLETE response is sent by the AMF or received by the UE. Type: event",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "REGISTRATION ACCEPT message requiring REGISTRATION COMPLETE acknowledgment is sent by AMF or received by UE. Type: event",
+            "cosine_similarity": 0.9154554009437561,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_ACCEPT_NoComplete",
             "description_1": "A REGISTRATION ACCEPT message not requiring a REGISTRATION COMPLETE response is sent by the AMF or received by the UE. Type: event",
             "id_2": "E_REGISTRATION_ACCEPT_NoComplete",
-            "description_2": "A REGISTRATION ACCEPT message not requiring a REGISTRATION COMPLETE response is sent by the AMF or received by the UE. Type: event",
-            "cosine_similarity": 1.0,
+            "description_2": "REGISTRATION ACCEPT message not requiring REGISTRATION COMPLETE acknowledgment is sent by AMF or received by UE. Type: event",
+            "cosine_similarity": 0.9138083457946777,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_REJECT",
             "description_1": "A REGISTRATION REJECT message is sent by the AMF or received by the UE. Type: event",
             "id_2": "E_REGISTRATION_REJECT",
-            "description_2": "A REGISTRATION REJECT message is sent by the AMF or received by the UE. Type: event",
-            "cosine_similarity": 0.9999999403953552,
+            "description_2": "REGISTRATION REJECT message is sent by AMF or received by UE. Type: event",
+            "cosine_similarity": 0.9789286255836487,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_COMPLETE",
             "description_1": "A REGISTRATION COMPLETE message is sent by the UE or received by the AMF. Type: event",
             "id_2": "E_REGISTRATION_COMPLETE",
-            "description_2": "A REGISTRATION COMPLETE message is sent by the UE or received by the AMF. Type: event",
-            "cosine_similarity": 1.0,
+            "description_2": "REGISTRATION COMPLETE message is sent by UE or received by AMF. Type: event",
+            "cosine_similarity": 0.9767173528671265,
             "valid": true
         },
         {
             "id_1": "E_T3510_Timeout_Retry",
             "description_1": "Timer T3510 expires at the UE, and the registration attempt counter is less than 5. Type: event",
             "id_2": "E_T3510_Timeout_Retry",
-            "description_2": "Timer T3510 expires at the UE, and the registration attempt counter is less than 5. Type: event",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "Timer T3510 expires at UE, and registration attempt counter is less than 5. Type: event",
+            "cosine_similarity": 0.9922802448272705,
             "valid": true
         },
         {
             "id_1": "E_T3510_Timeout_Max",
             "description_1": "Timer T3510 expires at the UE, and the registration attempt counter is equal to 5. Type: event",
             "id_2": "E_T3510_Timeout_Max",
-            "description_2": "Timer T3510 expires at the UE, and the registration attempt counter is equal to 5. Type: event",
-            "cosine_similarity": 1.0000001192092896,
+            "description_2": "Timer T3510 expires at UE, and registration attempt counter is equal to 5. Type: event",
+            "cosine_similarity": 0.9945055842399597,
             "valid": true
         },
         {
             "id_1": "E_T3511_Timeout",
             "description_1": "Timer T3511 expires at the UE. Type: event",
             "id_2": "E_T3511_Timeout",
-            "description_2": "Timer T3511 expires at the UE. Type: event",
-            "cosine_similarity": 1.0,
-            "valid": true
-        },
-        {
-            "id_1": "E_T3502_Timeout",
-            "description_1": "Timer T3502 expires at the UE. Type: event",
-            "id_2": "E_T3502_Timeout",
-            "description_2": "Timer T3502 expires at the UE. Type: event",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "Timer T3511 expires at UE. Type: event",
+            "cosine_similarity": 0.9974240064620972,
             "valid": true
         },
         {
             "id_1": "E_T3346_Timeout",
             "description_1": "Timer T3346 expires at the UE. Type: event",
             "id_2": "E_T3346_Timeout",
-            "description_2": "Timer T3346 expires at the UE. Type: event",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "Timer T3346 expires at UE. Type: event",
+            "cosine_similarity": 0.9973328709602356,
             "valid": true
         },
         {
             "id_1": "E_PLMN_Selection_Complete",
             "description_1": "The UE completes the PLMN/SNPN selection process. Type: event",
             "id_2": "E_PLMN_Selection_Complete",
-            "description_2": "The UE completes the PLMN/SNPN selection process. Type: event",
-            "cosine_similarity": 1.0,
-            "valid": true
-        },
-        {
-            "id_1": "E_T3550_Timeout_Retry",
-            "description_1": "Timer T3550 expires at the AMF, and the retransmission counter is less than 4. Type: event",
-            "id_2": "E_T3550_Timeout_Retry",
-            "description_2": "Timer T3550 expires at the AMF, and the retransmission counter is less than 4. Type: event",
-            "cosine_similarity": 0.9999999403953552,
+            "description_2": "UE completes the PLMN/SNPN selection process. Type: event",
+            "cosine_similarity": 0.9931051731109619,
             "valid": true
         },
         {
             "id_1": "E_T3550_Timeout_Max",
             "description_1": "Timer T3550 expires at the AMF for the fifth time (max retransmissions). Type: event",
             "id_2": "E_T3550_Timeout_Max",
-            "description_2": "Timer T3550 expires at the AMF for the fifth time (max retransmissions). Type: event",
-            "cosine_similarity": 1.0000001192092896,
+            "description_2": "Timer T3550 expires at AMF for the 5th time. Type: event",
+            "cosine_similarity": 0.9648679494857788,
             "valid": true
         },
         {
             "id_1": "E_Failure_UE",
             "description_1": "An abnormal case occurs at the UE side during registration (e.g., lower layer failure, transmission failure). Type: event",
             "id_2": "E_Failure_UE",
-            "description_2": "An abnormal case occurs at the UE side during registration (e.g., lower layer failure, transmission failure). Type: event",
-            "cosine_similarity": 1.0000001192092896,
+            "description_2": "An abnormal case occurs at the UE (e.g., lower layer failure, access barring, transmission failure). Type: event",
+            "cosine_similarity": 0.8932090997695923,
             "valid": true
         },
         {
             "id_1": "E_TAI_Changed",
             "description_1": "The UE's current TAI changes and is no longer in the TAI list received in REGISTRATION ACCEPT, potentially during a failure. Type: event",
             "id_2": "E_TAI_Changed",
-            "description_2": "The UE's current TAI changes and is no longer in the TAI list received in REGISTRATION ACCEPT, potentially during a failure. Type: event",
-            "cosine_similarity": 1.0,
+            "description_2": "UE detects TAI change after REGISTRATION COMPLETE transmission failure, and new TAI is not in the list. Type: event",
+            "cosine_similarity": 0.8822009563446045,
             "valid": true
         },
         {
             "id_1": "E_Failure_AMF",
             "description_1": "An abnormal case occurs at the AMF side during registration (e.g., lower layer failure while waiting for REGISTRATION COMPLETE). Type: event",
             "id_2": "E_Failure_AMF",
-            "description_2": "An abnormal case occurs at the AMF side during registration (e.g., lower layer failure while waiting for REGISTRATION COMPLETE). Type: event",
-            "cosine_similarity": 0.9999998807907104,
+            "description_2": "An abnormal case occurs at the AMF (e.g., lower layer failure). Type: event",
+            "cosine_similarity": 0.8418331146240234,
             "valid": true
         }
     ],
@@ -295,72 +240,64 @@
             "id_1": "UE_Deregistered->E_REGISTRATION_REQUEST",
             "description_1": "Triggered when the UE in 5GMM-DEREGISTERED state initiates initial registration by sending a REGISTRATION REQUEST message (Subclause 5.5.1.2.2). Type: trigger",
             "id_2": "UE_Deregistered->E_REGISTRATION_REQUEST",
-            "description_2": "Triggered when the UE in 5GMM-DEREGISTERED state initiates initial registration by sending a REGISTRATION REQUEST message (Subclause 5.5.1.2.2). Type: trigger",
-            "cosine_similarity": 1.0,
+            "description_2": "Triggered when the UE in state 5GMM-DEREGISTERED initiates the initial registration procedure by sending a REGISTRATION REQUEST message (e.g., for 5GS services, emergency, SMS, mobility from GERAN/UTRAN, onboarding, disaster roaming, resuming service). Type: trigger",
+            "cosine_similarity": 0.9146460294723511,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_REQUEST->UE_Attempting_Initial_Registration",
             "description_1": "UE transitions to attempting registration after sending the REGISTRATION REQUEST and starting timer T3510 (Subclause 5.5.1.2.2). Type: condition",
             "id_2": "E_REGISTRATION_REQUEST->UE_Attempting_Initial_Registration",
-            "description_2": "UE transitions to attempting registration after sending the REGISTRATION REQUEST and starting timer T3510 (Subclause 5.5.1.2.2). Type: condition",
-            "cosine_similarity": 0.9999999403953552,
+            "description_2": "UE transitions to attempting registration after sending the REGISTRATION REQUEST and starting timer T3510. Timers T3502 and T3511 are stopped if running. Type: condition",
+            "cosine_similarity": 0.9268704652786255,
             "valid": true
         },
         {
             "id_1": "AMF_Idle->E_REGISTRATION_REQUEST",
             "description_1": "Triggered when the AMF receives a REGISTRATION REQUEST message from the UE. Type: trigger",
             "id_2": "AMF_Idle->E_REGISTRATION_REQUEST",
-            "description_2": "Triggered when the AMF receives a REGISTRATION REQUEST message from the UE. Type: trigger",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "Triggered when the AMF receives the REGISTRATION REQUEST message from the UE. Type: trigger",
+            "cosine_similarity": 0.9979587197303772,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_REQUEST->AMF_Processing_Initial_Registration",
             "description_1": "AMF transitions to processing the registration upon receiving the REGISTRATION REQUEST. Type: condition",
             "id_2": "E_REGISTRATION_REQUEST->AMF_Processing_Initial_Registration",
-            "description_2": "AMF transitions to processing the registration upon receiving the REGISTRATION REQUEST. Type: condition",
-            "cosine_similarity": 1.0,
+            "description_2": "AMF transitions to processing the request upon receiving the REGISTRATION REQUEST message. Type: condition",
+            "cosine_similarity": 0.9495221376419067,
             "valid": true
         },
         {
             "id_1": "AMF_Processing_Initial_Registration->AMF_Authenticating_Securing",
             "description_1": "Triggered when the AMF initiates 5GMM common procedures like authentication and security based on the REGISTRATION REQUEST (Subclause 5.5.1.2.3). Type: trigger",
             "id_2": "AMF_Processing_Initial_Registration->AMF_Authenticating_Securing",
-            "description_2": "Triggered when the AMF initiates 5GMM common procedures like authentication and security based on the REGISTRATION REQUEST (Subclause 5.5.1.2.3). Type: trigger",
-            "cosine_similarity": 0.9999999403953552,
+            "description_2": "AMF initiates 5GMM common procedures (e.g., authentication, security) based on information in the REGISTRATION REQUEST. Type: trigger",
+            "cosine_similarity": 0.9231854677200317,
             "valid": true
         },
         {
             "id_1": "AMF_Authenticating_Securing->E_AUTHENTICATION_REQUEST",
             "description_1": "Triggered when the AMF sends an AUTHENTICATION REQUEST message to the UE as part of the authentication procedure (Subclause 5.5.1.2.3). Type: trigger",
             "id_2": "AMF_Authenticating_Securing->E_AUTHENTICATION_REQUEST",
-            "description_2": "Triggered when the AMF sends an AUTHENTICATION REQUEST message to the UE as part of the authentication procedure (Subclause 5.5.1.2.3). Type: trigger",
-            "cosine_similarity": 1.0000001192092896,
+            "description_2": "Triggered when the AMF sends an AUTHENTICATION REQUEST message to the UE as part of the authentication procedure. Type: trigger",
+            "cosine_similarity": 0.9827512502670288,
             "valid": true
         },
         {
             "id_1": "E_AUTHENTICATION_REQUEST->UE_Authenticating_Securing",
             "description_1": "UE transitions to handle authentication/security upon receiving the AUTHENTICATION REQUEST. Type: condition",
             "id_2": "E_AUTHENTICATION_REQUEST->UE_Authenticating_Securing",
-            "description_2": "UE transitions to handle authentication/security upon receiving the AUTHENTICATION REQUEST. Type: condition",
-            "cosine_similarity": 1.000000238418579,
-            "valid": true
-        },
-        {
-            "id_1": "AMF_Authenticating_Securing->E_SECURITY_MODE_COMMAND",
-            "description_1": "Triggered when the AMF sends a SECURITY MODE COMMAND message to the UE as part of the security procedure (Subclause 5.5.1.2.3). Type: trigger",
-            "id_2": "AMF_Authenticating_Securing->E_SECURITY_MODE_COMMAND",
-            "description_2": "Triggered when the AMF sends a SECURITY MODE COMMAND message to the UE as part of the security procedure (Subclause 5.5.1.2.3). Type: trigger",
-            "cosine_similarity": 1.0,
+            "description_2": "UE transitions to authenticating/securing state upon receiving the AUTHENTICATION REQUEST from the AMF. Type: condition",
+            "cosine_similarity": 0.8242629766464233,
             "valid": true
         },
         {
             "id_1": "E_SECURITY_MODE_COMMAND->UE_Authenticating_Securing",
             "description_1": "UE transitions to handle authentication/security upon receiving the SECURITY MODE COMMAND. Type: condition",
             "id_2": "E_SECURITY_MODE_COMMAND->UE_Authenticating_Securing",
-            "description_2": "UE transitions to handle authentication/security upon receiving the SECURITY MODE COMMAND. Type: condition",
-            "cosine_similarity": 0.9999997019767761,
+            "description_2": "UE transitions to authenticating/securing state upon receiving the SECURITY MODE COMMAND from the AMF. Type: condition",
+            "cosine_similarity": 0.8412214517593384,
             "valid": true
         },
         {
@@ -375,8 +312,8 @@
             "id_1": "E_AUTHENTICATION_RESPONSE->UE_Attempting_Initial_Registration",
             "description_1": "UE returns to attempting registration after sending the AUTHENTICATION RESPONSE, awaiting further network action. Type: condition",
             "id_2": "E_AUTHENTICATION_RESPONSE->UE_Attempting_Initial_Registration",
-            "description_2": "UE returns to attempting registration after sending the AUTHENTICATION RESPONSE, awaiting further network action. Type: condition",
-            "cosine_similarity": 1.0000001192092896,
+            "description_2": "UE returns to waiting state (attempting registration) after sending the AUTHENTICATION RESPONSE. Type: condition",
+            "cosine_similarity": 0.9061019420623779,
             "valid": true
         },
         {
@@ -384,354 +321,351 @@
             "description_1": "Triggered when the UE sends a SECURITY MODE COMPLETE message to the AMF. Type: trigger",
             "id_2": "UE_Authenticating_Securing->E_SECURITY_MODE_COMPLETE",
             "description_2": "Triggered when the UE sends a SECURITY MODE COMPLETE message to the AMF. Type: trigger",
-            "cosine_similarity": 1.0,
+            "cosine_similarity": 0.9999998807907104,
             "valid": true
         },
         {
             "id_1": "E_SECURITY_MODE_COMPLETE->UE_Attempting_Initial_Registration",
             "description_1": "UE returns to attempting registration after sending the SECURITY MODE COMPLETE, awaiting further network action. Type: condition",
             "id_2": "E_SECURITY_MODE_COMPLETE->UE_Attempting_Initial_Registration",
-            "description_2": "UE returns to attempting registration after sending the SECURITY MODE COMPLETE, awaiting further network action. Type: condition",
-            "cosine_similarity": 1.0,
-            "valid": true
-        },
-        {
-            "id_1": "AMF_Authenticating_Securing->E_REGISTRATION_ACCEPT_ReqComplete",
-            "description_1": "Triggered when the AMF accepts the registration and sends REGISTRATION ACCEPT requiring a REGISTRATION COMPLETE response (e.g., due to GUTI reallocation, SOR, ODB, CAG list update, PEIPS, UE Radio Cap ID, Truncated S-TMSI config, UUAA pending, NSSAI update, NSAG info, Alternative NSSAI, On-demand NSSAI) (Subclause 5.5.1.2.4). Type: trigger",
-            "id_2": "AMF_Authenticating_Securing->E_REGISTRATION_ACCEPT_ReqComplete",
-            "description_2": "Triggered when the AMF accepts the registration and sends REGISTRATION ACCEPT requiring a REGISTRATION COMPLETE response (e.g., due to GUTI reallocation, SOR, ODB, CAG list update, PEIPS, UE Radio Cap ID, Truncated S-TMSI config, UUAA pending, NSSAI update, NSAG info, Alternative NSSAI, On-demand NSSAI) (Subclause 5.5.1.2.4). Type: trigger",
-            "cosine_similarity": 1.0000001192092896,
+            "description_2": "UE returns to waiting state (attempting registration) after sending the SECURITY MODE COMPLETE. Type: condition",
+            "cosine_similarity": 0.9226899743080139,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_ACCEPT_ReqComplete->AMF_Waiting_Registration_Complete",
             "description_1": "AMF transitions to waiting for REGISTRATION COMPLETE after sending REGISTRATION ACCEPT requiring completion, starting timer T3550 (Subclause 5.5.1.2.4). Type: condition",
             "id_2": "E_REGISTRATION_ACCEPT_ReqComplete->AMF_Waiting_Registration_Complete",
-            "description_2": "AMF transitions to waiting for REGISTRATION COMPLETE after sending REGISTRATION ACCEPT requiring completion, starting timer T3550 (Subclause 5.5.1.2.4). Type: condition",
-            "cosine_similarity": 1.0,
+            "description_2": "AMF transitions to waiting for REGISTRATION COMPLETE after sending REGISTRATION ACCEPT (requiring complete) and starts timer T3550. Type: condition",
+            "cosine_similarity": 0.9683928489685059,
             "valid": true
         },
         {
             "id_1": "AMF_Authenticating_Securing->E_REGISTRATION_ACCEPT_NoComplete",
             "description_1": "Triggered when the AMF accepts the registration and sends REGISTRATION ACCEPT not requiring a REGISTRATION COMPLETE response (Subclause 5.5.1.2.4). Type: trigger",
             "id_2": "AMF_Authenticating_Securing->E_REGISTRATION_ACCEPT_NoComplete",
-            "description_2": "Triggered when the AMF accepts the registration and sends REGISTRATION ACCEPT not requiring a REGISTRATION COMPLETE response (Subclause 5.5.1.2.4). Type: trigger",
-            "cosine_similarity": 1.0000001192092896,
+            "description_2": "Triggered when the AMF accepts the registration and sends a REGISTRATION ACCEPT message that does *not* require a REGISTRATION COMPLETE acknowledgment. Type: trigger",
+            "cosine_similarity": 0.8952983021736145,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_ACCEPT_NoComplete->AMF_Registered",
             "description_1": "AMF transitions to registered state after sending REGISTRATION ACCEPT that does not require completion. Type: condition",
             "id_2": "E_REGISTRATION_ACCEPT_NoComplete->AMF_Registered",
-            "description_2": "AMF transitions to registered state after sending REGISTRATION ACCEPT that does not require completion. Type: condition",
-            "cosine_similarity": 0.9999998807907104,
+            "description_2": "AMF transitions directly to registered state after sending REGISTRATION ACCEPT (not requiring complete). Type: condition",
+            "cosine_similarity": 0.9596798419952393,
             "valid": true
         },
         {
             "id_1": "AMF_Authenticating_Securing->E_REGISTRATION_REJECT",
             "description_1": "Triggered when the AMF rejects the registration request and sends a REGISTRATION REJECT message (Subclause 5.5.1.2.5). Type: trigger",
             "id_2": "AMF_Authenticating_Securing->E_REGISTRATION_REJECT",
-            "description_2": "Triggered when the AMF rejects the registration request and sends a REGISTRATION REJECT message (Subclause 5.5.1.2.5). Type: trigger",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "Triggered when the AMF rejects the registration request and sends a REGISTRATION REJECT message. Type: trigger",
+            "cosine_similarity": 0.9748486280441284,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_REJECT->AMF_Idle",
             "description_1": "AMF returns to idle state after sending REGISTRATION REJECT. Type: condition",
             "id_2": "E_REGISTRATION_REJECT->AMF_Idle",
-            "description_2": "AMF returns to idle state after sending REGISTRATION REJECT. Type: condition",
-            "cosine_similarity": 0.9999998211860657,
-            "valid": true
-        },
-        {
-            "id_1": "UE_Attempting_Initial_Registration->E_REGISTRATION_ACCEPT_ReqComplete",
-            "description_1": "Triggered when the UE receives a REGISTRATION ACCEPT message that requires a REGISTRATION COMPLETE response (e.g., due to GUTI, SOR, ODB, CAG list, PEIPS, UE Radio Cap ID, Truncated S-TMSI config, UUAA pending, NSSAI update, NSAG info, Alternative NSSAI, On-demand NSSAI) (Subclause 5.5.1.2.4). Type: trigger",
-            "id_2": "UE_Attempting_Initial_Registration->E_REGISTRATION_ACCEPT_ReqComplete",
-            "description_2": "Triggered when the UE receives a REGISTRATION ACCEPT message that requires a REGISTRATION COMPLETE response (e.g., due to GUTI, SOR, ODB, CAG list, PEIPS, UE Radio Cap ID, Truncated S-TMSI config, UUAA pending, NSSAI update, NSAG info, Alternative NSSAI, On-demand NSSAI) (Subclause 5.5.1.2.4). Type: trigger",
-            "cosine_similarity": 0.9999998807907104,
-            "valid": true
-        },
-        {
-            "id_1": "E_REGISTRATION_ACCEPT_ReqComplete->UE_Sending_RegComplete",
-            "description_1": "UE transitions to sending REGISTRATION COMPLETE upon receiving a REGISTRATION ACCEPT that requires completion (Subclause 5.5.1.2.4). Type: condition",
-            "id_2": "E_REGISTRATION_ACCEPT_ReqComplete->UE_Sending_RegComplete",
-            "description_2": "UE transitions to sending REGISTRATION COMPLETE upon receiving a REGISTRATION ACCEPT that requires completion (Subclause 5.5.1.2.4). Type: condition",
-            "cosine_similarity": 0.9999998807907104,
+            "description_2": "AMF returns to idle state regarding this UE's registration attempt after sending the REGISTRATION REJECT message. Type: condition",
+            "cosine_similarity": 0.893362820148468,
             "valid": true
         },
         {
             "id_1": "UE_Attempting_Initial_Registration->E_REGISTRATION_ACCEPT_NoComplete",
             "description_1": "Triggered when the UE receives a REGISTRATION ACCEPT message that does not require a REGISTRATION COMPLETE response (Subclause 5.5.1.2.4). Type: trigger",
             "id_2": "UE_Attempting_Initial_Registration->E_REGISTRATION_ACCEPT_NoComplete",
-            "description_2": "Triggered when the UE receives a REGISTRATION ACCEPT message that does not require a REGISTRATION COMPLETE response (Subclause 5.5.1.2.4). Type: trigger",
-            "cosine_similarity": 1.000000238418579,
-            "valid": true
-        },
-        {
-            "id_1": "E_REGISTRATION_ACCEPT_NoComplete->UE_Registered",
-            "description_1": "UE transitions to 5GMM-REGISTERED state upon receiving a REGISTRATION ACCEPT that does not require completion (Subclause 5.5.1.2.4). Type: condition",
-            "id_2": "E_REGISTRATION_ACCEPT_NoComplete->UE_Registered",
-            "description_2": "UE transitions to 5GMM-REGISTERED state upon receiving a REGISTRATION ACCEPT that does not require completion (Subclause 5.5.1.2.4). Type: condition",
-            "cosine_similarity": 1.0000003576278687,
+            "description_2": "Triggered when the UE receives a REGISTRATION ACCEPT message that does *not* require a REGISTRATION COMPLETE acknowledgment. Type: trigger",
+            "cosine_similarity": 0.9116909503936768,
             "valid": true
         },
         {
             "id_1": "UE_Attempting_Initial_Registration->E_REGISTRATION_REJECT",
             "description_1": "Triggered when the UE receives a REGISTRATION REJECT message from the AMF (Subclause 5.5.1.2.5). Type: trigger",
             "id_2": "UE_Attempting_Initial_Registration->E_REGISTRATION_REJECT",
-            "description_2": "Triggered when the UE receives a REGISTRATION REJECT message from the AMF (Subclause 5.5.1.2.5). Type: trigger",
-            "cosine_similarity": 1.0,
-            "valid": true
-        },
-        {
-            "id_1": "E_REGISTRATION_REJECT->UE_Retry_After_Rejection",
-            "description_1": "UE transitions to retry state upon receiving REGISTRATION REJECT with 5GMM cause #22 (Congestion) and a valid T3346 value (Subclause 5.5.1.2.5). Type: condition",
-            "id_2": "E_REGISTRATION_REJECT->UE_Retry_After_Rejection",
-            "description_2": "UE transitions to retry state upon receiving REGISTRATION REJECT with 5GMM cause #22 (Congestion) and a valid T3346 value (Subclause 5.5.1.2.5). Type: condition",
-            "cosine_similarity": 1.0000003576278687,
-            "valid": true
-        },
-        {
-            "id_1": "E_REGISTRATION_REJECT->UE_Deregistered_PLMN_Search",
-            "description_1": "UE transitions to PLMN search state upon receiving REGISTRATION REJECT with specific causes requiring PLMN/SNPN reselection (e.g., #11, #73, #74, #75, #76, #78, #80) (Subclause 5.5.1.2.5). Type: condition",
-            "id_2": "E_REGISTRATION_REJECT->UE_Deregistered_PLMN_Search",
-            "description_2": "UE transitions to PLMN search state upon receiving REGISTRATION REJECT with specific causes requiring PLMN/SNPN reselection (e.g., #11, #73, #74, #75, #76, #78, #80) (Subclause 5.5.1.2.5). Type: condition",
-            "cosine_similarity": 0.9999998807907104,
-            "valid": true
-        },
-        {
-            "id_1": "E_REGISTRATION_REJECT->UE_Deregistered",
-            "description_1": "UE transitions to a deregistered sub-state (e.g., DEREGISTERED.NO-SUPI, DEREGISTERED.LIMITED-SERVICE, DEREGISTERED.ATTEMPTING-REGISTRATION) upon receiving REGISTRATION REJECT with causes not leading to immediate retry or PLMN search (e.g., #3, #6, #7, #10, #12, #13, #15, #27, #31, #62, #72, #77, #79, #81, #82) (Subclause 5.5.1.2.5). Type: condition",
-            "id_2": "E_REGISTRATION_REJECT->UE_Deregistered",
-            "description_2": "UE transitions to a deregistered sub-state (e.g., DEREGISTERED.NO-SUPI, DEREGISTERED.LIMITED-SERVICE, DEREGISTERED.ATTEMPTING-REGISTRATION) upon receiving REGISTRATION REJECT with causes not leading to immediate retry or PLMN search (e.g., #3, #6, #7, #10, #12, #13, #15, #27, #31, #62, #72, #77, #79, #81, #82) (Subclause 5.5.1.2.5). Type: condition",
-            "cosine_similarity": 0.9999998807907104,
-            "valid": true
-        },
-        {
-            "id_1": "UE_Retry_After_Rejection->E_T3346_Timeout",
-            "description_1": "Triggered when the backoff timer T3346 expires (Subclause 5.5.1.2.5, Cause #22). Type: trigger",
-            "id_2": "UE_Retry_After_Rejection->E_T3346_Timeout",
-            "description_2": "Triggered when the backoff timer T3346 expires (Subclause 5.5.1.2.5, Cause #22). Type: trigger",
-            "cosine_similarity": 0.9999998807907104,
+            "description_2": "Triggered when the UE receives a REGISTRATION REJECT message from the AMF. Type: trigger",
+            "cosine_similarity": 0.9730564951896667,
             "valid": true
         },
         {
             "id_1": "E_T3346_Timeout->UE_Deregistered",
             "description_1": "UE returns to deregistered state to potentially re-initiate registration after T3346 expires (Subclause 5.5.1.2.5, Cause #22). Type: condition",
             "id_2": "E_T3346_Timeout->UE_Deregistered",
-            "description_2": "UE returns to deregistered state to potentially re-initiate registration after T3346 expires (Subclause 5.5.1.2.5, Cause #22). Type: condition",
-            "cosine_similarity": 0.9999999403953552,
+            "description_2": "UE transitions back to deregistered state upon T3346 expiry, allowing potential re-attempt of registration if still needed. Type: condition",
+            "cosine_similarity": 0.9229332804679871,
             "valid": true
         },
         {
             "id_1": "UE_Deregistered_PLMN_Search->E_PLMN_Selection_Complete",
             "description_1": "Triggered when the UE completes the PLMN/SNPN selection process according to 3GPP TS 23.122 [5]. Type: trigger",
             "id_2": "UE_Deregistered_PLMN_Search->E_PLMN_Selection_Complete",
-            "description_2": "Triggered when the UE completes the PLMN/SNPN selection process according to 3GPP TS 23.122 [5]. Type: trigger",
-            "cosine_similarity": 1.0,
+            "description_2": "Triggered when the UE completes the PLMN/SNPN selection process according to 3GPP TS 23.122. Type: trigger",
+            "cosine_similarity": 0.9966242909431458,
             "valid": true
         },
         {
             "id_1": "E_PLMN_Selection_Complete->UE_Deregistered",
             "description_1": "UE returns to deregistered state on the newly selected PLMN/SNPN, ready to initiate registration. Type: condition",
             "id_2": "E_PLMN_Selection_Complete->UE_Deregistered",
-            "description_2": "UE returns to deregistered state on the newly selected PLMN/SNPN, ready to initiate registration. Type: condition",
-            "cosine_similarity": 1.0,
+            "description_2": "UE transitions to deregistered state (potentially on a newly selected PLMN/SNPN or remaining in limited service) after completing PLMN/SNPN selection, ready to initiate registration if a suitable cell is found. Type: condition",
+            "cosine_similarity": 0.892126739025116,
             "valid": true
         },
         {
             "id_1": "UE_Sending_RegComplete->E_REGISTRATION_COMPLETE",
             "description_1": "Triggered when the UE sends the REGISTRATION COMPLETE message to the AMF (Subclause 5.5.1.2.4). Type: trigger",
             "id_2": "UE_Sending_RegComplete->E_REGISTRATION_COMPLETE",
-            "description_2": "Triggered when the UE sends the REGISTRATION COMPLETE message to the AMF (Subclause 5.5.1.2.4). Type: trigger",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "Triggered when the UE sends the REGISTRATION COMPLETE message to the AMF. Type: trigger",
+            "cosine_similarity": 0.9698958396911621,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_COMPLETE->UE_Registered",
             "description_1": "UE transitions to 5GMM-REGISTERED state after sending the REGISTRATION COMPLETE message. Type: condition",
             "id_2": "E_REGISTRATION_COMPLETE->UE_Registered",
-            "description_2": "UE transitions to 5GMM-REGISTERED state after sending the REGISTRATION COMPLETE message. Type: condition",
-            "cosine_similarity": 1.0,
+            "description_2": "UE transitions to registered state (5GMM-REGISTERED) after successfully sending the REGISTRATION COMPLETE message. Type: condition",
+            "cosine_similarity": 0.9772032499313354,
             "valid": true
         },
         {
             "id_1": "AMF_Waiting_Registration_Complete->E_REGISTRATION_COMPLETE",
             "description_1": "Triggered when the AMF receives the REGISTRATION COMPLETE message from the UE (Subclause 5.5.1.2.4). Type: trigger",
             "id_2": "AMF_Waiting_Registration_Complete->E_REGISTRATION_COMPLETE",
-            "description_2": "Triggered when the AMF receives the REGISTRATION COMPLETE message from the UE (Subclause 5.5.1.2.4). Type: trigger",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "Triggered when the AMF receives the REGISTRATION COMPLETE message from the UE. Type: trigger",
+            "cosine_similarity": 0.9719253778457642,
             "valid": true
         },
         {
             "id_1": "E_REGISTRATION_COMPLETE->AMF_Registered",
             "description_1": "AMF transitions to 5GMM-REGISTERED state upon receiving the REGISTRATION COMPLETE message, stopping timer T3550 (Subclause 5.5.1.2.4). Type: condition",
             "id_2": "E_REGISTRATION_COMPLETE->AMF_Registered",
-            "description_2": "AMF transitions to 5GMM-REGISTERED state upon receiving the REGISTRATION COMPLETE message, stopping timer T3550 (Subclause 5.5.1.2.4). Type: condition",
-            "cosine_similarity": 1.0000001192092896,
-            "valid": true
-        },
-        {
-            "id_1": "UE_Attempting_Initial_Registration->E_T3510_Timeout_Retry",
-            "description_1": "Triggered upon T3510 timeout when the registration attempt counter is less than 5 (Subclause 5.5.1.2.7 case c). Type: trigger",
-            "id_2": "UE_Attempting_Initial_Registration->E_T3510_Timeout_Retry",
-            "description_2": "Triggered upon T3510 timeout when the registration attempt counter is less than 5 (Subclause 5.5.1.2.7 case c). Type: trigger",
-            "cosine_similarity": 0.9999998807907104,
-            "valid": true
-        },
-        {
-            "id_1": "E_T3510_Timeout_Retry->UE_Waiting_T3511",
-            "description_1": "UE transitions to waiting for T3511 after T3510 timeout (retry case), starting timer T3511 (Subclause 5.5.1.2.7 case c). Type: condition",
-            "id_2": "E_T3510_Timeout_Retry->UE_Waiting_T3511",
-            "description_2": "UE transitions to waiting for T3511 after T3510 timeout (retry case), starting timer T3511 (Subclause 5.5.1.2.7 case c). Type: condition",
-            "cosine_similarity": 0.9999999403953552,
+            "description_2": "AMF stops timer T3550 and transitions to registered state (5GMM-REGISTERED) upon receiving the REGISTRATION COMPLETE message. Type: condition",
+            "cosine_similarity": 0.9439542889595032,
             "valid": true
         },
         {
             "id_1": "UE_Waiting_T3511->E_T3511_Timeout",
             "description_1": "Triggered when timer T3511 expires (Subclause 5.5.1.2.7 case c). Type: trigger",
             "id_2": "UE_Waiting_T3511->E_T3511_Timeout",
-            "description_2": "Triggered when timer T3511 expires (Subclause 5.5.1.2.7 case c). Type: trigger",
-            "cosine_similarity": 0.9999998211860657,
+            "description_2": "Triggered when timer T3511 expires. Type: trigger",
+            "cosine_similarity": 0.9616325497627258,
             "valid": true
         },
         {
             "id_1": "E_T3511_Timeout->UE_Deregistered",
             "description_1": "UE returns to deregistered state to restart registration after T3511 expires (Subclause 5.5.1.2.7 case c). Type: condition",
             "id_2": "E_T3511_Timeout->UE_Deregistered",
-            "description_2": "UE returns to deregistered state to restart registration after T3511 expires (Subclause 5.5.1.2.7 case c). Type: condition",
-            "cosine_similarity": 1.0,
-            "valid": true
-        },
-        {
-            "id_1": "UE_Attempting_Initial_Registration->E_T3510_Timeout_Max",
-            "description_1": "Triggered upon T3510 timeout when the registration attempt counter reaches 5 (Subclause 5.5.1.2.7 case c). Type: trigger",
-            "id_2": "UE_Attempting_Initial_Registration->E_T3510_Timeout_Max",
-            "description_2": "Triggered upon T3510 timeout when the registration attempt counter reaches 5 (Subclause 5.5.1.2.7 case c). Type: trigger",
-            "cosine_similarity": 1.0000001192092896,
-            "valid": true
-        },
-        {
-            "id_1": "E_T3510_Timeout_Max->UE_Waiting_T3502",
-            "description_1": "UE transitions to waiting for T3502 after T3510 timeout (max attempts reached), starting timer T3502 (Subclause 5.5.1.2.7 case c). Type: condition",
-            "id_2": "E_T3510_Timeout_Max->UE_Waiting_T3502",
-            "description_2": "UE transitions to waiting for T3502 after T3510 timeout (max attempts reached), starting timer T3502 (Subclause 5.5.1.2.7 case c). Type: condition",
-            "cosine_similarity": 1.0000001192092896,
+            "description_2": "UE transitions back to deregistered state upon T3511 expiry to re-attempt registration if still required. Type: condition",
+            "cosine_similarity": 0.8927969932556152,
             "valid": true
         },
         {
             "id_1": "UE_Waiting_T3502->E_T3502_Timeout",
             "description_1": "Triggered when timer T3502 expires (Subclause 5.5.1.2.7 case c). Type: trigger",
             "id_2": "UE_Waiting_T3502->E_T3502_Timeout",
-            "description_2": "Triggered when timer T3502 expires (Subclause 5.5.1.2.7 case c). Type: trigger",
-            "cosine_similarity": 1.0,
+            "description_2": "Triggered when timer T3502 expires (or if its value was initially zero). Type: trigger",
+            "cosine_similarity": 0.9465196132659912,
             "valid": true
         },
         {
             "id_1": "E_T3502_Timeout->UE_Deregistered",
             "description_1": "UE returns to deregistered state (potentially initiating PLMN search) after T3502 expires (Subclause 5.5.1.2.7 case c). Type: condition",
             "id_2": "E_T3502_Timeout->UE_Deregistered",
-            "description_2": "UE returns to deregistered state (potentially initiating PLMN search) after T3502 expires (Subclause 5.5.1.2.7 case c). Type: condition",
-            "cosine_similarity": 0.9999999403953552,
+            "description_2": "UE performs actions defined for T3502 expiry (potentially PLMN selection) and remains in a deregistered state. Type: condition",
+            "cosine_similarity": 0.8429011702537537,
             "valid": true
         },
         {
             "id_1": "UE_Attempting_Initial_Registration->E_Failure_UE",
             "description_1": "Triggered by various UE-side failures like lower layer issues, transmission failures, or other abnormal cases during the attempt (Subclause 5.5.1.2.7 cases e, k, n). Type: trigger",
             "id_2": "UE_Attempting_Initial_Registration->E_Failure_UE",
-            "description_2": "Triggered by various UE-side failures like lower layer issues, transmission failures, or other abnormal cases during the attempt (Subclause 5.5.1.2.7 cases e, k, n). Type: trigger",
-            "cosine_similarity": 1.0000003576278687,
+            "description_2": "Triggered by various UE-internal or lower-layer failures during the registration attempt. Type: trigger",
+            "cosine_similarity": 0.8130066394805908,
             "valid": true
         },
         {
             "id_1": "E_Failure_UE->UE_Deregistered",
             "description_1": "UE transitions back to a deregistered state following a failure during the registration attempt, potentially after incrementing attempt counter (Subclause 5.5.1.2.7 cases c, d, e). Type: condition",
             "id_2": "E_Failure_UE->UE_Deregistered",
-            "description_2": "UE transitions back to a deregistered state following a failure during the registration attempt, potentially after incrementing attempt counter (Subclause 5.5.1.2.7 cases c, d, e). Type: condition",
-            "cosine_similarity": 1.0,
+            "description_2": "UE aborts the registration procedure and transitions to a deregistered state (potentially LIMITED-SERVICE or PLMN-SEARCH) following a UE-internal or lower-layer failure. Type: condition",
+            "cosine_similarity": 0.7467886209487915,
             "valid": true
         },
         {
             "id_1": "UE_Sending_RegComplete->E_Failure_UE",
             "description_1": "Triggered by transmission failure of the REGISTRATION COMPLETE message (Subclause 5.5.1.2.7 case j). Type: trigger",
             "id_2": "UE_Sending_RegComplete->E_Failure_UE",
-            "description_2": "Triggered by transmission failure of the REGISTRATION COMPLETE message (Subclause 5.5.1.2.7 case j). Type: trigger",
-            "cosine_similarity": 0.9999998211860657,
+            "description_2": "Triggered by transmission failure of the REGISTRATION COMPLETE message indicated by lower layers. Type: trigger",
+            "cosine_similarity": 0.884053111076355,
             "valid": true
         },
         {
             "id_1": "E_Failure_UE->UE_Sending_RegComplete",
             "description_1": "UE may return to the state of sending REGISTRATION COMPLETE to retry transmission after failure (implementation specific) (Subclause 5.5.1.2.7 case j). Type: condition",
             "id_2": "E_Failure_UE->UE_Sending_RegComplete",
-            "description_2": "UE may return to the state of sending REGISTRATION COMPLETE to retry transmission after failure (implementation specific) (Subclause 5.5.1.2.7 case j). Type: condition",
-            "cosine_similarity": 1.0000001192092896,
-            "valid": true
-        },
-        {
-            "id_1": "E_Failure_UE->E_TAI_Changed",
-            "description_1": "Condition where failure to send REGISTRATION COMPLETE coincides with TAI changing out of the assigned list (Subclause 5.5.1.2.7 case i). Type: condition",
-            "id_2": "E_Failure_UE->E_TAI_Changed",
-            "description_2": "Condition where failure to send REGISTRATION COMPLETE coincides with TAI changing out of the assigned list (Subclause 5.5.1.2.7 case i). Type: condition",
-            "cosine_similarity": 1.000000238418579,
+            "description_2": "UE attempts to resend REGISTRATION COMPLETE after a transmission failure. Type: condition",
+            "cosine_similarity": 0.8179936408996582,
             "valid": true
         },
         {
             "id_1": "E_TAI_Changed->UE_Deregistered",
             "description_1": "UE aborts initial registration and transitions towards deregistered state to initiate mobility registration update due to TAI change during REG COMPLETE failure (Subclause 5.5.1.2.7 case i). Type: condition",
             "id_2": "E_TAI_Changed->UE_Deregistered",
-            "description_2": "UE aborts initial registration and transitions towards deregistered state to initiate mobility registration update due to TAI change during REG COMPLETE failure (Subclause 5.5.1.2.7 case i). Type: condition",
-            "cosine_similarity": 1.000000238418579,
-            "valid": true
-        },
-        {
-            "id_1": "AMF_Waiting_Registration_Complete->E_T3550_Timeout_Retry",
-            "description_1": "Triggered upon T3550 timeout when the retransmission counter is less than 4 (Subclause 5.5.1.2.8 case c). Type: trigger",
-            "id_2": "AMF_Waiting_Registration_Complete->E_T3550_Timeout_Retry",
-            "description_2": "Triggered upon T3550 timeout when the retransmission counter is less than 4 (Subclause 5.5.1.2.8 case c). Type: trigger",
-            "cosine_similarity": 0.9999999403953552,
+            "description_2": "UE aborts initial registration procedure and initiates mobility registration update due to TAI change after REGISTRATION COMPLETE transmission failure. Type: condition",
+            "cosine_similarity": 0.8776876926422119,
             "valid": true
         },
         {
             "id_1": "E_T3550_Timeout_Retry->AMF_Waiting_Registration_Complete",
             "description_1": "AMF retransmits REGISTRATION ACCEPT, restarts T3550, and remains in the waiting state (Subclause 5.5.1.2.8 case c). Type: condition",
             "id_2": "E_T3550_Timeout_Retry->AMF_Waiting_Registration_Complete",
-            "description_2": "AMF retransmits REGISTRATION ACCEPT, restarts T3550, and remains in the waiting state (Subclause 5.5.1.2.8 case c). Type: condition",
-            "cosine_similarity": 0.9999999403953552,
-            "valid": true
-        },
-        {
-            "id_1": "AMF_Waiting_Registration_Complete->E_T3550_Timeout_Max",
-            "description_1": "Triggered upon the fifth expiry of timer T3550 (max retransmissions reached) (Subclause 5.5.1.2.8 case c). Type: trigger",
-            "id_2": "AMF_Waiting_Registration_Complete->E_T3550_Timeout_Max",
-            "description_2": "Triggered upon the fifth expiry of timer T3550 (max retransmissions reached) (Subclause 5.5.1.2.8 case c). Type: trigger",
-            "cosine_similarity": 1.0,
+            "description_2": "AMF retransmits REGISTRATION ACCEPT message, resets and restarts timer T3550, and returns to waiting state. Type: condition",
+            "cosine_similarity": 0.9445738792419434,
             "valid": true
         },
         {
             "id_1": "E_T3550_Timeout_Max->AMF_Registered",
             "description_1": "AMF aborts waiting for REGISTRATION COMPLETE and transitions to registered state after T3550 max timeouts (Subclause 5.5.1.2.8 case c). Type: condition",
             "id_2": "E_T3550_Timeout_Max->AMF_Registered",
-            "description_2": "AMF aborts waiting for REGISTRATION COMPLETE and transitions to registered state after T3550 max timeouts (Subclause 5.5.1.2.8 case c). Type: condition",
-            "cosine_similarity": 0.9999998807907104,
+            "description_2": "AMF aborts the registration procedure and transitions to registered state (5GMM-REGISTERED) after T3550 max timeouts. Type: condition",
+            "cosine_similarity": 0.9389779567718506,
             "valid": true
         },
         {
             "id_1": "AMF_Waiting_Registration_Complete->E_Failure_AMF",
             "description_1": "Triggered by AMF-side failures (e.g., lower layer failure) while waiting for REGISTRATION COMPLETE (Subclause 5.5.1.2.8 case a). Type: trigger",
             "id_2": "AMF_Waiting_Registration_Complete->E_Failure_AMF",
-            "description_2": "Triggered by AMF-side failures (e.g., lower layer failure) while waiting for REGISTRATION COMPLETE (Subclause 5.5.1.2.8 case a). Type: trigger",
-            "cosine_similarity": 0.9999995231628418,
+            "description_2": "Triggered by a lower layer failure at the AMF while waiting for REGISTRATION COMPLETE. Type: trigger",
+            "cosine_similarity": 0.9225063920021057,
             "valid": true
         },
         {
             "id_1": "E_Failure_AMF->AMF_Registered",
             "description_1": "AMF aborts waiting for REGISTRATION COMPLETE and transitions to registered state following a failure (Subclause 5.5.1.2.8 case a). Type: condition",
             "id_2": "E_Failure_AMF->AMF_Registered",
-            "description_2": "AMF aborts waiting for REGISTRATION COMPLETE and transitions to registered state following a failure (Subclause 5.5.1.2.8 case a). Type: condition",
-            "cosine_similarity": 1.0000001192092896,
+            "description_2": "AMF locally aborts the registration procedure and transitions to registered state (5GMM-REGISTERED) following a lower layer failure. Type: condition",
+            "cosine_similarity": 0.822504997253418,
             "valid": true
         }
     ],
-    "unmatched_nodes": [],
-    "unmatched_edges": []
+    "unmatched_nodes": [
+        {
+            "id": "UE_Attempting_Initial_Registration",
+            "description": "UE has sent a REGISTRATION REQUEST for initial registration and is waiting for a response or performing common procedures (e.g., authentication, security). Type: state",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "UE_Authenticating_Securing",
+            "description": "UE is actively involved in authentication or security mode control procedures initiated by the AMF. Type: state",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "UE_Registered",
+            "description": "UE has successfully completed the initial registration procedure and is in 5GMM-REGISTERED state. Type: state",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "UE_Retry_After_Rejection",
+            "description": "UE received a REGISTRATION REJECT with a cause requiring a backoff period (T3346) before retrying registration. Type: state",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "UE_Waiting_T3502",
+            "description": "UE is waiting for timer T3502 to expire after reaching the maximum number of registration attempts (T3510 timeout, attempt = 5). Type: state",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "E_T3502_Timeout",
+            "description": "Timer T3502 expires at the UE. Type: event",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "E_T3550_Timeout_Retry",
+            "description": "Timer T3550 expires at the AMF, and the retransmission counter is less than 4. Type: event",
+            "dataset": "Dataset 1"
+        }
+    ],
+    "unmatched_edges": [
+        {
+            "id": "AMF_Authenticating_Securing->E_SECURITY_MODE_COMMAND",
+            "description": "Triggered when the AMF sends a SECURITY MODE COMMAND message to the UE as part of the security procedure (Subclause 5.5.1.2.3). Type: trigger",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "AMF_Authenticating_Securing->E_REGISTRATION_ACCEPT_ReqComplete",
+            "description": "Triggered when the AMF accepts the registration and sends REGISTRATION ACCEPT requiring a REGISTRATION COMPLETE response (e.g., due to GUTI reallocation, SOR, ODB, CAG list update, PEIPS, UE Radio Cap ID, Truncated S-TMSI config, UUAA pending, NSSAI update, NSAG info, Alternative NSSAI, On-demand NSSAI) (Subclause 5.5.1.2.4). Type: trigger",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "UE_Attempting_Initial_Registration->E_REGISTRATION_ACCEPT_ReqComplete",
+            "description": "Triggered when the UE receives a REGISTRATION ACCEPT message that requires a REGISTRATION COMPLETE response (e.g., due to GUTI, SOR, ODB, CAG list, PEIPS, UE Radio Cap ID, Truncated S-TMSI config, UUAA pending, NSSAI update, NSAG info, Alternative NSSAI, On-demand NSSAI) (Subclause 5.5.1.2.4). Type: trigger",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "E_REGISTRATION_ACCEPT_ReqComplete->UE_Sending_RegComplete",
+            "description": "UE transitions to sending REGISTRATION COMPLETE upon receiving a REGISTRATION ACCEPT that requires completion (Subclause 5.5.1.2.4). Type: condition",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "E_REGISTRATION_ACCEPT_NoComplete->UE_Registered",
+            "description": "UE transitions to 5GMM-REGISTERED state upon receiving a REGISTRATION ACCEPT that does not require completion (Subclause 5.5.1.2.4). Type: condition",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "E_REGISTRATION_REJECT->UE_Retry_After_Rejection",
+            "description": "UE transitions to retry state upon receiving REGISTRATION REJECT with 5GMM cause #22 (Congestion) and a valid T3346 value (Subclause 5.5.1.2.5). Type: condition",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "E_REGISTRATION_REJECT->UE_Deregistered_PLMN_Search",
+            "description": "UE transitions to PLMN search state upon receiving REGISTRATION REJECT with specific causes requiring PLMN/SNPN reselection (e.g., #11, #73, #74, #75, #76, #78, #80) (Subclause 5.5.1.2.5). Type: condition",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "E_REGISTRATION_REJECT->UE_Deregistered",
+            "description": "UE transitions to a deregistered sub-state (e.g., DEREGISTERED.NO-SUPI, DEREGISTERED.LIMITED-SERVICE, DEREGISTERED.ATTEMPTING-REGISTRATION) upon receiving REGISTRATION REJECT with causes not leading to immediate retry or PLMN search (e.g., #3, #6, #7, #10, #12, #13, #15, #27, #31, #62, #72, #77, #79, #81, #82) (Subclause 5.5.1.2.5). Type: condition",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "UE_Retry_After_Rejection->E_T3346_Timeout",
+            "description": "Triggered when the backoff timer T3346 expires (Subclause 5.5.1.2.5, Cause #22). Type: trigger",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "UE_Attempting_Initial_Registration->E_T3510_Timeout_Retry",
+            "description": "Triggered upon T3510 timeout when the registration attempt counter is less than 5 (Subclause 5.5.1.2.7 case c). Type: trigger",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "E_T3510_Timeout_Retry->UE_Waiting_T3511",
+            "description": "UE transitions to waiting for T3511 after T3510 timeout (retry case), starting timer T3511 (Subclause 5.5.1.2.7 case c). Type: condition",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "UE_Attempting_Initial_Registration->E_T3510_Timeout_Max",
+            "description": "Triggered upon T3510 timeout when the registration attempt counter reaches 5 (Subclause 5.5.1.2.7 case c). Type: trigger",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "E_T3510_Timeout_Max->UE_Waiting_T3502",
+            "description": "UE transitions to waiting for T3502 after T3510 timeout (max attempts reached), starting timer T3502 (Subclause 5.5.1.2.7 case c). Type: condition",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "E_Failure_UE->E_TAI_Changed",
+            "description": "Condition where failure to send REGISTRATION COMPLETE coincides with TAI changing out of the assigned list (Subclause 5.5.1.2.7 case i). Type: condition",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "AMF_Waiting_Registration_Complete->E_T3550_Timeout_Retry",
+            "description": "Triggered upon T3550 timeout when the retransmission counter is less than 4 (Subclause 5.5.1.2.8 case c). Type: trigger",
+            "dataset": "Dataset 1"
+        },
+        {
+            "id": "AMF_Waiting_Registration_Complete->E_T3550_Timeout_Max",
+            "description": "Triggered upon the fifth expiry of timer T3550 (max retransmissions reached) (Subclause 5.5.1.2.8 case c). Type: trigger",
+            "dataset": "Dataset 1"
+        }
+    ]
 }

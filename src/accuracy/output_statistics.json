@@ -1,38 +1,43 @@
 {
     "summary": {
         "nodes": {
-            "min": 10,
-            "max": 16,
-            "mean": 12.5,
-            "stdev": 2.6457513110645907
+            "min": 25,
+            "max": 34,
+            "mean": 32.2,
+            "stdev": 4.024922359499621
         },
         "edges": {
-            "min": 10,
-            "max": 22,
-            "mean": 15.25,
-            "stdev": 5.377421934967226
+            "min": 39,
+            "max": 55,
+            "mean": 51.8,
+            "stdev": 7.155417527999327
         }
     },
     "datasets": [
         {
-            "file": "data/version_1/step3.json",
-            "nodes": 16,
-            "edges": 17
+            "file": "data/consolidated_output/run1_step4.json",
+            "nodes": 34,
+            "edges": 55
         },
         {
-            "file": "data/version_2/v02-step3.json",
-            "nodes": 13,
-            "edges": 22
+            "file": "data/consolidated_output/run2_step4.json",
+            "nodes": 34,
+            "edges": 55
         },
         {
-            "file": "data/version_3/step3-v3.json",
-            "nodes": 11,
-            "edges": 12
+            "file": "data/consolidated_output/run3_step4.json",
+            "nodes": 34,
+            "edges": 55
         },
         {
-            "file": "data/version_4/step3-v4.json",
-            "nodes": 10,
-            "edges": 10
+            "file": "data/consolidated_output/run4_step4.json",
+            "nodes": 25,
+            "edges": 39
+        },
+        {
+            "file": "data/consolidated_output/run5_step4.json",
+            "nodes": 34,
+            "edges": 55
         }
     ]
 }
