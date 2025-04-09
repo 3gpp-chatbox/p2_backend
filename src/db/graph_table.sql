@@ -6,5 +6,5 @@ CREATE TABLE graph (
     document_id UUID REFERENCES document(id) ON DELETE CASCADE,
     graph JSONB NOT NULL,
     accuracy FLOAT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
+    extracted_at TIMESTAMP DEFAULT NOW()
 );

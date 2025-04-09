@@ -43,7 +43,8 @@ def store_graph(
     name: str, 
     document_name: str, 
     graph_data: Dict, 
-    accuracy: float
+    accuracy: float,
+    db: DatabaseHandler
 ) -> Optional[UUID]:
     """
     Store a graph in the database.
@@ -53,6 +54,7 @@ def store_graph(
         document_name: Name of the document this graph belongs to
         graph_data: Graph data as a dictionary
         accuracy: Accuracy score of the graph
+        db: Database handler instance for database operations
 
     Returns:
         UUID of the stored graph if successful, None otherwise
@@ -61,9 +63,6 @@ def store_graph(
         Exception: If database operation fails
     """
     try:
-        # Initialize database handler
-        db = DatabaseHandler()
-        
         # Get document_id from document name
         document_id = get_document_id_by_name(db, document_name)
         if not document_id:
@@ -110,6 +109,8 @@ def store_graph(
 # Example usage
 if __name__ == "__main__":
     try:
+        # Initialize database handler
+        db = DatabaseHandler()
         # dummy graph
         sample_graph = {
             "nodes": [
@@ -122,12 +123,13 @@ if __name__ == "__main__":
         }
 
         # Store the graph
-        document_name = "Sample Document 1"  # This should be an existing document name
+        document_name = "Sample Document 2"  # This should be an existing document name
         graph_id = store_graph(
             name="Sample Graph",
             document_name=document_name,
             graph_data=sample_graph,
             accuracy=0.95,
+            db=db
         )
         
         if graph_id:
