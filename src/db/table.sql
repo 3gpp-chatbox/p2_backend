@@ -41,3 +41,4 @@ CREATE TABLE section (
 -- Indexes for optimization
 CREATE INDEX idx_section_document_id ON section(document_id);
 CREATE INDEX idx_section_path ON section USING GIST (path);
+
