@@ -10,4 +10,4 @@ ruff # For manual linting/formatting/sorting
 numpy # For numerical operations
 sentence-transformers # For sentence embeddings
 scikit-learn # For machine learning operations
-pydantic # For data validation
+
