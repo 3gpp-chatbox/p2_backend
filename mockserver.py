@@ -14,7 +14,12 @@ app = FastAPI()
 # Enable CORS - allow both localhost and 127.0.0.1
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -24,7 +29,7 @@ app.add_middleware(
 SCRIPT_DIR = Path(__file__).parent.resolve()
 
 # Paths - using absolute paths based on script location
-MOCK_DATA_PATH = SCRIPT_DIR / "data" / "mock_pydantic" / "mockstep3.json"
+MOCK_DATA_PATH = SCRIPT_DIR / "data" / "mock_pydantic" / "mockstep4.json"
 EDITED_DATA_PATH = (
     SCRIPT_DIR.parent / "frontend" / "src" / "assets" / "edited_mock.json"
 )
