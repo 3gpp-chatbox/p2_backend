@@ -7,9 +7,8 @@ import numpy as np
 from docx import Document
 
 sys.path.append(str(Path(__file__).parents[2].resolve()))
-from src.retrieval.pre_processor import extract_paragraphs, extract_toc
-
 from src.lib.logger import get_logger
+from src.retrieval.pre_processor import extract_paragraphs, extract_toc
 
 logger = get_logger(__name__)
 

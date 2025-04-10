@@ -11,4 +11,4 @@ numpy # For numerical operations
 pydantic # For data validation
 sentence-transformers # For sentence embeddings
 scikit-learn # For machine learning operations
-
+httpx  # Required by TestClient

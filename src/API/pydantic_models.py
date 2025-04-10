@@ -11,15 +11,11 @@ class ProcedureListItem(BaseModel):
     Attributes:
         id: UUID of the procedure
         name: Name of the procedure
-        document_id: Reference to the source document
-        created_at: Timestamp of creation
     """
     id: UUID4
     name: str
-    document_id: UUID4
-    created_at: datetime
 
-class ProcedureGraph(BaseModel):  # Note: Fixed the class name to follow PascalCase convention
+class ProcedureItem(BaseModel):  
     """Procedure graph with accuracy.
     
     Attributes:
@@ -33,7 +29,7 @@ class ProcedureGraph(BaseModel):  # Note: Fixed the class name to follow PascalC
     id: UUID4
     name: str
     document_id: UUID4
-    graph: Dict[str, Any]  # For JSONB data
+    graph: Dict[str, Any]  
     accuracy: float
     created_at: datetime
     
