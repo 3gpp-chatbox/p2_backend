@@ -5,7 +5,7 @@ from pathlib import Path
 from uuid import UUID
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[3].resolve()))
-from src.API.models import ProcedureListItem, ProcedureGraph
+from API.models.pydantic_models import ProcedureListItem, ProcedureGraph
 
 router = APIRouter()
 

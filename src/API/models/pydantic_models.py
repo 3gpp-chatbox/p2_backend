@@ -1,3 +1,6 @@
+'''
+Defines API response/request models.
+'''
 from pydantic import BaseModel, UUID4
 from typing import Dict, Any
 from datetime import datetime
