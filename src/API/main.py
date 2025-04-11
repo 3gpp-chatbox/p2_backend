@@ -7,7 +7,8 @@ from fastapi import FastAPI
 sys.path.append(str(Path(__file__).parents[2].resolve()))
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.API.routes.fetch_routes import router
+from src.API.routes.fetch_routes import router as fetch_router
+from src.API.routes.insert_routes import router as insert_router
 
 app = FastAPI()
 
@@ -20,5 +21,6 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
-# Include the router
-app.include_router(router, prefix="/procedures")
+# Include the routers
+app.include_router(fetch_router, prefix="/procedures")
+app.include_router(insert_router, prefix="/procedures")

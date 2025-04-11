@@ -2,7 +2,7 @@
 Defines API response/request models.
 '''
 from pydantic import BaseModel, UUID4
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from datetime import datetime
 
 class ProcedureListItem(BaseModel):
@@ -21,17 +21,33 @@ class ProcedureItem(BaseModel):
     Attributes:
         id: UUID of the procedure
         name: Name of the procedure
-        document_id: Reference to the source document
-        graph: JSON representation of the procedure graph
+        document_id: UUID of the source document
+        document_name: Name of the source document
+        original_graph: JSON representation of the original procedure graph
+        edited_graph: Optional JSON representation of the edited procedure graph
         accuracy: Confidence score of the procedure
-        created_at: Timestamp of creation
+        extracted_at: Timestamp of extraction
+        last_edit_at: Optional timestamp of last edit
+        status: Status of the graph ('original' or 'edited')
     """
     id: UUID4
     name: str
     document_id: UUID4
-    graph: Dict[str, Any]  
+    document_name: str
+    original_graph: Dict[str, Any]
+    edited_graph: Optional[Dict[str, Any]] = None
     accuracy: float
-    created_at: datetime
+    extracted_at: datetime
+    last_edit_at: Optional[datetime] = None
+    status: str
     
-
+class EditedGraph(BaseModel):
+    """model for edited graph.
+    
+    Attributes:
+        graph_id: UUID of the edited graph
+        edited_graph: The edited graph data in JSON format
+    """
+    graph_id: UUID4
+    edited_graph: Dict[str, Any]
 
