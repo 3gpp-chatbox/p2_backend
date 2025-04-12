@@ -29,7 +29,7 @@ async def get_procedures():
             query = """
             SELECT id, name 
             FROM graph 
-            ORDER BY created_at DESC
+            ORDER BY extracted_at DESC
             """
             results = db.execute_query(query)
 
