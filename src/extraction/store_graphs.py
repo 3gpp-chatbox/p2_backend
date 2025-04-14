@@ -1,8 +1,8 @@
+import json
 import sys
 from pathlib import Path
 from typing import Dict, Optional
 from uuid import UUID
-import json
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
@@ -45,8 +45,6 @@ def store_graph(
     graph_data: Dict,
     accuracy: float,
     db: DatabaseHandler,
-    status: str = 'original',
-    edited_graph: Optional[Dict] = None
 ) -> Optional[UUID]:
     """
     Store a graph in the database.
@@ -57,8 +55,6 @@ def store_graph(
         graph_data: Graph data as a dictionary
         accuracy: Accuracy score of the graph
         db: Database handler instance for database operations
-        status: Status of the graph ('original' or 'edited'), defaults to 'original'
-        edited_graph: Optional edited version of the graph. If provided, status will be set to 'edited'
 
     Returns:
         UUID of the stored graph if successful, None otherwise
@@ -67,14 +63,6 @@ def store_graph(
         Exception: If database operation fails
     """
     try:
-        # If edited_graph is provided, force status to 'edited'
-        if edited_graph is not None:
-            status = 'edited'
-        # Validate status
-        elif status not in ['original', 'edited']:
-            logger.error(f"Invalid status: {status}. Must be 'original' or 'edited'")
-            return None
-            
         # Get document_id from document name
         document_id = get_document_id_by_name(db, document_name)
         if not document_id:
@@ -95,37 +83,16 @@ def store_graph(
             )
             return result[0]["id"]
 
-        # Convert Python dicts to JSON strings for PostgreSQL
+        # Convert graph data to JSON
         graph_json = json.dumps(graph_data)
-        edited_json = json.dumps(edited_graph) if edited_graph is not None else None
-        
+
         # Insert graph data into the database
         query = """
-        INSERT INTO graph (
-            name, 
-            document_id, 
-            original_graph, 
-            edited_graph, 
-            accuracy, 
-            status,
-            last_edit_at
-        )
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO graph (name, document_id, graph, accuracy)
+        VALUES (%s, %s, %s, %s)
         RETURNING id
         """
-        
-        # Set last_edit_at to NOW() if edited_graph is provided, otherwise NULL
-        last_edit_at = "NOW()" if edited_graph is not None else None
-        
-        parameters = (
-            name, 
-            document_id, 
-            graph_json,      # Now a JSON string
-            edited_json,     # Now a JSON string or None
-            accuracy, 
-            status,
-            last_edit_at
-        )
+        parameters = (name, document_id, graph_json, accuracy)
 
         with db.transaction():
             result = db.execute_query(query, parameters)
@@ -158,7 +125,7 @@ if __name__ == "__main__":
         }
 
         # Store the graph
-        document_name = "Sample Document 1"  # This should be an existing document name
+        document_name = "Sample Document 2"  # This should be an existing document name
         graph_id = store_graph(
             name="Sample Graph",
             document_name=document_name,
