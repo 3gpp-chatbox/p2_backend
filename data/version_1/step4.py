@@ -223,6 +223,6 @@ section_name = "Registration procedure for initial registration"
 procedural_info = process_procedure(section_name)
 
 if procedural_info:
-    save_to_json(procedural_info, "data/consolidated_output/run5_step4.json")
+    save_to_json(procedural_info, "data/consolidated_output/run8_step4.json")
 else:
     print("Failed to extract")

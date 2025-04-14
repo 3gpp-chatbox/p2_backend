@@ -9,6 +9,9 @@ version_files = [
     "data/consolidated_output/run3_step4.json",
     "data/consolidated_output/run4_step4.json",
     "data/consolidated_output/run5_step4.json",
+    "data/consolidated_output/run6_step4.json",
+    "data/consolidated_output/run7_step4.json",
+    "data/consolidated_output/run8_step4.json",
 ]
 
 # Extract node and edge counts

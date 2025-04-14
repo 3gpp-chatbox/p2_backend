@@ -275,7 +275,7 @@ if __name__ == "__main__":
     data_dir = "data"
     dataset_files = {
         "v1": os.path.join(data_dir, "consolidated_output/run1_step4.json"),
-        "v2": os.path.join(data_dir, "consolidated_output/run5_step4.json"),
+        "v2": os.path.join(data_dir, "consolidated_output/run8_step4.json"),
     }
 
     datasets = {key: load_dataset(path) for key, path in dataset_files.items()}

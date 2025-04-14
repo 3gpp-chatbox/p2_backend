@@ -2,82 +2,177 @@
 {
   "corrections": [
     {
-      "type": "missing_state",
-      "state": "AMF_Authenticating_Securing",
-      "description": "The graph is missing states representing the mandatory 5GMM common procedures (Authentication, Security Mode Control) initiated by the AMF after receiving REGISTRATION REQUEST.",
-      "suggested_location": "Between 'AMF_Processing_Initial_Registration' and the sending of 'REGISTRATION ACCEPT' or 'REGISTRATION REJECT'.",
-      "supporting_text_snippet": "5.5.1.2.3 5GMM common procedure initiation\nThe network may initiate 5GMM common procedures, e.g. the identification, authentication and security procedures during the registration procedure, depending on the information received in the REGISTRATION REQUEST message."
-    },
-    {
-      "type": "missing_state",
-      "state": "UE_Authenticating_Securing",
-      "description": "The graph is missing states representing the UE's involvement in the 5GMM common procedures (Authentication, Security Mode Control) initiated by the AMF.",
-      "suggested_location": "Within the 'UE_Attempting_Initial_Registration' phase, triggered by network commands (e.g., AUTHENTICATION REQUEST, SECURITY MODE COMMAND).",
-      "supporting_text_snippet": "5.5.1.2.3 5GMM common procedure initiation\nThe network may initiate 5GMM common procedures, e.g. the identification, authentication and security procedures during the registration procedure..."
+      "type": "incorrect_edge_type",
+      "edge": "UE_Sends_REGISTRATION_REQUEST -> UE_Attempting_Registration",
+      "current_type": "condition",
+      "suggested_type": "trigger",
+      "description": "Sending the REGISTRATION REQUEST message causes the UE to enter the 'Attempting Registration' state and start timer T3510. The edge type should be 'trigger'.",
+      "supporting_text_snippet": "The UE initiates the registration procedure for initial registration by sending a REGISTRATION REQUEST message to the AMF, starting timer T3510."
     },
     {
       "type": "missing_event",
-      "event": "E_AUTHENTICATION_REQUEST",
-      "description": "The event representing the AMF sending an AUTHENTICATION REQUEST message to the UE during common procedures is missing.",
-      "suggested_location": "Triggered from 'AMF_Authenticating_Securing' state.",
-      "supporting_text_snippet": "5.5.1.2.3 5GMM common procedure initiation\nThe network may initiate 5GMM common procedures, e.g. the ... authentication ... procedures..."
+      "event": "UE_Starts_T3510",
+      "description": "The event representing the UE starting timer T3510 upon sending the REGISTRATION REQUEST is missing.",
+      "suggested_location": "Triggered by 'UE_Sends_REGISTRATION_REQUEST'.",
+      "supporting_text_snippet": "The UE initiates the registration procedure for initial registration by sending a REGISTRATION REQUEST message to the AMF, starting timer T3510."
     },
     {
-      "type": "missing_event",
-      "event": "E_SECURITY_MODE_COMMAND",
-      "description": "The event representing the AMF sending a SECURITY MODE COMMAND message to the UE during common procedures is missing.",
-      "suggested_location": "Triggered from 'AMF_Authenticating_Securing' state, typically after successful authentication.",
-      "supporting_text_snippet": "5.5.1.2.3 5GMM common procedure initiation\nThe network may initiate 5GMM common procedures, e.g. the ... security procedures..."
+      "type": "incorrect_edge_type",
+      "edge": "AMF_Receives_REGISTRATION_REQUEST -> AMF_Processing_Registration",
+      "current_type": "condition",
+      "suggested_type": "trigger",
+      "description": "Receiving the REGISTRATION REQUEST message causes the AMF to enter the 'Processing Registration' state. The edge type should be 'trigger'.",
+      "supporting_text_snippet": "The network may initiate 5GMM common procedures... depending on the information received in the REGISTRATION REQUEST message."
+    },
+    {
+      "type": "missing_state",
+      "state": "AMF_Performing_Common_Procedures",
+      "description": "The graph jumps from 'AMF_Processing_Registration' to sending ACCEPT/REJECT. It misses intermediate states/events representing potential common procedures like Authentication and Security Mode Control.",
+      "suggested_location": "Between 'AMF_Processing_Registration' and 'AMF_Sends_REGISTRATION_ACCEPT'/'AMF_Sends_REGISTRATION_REJECT'.",
+      "supporting_text_snippet": "The network may initiate 5GMM common procedures, e.g. the identification, authentication and security procedures during the registration procedure..."
     },
     {
       "type": "missing_transition",
-      "from": "UE_Registration_Rejected",
-      "event": "Specific_Reject_Cause_Handling",
-      "to": "Various_States",
-      "description": "The graph incorrectly maps all REGISTRATION REJECT events to a single 'UE_Registration_Rejected' state. The spec defines different UE behaviors (e.g., retry with T3346 for cause #22, add to forbidden list and PLMN search for cause #11, disable N1 mode for cause #27) based on the 5GMM cause value.",
-      "supporting_text_snippet": "5.5.1.2.5 Initial registration not accepted by the network\nFurthermore, the UE shall take the following actions depending on the 5GMM cause value received in the REGISTRATION REJECT message. \n#11 (PLMN not allowed). ... store the PLMN identity in the forbidden PLMN list ... enter state 5GMM-DEREGISTERED.PLMN-SEARCH...\n#22 (Congestion). ... start timer T3346 ... The initial registration procedure is started if still needed when timer T3346 expires...\n#27 (N1 mode not allowed). ... The UE shall disable the N1 mode capability..."
+      "from": "AMF_Processing_Registration",
+      "event": "Common_Procedure_Initiation",
+      "to": "AMF_Performing_Common_Procedures",
+      "description": "Transition missing from AMF processing the request to initiating common procedures like authentication or security.",
+      "supporting_text_snippet": "The network may initiate 5GMM common procedures, e.g. the identification, authentication and security procedures during the registration procedure..."
     },
     {
-      "type": "missing_state",
-      "state": "UE_Retry_After_Rejection",
-      "description": "States representing UE retry mechanisms after specific rejection causes (e.g., #22 Congestion with T3346) are missing. All rejections currently lead to a terminal 'UE_Registration_Rejected' state.",
-      "suggested_location": "Following 'E_REGISTRATION_REJECT' under specific cause conditions.",
-      "supporting_text_snippet": "5.5.1.2.5 Initial registration not accepted by the network\n#22 (Congestion). ... The UE shall start timer T3346 ... The initial registration procedure is started if still needed when timer T3346 expires or is stopped."
+      "type": "incorrect_state_label",
+      "state": "AMF_Waiting_For_Registration_Complete",
+      "suggested_state": "AMF_5GMM_COMMON_PROCEDURE_INITIATED",
+      "description": "The state where the AMF waits for REGISTRATION COMPLETE after sending REGISTRATION ACCEPT (and starting T3550) is officially named '5GMM-COMMON-PROCEDURE-INITIATED' in the specification.",
+      "supporting_text_snippet": "If a 5G-GUTI ... is included in the REGISTRATION ACCEPT message, the AMF shall start timer T3550 and enter state 5GMM-COMMON-PROCEDURE-INITIATED..."
     },
     {
-      "type": "missing_state",
-      "state": "UE_Deregistered_PLMN_Search",
-      "description": "The state '5GMM-DEREGISTERED.PLMN-SEARCH', which the UE enters after certain rejection causes (e.g., #11, #76), is missing. It's currently abstracted into 'UE_Registration_Rejected'.",
-      "suggested_location": "As a possible outcome state after 'E_REGISTRATION_REJECT' depending on the cause code.",
-      "supporting_text_snippet": "5.5.1.2.5 Initial registration not accepted by the network\n#11 (PLMN not allowed). ... enter state 5GMM-DEREGISTERED.PLMN-SEARCH and perform a PLMN selection..."
-    },
-    {
-      "type": "incorrect_transition",
-      "edge": "E_T3510_Timeout_Retry -> UE_Registration_Rejected",
-      "description": "The transition from 'E_T3510_Timeout_Retry' should not lead directly to 'UE_Registration_Rejected'. According to spec abnormal case c), T3510 timeout (if attempt counter < 5) should lead to starting T3511 and re-attempting registration upon T3511 expiry.",
-      "suggested_transition": "E_T3510_Timeout_Retry should lead back to a state indicating waiting for T3511 expiry before re-attempting registration (e.g., back to UE_Attempting_Initial_Registration after T3511 logic).",
-      "supporting_text_snippet": "5.5.1.2.7 Abnormal cases in the UE\nc) T3510 timeout. ... If the registration attempt counter is less than 5: - ... timer T3511 is started and the state is changed to 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION. When timer T3511 expires the registration procedure for initial registration shall be restarted, if still required."
+      "type": "incorrect_edge_type",
+      "edge": "AMF_Sends_REGISTRATION_ACCEPT -> AMF_Waiting_For_Registration_Complete",
+      "current_type": "condition",
+      "suggested_type": "trigger",
+      "description": "Sending the REGISTRATION ACCEPT (containing specific IEs requiring acknowledgement) causes the AMF to start T3550 and enter the waiting state ('5GMM-COMMON-PROCEDURE-INITIATED'). The edge type should be 'trigger'.",
+      "supporting_text_snippet": "If a 5G-GUTI ... is included in the REGISTRATION ACCEPT message, the AMF shall start timer T3550 and enter state 5GMM-COMMON-PROCEDURE-INITIATED..."
     },
     {
       "type": "missing_event",
-      "event": "E_T3511_Timeout",
-      "description": "The timer T3511, started after T3510 expiry when retries are allowed, and its expiry event are missing from the graph.",
-      "suggested_location": "Triggered after T3510 expiry (when counter < 5), leading back to registration attempt.",
-      "supporting_text_snippet": "5.5.1.2.7 Abnormal cases in the UE\nc) T3510 timeout. ... timer T3511 is started ... When timer T3511 expires the registration procedure for initial registration shall be restarted..."
+      "event": "AMF_Starts_T3550",
+      "description": "The event representing the AMF starting timer T3550 upon sending REGISTRATION ACCEPT (if acknowledgement is required) is missing.",
+      "suggested_location": "Triggered by 'AMF_Sends_REGISTRATION_ACCEPT' under specific conditions.",
+      "supporting_text_snippet": "If a 5G-GUTI ... is included in the REGISTRATION ACCEPT message, the AMF shall start timer T3550..."
     },
     {
       "type": "incorrect_transition",
-      "edge": "E_Failure_UE -> UE_Registration_Rejected (from UE_Sending_RegComplete)",
-      "description": "A UE failure during the 'UE_Sending_RegComplete' state (i.e., transmission failure of REGISTRATION COMPLETE) should not necessarily lead to 'UE_Registration_Rejected'. Spec case 5.5.1.2.7 j) indicates UE implementation handles re-running (e.g., retransmission), and case i) handles TAI change leading to mobility update.",
-      "suggested_transition": "E_Failure_UE from UE_Sending_RegComplete should potentially loop back to UE_Sending_RegComplete (for retransmission) or trigger a different procedure (like mobility update if TAI changed).",
-      "supporting_text_snippet": "5.5.1.2.7 Abnormal cases in the UE\nj) Transmission failure of REGISTRATION COMPLETE message indication without change in the current TAI from lower layers. It is up to the UE implementation how to re-run the ongoing procedure.\ni) Transmission failure of REGISTRATION COMPLETE message indication with change in the current TAI. ... 2) otherwise, the registration procedure for initial registration shall be aborted and the registration procedure for mobility registration update shall be initiated."
+      "from": "AMF_Sends_REGISTRATION_ACCEPT",
+      "to": "AMF_5GMM_REGISTERED",
+      "description": "The AMF transitions to 'AMF_5GMM_REGISTERED' only after receiving REGISTRATION COMPLETE (if T3550 was started) or immediately after sending ACCEPT (if T3550 was not started). This direct transition from sending ACCEPT is only correct if COMPLETE is not expected.",
+      "supporting_text_snippet": "Upon receiving a REGISTRATION COMPLETE message, the AMF shall stop timer T3550 and change to state 5GMM-REGISTERED."
+    },
+    {
+      "type": "missing_condition",
+      "edge": "AMF_Sends_REGISTRATION_ACCEPT -> AMF_5GMM_REGISTERED",
+      "condition": "REGISTRATION_COMPLETE_Not_Expected",
+      "description": "The transition from sending ACCEPT to REGISTERED state should be conditional on REGISTRATION COMPLETE not being required (T3550 not started).",
+      "supporting_text_snippet": "If a 5G-GUTI ... [or other specific IEs] ... is included ... the AMF shall start timer T3550... [implies T3550 is not started otherwise, and COMPLETE is not expected]"
+    },
+    {
+      "type": "incorrect_edge_type",
+      "edge": "UE_Receives_REGISTRATION_ACCEPT -> UE_5GMM_REGISTERED",
+      "current_type": "condition",
+      "suggested_type": "trigger",
+      "description": "Receiving the REGISTRATION ACCEPT message causes the UE to enter the '5GMM-REGISTERED' state. The edge type should be 'trigger'.",
+      "supporting_text_snippet": "Upon receipt of the REGISTRATION ACCEPT message, the UE shall reset the registration attempt counter, enter state 5GMM-REGISTERED..."
+    },
+    {
+      "type": "incorrect_transition",
+      "from": "UE_Sends_REGISTRATION_COMPLETE",
+      "to": "UE_5GMM_REGISTERED",
+      "description": "Sending REGISTRATION COMPLETE does not change the UE state; the UE is already in 'UE_5GMM_REGISTERED' state when it decides to send it. This edge is incorrect.",
+      "supporting_text_snippet": "Upon receipt of the REGISTRATION ACCEPT message, the UE shall ... enter state 5GMM-REGISTERED... If the REGISTRATION ACCEPT message contains ... the UE shall return a REGISTRATION COMPLETE message..."
+    },
+    {
+      "type": "incorrect_edge_type",
+      "edge": "AMF_Receives_REGISTRATION_COMPLETE -> AMF_5GMM_REGISTERED",
+      "current_type": "condition",
+      "suggested_type": "trigger",
+      "description": "Receiving the REGISTRATION COMPLETE message causes the AMF to stop T3550 and enter the 'AMF_5GMM_REGISTERED' state. The edge type should be 'trigger'.",
+      "supporting_text_snippet": "Upon receiving a REGISTRATION COMPLETE message, the AMF shall stop timer T3550 and change to state 5GMM-REGISTERED."
+    },
+    {
+      "type": "incorrect_edge_type",
+      "edge": "AMF_Sends_REGISTRATION_REJECT -> AMF_Idle",
+      "current_type": "condition",
+      "suggested_type": "trigger",
+      "description": "Sending the REGISTRATION REJECT message causes the AMF to conclude the procedure for this UE and return to an idle state relative to this attempt. The edge type should be 'trigger'.",
+      "supporting_text_snippet": "If the initial registration request cannot be accepted by the network, the AMF shall send a REGISTRATION REJECT message..."
+    },
+    {
+      "type": "incorrect_edge_type",
+      "edge": "UE_Receives_REGISTRATION_REJECT -> UE_Deregistered_Rejected",
+      "current_type": "condition",
+      "suggested_type": "trigger",
+      "description": "Receiving the REGISTRATION REJECT message causes the UE to enter a specific DEREGISTERED sub-state based on the cause. The edge type should be 'trigger'.",
+      "supporting_text_snippet": "Furthermore, the UE shall take the following actions depending on the 5GMM cause value received in the REGISTRATION REJECT message."
+    },
+    {
+      "type": "incorrect_state_label",
+      "state": "UE_Deregistered_Rejected",
+      "suggested_state": "Various 5GMM-DEREGISTERED sub-states (e.g., PLMN-SEARCH, LIMITED-SERVICE, ATTEMPTING-REGISTRATION, NO-SUPI)",
+      "description": "The state 'UE_Deregistered_Rejected' is too generic. The specification defines multiple specific 5GMM-DEREGISTERED sub-states based on the rejection cause or timeout condition.",
+      "supporting_text_snippet": "e.g., #11 ... enter the state 5GMM-DEREGISTERED.PLMN-SEARCH; #12 ... enter the state 5GMM-DEREGISTERED.LIMITED-SERVICE; #22 ... enter state 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION; #3 ... enter the state 5GMM-DEREGISTERED.NO-SUPI."
+    },
+    {
+      "type": "missing_state",
+      "state": "UE_5GMM_DEREGISTERED.ATTEMPTING-REGISTRATION",
+      "description": "The specific state UE enters after T3510 timeout (if counter < 5) or certain rejects (e.g., #22, #62) while retrying.",
+      "suggested_location": "As a target state for T3510 timeout (counter < 5) or specific REJECT causes.",
+      "supporting_text_snippet": "If the registration attempt counter is less than 5: ... timer T3511 is started and the state is changed to 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION."
     },
     {
       "type": "missing_event",
-      "event": "E_T3502_Timeout",
-      "description": "The timer T3502, started after the registration attempt counter reaches 5, and its expiry event are missing from the graph.",
-      "suggested_location": "Triggered after max registration attempts (counter = 5).",
-      "supporting_text_snippet": "5.5.1.2.7 Abnormal cases in the UE\nIf the registration attempt counter is equal to 5 ... start timer T3502 if the value of the timer as indicated by the network is not zero ... if the value of T3502 as indicated by the network is zero, the UE shall perform the actions defined for the expiry of the timer T3502."
+      "event": "UE_Starts_T3511",
+      "description": "The event representing the UE starting timer T3511 after T3510 timeout or certain rejects (when counter < 5) is missing.",
+      "suggested_location": "Triggered after T3510 timeout or specific REJECT causes when attempt counter < 5.",
+      "supporting_text_snippet": "If the registration attempt counter is less than 5: ... timer T3511 is started..."
+    },
+    {
+      "type": "missing_transition",
+      "from": "UE_Attempting_Registration",
+      "event": "T3510_Timeout (counter < 5)",
+      "to": "UE_5GMM_DEREGISTERED.ATTEMPTING-REGISTRATION",
+      "description": "Transition missing for T3510 timeout when the registration attempt counter is less than 5, leading to a retry state.",
+      "supporting_text_snippet": "If the registration attempt counter is less than 5: ... timer T3511 is started and the state is changed to 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION."
+    },
+    {
+      "type": "incorrect_edge_type",
+      "edge": "T3510_Timeout -> UE_Deregistered_Rejected",
+      "current_type": "condition",
+      "suggested_type": "trigger",
+      "description": "The T3510 timeout event causes the UE to transition to a DEREGISTERED sub-state. The edge type should be 'trigger'.",
+      "supporting_text_snippet": "c) T3510 timeout. The UE shall abort the registration procedure... The UE shall proceed as described below... If the registration attempt counter is equal to 5... The state is changed to 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION or optionally to 5GMM-DEREGISTERED.PLMN-SEARCH..."
+    },
+    {
+      "type": "incorrect_transition",
+      "from": "T3510_Timeout",
+      "to": "UE_Deregistered_Rejected",
+      "description": "The target state 'UE_Deregistered_Rejected' is too generic for T3510 timeout. If counter < 5, it should lead to 'UE_5GMM_DEREGISTERED.ATTEMPTING-REGISTRATION'. If counter = 5, it leads to other DEREGISTERED sub-states like 'ATTEMPTING-REGISTRATION' or 'PLMN-SEARCH'.",
+      "supporting_text_snippet": "If the registration attempt counter is less than 5... state is changed to 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION. If the registration attempt counter is equal to 5... The state is changed to 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION or optionally to 5GMM-DEREGISTERED.PLMN-SEARCH..."
+    },
+    {
+      "type": "incorrect_edge_type",
+      "edge": "T3550_Timeout -> AMF_5GMM_REGISTERED",
+      "current_type": "condition",
+      "suggested_type": "trigger",
+      "description": "The T3550 timeout event (after retries) causes the AMF to abort waiting and transition to the REGISTERED state. The edge type should be 'trigger'.",
+      "supporting_text_snippet": "...on the fifth expiry of timer T3550, the registration procedure for initial registration shall be aborted and the AMF enters state 5GMM-REGISTERED."
+    },
+    {
+      "type": "missing_transition",
+      "from": "AMF_Waiting_For_Registration_Complete",
+      "event": "T3550_Timeout (retries < 4)",
+      "to": "AMF_Waiting_For_Registration_Complete",
+      "description": "Transition missing for T3550 timeout leading to retransmission of REGISTRATION ACCEPT and restart of T3550 (staying in the waiting state).",
+      "supporting_text_snippet": "On the first expiry of the timer, the AMF shall retransmit the REGISTRATION ACCEPT message and shall reset and restart timer T3550. This retransmission is repeated four times..."
     }
   ]
 }

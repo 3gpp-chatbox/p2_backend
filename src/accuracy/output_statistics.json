@@ -3,14 +3,14 @@
         "nodes": {
             "min": 25,
             "max": 34,
-            "mean": 32.2,
-            "stdev": 4.024922359499621
+            "mean": 30.625,
+            "stdev": 3.7392703642746747
         },
         "edges": {
-            "min": 39,
+            "min": 30,
             "max": 55,
-            "mean": 51.8,
-            "stdev": 7.155417527999327
+            "mean": 43.625,
+            "stdev": 12.512136964906171
         }
     },
     "datasets": [
@@ -38,6 +38,21 @@
             "file": "data/consolidated_output/run5_step4.json",
             "nodes": 34,
             "edges": 55
+        },
+        {
+            "file": "data/consolidated_output/run6_step4.json",
+            "nodes": 28,
+            "edges": 30
+        },
+        {
+            "file": "data/consolidated_output/run7_step4.json",
+            "nodes": 28,
+            "edges": 30
+        },
+        {
+            "file": "data/consolidated_output/run8_step4.json",
+            "nodes": 28,
+            "edges": 30
         }
     ]
 }
