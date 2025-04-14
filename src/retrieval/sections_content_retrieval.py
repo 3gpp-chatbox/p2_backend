@@ -11,7 +11,7 @@ from src.lib.logger import get_logger
 logger = get_logger(__name__)
 
 
-def retrieve_sections_content(
+def get_sections_content(
     db_handler: DatabaseHandler, doc_name: str, section_list: list[str]
 ) -> str:
     """Fetch and format section contents from a document based on section identifiers.
@@ -181,9 +181,7 @@ if __name__ == "__main__":
         with DatabaseHandler() as db_handler:
             doc_name = "24501"
             section_list = ["4.2", "5.2"]
-            sections_content = retrieve_sections_content(
-                db_handler, doc_name, section_list
-            )
+            sections_content = get_sections_content(db_handler, doc_name, section_list)
 
             # save file (Optional: for manual review)
             output_file = Path("data/markdown/extracted_section.md")
