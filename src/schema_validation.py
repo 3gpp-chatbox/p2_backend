@@ -1,5 +1,5 @@
 # schema_validation.py
-from typing import Any, Dict, List, Literal
+from typing import Dict, List, Literal
 
 from pydantic import BaseModel, Field, ValidationError
 
@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field, ValidationError
 class Node(BaseModel):
     """Represents a State or Event in the process"""
 
-    id: Any = Field(
+    id: str = Field(
         ...,
         description="Unique identifier for the node (e.g., number, 'start', 'end').",
     )
@@ -20,8 +20,8 @@ class Node(BaseModel):
 class Edge(BaseModel):
     """Represents a Trigger or Condition connecting Nodes"""
 
-    from_node: Any = Field(..., alias="from", description="ID of the starting node.")
-    to: Any = Field(..., description="ID of the target node.")
+    from_node: str = Field(..., alias="from", description="ID of the starting node.")
+    to: str = Field(..., description="ID of the target node.")
     type: str = Field(
         ..., description="Type of the edge, either 'trigger' or 'condition'."
     )
