@@ -13,4 +13,6 @@ sentence-transformers # For sentence embeddings
 scikit-learn # For machine learning operations
 pydantic-ai # AI agent framework
 langgraph # For orchestration of AI agents
+fastapi # For API
+uvicorn # For running the server
 
