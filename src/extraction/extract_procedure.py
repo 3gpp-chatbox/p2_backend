@@ -8,6 +8,7 @@ from pydantic_ai.models.gemini import GeminiModel
 
 from src.accuracy.sbert_simple import compare_two_datasets
 from src.db.db_handler import DatabaseHandler
+from src.extraction.store_graphs import store_graph
 from src.prompts.prompt_manager import PromptManager
 from src.retrieval.sections_content_retrieval import get_sections_content
 from src.retrieval.toc_retrieval import (
@@ -265,7 +266,7 @@ def main() -> None:
 
         result_4_alt = alt_agent.run_sync(user_prompt=prompt_4, result_type=Graph).data
 
-        # TODO: Step 4:  Validate procedures
+        # Step 4:  Validate procedures
         result_4_dict = result_4.model_dump()
         result_4_modified_dict = result_4_modified.model_dump()
         result_4_alt_dict = result_4_alt.model_dump()
@@ -295,16 +296,45 @@ def main() -> None:
             f"Main extraction accuracy: {result_4_accuracy:.2f}, Modified extraction accuracy: {result_4_accuracy_modified:.2f}, Alternative extraction accuracy: {result_4_accuracy_alt:.2f}"
         )
 
+        # Pick the best extraction based on accuracy
+        best_extraction = None
+        best_extraction_accuracy = 0.0
+
+        # If accuracies are equal, prioritize in order: main -> modified -> alt
+        if (
+            result_4_accuracy >= result_4_accuracy_modified
+            and result_4_accuracy >= result_4_accuracy_alt
+        ):
+            best_extraction = result_4_dict
+            best_extraction_accuracy = result_4_accuracy
+            best_model = MAIN_MODEL
+            extraction_method = "main"
+        elif result_4_accuracy_modified >= result_4_accuracy_alt:
+            best_extraction = result_4_modified_dict
+            best_extraction_accuracy = result_4_accuracy_modified
+            best_model = MAIN_MODEL
+            extraction_method = "modified"
+        else:
+            best_extraction = result_4_alt_dict
+            best_extraction_accuracy = result_4_accuracy_alt
+            best_model = ALTERNATIVE_MODEL
+            extraction_method = "alternative model"
+
+        logger.info(f"Best extraction model: {best_model}")
+        logger.info(f"Extraction method used: {extraction_method}")
+        logger.info(
+            f"Selected best extraction with accuracy: {best_extraction_accuracy:.2f}"
+        )
+
         # TODO: Step 5: save to database
 
-        # Convert Graph data to dict
-        # store_graph(
-        #     name=PROCEDURE_TO_EXTRACT,
-        #     document_name=DOCUMENT_NAME,
-        #     graph_data=result_4_dict,
-        #     accuracy=0.5,
-        #     db=db_handler,
-        # )
+        store_graph(
+            name=PROCEDURE_TO_EXTRACT,
+            document_name=DOCUMENT_NAME,
+            graph_data=best_extraction,
+            accuracy=best_extraction_accuracy,
+            db=db_handler,
+        )
 
     except Exception as e:
         logger.error(
