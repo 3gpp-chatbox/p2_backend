@@ -11,13 +11,13 @@ VALUES
     (SELECT id FROM doc),
     '{
         "nodes": [
-            {"id": "1", "type": "entity", "label": "User"},
-            {"id": "2", "type": "action", "label": "Login"},
-            {"id": "3", "type": "entity", "label": "System"}
+            {"id": "1", "type": "state", "description": "User"},
+            {"id": "2", "type": "event", "description": "Login"},
+            {"id": "3", "type": "state", "description": "System"}
         ],
         "edges": [
-            {"source": "1", "target": "2", "label": "performs"},
-            {"source": "2", "target": "3", "label": "authenticates with"}
+            {"from": "1", "to": "2", "type": "trigger", "description": "performs"},
+            {"from": "2", "to": "3", "type": "condition", "description": "authenticates with"}
         ]
     }',
     NULL,
@@ -32,26 +32,26 @@ VALUES
     (SELECT id FROM doc),
     '{
         "nodes": [
-            {"id": "1", "type": "entity", "label": "User"},
-            {"id": "2", "type": "action", "label": "Login"},
-            {"id": "3", "type": "entity", "label": "System"}
+            {"id": "1", "type": "state", "description": "User"},
+            {"id": "2", "type": "event", "description": "Login"},
+            {"id": "3", "type": "state", "description": "System"}
         ],
         "edges": [
-            {"source": "1", "target": "2", "label": "performs"},
-            {"source": "2", "target": "3", "label": "authenticates with"}
+            {"from": "1", "to": "2", "type": "trigger", "description": "performs"},
+            {"from": "2", "to": "3", "type": "condition", "description": "authenticates with"}
         ]
     }',
     '{
         "nodes": [
-            {"id": "1", "type": "entity", "label": "User"},
-            {"id": "2", "type": "action", "label": "Login"},
-            {"id": "3", "type": "entity", "label": "System"},
-            {"id": "4", "type": "entity", "label": "Database"}
+            {"id": "1", "type": "state", "description": "User"},
+            {"id": "2", "type": "event", "description": "Login"},
+            {"id": "3", "type": "state", "description": "System"},
+            {"id": "4", "type": "state", "description": "Database"}
         ],
         "edges": [
-            {"source": "1", "target": "2", "label": "performs"},
-            {"source": "2", "target": "3", "label": "authenticates with"},
-            {"source": "3", "target": "4", "label": "queries"}
+            {"from": "1", "to": "2", "type": "trigger", "description": "performs"},
+            {"from": "2", "to": "3", "type": "condition", "description": "authenticates with"},
+            {"from": "3", "to": "4", "type": "condition", "description": "queries"}
         ]
     }',
     0.92,
@@ -73,15 +73,15 @@ VALUES
     (SELECT id FROM doc2),
     '{
         "nodes": [
-            {"id": "1", "type": "entity", "label": "Customer"},
-            {"id": "2", "type": "action", "label": "Place Order"},
-            {"id": "3", "type": "entity", "label": "Product"},
-            {"id": "4", "type": "entity", "label": "Payment"}
+            {"id": "1", "type": "state", "description": "Customer"},
+            {"id": "2", "type": "event", "description": "Place Order"},
+            {"id": "3", "type": "state", "description": "Product"},
+            {"id": "4", "type": "state", "description": "Payment"}
         ],
         "edges": [
-            {"source": "1", "target": "2", "label": "performs"},
-            {"source": "2", "target": "3", "label": "orders"},
-            {"source": "2", "target": "4", "label": "pays with"}
+            {"from": "1", "to": "2", "type": "trigger", "description": "performs"},
+            {"from": "2", "to": "3", "type": "condition", "description": "orders"},
+            {"from": "2", "to": "4", "type": "condition", "description": "pays with"}
         ]
     }',
     NULL,

@@ -1,23 +1,27 @@
-'''
+"""
 Defines API response/request models.
-'''
+"""
+
 from pydantic import BaseModel, UUID4
 from typing import Dict, Any, Optional
 from datetime import datetime
 
+
 class ProcedureListItem(BaseModel):
     """Basic procedure information for list view.
-    
+
     Attributes:
         id: UUID of the procedure
         name: Name of the procedure
     """
+
     id: UUID4
     name: str
 
-class ProcedureItem(BaseModel):  
+
+class ProcedureItem(BaseModel):
     """Procedure graph with accuracy.
-    
+
     Attributes:
         id: UUID of the procedure
         name: Name of the procedure
@@ -30,6 +34,7 @@ class ProcedureItem(BaseModel):
         last_edit_at: Optional timestamp of last edit
         status: Status of the graph ('original' or 'edited')
     """
+
     id: UUID4
     name: str
     document_id: UUID4
@@ -40,14 +45,13 @@ class ProcedureItem(BaseModel):
     extracted_at: datetime
     last_edit_at: Optional[datetime] = None
     status: str
-    
+
+
 class EditedGraph(BaseModel):
     """model for edited graph.
-    
+
     Attributes:
-        graph_id: UUID of the edited graph
         edited_graph: The edited graph data in JSON format
     """
-    graph_id: UUID4
-    edited_graph: Dict[str, Any]
 
+    edited_graph: Dict[str, Any]
