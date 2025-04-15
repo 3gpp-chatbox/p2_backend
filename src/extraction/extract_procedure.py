@@ -102,6 +102,61 @@ def get_context(doc_name: str, procedure_name: str, db_handler: DatabaseHandler)
         raise ValueError(f"Error retrieving context: {e}")
 
 
+def compare_datasets(
+    target_dataset: dict,
+    comparison_datasets: list[dict],
+    procedure_name: str,
+    fixed_threshold: float = 0.8,
+) -> float:
+    """Compare a target dataset against multiple comparison datasets and compute average accuracy.
+
+    This function compares a target dataset against multiple comparison datasets using
+    `compare_two_datasets`. It calculates the average accuracy across all comparisons,
+    providing a single overall accuracy score. This is useful when you want to assess
+    how well a reference dataset aligns with multiple variations.
+
+    Args:
+        target_dataset (dict): The reference dataset to compare against others.
+        comparison_datasets (list[dict]): List of datasets to compare against the target.
+        procedure_name (str): Name of the procedure used in comparisons.
+        fixed_threshold (float, optional): Threshold value for comparisons. Defaults to 0.8.
+
+    Returns:
+        float: The average accuracy score across all comparisons.
+
+    Raises:
+        ValueError: If no comparison datasets are provided.
+
+    Example:
+        >>> main_result = {...}  # Your reference/main extraction
+        >>> variations = [modified_result, alt_result]  # Other extractions
+        >>> accuracy = compare_datasets(main_result, variations, "ExtractionProcedure")
+        >>> print(f"Average accuracy: {accuracy}")
+    """
+    if not comparison_datasets:
+        raise ValueError("Provide at least one comparison dataset.")
+
+    total_accuracy = 0.0
+
+    # Compare target against each comparison dataset
+    for i, comparison_dataset in enumerate(comparison_datasets):
+        accuracy_result = compare_two_datasets(
+            dataset_1=target_dataset,
+            dataset_2=comparison_dataset,
+            dataset_1_name=f"{procedure_name}",
+            dataset_2_name=f"{procedure_name}",
+            fixed_threshold=fixed_threshold,
+        )
+        comparison_accuracy = accuracy_result["summary"]["overall_match_percentage"]
+        total_accuracy += comparison_accuracy
+
+    overall_accuracy = (
+        total_accuracy / len(comparison_datasets) if comparison_datasets else 0.0
+    )
+
+    return overall_accuracy
+
+
 def main() -> None:
     try:
         load_dotenv(override=True)
@@ -158,18 +213,6 @@ def main() -> None:
 
         # Step 3: Prompt the model to extract the procedure (Prompt Chain)
 
-        # v1-step1
-        # Parameters: ['section_name', 'text']
-
-        # v1-step2-evaluate
-        # Parameters: ['original_content', 'result_1', 'section_name']
-
-        # v1-step3-correct
-        # Parameters: ['result_1', 'result_2', 'section_name']
-
-        # v1-step4-enrich
-        # Parameters: ['original_content', 'result_3', 'section_name']
-
         # Call agent for prompt_1
         prompt_1 = prompt_manager.render_prompt(
             template_name="v1-step1", section_name=PROCEDURE_TO_EXTRACT, text=context
@@ -207,25 +250,50 @@ def main() -> None:
             section_name=PROCEDURE_TO_EXTRACT,
         )
 
+        prompt_4_modified = prompt_manager.render_prompt(
+            template_name="v1-step4-enrich-modified",
+            original_content=context,
+            result_3=result_3,
+            section_name=PROCEDURE_TO_EXTRACT,
+        )
+
         result_4 = main_agent.run_sync(user_prompt=prompt_4, result_type=Graph).data
+
+        result_4_modified = main_agent.run_sync(
+            user_prompt=prompt_4_modified, result_type=Graph
+        ).data
 
         result_4_alt = alt_agent.run_sync(user_prompt=prompt_4, result_type=Graph).data
 
         # TODO: Step 4:  Validate procedures
         result_4_dict = result_4.model_dump()
+        result_4_modified_dict = result_4_modified.model_dump()
         result_4_alt_dict = result_4_alt.model_dump()
 
-        accuracy_result = compare_two_datasets(
-            dataset_1=result_4_dict,
-            dataset_2=result_4_alt_dict,
-            dataset_1_name=PROCEDURE_TO_EXTRACT,
-            dataset_2_name=PROCEDURE_TO_EXTRACT,
+        result_4_accuracy = compare_datasets(
+            target_dataset=result_4_dict,
+            comparison_datasets=[result_4_modified_dict, result_4_alt_dict],
+            procedure_name=PROCEDURE_TO_EXTRACT,
             fixed_threshold=0.8,
         )
 
-        accuracy_overall_metric = accuracy_result["summary"]["overall_match_percentage"]
+        result_4_accuracy_modified = compare_datasets(
+            target_dataset=result_4_modified_dict,
+            comparison_datasets=[result_4_dict, result_4_alt_dict],
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            fixed_threshold=0.8,
+        )
 
-        print(accuracy_overall_metric)
+        result_4_accuracy_alt = compare_datasets(
+            target_dataset=result_4_alt_dict,
+            comparison_datasets=[result_4_dict, result_4_modified_dict],
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            fixed_threshold=0.8,
+        )
+
+        logger.info(
+            f"Main extraction accuracy: {result_4_accuracy:.2f}, Modified extraction accuracy: {result_4_accuracy_modified:.2f}, Alternative extraction accuracy: {result_4_accuracy_alt:.2f}"
+        )
 
         # TODO: Step 5: save to database
 
