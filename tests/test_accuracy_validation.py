@@ -3,6 +3,7 @@
 import json
 
 import numpy as np
+from sentence_transformers import SentenceTransformer
 
 from src.accuracy.sbert_simple import (
     compare_two_datasets,
@@ -11,50 +12,48 @@ from src.accuracy.sbert_simple import (
     extract_node_descriptions,
     find_best_matches,
 )
+from src.schemas.procedure_graph import Graph
+
+# Initialize SBERT model for tests
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Sample minimal dataset for testing
-sample_dataset = {
-    "graph": {
-        "nodes": [
-            {
-                "id": "n1",
-                "type": "Action",
-                "description": "Start session",
-                "properties": {"status": "initial"},
-            }
-        ],
-        "edges": [
-            {
-                "from": "n1",
-                "to": "n2",
-                "type": "transition",
-                "description": "Proceed to next step",
-            }
-        ],
-    }
-}
+sample_dataset = Graph(
+    nodes=[
+        {
+            "id": "n1",
+            "type": "state",
+            "description": "Start session",
+        }
+    ],
+    edges=[
+        {
+            "from": "n1",
+            "to": "n2",
+            "type": "trigger",
+            "description": "Proceed to next step",
+        }
+    ],
+)
 
 # Another sample with similar structure
-similar_dataset = {
-    "graph": {
-        "nodes": [
-            {
-                "id": "n1",
-                "type": "Action",
-                "description": "Begin session",
-                "properties": {"status": "initial"},
-            }
-        ],
-        "edges": [
-            {
-                "from": "n1",
-                "to": "n2",
-                "type": "transition",
-                "description": "Go to next step",
-            }
-        ],
-    }
-}
+similar_dataset = Graph(
+    nodes=[
+        {
+            "id": "n1",
+            "type": "state",
+            "description": "Begin session",
+        }
+    ],
+    edges=[
+        {
+            "from": "n1",
+            "to": "n2",
+            "type": "trigger",
+            "description": "Go to next step",
+        }
+    ],
+)
 
 
 def test_extract_node_descriptions():
@@ -73,7 +72,7 @@ def test_extract_edge_descriptions():
 
 def test_compute_sbert_embeddings():
     descriptions = ["This is a test", "Another sentence"]
-    embeddings = compute_sbert_embeddings(descriptions)
+    embeddings = compute_sbert_embeddings(descriptions, model=model)
     assert isinstance(embeddings, np.ndarray)
     assert embeddings.shape[0] == 2
 
@@ -81,7 +80,7 @@ def test_compute_sbert_embeddings():
 def test_find_best_matches():
     nodes_1 = extract_node_descriptions(sample_dataset, "v1")
     nodes_2 = extract_node_descriptions(similar_dataset, "v2")
-    results = find_best_matches(nodes_1, nodes_2, fixed_threshold=0.8)
+    results = find_best_matches(nodes_1, nodes_2, model=model, fixed_threshold=0.8)
     assert "matches" in results
     assert "unmatched" in results
     assert len(results["matches"]) >= 1  # should match loosely
@@ -89,7 +88,7 @@ def test_find_best_matches():
 
 def test_compare_two_datasets_summary():
     results = compare_two_datasets(
-        sample_dataset, similar_dataset, "v1", "v2", fixed_threshold=0.8
+        sample_dataset, similar_dataset, "v1", "v2", model=model, fixed_threshold=0.8
     )
     summary = results["summary"]
     assert "validity_status" in summary
@@ -102,7 +101,9 @@ def test_output_saving(tmp_path):
     from src.accuracy.sbert_simple import save_results
 
     output_path = tmp_path / "result.json"
-    results = compare_two_datasets(sample_dataset, similar_dataset, "v1", "v2", 0.8)
+    results = compare_two_datasets(
+        sample_dataset, similar_dataset, "v1", "v2", model=model, fixed_threshold=0.8
+    )
     save_results(results, str(output_path))
     assert output_path.exists()
 
