@@ -19,6 +19,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from pydantic_ai import Agent
 from pydantic_ai.models.gemini import GeminiModel
+from sentence_transformers import SentenceTransformer
 
 from src.accuracy.compare_datasets import compare_datasets
 from src.db.db_handler import DatabaseHandler
@@ -77,10 +78,14 @@ def main() -> None:
                 "PROCEDURE_TO_EXTRACT and DOCUMENT_NAME must be set in the environment variables."
             )
 
+        # Initialize SBERT model once at module level for reuse across comparisons
+        sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
+
         # Initialize LLM models with specified configurations
         main_model = GeminiModel(
             model_name=MAIN_MODEL, provider="google-gla"
         )  # Primary model for main extraction pipeline
+
         alt_model = GeminiModel(
             model_name=ALTERNATIVE_MODEL, provider="google-gla"
         )  # Secondary model for validation
@@ -205,6 +210,7 @@ def main() -> None:
             target_dataset=result_4,
             comparison_datasets=[result_4_modified, result_4_alt],
             procedure_name=PROCEDURE_TO_EXTRACT,
+            model=sbert_model,
             fixed_threshold=0.8,
         )
 
@@ -212,6 +218,7 @@ def main() -> None:
             target_dataset=result_4_modified,
             comparison_datasets=[result_4, result_4_alt],
             procedure_name=PROCEDURE_TO_EXTRACT,
+            model=sbert_model,
             fixed_threshold=0.8,
         )
 
@@ -219,6 +226,7 @@ def main() -> None:
             target_dataset=result_4_alt,
             comparison_datasets=[result_4, result_4_modified],
             procedure_name=PROCEDURE_TO_EXTRACT,
+            model=sbert_model,
             fixed_threshold=0.8,
         )
 

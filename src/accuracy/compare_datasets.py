@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
 
+from sentence_transformers import SentenceTransformer
+
 from src.accuracy.sbert_simple import compare_two_datasets
 from src.schemas.procedure_graph import Graph
 
@@ -17,6 +19,7 @@ def compare_datasets(
     target_dataset: Graph,
     comparison_datasets: list[Graph],
     procedure_name: str,
+    model: SentenceTransformer,
     fixed_threshold: float = 0.8,
 ) -> float:
     """Compare a target dataset against multiple comparison datasets and compute average accuracy.
@@ -30,6 +33,8 @@ def compare_datasets(
         target_dataset (Graph): The reference dataset to compare against others.
         comparison_datasets (list[Graph]): List of datasets to compare against the target.
         procedure_name (str): Name of the procedure used in comparisons.
+        model (SentenceTransformer, optional): Pre-initialized SBERT model for computing embeddings.
+            Defaults to module-level model.
         fixed_threshold (float, optional): Threshold value for comparisons. Defaults to 0.8.
 
     Returns:
@@ -56,6 +61,7 @@ def compare_datasets(
             dataset_2=comparison_dataset,
             dataset_1_name=f"{procedure_name}",
             dataset_2_name=f"{procedure_name}",
+            model=model,
             fixed_threshold=fixed_threshold,
         )
         comparison_accuracy = accuracy_result["summary"]["overall_match_percentage"]

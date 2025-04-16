@@ -90,6 +90,7 @@ def compute_sbert_embeddings(
 
     Args:
         descriptions (List[str]): List of string descriptions to embed.
+        model (SentenceTransformer): Pre-initialized SBERT model for computing embeddings.
 
     Returns:
         np.ndarray: Array of SBERT embeddings.
@@ -101,6 +102,7 @@ def compute_sbert_embeddings(
 def find_best_matches(
     set_1: List[Dict[str, Any]],
     set_2: List[Dict[str, Any]],
+    model: SentenceTransformer,
     fixed_threshold: float = 0.8,
 ) -> Dict[str, Any]:
     """Finds the best semantic matches between two sets of graph items using SBERT and cosine similarity.
@@ -108,6 +110,7 @@ def find_best_matches(
     Args:
         set_1 (List[Dict[str, Any]]): First list of graph items (nodes or edges).
         set_2 (List[Dict[str, Any]]): Second list of graph items.
+        model (SentenceTransformer): Pre-initialized SBERT model for computing embeddings.
         fixed_threshold (float): Minimum cosine similarity to consider a match as valid. Defaults to 0.8.
 
     Returns:
@@ -116,8 +119,6 @@ def find_best_matches(
     descriptions_1 = [item["description"] for item in set_1]
     descriptions_2 = [item["description"] for item in set_2]
 
-    # Define model outside the function to avoid reloading it every time
-    model = SentenceTransformer("all-MiniLM-L6-v2")
     embeddings_1 = compute_sbert_embeddings(descriptions_1, model=model)
     embeddings_2 = compute_sbert_embeddings(descriptions_2, model=model)
 
@@ -153,6 +154,7 @@ def compare_two_datasets(
     dataset_2: Graph,
     dataset_1_name: str,
     dataset_2_name: str,
+    model: SentenceTransformer,
     fixed_threshold: float = 0.8,
 ) -> Dict[str, Any]:
     """Compares two datasets by matching their nodes and edges based on semantic similarity.
@@ -162,6 +164,7 @@ def compare_two_datasets(
         dataset_2 (Graph): Second graph.
         dataset_1_name (str): Name of the first dataset.
         dataset_2_name (str): Name of the second dataset.
+        model (SentenceTransformer): Pre-initialized SBERT model for computing embeddings.
         fixed_threshold (float): Minimum similarity score to consider a match valid.
 
     Returns:
@@ -173,8 +176,8 @@ def compare_two_datasets(
     edges_1 = extract_edge_descriptions(dataset_1, dataset_1_name)
     edges_2 = extract_edge_descriptions(dataset_2, dataset_2_name)
 
-    node_results = find_best_matches(nodes_1, nodes_2, fixed_threshold)
-    edge_results = find_best_matches(edges_1, edges_2, fixed_threshold)
+    node_results = find_best_matches(nodes_1, nodes_2, model, fixed_threshold)
+    edge_results = find_best_matches(edges_1, edges_2, model, fixed_threshold)
 
     node_matches = node_results["matches"]
     edge_matches = edge_results["matches"]
@@ -273,6 +276,9 @@ def save_results(results: Dict[str, Any], output_path: str):
 
 
 if __name__ == "__main__":
+    # Initialize the model once at module level for reuse
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+
     data_dir = "data"
     dataset_files = {
         "v1": os.path.join(data_dir, "consolidated_output/run1_step4.json"),
@@ -286,7 +292,7 @@ if __name__ == "__main__":
         datasets[key] = data
 
     results = compare_two_datasets(
-        datasets["v1"], datasets["v2"], "Dataset 1", "Dataset 2"
+        datasets["v1"], datasets["v2"], "Dataset 1", "Dataset 2", model=model
     )
 
     save_results(results, "src/accuracy/sbert_simple.json")
