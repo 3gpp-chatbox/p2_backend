@@ -27,12 +27,12 @@ def get_document_id_by_name(db: DatabaseHandler, document_name: str) -> Optional
     try:
         query = "SELECT id FROM document WHERE name = %s"
         parameters = (document_name,)
-        
+
         result = db.execute_query(query, parameters)
         if not result:
             logger.warning(f"Document with name '{document_name}' not found")
             return None
-            
+
         return result[0]["id"]
     except Exception as e:
         logger.error(f"Error retrieving document ID: {e}")
@@ -40,11 +40,11 @@ def get_document_id_by_name(db: DatabaseHandler, document_name: str) -> Optional
 
 
 def store_graph(
-    name: str, 
-    document_name: str, 
-    graph_data: Dict, 
+    name: str,
+    document_name: str,
+    graph_data: Dict,
     accuracy: float,
-    db: DatabaseHandler
+    db: DatabaseHandler,
 ) -> Optional[UUID]:
     """
     Store a graph in the database.
@@ -76,9 +76,11 @@ def store_graph(
         """
         check_params = (document_id, name)
         result = db.execute_query(check_query, check_params)
-        
+
         if result:
-            logger.warning(f"Graph '{name}' already exists for document '{document_name}'")
+            logger.warning(
+                f"Graph '{name}' already exists for document '{document_name}'"
+            )
             return result[0]["id"]
 
         # Convert graph data to JSON
@@ -96,7 +98,7 @@ def store_graph(
             result = db.execute_query(query, parameters)
             if not result:
                 raise Exception("Failed to store graph data")
-            
+
             graph_id = result[0]["id"]
             logger.info(f"Stored graph '{name}' with ID: {graph_id}")
             return graph_id
@@ -129,9 +131,9 @@ if __name__ == "__main__":
             document_name=document_name,
             graph_data=sample_graph,
             accuracy=0.95,
-            db=db
+            db=db,
         )
-        
+
         if graph_id:
             print(f"Stored graph with ID: {graph_id}")
         else:

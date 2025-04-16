@@ -62,7 +62,9 @@ def test_node_structure(mock_step1_data, mock_step2_data):
     from data.mock_pydantic.mockstep3 import extract_procedural_info
 
     section_name = "Registration procedure for initial registration"
-    result_json_str = extract_procedural_info(section_name, mock_step1_data, mock_step2_data)
+    result_json_str = extract_procedural_info(
+        section_name, mock_step1_data, mock_step2_data
+    )
     result = json.loads(result_json_str)
 
     # Ensure result is a dictionary
@@ -87,7 +89,9 @@ def test_edge_structure(mock_step1_data, mock_step2_data):
     from data.mock_pydantic.mockstep3 import extract_procedural_info
 
     section_name = "Registration procedure for initial registration"
-    result_json_str = extract_procedural_info(section_name, mock_step1_data, mock_step2_data)
+    result_json_str = extract_procedural_info(
+        section_name, mock_step1_data, mock_step2_data
+    )
     result = json.loads(result_json_str)
 
     # Ensure result is a dictionary
@@ -110,7 +114,10 @@ def test_edge_structure(mock_step1_data, mock_step2_data):
         assert edge["to"] in node_ids, f"Edge to non-existent node: {edge['to']}"
 
         # Test edge type
-        assert edge["type"] in ["sequential", "conditional"], f"Invalid edge type: {edge['type']}"
+        assert edge["type"] in [
+            "sequential",
+            "conditional",
+        ], f"Invalid edge type: {edge['type']}"
 
 
 def test_complete_graph_validation(mock_step1_data, mock_step2_data):
@@ -118,7 +125,9 @@ def test_complete_graph_validation(mock_step1_data, mock_step2_data):
     from data.mock_pydantic.mockstep3 import extract_procedural_info
 
     section_name = "Registration procedure for initial registration"
-    result_json_str = extract_procedural_info(section_name, mock_step1_data, mock_step2_data)
+    result_json_str = extract_procedural_info(
+        section_name, mock_step1_data, mock_step2_data
+    )
     result = json.loads(result_json_str)
 
     # Ensure result is a dictionary
@@ -138,8 +147,12 @@ def test_complete_graph_validation(mock_step1_data, mock_step2_data):
     assert edge_froms.union(edge_tos) == node_ids, "Graph should be fully connected"
 
     # Should have start and end nodes
-    assert any(node["type"] == "start" for node in result["graph"]["nodes"]), "Graph should have a start node"
-    assert any(node["type"] == "end" for node in result["graph"]["nodes"]), "Graph should have an end node"
+    assert any(
+        node["type"] == "start" for node in result["graph"]["nodes"]
+    ), "Graph should have a start node"
+    assert any(
+        node["type"] == "end" for node in result["graph"]["nodes"]
+    ), "Graph should have an end node"
 
 
 def test_invalid_node_type():
@@ -151,7 +164,7 @@ def test_invalid_node_type():
                     "id": "1",
                     "type": "invalid_type",  # Invalid type
                     "description": "Test node",
-                    "properties": {}
+                    "properties": {},
                 }
             ],
             "edges": [],
@@ -164,13 +177,20 @@ def test_invalid_edge_references():
     """Test that edges must reference existing nodes."""
     invalid_graph = {
         "graph": {
-            "nodes": [{"id": "1", "type": "state", "description": "Test state", "properties": {}}],
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "state",
+                    "description": "Test state",
+                    "properties": {},
+                }
+            ],
             "edges": [
                 {
                     "from": "1",
                     "to": "nonexistent",  # References non-existent node
                     "type": "sequential",
-                    "properties": {}
+                    "properties": {},
                 }
             ],
         }
