@@ -64,4 +64,4 @@ def compare_datasets(
         total_accuracy / len(comparison_datasets) if comparison_datasets else 0.0
     )
 
-    return overall_accuracy
+    return round(overall_accuracy, 2)
