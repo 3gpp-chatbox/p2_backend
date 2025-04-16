@@ -161,14 +161,17 @@ def compare_datasets(
 def main() -> None:
     try:
         load_dotenv(override=True)
+        # Load environment variables
+        # Procedure to extract
         DOCUMENT_NAME = os.getenv("DOCUMENT_NAME")
+        PROCEDURE_TO_EXTRACT = os.getenv("PROCEDURE_TO_EXTRACT")
+        # LLM config
         MAIN_MODEL = os.getenv("MAIN_MODEL", "gemini-2.0-flash-exp")
-        ALTERNATIVE_MODEL = os.getenv("ALTERNATIVE_MODEL", MAIN_MODEL)
         MAIN_MODEL_TEMPERATURE = float(os.getenv("MAIN_MODEL_TEMPERATURE", 0.0))
+        ALTERNATIVE_MODEL = os.getenv("ALTERNATIVE_MODEL", MAIN_MODEL)
         ALTERNATIVE_MODEL_TEMPERATURE = float(
             os.getenv("ALTERNATIVE_MODEL_TEMPERATURE", 0.0)
         )
-        PROCEDURE_TO_EXTRACT = os.getenv("PROCEDURE_TO_EXTRACT")
 
         if not PROCEDURE_TO_EXTRACT or not DOCUMENT_NAME:
             raise ValueError(
@@ -320,13 +323,12 @@ def main() -> None:
             best_model = ALTERNATIVE_MODEL
             extraction_method = "alternative model"
 
-        logger.info(f"Best extraction model: {best_model}")
-        logger.info(f"Extraction method used: {extraction_method}")
-        logger.info(
-            f"Selected best extraction with accuracy: {best_extraction_accuracy:.2f}"
-        )
+        # Log the best extraction result
+        logger.info(f"Best result model: {best_model}")
+        logger.info(f"Best result extraction method: {extraction_method}")
+        logger.info(f"Best result accuracy: {best_extraction_accuracy:.2f}")
 
-        # TODO: Step 5: save to database
+        #  Step 5: save to database
 
         store_graph(
             name=PROCEDURE_TO_EXTRACT,
@@ -349,5 +351,4 @@ if __name__ == "__main__":
         main()
 
     except Exception:
-        # raise ValueError(f"Error in `__main__`: {e}")
         sys.exit(1)
