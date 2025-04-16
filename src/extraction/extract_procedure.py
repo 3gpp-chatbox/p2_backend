@@ -1,3 +1,17 @@
+"""
+This module handles the extraction of procedural information from documents using LLMs.
+
+It implements a multi-step extraction process:
+1. Document retrieval from database
+2. Context gathering for the target procedure
+3. Multi-stage LLM prompting with different models and temperatures
+4. Accuracy validation of extracted procedures
+5. Storage of the best extraction result
+
+The module uses multiple LLM models and prompting strategies to ensure high-quality
+extraction results, comparing different approaches and selecting the most accurate one.
+"""
+
 import os
 import sys
 from pathlib import Path
@@ -24,13 +38,33 @@ logger = get_logger(__name__)
 
 
 def main() -> None:
+    """
+    Execute the main procedure extraction pipeline.
+
+    This function orchestrates the entire extraction process:
+    1. Loads environment variables and configurations
+    2. Sets up LLM models with different parameters
+    3. Retrieves document and context
+    4. Runs multi-stage prompting chain
+    5. Validates and compares different extraction results
+    6. Stores the best extraction in the database
+
+    The function uses multiple approaches for extraction:
+    - Main extraction with primary model
+    - Modified extraction with primary model
+    - Alternative extraction with secondary model
+
+    Raises:
+        ValueError: If required environment variables are missing or if document is not found
+        Exception: For any other unexpected errors during execution
+    """
     try:
         load_dotenv(override=True)
-        # Load environment variables
-        # Procedure to extract
+        # Load environment variables with default values where appropriate
+        # --- Document Configuration ---
         DOCUMENT_NAME = os.getenv("DOCUMENT_NAME")
         PROCEDURE_TO_EXTRACT = os.getenv("PROCEDURE_TO_EXTRACT")
-        # LLM config
+        # --- LLM Configuration ---
         MAIN_MODEL = os.getenv("MAIN_MODEL", "gemini-2.0-flash-exp")
         MAIN_MODEL_TEMPERATURE = float(os.getenv("MAIN_MODEL_TEMPERATURE", 0.0))
         ALTERNATIVE_MODEL = os.getenv("ALTERNATIVE_MODEL", MAIN_MODEL)
@@ -43,44 +77,64 @@ def main() -> None:
                 "PROCEDURE_TO_EXTRACT and DOCUMENT_NAME must be set in the environment variables."
             )
 
-        # Define the LLM models
-        main_model = GeminiModel(model_name=MAIN_MODEL, provider="google-gla")
-        alt_model = GeminiModel(model_name=ALTERNATIVE_MODEL, provider="google-gla")
+        # Initialize LLM models with specified configurations
+        main_model = GeminiModel(
+            model_name=MAIN_MODEL, provider="google-gla"
+        )  # Primary model for main extraction pipeline
+        alt_model = GeminiModel(
+            model_name=ALTERNATIVE_MODEL, provider="google-gla"
+        )  # Secondary model for validation
 
-        # instatiate the database handler
+        # Initialize database connection
         db_handler = DatabaseHandler()
 
         # Instantiate prompt manager
         prompt_manager = PromptManager()
 
-        # Define the Agent
+        # Initialize primary agent with main model
         main_agent: Agent = Agent(
             model=main_model,
             model_settings={"temperature": MAIN_MODEL_TEMPERATURE},
         )
 
-        # Define the Agent
+        # Initialize secondary agent with alternative model for validation
         alt_agent: Agent = Agent(
             model=alt_model,
             model_settings={"temperature": ALTERNATIVE_MODEL_TEMPERATURE},
-            result_type=Graph,
         )
 
-        # Step 1. Get the document
+        # Step 1: Retrieve the target document from database
         document = get_document_by_name(doc_name=DOCUMENT_NAME, db_handler=db_handler)
 
         if not document:
             logger.error(f"Document '{DOCUMENT_NAME}' not found in the database.")
             raise ValueError(f"Document '{DOCUMENT_NAME}' not found in the database.")
 
-        # Step 2: Get the context
+        # Check if the graph already exists in the database for the given document
+        check_query = """
+        SELECT id FROM graph 
+        WHERE document_id = %s AND name = %s
+        """
+        check_params = (document["id"], PROCEDURE_TO_EXTRACT)
+        existing_graph = db_handler.execute_query(check_query, check_params)
+
+        if existing_graph:
+            logger.warning(
+                f"Graph '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
+            )
+            raise ValueError(
+                f"Graph '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
+            )
+
+        # Step 2: Retrieve relevant context for the procedure extraction
         context = get_context(
             doc_name=DOCUMENT_NAME,
             procedure_name=PROCEDURE_TO_EXTRACT,
             db_handler=db_handler,
         )
 
-        # Step 3: Prompt the model to extract the procedure (Prompt Chain)
+        # Step 3: Execute multi-stage prompting chain for procedure extraction
+        # Stage 1: Initial extraction of procedure information
 
         # Call agent for prompt_1
         prompt_1 = prompt_manager.render_prompt(
@@ -91,7 +145,7 @@ def main() -> None:
             user_prompt=prompt_1,
         ).output
 
-        # Call agent for prompt_2
+        # Stage 2: Evaluate and validate initial extraction
         prompt_2 = prompt_manager.render_prompt(
             template_name="v1-step2-evaluate",
             original_content=context,
@@ -103,6 +157,7 @@ def main() -> None:
             user_prompt=prompt_2,
         ).output
 
+        # Stage 3: Apply corrections based on evaluation
         prompt_3 = prompt_manager.render_prompt(
             template_name="v1-step3-correct",
             result_1=result_1,
@@ -112,6 +167,8 @@ def main() -> None:
 
         result_3 = main_agent.run_sync(user_prompt=prompt_3).output
 
+        # Stage 4: Enrich the corrected extraction with additional details
+        # Try multiple approaches for better accuracy
         prompt_4 = prompt_manager.render_prompt(
             template_name="v1-step4-enrich",
             original_content=context,
@@ -126,49 +183,63 @@ def main() -> None:
             section_name=PROCEDURE_TO_EXTRACT,
         )
 
-        result_4 = main_agent.run_sync(user_prompt=prompt_4, output_type=Graph).output
-
-        result_4_modified = main_agent.run_sync(
-            user_prompt=prompt_4_modified, output_type=Graph
-        ).output
-
-        result_4_alt = alt_agent.run_sync(
+        # Execute final extraction with type validation using Graph schema
+        result_4: Graph = main_agent.run_sync(
             user_prompt=prompt_4, output_type=Graph
         ).output
 
-        # Step 4:  Validate procedures
+        # Execute modified approach for comparison
+        result_4_modified: Graph = main_agent.run_sync(
+            user_prompt=prompt_4_modified, output_type=Graph
+        ).output
+
+        # Execute alternative model extraction for validation
+        result_4_alt: Graph = alt_agent.run_sync(
+            user_prompt=prompt_4, output_type=Graph
+        ).output
+
+        # Step 4: Compare and validate different extraction approaches
+        # Convert Pydantic models to dictionaries for comparison
         result_4_dict = result_4.model_dump()
         result_4_modified_dict = result_4_modified.model_dump()
         result_4_alt_dict = result_4_alt.model_dump()
 
-        result_4_accuracy = compare_datasets(
+        # Calculate accuracy scores by comparing each extraction against the others
+        result_4_accuracy: float = compare_datasets(
             target_dataset=result_4_dict,
             comparison_datasets=[result_4_modified_dict, result_4_alt_dict],
             procedure_name=PROCEDURE_TO_EXTRACT,
             fixed_threshold=0.8,
         )
 
-        result_4_accuracy_modified = compare_datasets(
+        result_4_accuracy_modified: float = compare_datasets(
             target_dataset=result_4_modified_dict,
             comparison_datasets=[result_4_dict, result_4_alt_dict],
             procedure_name=PROCEDURE_TO_EXTRACT,
             fixed_threshold=0.8,
         )
 
-        result_4_accuracy_alt = compare_datasets(
+        result_4_accuracy_alt: float = compare_datasets(
             target_dataset=result_4_alt_dict,
             comparison_datasets=[result_4_dict, result_4_modified_dict],
             procedure_name=PROCEDURE_TO_EXTRACT,
             fixed_threshold=0.8,
         )
 
+        # Log combined accuracy and model information
         logger.info(
-            f"Main extraction accuracy: {result_4_accuracy:.2f}, Modified extraction accuracy: {result_4_accuracy_modified:.2f}, Alternative extraction accuracy: {result_4_accuracy_alt:.2f}"
+            f"Extraction accuracy comparison - "
+            f"Main ({MAIN_MODEL}): {result_4_accuracy:.2f}, "
+            f"Modified ({MAIN_MODEL}): {result_4_accuracy_modified:.2f}, "
+            f"Alternative ({ALTERNATIVE_MODEL}): {result_4_accuracy_alt:.2f}"
         )
 
-        # Pick the best extraction based on accuracy
-        best_extraction = None
-        best_extraction_accuracy = 0.0
+        # Select the best extraction based on accuracy scores and extraction method
+        # Priority order: main -> modified -> alternative when accuracies are equal
+        best_extraction: dict | None = None
+        best_extraction_accuracy: float = 0.0
+        best_model: str
+        extraction_method: str
 
         # If accuracies are equal, prioritize in order: main -> modified -> alt
         if (
@@ -190,23 +261,12 @@ def main() -> None:
             best_model = ALTERNATIVE_MODEL
             extraction_method = "alternative"
 
-        # Log all results model/method/accuracy
-        logger.info(
-            f"Main extraction model: {MAIN_MODEL}, Main extraction accuracy: {result_4_accuracy:.2f}"
-        )
-        logger.info(
-            f"Modified extraction model: {MAIN_MODEL}, Modified extraction accuracy: {result_4_accuracy_modified:.2f}"
-        )
-        logger.info(
-            f"Alternative extraction model: {ALTERNATIVE_MODEL}, Alternative extraction accuracy: {result_4_accuracy_alt:.2f}"
-        )
-
         # Log the best extraction result
         logger.info(f"Best result model: {best_model}")
         logger.info(f"Best result extraction method: {extraction_method}")
         logger.info(f"Best result accuracy: {best_extraction_accuracy:.2f}")
 
-        #  Step 5: save to database
+        # Step 5: Store the best extraction result with its metadata in the database
 
         store_graph(
             name=PROCEDURE_TO_EXTRACT,
@@ -221,7 +281,7 @@ def main() -> None:
             f"Error in `main`: An error occurred when extracting procedure: {e}.",
             exc_info=True,
         )
-        raise ValueError(f"Error in `main`: {e}")
+        raise ValueError(f"Error in procedure extraction pipeline: {e}")
 
 
 if __name__ == "__main__":
