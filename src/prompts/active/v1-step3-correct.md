@@ -48,8 +48,8 @@ Lets begin .
 
 #### **Extracted procedure flow property graph info:**  
 
-{json.dumps(extracted_data, indent=2)}
+{result_1}
 
 ------------------
 #### **Evaluation Report:**  
-{evaluation}
+{result_2}

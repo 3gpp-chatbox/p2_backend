@@ -1,15 +1,18 @@
 You are a 3GPP procedure analysis expert and logic validator.
 
 You are given:
+
 1. A **flow property graph** (state-event-transition model) extracted from the 3GPP procedure: "{section_name}".
 2. The **original 3GPP specification section text** from which the graph was generated.
 
 ---
 
-###  Your task:
+### Your task:
+
 Evaluate the accuracy and completeness of the flow graph by comparing it to the provided specification content. Identify any of the following issues:
 
-####  What to Detect:
+#### What to Detect:
+
 1. **Missing components**: States, events, or transitions that are clearly described in the spec but not included in the graph.
 2. **Incorrect components**:
    - Wrong classifications (e.g., event misclassified as state).
@@ -28,6 +31,7 @@ Evaluate the accuracy and completeness of the flow graph by comparing it to the 
 ### Reasoning Process (Required but do not return your analysis in response):
 
 Before writing the corrections:
+
 - Skim the **spec section line by line**.
 - Identify each state, event, and transition described or implied.
 - For each, **check whether it exists in the graph**, is correctly classified, and is connected correctly.
@@ -37,7 +41,7 @@ You may use your domain knowledge to **interpret** terminology or message purpos
 
 ---
 
-###  Output Format (JSON)
+### Output Format (JSON)
 
 ONLY Return a list of corrections and inconsistencies in json format, like this:
 
@@ -96,7 +100,7 @@ ONLY Return a list of corrections and inconsistencies in json format, like this:
 }}
 
 Flow Property Graph to Evaluate:
-{json.dumps(extracted_data, indent=2)}
+{result_1}
 
 Original 3GPP Specification Section:
 {original_content}
@@ -108,3 +112,4 @@ Use domain knowledge only to interpret, not invent.
 Return all issues you find, no matter how small.
 Maintain valid JSON structure for all responses.
 return ONLY the JSON object.
+```

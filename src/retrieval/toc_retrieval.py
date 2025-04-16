@@ -8,7 +8,7 @@ from docx import Document
 
 sys.path.append(str(Path(__file__).parents[2].resolve()))
 from src.lib.logger import get_logger
-from src.retrieval.pre_processor import extract_paragraphs, extract_toc
+from src.retrieval.pre_processor import _extract_paragraphs, _extract_toc
 
 logger = get_logger(__name__)
 
@@ -114,10 +114,10 @@ if __name__ == "__main__":
         logger.info("Loading document...")
         file_path = "data/raw/24501-j11.docx"
         doc = Document(file_path)
-        paragraphs = extract_paragraphs(doc)
+        paragraphs = _extract_paragraphs(doc)
 
         logger.info("Extracting table of contents...")
-        toc_content = extract_toc(paragraphs)
+        toc_content = _extract_toc(paragraphs)
 
         procedure_name = "initial registration"
         logger.info(f"Searching for sections related to '{procedure_name}'")

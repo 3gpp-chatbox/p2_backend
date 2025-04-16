@@ -88,7 +88,7 @@ Provide the exact descriptions and conditions based on what is described in the 
 
 First Part:
 States, Events, and transitions of the procedure "{section_name}" (Extracted previously):
-{json.dumps(extracted_data, indent=2)}
+{result_3}
 
 ------------------
 Second Part:
