@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 
 from src.accuracy.sbert_simple import compare_two_datasets
+from src.schemas.procedure_graph import Graph
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
@@ -13,8 +14,8 @@ logger = get_logger(__name__)
 
 
 def compare_datasets(
-    target_dataset: dict,
-    comparison_datasets: list[dict],
+    target_dataset: Graph,
+    comparison_datasets: list[Graph],
     procedure_name: str,
     fixed_threshold: float = 0.8,
 ) -> float:
@@ -26,8 +27,8 @@ def compare_datasets(
     how well a reference dataset aligns with multiple variations.
 
     Args:
-        target_dataset (dict): The reference dataset to compare against others.
-        comparison_datasets (list[dict]): List of datasets to compare against the target.
+        target_dataset (Graph): The reference dataset to compare against others.
+        comparison_datasets (list[Graph]): List of datasets to compare against the target.
         procedure_name (str): Name of the procedure used in comparisons.
         fixed_threshold (float, optional): Threshold value for comparisons. Defaults to 0.8.
 
@@ -38,7 +39,7 @@ def compare_datasets(
         ValueError: If no comparison datasets are provided.
 
     Example:
-        >>> main_result = {...}  # Your reference/main extraction
+        >>> main_result = Graph(...)  # Your reference/main extraction
         >>> variations = [modified_result, alt_result]  # Other extractions
         >>> accuracy = compare_datasets(main_result, variations, "ExtractionProcedure")
         >>> print(f"Average accuracy: {accuracy}")

@@ -6,7 +6,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from src.schema_validation import Graph
+from src.schemas.procedure_graph import Graph
 
 
 def load_dataset(file_path: str) -> Graph:

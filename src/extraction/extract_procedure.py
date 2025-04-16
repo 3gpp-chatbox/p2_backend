@@ -26,7 +26,7 @@ from src.db.document import get_document_by_name
 from src.extraction.store_graphs import store_graph
 from src.prompts.prompt_manager import PromptManager
 from src.retrieval.get_context import get_context
-from src.schema_validation import Graph
+from src.schemas.procedure_graph import Graph
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
@@ -199,29 +199,25 @@ def main() -> None:
         ).output
 
         # Step 4: Compare and validate different extraction approaches
-        # Convert Pydantic models to dictionaries for comparison
-        result_4_dict = result_4.model_dump()
-        result_4_modified_dict = result_4_modified.model_dump()
-        result_4_alt_dict = result_4_alt.model_dump()
 
         # Calculate accuracy scores by comparing each extraction against the others
         result_4_accuracy: float = compare_datasets(
-            target_dataset=result_4_dict,
-            comparison_datasets=[result_4_modified_dict, result_4_alt_dict],
+            target_dataset=result_4,
+            comparison_datasets=[result_4_modified, result_4_alt],
             procedure_name=PROCEDURE_TO_EXTRACT,
             fixed_threshold=0.8,
         )
 
         result_4_accuracy_modified: float = compare_datasets(
-            target_dataset=result_4_modified_dict,
-            comparison_datasets=[result_4_dict, result_4_alt_dict],
+            target_dataset=result_4_modified,
+            comparison_datasets=[result_4, result_4_alt],
             procedure_name=PROCEDURE_TO_EXTRACT,
             fixed_threshold=0.8,
         )
 
         result_4_accuracy_alt: float = compare_datasets(
-            target_dataset=result_4_alt_dict,
-            comparison_datasets=[result_4_dict, result_4_modified_dict],
+            target_dataset=result_4_alt,
+            comparison_datasets=[result_4, result_4_modified],
             procedure_name=PROCEDURE_TO_EXTRACT,
             fixed_threshold=0.8,
         )
@@ -246,17 +242,17 @@ def main() -> None:
             result_4_accuracy >= result_4_accuracy_modified
             and result_4_accuracy >= result_4_accuracy_alt
         ):
-            best_extraction = result_4_dict
+            best_extraction = result_4
             best_extraction_accuracy = result_4_accuracy
             best_model = MAIN_MODEL
             extraction_method = "main"
         elif result_4_accuracy_modified >= result_4_accuracy_alt:
-            best_extraction = result_4_modified_dict
+            best_extraction = result_4_modified
             best_extraction_accuracy = result_4_accuracy_modified
             best_model = MAIN_MODEL
             extraction_method = "modified"
         else:
-            best_extraction = result_4_alt_dict
+            best_extraction = result_4_alt
             best_extraction_accuracy = result_4_accuracy_alt
             best_model = ALTERNATIVE_MODEL
             extraction_method = "alternative"

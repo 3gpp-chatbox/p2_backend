@@ -7,7 +7,7 @@ import sys
 import pytest
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))  # Add p2_backend to path
-from src.schema_validation import validate_data
+from schemas.schema_validation import validate_data
 
 # Path to mock data directory
 MOCK_DATA_DIR = os.path.join(
