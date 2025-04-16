@@ -88,7 +88,7 @@ def store_graph(
 
         # Insert graph data into the database
         query = """
-        INSERT INTO graph (name, document_id, graph, accuracy)
+        INSERT INTO graph (name, document_id, original_graph, accuracy)
         VALUES (%s, %s, %s, %s)
         RETURNING id
         """

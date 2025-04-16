@@ -85,7 +85,9 @@ def extract_edge_descriptions(
     return edges
 
 
-def compute_sbert_embeddings(descriptions: List[str]) -> np.ndarray:
+def compute_sbert_embeddings(
+    descriptions: List[str], model: SentenceTransformer
+) -> np.ndarray:
     """Computes SBERT embeddings for a list of text descriptions.
 
     Args:
@@ -94,7 +96,6 @@ def compute_sbert_embeddings(descriptions: List[str]) -> np.ndarray:
     Returns:
         np.ndarray: Array of SBERT embeddings.
     """
-    model = SentenceTransformer("all-MiniLM-L6-v2")
     embeddings = model.encode(descriptions, convert_to_tensor=True)
     return embeddings.cpu().numpy()
 
@@ -117,8 +118,10 @@ def find_best_matches(
     descriptions_1 = [item["description"] for item in set_1]
     descriptions_2 = [item["description"] for item in set_2]
 
-    embeddings_1 = compute_sbert_embeddings(descriptions_1)
-    embeddings_2 = compute_sbert_embeddings(descriptions_2)
+    # Define model outside the function to avoid reloading it every time
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+    embeddings_1 = compute_sbert_embeddings(descriptions_1, model=model)
+    embeddings_2 = compute_sbert_embeddings(descriptions_2, model=model)
 
     similarity_matrix = cosine_similarity(embeddings_1, embeddings_2)
 

@@ -15,7 +15,7 @@ import pytest
 from src.db.db_handler import DatabaseHandler
 from src.retrieval.sections_content_retrieval import (
     _generate_markdown,
-    retrieve_sections_content,
+    get_sections_content,
 )
 
 
@@ -102,7 +102,7 @@ def test_retrieve_sections_content_normal_execution(
     ]
 
     # Execute function
-    result = retrieve_sections_content(mock_db_handler, "test_doc", ["4.2", "5.2"])
+    result = get_sections_content(mock_db_handler, "test_doc", ["4.2", "5.2"])
 
     # Verify the expected markdown format
     expected_markdown = (
@@ -128,7 +128,7 @@ def test_retrieve_sections_content_missing_doc_name(
     raises a ValueError with an appropriate error message.
     """
     with pytest.raises(ValueError, match="Missing required argument: doc_name"):
-        retrieve_sections_content(mock_db_handler, "", ["4.2"])
+        get_sections_content(mock_db_handler, "", ["4.2"])
 
 
 def test_retrieve_sections_content_empty_section_list(
@@ -140,7 +140,7 @@ def test_retrieve_sections_content_empty_section_list(
     raises a ValueError with the expected error message.
     """
     with pytest.raises(ValueError, match="Missing required argument: section_list"):
-        retrieve_sections_content(mock_db_handler, "test_doc", [])
+        get_sections_content(mock_db_handler, "test_doc", [])
 
 
 def test_retrieve_sections_content_invalid_section_type(
@@ -153,7 +153,7 @@ def test_retrieve_sections_content_invalid_section_type(
     error message.
     """
     with pytest.raises(ValueError, match="All section identifiers must be strings"):
-        retrieve_sections_content(mock_db_handler, "test_doc", ["4.2", 5.2])
+        get_sections_content(mock_db_handler, "test_doc", ["4.2", 5.2])
 
 
 def test_retrieve_sections_content_document_not_found(
@@ -171,7 +171,7 @@ def test_retrieve_sections_content_document_not_found(
         Exception,
         match="fetch_sections_content: Failed to retrieve sections: Document 'non_existent_doc' not found in the database",
     ):
-        retrieve_sections_content(mock_db_handler, "non_existent_doc", ["4.2"])
+        get_sections_content(mock_db_handler, "non_existent_doc", ["4.2"])
 
 
 def test_retrieve_sections_content_no_sections_found(
@@ -193,7 +193,7 @@ def test_retrieve_sections_content_no_sections_found(
         Exception,
         match="fetch_sections_content: Failed to retrieve sections: No sections found for document 'test_doc' with the given parameter:",
     ):
-        retrieve_sections_content(mock_db_handler, "test_doc", ["non_existent_section"])
+        get_sections_content(mock_db_handler, "test_doc", ["non_existent_section"])
 
 
 def test_retrieve_sections_content_hierarchical_query_failure(
@@ -217,7 +217,7 @@ def test_retrieve_sections_content_hierarchical_query_failure(
         Exception,
         match="fetch_sections_content: Failed to retrieve sections: Failed to perform hierarchical search for document 'test_doc' with the given parameter:",
     ):
-        retrieve_sections_content(mock_db_handler, "test_doc", ["4.2", "5.2"])
+        get_sections_content(mock_db_handler, "test_doc", ["4.2", "5.2"])
 
 
 def test_generate_markdown_normal_execution() -> None:
