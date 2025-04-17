@@ -278,6 +278,8 @@ def main() -> None:
             graph_data=best_extraction,
             accuracy=best_extraction_accuracy,
             db=db_handler,
+            model=best_model,
+            extraction_method=extraction_method,
         )
 
     except Exception as e:

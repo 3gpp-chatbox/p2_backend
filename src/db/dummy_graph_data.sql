@@ -3,7 +3,7 @@
 WITH doc AS (
     SELECT id FROM document WHERE name = 'Sample Document 1'
 )
-INSERT INTO graph (name, document_id, original_graph, edited_graph, accuracy, extracted_at, last_edit_at, status)
+INSERT INTO graph (name, document_id, original_graph, edited_graph, model_name, extraction_method, accuracy, extracted_at, last_edit_at, edited)
 VALUES 
 -- Original graph (no edits) 
 (
@@ -21,10 +21,12 @@ VALUES
         ]
     }',
     NULL,
+    'gpt-4-1106-preview',
+    'main',
     0.95,
     NOW() - INTERVAL '2 days',
     NULL,
-    'original'
+    FALSE
 ),
 -- Edited graph - explicitly set status to 'edited'
 (
@@ -54,10 +56,12 @@ VALUES
             {"from": "3", "to": "4", "type": "condition", "description": "queries"}
         ]
     }',
+    'gpt-4-1106-preview',
+    'main',
     0.92,
     NOW() - INTERVAL '1 day',
     NOW(),
-    'edited'
+    TRUE
 );
 
 
@@ -65,9 +69,9 @@ VALUES
 WITH doc2 AS (
     SELECT id FROM document WHERE name = 'Sample Document 2'
 )
-INSERT INTO graph (name, document_id, original_graph, edited_graph, accuracy, extracted_at, last_edit_at, status)
+INSERT INTO graph (name, document_id, original_graph, edited_graph, model_name, extraction_method, accuracy, extracted_at, last_edit_at, edited)
 VALUES 
--- Another original graph - status will default to 'original'
+-- Another original graph
 (
     'Sample Graph 3',
     (SELECT id FROM doc2),
@@ -85,9 +89,10 @@ VALUES
         ]
     }',
     NULL,
+    'gpt-4-1106-preview',
+    'main',
     0.88,
     NOW() - INTERVAL '12 hours',
     NULL,
-    'original'
+    FALSE
 );
-
