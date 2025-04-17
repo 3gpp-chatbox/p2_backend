@@ -20,9 +20,6 @@ from psycopg.rows import dict_row
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment variables from .env file
-load_dotenv(override=True)
-
 
 class DatabaseHandler:
     """A class to handle PostgreSQL database operations with connection pooling and error handling.
@@ -207,6 +204,7 @@ class DatabaseHandler:
 
 
 if __name__ == "__main__":
+    load_dotenv(override=True)
     # Example usage
     try:
         with DatabaseHandler() as db:

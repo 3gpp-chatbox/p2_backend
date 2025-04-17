@@ -1,10 +1,11 @@
+import json
 import sys
 from pathlib import Path
 from uuid import UUID
-import json
 
 from fastapi import APIRouter, HTTPException
-from src.API.pydantic_models import EditedGraph
+
+from src.schemas.procedure_graph import Graph
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[3].resolve()))
@@ -14,11 +15,10 @@ from src.lib.logger import get_logger
 
 logger = get_logger(__name__)
 router = APIRouter()
-db = DatabaseHandler()
 
 
-@router.put("/{procedure_id}/edit", response_model=ProcedureItem)
-async def update_graph_with_edit(procedure_id: UUID, edit_request: EditedGraph):
+@router.put("/{procedure_id}", response_model=ProcedureItem)
+async def update_graph_with_edit(procedure_id: UUID, edit_request: Graph):
     """
     Update a procedure graph with an edited version.
 
@@ -33,7 +33,7 @@ async def update_graph_with_edit(procedure_id: UUID, edit_request: EditedGraph):
         HTTPException: If the procedure is not found or update fails
     """
     try:
-        with db:
+        with DatabaseHandler() as db:
             # First check if the procedure exists
             check_query = """
             SELECT id, document_id
