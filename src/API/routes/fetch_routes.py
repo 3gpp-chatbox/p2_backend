@@ -63,16 +63,17 @@ async def get_procedure(procedure_id: UUID):
             query = """
             SELECT g.id, g.name, g.document_id, d.name as document_name, g.original_graph, g.edited_graph, 
                    g.accuracy, 
-                   TO_CHAR(g.extracted_at, 'YYYY-MM-DD HH24:MI') as extracted_at,
+                   TO_CHAR(g.extracted_at, 'DD-MM-YYYY HH24:MI') as extracted_at,
                    CASE 
                        WHEN g.last_edit_at IS NULL THEN NULL 
-                       ELSE TO_CHAR(g.last_edit_at, 'YYYY-MM-DD HH24:MI')
+                       ELSE TO_CHAR(g.last_edit_at, 'DD-MM-YYYY HH24:MI')
                    END as last_edit_at,
                    g.edited, g.model_name, g.extraction_method 
             FROM graph g
             JOIN document d ON g.document_id = d.id
             WHERE g.id = %s
             """
+
             results = db.execute_query(query, (procedure_id,))
 
             if not results:

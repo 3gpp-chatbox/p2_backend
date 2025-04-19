@@ -2,7 +2,7 @@
 Defines API response/request models.
 """
 
-from typing import Any, Dict, Optional
+from typing import Optional
 
 from pydantic import UUID4, BaseModel
 
@@ -51,11 +51,15 @@ class ProcedureItem(BaseModel):
     last_edit_at: Optional[str] = None
 
 
-class EditedGraph(BaseModel):
+class Graph(Graph):
+    pass
+
+
+class EditGraph(BaseModel):
     """model for edited graph.
 
     Attributes:
         edited_graph: The edited graph data in JSON format
     """
 
-    edited_graph: Dict[str, Any]
+    edited_graph: Graph

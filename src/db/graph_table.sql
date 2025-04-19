@@ -6,7 +6,7 @@ CREATE TYPE extraction_method AS ENUM ('main', 'modified', 'alternative');
 CREATE TABLE graph (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
-    document_id UUID REFERENCES document(id) ON DELETE CASCADE,
+    document_id UUID NOT NULL REFERENCES document(id) ON DELETE CASCADE,
     original_graph JSONB NOT NULL,
     edited_graph JSONB DEFAULT NULL,
     model_name TEXT NOT NULL,
