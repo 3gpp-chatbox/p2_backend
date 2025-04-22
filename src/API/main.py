@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
 
 # Add parent directory to Python path
@@ -11,6 +12,8 @@ from src.API.routes.fetch_routes import router as fetch_router
 from src.API.routes.insert_routes import router as insert_router
 
 app = FastAPI()
+
+load_dotenv(override=True)
 
 # Add CORS middleware
 app.add_middleware(

@@ -13,10 +13,9 @@ from src.lib.logger import get_logger
 
 logger = get_logger(__name__)
 router = APIRouter()
-db = DatabaseHandler()
 
 
-@router.get("/list", response_model=List[ProcedureListItem])
+@router.get("/", response_model=List[ProcedureListItem])
 async def get_procedures():
     """
     Get list of all available procedures.
@@ -25,7 +24,7 @@ async def get_procedures():
         List[ProcedureListItem]: List of procedures with basic information
     """
     try:
-        with db:
+        with DatabaseHandler() as db:
             query = """
             SELECT id, name 
             FROM graph 
@@ -60,14 +59,21 @@ async def get_procedure(procedure_id: UUID):
         ProcedureGraph: Complete procedure information including graph data
     """
     try:
-        with db:
+        with DatabaseHandler() as db:
             query = """
             SELECT g.id, g.name, g.document_id, d.name as document_name, g.original_graph, g.edited_graph, 
-                   g.accuracy, g.extracted_at, g.last_edit_at, g.status 
+                   g.accuracy, 
+                   TO_CHAR(g.extracted_at, 'DD-MM-YYYY HH24:MI') as extracted_at,
+                   CASE 
+                       WHEN g.last_edit_at IS NULL THEN NULL 
+                       ELSE TO_CHAR(g.last_edit_at, 'DD-MM-YYYY HH24:MI')
+                   END as last_edit_at,
+                   g.edited, g.model_name, g.extraction_method 
             FROM graph g
             JOIN document d ON g.document_id = d.id
             WHERE g.id = %s
             """
+
             results = db.execute_query(query, (procedure_id,))
 
             if not results:
@@ -87,7 +93,9 @@ async def get_procedure(procedure_id: UUID):
                 accuracy=row["accuracy"],
                 extracted_at=row["extracted_at"],
                 last_edit_at=row["last_edit_at"],
-                status=row["status"],
+                edited=row["edited"],
+                model_name=row["model_name"],
+                extraction_method=row["extraction_method"],
             )
 
     except HTTPException:
