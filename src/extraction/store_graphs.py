@@ -1,8 +1,9 @@
-import json
 import sys
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Optional
 from uuid import UUID
+
+from src.schemas.procedure_graph import Graph
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
@@ -42,8 +43,10 @@ def get_document_id_by_name(db: DatabaseHandler, document_name: str) -> Optional
 def store_graph(
     name: str,
     document_name: str,
-    graph_data: Dict,
+    graph_data: Graph,
     accuracy: float,
+    model: str,
+    extraction_method: str,
     db: DatabaseHandler,
 ) -> Optional[UUID]:
     """
@@ -84,15 +87,16 @@ def store_graph(
             return result[0]["id"]
 
         # Convert graph data to JSON
-        graph_json = json.dumps(graph_data)
+        # graph_json = json.dumps(graph_data)
+        graph_json = graph_data.model_dump_json()
 
         # Insert graph data into the database
         query = """
-        INSERT INTO graph (name, document_id, original_graph, accuracy)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO graph (name, document_id, original_graph, accuracy, model_name, extraction_method)
+        VALUES (%s, %s, %s, %s, %s, %s)
         RETURNING id
         """
-        parameters = (name, document_id, graph_json, accuracy)
+        parameters = (name, document_id, graph_json, accuracy, model, extraction_method)
 
         with db.transaction():
             result = db.execute_query(query, parameters)

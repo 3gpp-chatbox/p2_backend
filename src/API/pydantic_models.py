@@ -2,9 +2,11 @@
 Defines API response/request models.
 """
 
-from pydantic import BaseModel, UUID4
-from typing import Dict, Any, Optional
-from datetime import datetime
+from typing import Optional
+
+from pydantic import UUID4, BaseModel
+
+from src.schemas.procedure_graph import Graph
 
 
 class ProcedureListItem(BaseModel):
@@ -37,21 +39,27 @@ class ProcedureItem(BaseModel):
 
     id: UUID4
     name: str
-    document_id: UUID4
     document_name: str
-    original_graph: Dict[str, Any]
-    edited_graph: Optional[Dict[str, Any]] = None
+    document_id: UUID4
+    edited: bool
+    original_graph: Graph
+    edited_graph: Optional[Graph] = None
     accuracy: float
-    extracted_at: datetime
-    last_edit_at: Optional[datetime] = None
-    status: str
+    extraction_method: str
+    model_name: str
+    extracted_at: str
+    last_edit_at: Optional[str] = None
 
 
-class EditedGraph(BaseModel):
+class Graph(Graph):
+    pass
+
+
+class EditGraph(BaseModel):
     """model for edited graph.
 
     Attributes:
         edited_graph: The edited graph data in JSON format
     """
 
-    edited_graph: Dict[str, Any]
+    edited_graph: Graph
