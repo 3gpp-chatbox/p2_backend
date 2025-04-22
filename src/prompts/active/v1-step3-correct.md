@@ -1,29 +1,35 @@
-You are a 3GPP procedure analysis expert.
+You are given the following inputs:
 
-You are given:
-1. A **flow property graph** extracted from the 3GPP procedure: "{section_name}".
-2. A **professional evaluation report** that identifies structural and semantic issues in the graph.
+1. A Flow Property Graph (FPG) in JSON format for the procedure "{section_name}".
+2. An evaluation report identifying missing or incorrect nodes and edges in the FPG.
 
----
-
-### 🎯 Your task:
-- Correct the flow graph based **only on the information in the evaluation report**.
-- Return **only** the corrected flow graph as a JSON object.
-- Do **not** return any commentary or explanation.
-
-
-####  What You Must Do:
-- Apply **all corrections** listed in the evaluation report.
-- **Fix or replace** nodes and edges that are flagged.
-- **Add** any missing states, events, or transitions explicitly described.
-- **Correct edge types** if needed (e.g., `condition` → `trigger`).
-- **Remove** nodes or edges if the evaluation marks them as invalid or incorrect.
-- If a **conflicting node type** is detected, keep the one suggested in the report.
-- If a **fatal error** is indicated, return an empty graph with an explanatory note.
+Your task is to **correct the FPG** using the evaluation report provided.
 
 ---
 
-###  What You Must NOT Do:
+## Correction Instructions
+
+Using the evaluation report, update the FPG:
+
+- **Add missing nodes or edges** that are explicitly described in the text.
+- **Remove invalid or extra nodes and edges** that are not supported by the content.
+- **Ensure consistency** between all `from`/`to` values in edges and `id`s in the node list.
+- **Edge Types**:
+  - State→event must be `"trigger"`
+  - Event→state must be `"condition"` (note: these transitions always represent actions in the actual procedure)
+- **Node names and structure** must follow:
+  - States: `"ENTITY_STATE_NAME"` (e.g., `"UE_5GMM_DEREGISTERED","AMF_REGISTRATION_PENDING"`)
+  - Events: `"Event_[DESCRIPTION]"` (e.g., `"Event_T3510_Expires"`)
+
+---
+
+## Output Instructions
+
+Return a single corrected FPG JSON object with the same structure as the input.
+
+- Do not include the evaluation report.
+- Do not include comments or explanations.
+- Use only data supported by the original text.
 - Do **not** invent new states, events, or transitions beyond those described.
 - Do **not** make assumptions or corrections that are not supported by the evaluation.
 
@@ -42,14 +48,16 @@ Return ONLY the corrected graph in this format:
 }}
 
 ---
-STRICT RULE: Return **only** a valid JSON object. No commentary, no explanation, no text before or after the JSON.
+Strict Rules:
+Return only a valid JSON object.
+No commentary, explanation, or text before/after the JSON.
+Maintain exact original JSON structure.
 
-Lets begin .
+Input Data
 
 #### **Extracted procedure flow property graph info:**  
-
-{result_1}
+{json.dumps(extracted_data, indent=2)}
 
 ------------------
 #### **Evaluation Report:**  
-{result_2}
+{evaluation}
