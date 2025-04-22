@@ -6,8 +6,10 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
+from src.schemas.procedure_graph import Graph
 
-def load_dataset(file_path: str) -> Dict[str, Any]:
+
+def load_dataset(file_path: str) -> Graph:
     """Loads a JSON dataset from the specified file path.
 
     Args:
@@ -20,25 +22,23 @@ def load_dataset(file_path: str) -> Dict[str, Any]:
         return json.load(f)
 
 
-def extract_node_descriptions(
-    dataset: Dict[str, Any], dataset_name: str
-) -> List[Dict[str, Any]]:
+def extract_node_descriptions(graph: Graph, dataset_name: str) -> List[Dict[str, Any]]:
     """Extracts and formats node descriptions from the dataset.
 
     Args:
-        dataset (Dict[str, Any]): The JSON dataset containing graph nodes.
+        graph (Graph): The graph containing nodes.
         dataset_name (str): Name/identifier for the dataset.
 
     Returns:
         List[Dict[str, Any]]: List of dictionaries with node ID, full description, and dataset name.
     """
     nodes = []
-    if dataset and "graph" in dataset and "nodes" in dataset["graph"]:
-        for node in dataset["graph"]["nodes"]:
-            node_id = node.get("id", "")
-            node_type = node.get("type", "")
-            description = node.get("description", "")
-            properties = json.dumps(node.get("properties", {}), ensure_ascii=False)
+    if graph.nodes:
+        for node in graph.nodes:
+            node_id = node.id
+            node_type = node.type
+            description = node.description
+            properties = "{}"  # Node model doesn't have properties anymore
 
             full_text = f"ID: {node_id}. Type: {node_type}. Description: {description}. Properties: {properties}"
 
@@ -52,25 +52,23 @@ def extract_node_descriptions(
     return nodes
 
 
-def extract_edge_descriptions(
-    dataset: Dict[str, Any], dataset_name: str
-) -> List[Dict[str, Any]]:
+def extract_edge_descriptions(graph: Graph, dataset_name: str) -> List[Dict[str, Any]]:
     """Extracts and formats edge descriptions from the dataset.
 
     Args:
-        dataset (Dict[str, Any]): The JSON dataset containing graph edges.
+        graph (Graph): The graph containing edges.
         dataset_name (str): Name/identifier for the dataset.
 
     Returns:
         List[Dict[str, Any]]: List of dictionaries with edge ID, full description, and dataset name.
     """
     edges = []
-    if dataset and "graph" in dataset and "edges" in dataset["graph"]:
-        for edge in dataset["graph"]["edges"]:
-            from_node = edge.get("from", "")
-            to_node = edge.get("to", "")
-            edge_type = edge.get("type", "")
-            description = edge.get("description", "")
+    if graph.edges:
+        for edge in graph.edges:
+            from_node = edge.from_node
+            to_node = edge.to
+            edge_type = edge.type
+            description = edge.description
 
             edge_id = f"{from_node}->{to_node}"
             full_text = f"From: {from_node}. To: {to_node}. Type: {edge_type}. Description: {description}."
@@ -92,6 +90,7 @@ def compute_sbert_embeddings(
 
     Args:
         descriptions (List[str]): List of string descriptions to embed.
+        model (SentenceTransformer): Pre-initialized SBERT model for computing embeddings.
 
     Returns:
         np.ndarray: Array of SBERT embeddings.
@@ -103,6 +102,7 @@ def compute_sbert_embeddings(
 def find_best_matches(
     set_1: List[Dict[str, Any]],
     set_2: List[Dict[str, Any]],
+    model: SentenceTransformer,
     fixed_threshold: float = 0.8,
 ) -> Dict[str, Any]:
     """Finds the best semantic matches between two sets of graph items using SBERT and cosine similarity.
@@ -110,6 +110,7 @@ def find_best_matches(
     Args:
         set_1 (List[Dict[str, Any]]): First list of graph items (nodes or edges).
         set_2 (List[Dict[str, Any]]): Second list of graph items.
+        model (SentenceTransformer): Pre-initialized SBERT model for computing embeddings.
         fixed_threshold (float): Minimum cosine similarity to consider a match as valid. Defaults to 0.8.
 
     Returns:
@@ -118,8 +119,6 @@ def find_best_matches(
     descriptions_1 = [item["description"] for item in set_1]
     descriptions_2 = [item["description"] for item in set_2]
 
-    # Define model outside the function to avoid reloading it every time
-    model = SentenceTransformer("all-MiniLM-L6-v2")
     embeddings_1 = compute_sbert_embeddings(descriptions_1, model=model)
     embeddings_2 = compute_sbert_embeddings(descriptions_2, model=model)
 
@@ -151,19 +150,21 @@ def find_best_matches(
 
 
 def compare_two_datasets(
-    dataset_1: Dict[str, Any],
-    dataset_2: Dict[str, Any],
+    dataset_1: Graph,
+    dataset_2: Graph,
     dataset_1_name: str,
     dataset_2_name: str,
+    model: SentenceTransformer,
     fixed_threshold: float = 0.8,
 ) -> Dict[str, Any]:
     """Compares two datasets by matching their nodes and edges based on semantic similarity.
 
     Args:
-        dataset_1 (Dict[str, Any]): First dataset.
-        dataset_2 (Dict[str, Any]): Second dataset.
+        dataset_1 (Graph): First graph.
+        dataset_2 (Graph): Second graph.
         dataset_1_name (str): Name of the first dataset.
         dataset_2_name (str): Name of the second dataset.
+        model (SentenceTransformer): Pre-initialized SBERT model for computing embeddings.
         fixed_threshold (float): Minimum similarity score to consider a match valid.
 
     Returns:
@@ -175,8 +176,8 @@ def compare_two_datasets(
     edges_1 = extract_edge_descriptions(dataset_1, dataset_1_name)
     edges_2 = extract_edge_descriptions(dataset_2, dataset_2_name)
 
-    node_results = find_best_matches(nodes_1, nodes_2, fixed_threshold)
-    edge_results = find_best_matches(edges_1, edges_2, fixed_threshold)
+    node_results = find_best_matches(nodes_1, nodes_2, model, fixed_threshold)
+    edge_results = find_best_matches(edges_1, edges_2, model, fixed_threshold)
 
     node_matches = node_results["matches"]
     edge_matches = edge_results["matches"]
@@ -275,16 +276,23 @@ def save_results(results: Dict[str, Any], output_path: str):
 
 
 if __name__ == "__main__":
+    # Initialize the model once at module level for reuse
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+
     data_dir = "data"
     dataset_files = {
         "v1": os.path.join(data_dir, "consolidated_output/run1_step4.json"),
         "v2": os.path.join(data_dir, "consolidated_output/run5_step4.json"),
     }
 
-    datasets = {key: load_dataset(path) for key, path in dataset_files.items()}
+    # Load datasets as Graph objects
+    datasets = {}
+    for key, path in dataset_files.items():
+        data = load_dataset(path)
+        datasets[key] = data
 
     results = compare_two_datasets(
-        datasets["v1"], datasets["v2"], "Dataset 1", "Dataset 2"
+        datasets["v1"], datasets["v2"], "Dataset 1", "Dataset 2", model=model
     )
 
     save_results(results, "src/accuracy/sbert_simple.json")
