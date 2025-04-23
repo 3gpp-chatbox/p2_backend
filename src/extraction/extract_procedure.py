@@ -40,18 +40,22 @@ from src.lib.logger import get_logger
 logger = get_logger(__name__)
 
 
-def save_result(result: str | dict | Graph, step: str, procedure_name: str) -> None:
+def save_result(
+    result: str | dict | Graph, step: str, procedure_name: str, run_id: str
+) -> None:
     """Save the extraction result to a file.
 
     Args:
         result: The result to save (can be string, dict or Graph)
         step: The step name (e.g., 'step1', 'step2')
         procedure_name: Name of the procedure being extracted
+        run_id: Unique identifier for the current execution run
     """
-    # Create output directory if it doesn't exist
-    output_dir = Path("data/output")
+    # Create run-specific output directory if it doesn't exist
+    output_dir = Path("data/output") / run_id
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    # Get timestamp for file name
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     # Handle different result types
@@ -92,6 +96,9 @@ def main() -> None:
         Exception: For any other unexpected errors during execution
     """
     try:
+        # Generate a unique run ID for this execution
+        run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+
         load_dotenv(override=True)
         # Load environment variables with default values where appropriate
         # --- Document Configuration ---
@@ -182,7 +189,7 @@ def main() -> None:
         result_1 = result_1_response.output
         logger.info(f"Step 1 token usage: {result_1_response.usage()}")
 
-        save_result(result_1, "step1", PROCEDURE_TO_EXTRACT)
+        save_result(result_1, "step1", PROCEDURE_TO_EXTRACT, run_id)
 
         # Stage 2: Evaluate and validate initial extraction
         prompt_2 = prompt_manager.render_prompt(
@@ -198,7 +205,7 @@ def main() -> None:
         result_2 = result_2_response.output
         logger.info(f"Step 2 token usage: {result_2_response.usage()}")
 
-        save_result(result_2, "step2", PROCEDURE_TO_EXTRACT)
+        save_result(result_2, "step2", PROCEDURE_TO_EXTRACT, run_id)
 
         # Stage 3: Apply corrections based on evaluation
         prompt_3 = prompt_manager.render_prompt(
@@ -208,11 +215,11 @@ def main() -> None:
             section_name=PROCEDURE_TO_EXTRACT,
         )
 
-        result_3_response = main_agent.run_sync(user_prompt=prompt_3)
+        result_3_response = main_agent.run_sync(user_prompt=prompt_3, output_type=Graph)
         result_3 = result_3_response.output
         logger.info(f"Step 3 token usage: {result_3_response.usage()}")
 
-        save_result(result_3, "step3", PROCEDURE_TO_EXTRACT)
+        save_result(result_3, "step3", PROCEDURE_TO_EXTRACT, run_id)
 
         # Stage 4: Enrich the corrected extraction with additional details
         # Try multiple approaches for better accuracy
@@ -235,7 +242,7 @@ def main() -> None:
         result_4: Graph = result_4_response.output
         logger.info(f"Step 4 token usage (main): {result_4_response.usage()}")
 
-        save_result(result_4, "step4", PROCEDURE_TO_EXTRACT)
+        save_result(result_4, "step4", PROCEDURE_TO_EXTRACT, run_id)
 
         # Execute modified approach for comparison
         result_4_modified_response = main_agent.run_sync(
@@ -246,7 +253,7 @@ def main() -> None:
             f"Step 4 token usage (modified): {result_4_modified_response.usage()}"
         )
 
-        save_result(result_4_modified, "step4_modified", PROCEDURE_TO_EXTRACT)
+        save_result(result_4_modified, "step4_modified", PROCEDURE_TO_EXTRACT, run_id)
 
         # Execute alternative model extraction for validation
         result_4_alt_response = alt_agent.run_sync(
@@ -257,7 +264,7 @@ def main() -> None:
             f"Step 4 token usage (alternative): {result_4_alt_response.usage()}"
         )
 
-        save_result(result_4_alt, "step4_alt", PROCEDURE_TO_EXTRACT)
+        save_result(result_4_alt, "step4_alt", PROCEDURE_TO_EXTRACT, run_id)
 
         # Step 4: Compare and validate different extraction approaches
 
