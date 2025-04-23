@@ -12,8 +12,10 @@ The module uses multiple LLM models and prompting strategies to ensure high-qual
 extraction results, comparing different approaches and selecting the most accurate one.
 """
 
+import json
 import os
 import sys
+from datetime import datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -36,6 +38,36 @@ from src.lib.logger import get_logger
 
 # Set up logging
 logger = get_logger(__name__)
+
+
+def save_result(result: str | dict | Graph, step: str, procedure_name: str) -> None:
+    """Save the extraction result to a file.
+
+    Args:
+        result: The result to save (can be string, dict or Graph)
+        step: The step name (e.g., 'step1', 'step2')
+        procedure_name: Name of the procedure being extracted
+    """
+    # Create output directory if it doesn't exist
+    output_dir = Path("data/output")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    # Handle different result types
+    if isinstance(result, Graph):
+        # Save Graph objects as JSON
+        filename = output_dir / f"{procedure_name}_{step}_{timestamp}.json"
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump(result.model_dump(), f, indent=2, ensure_ascii=False)
+    else:
+        # Save string results as Markdown
+        filename = output_dir / f"{procedure_name}_{step}_{timestamp}.md"
+        content = str(result)  # Convert to string if it's not already
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(content)
+
+    logger.info(f"Saved {step} result to {filename}")
 
 
 def main() -> None:
@@ -146,9 +178,11 @@ def main() -> None:
             template_name="v1-step1", section_name=PROCEDURE_TO_EXTRACT, text=context
         )
 
-        result_1 = main_agent.run_sync(
-            user_prompt=prompt_1,
-        ).output
+        result_1_response = main_agent.run_sync(user_prompt=prompt_1, output_type=Graph)
+        result_1 = result_1_response.output
+        logger.info(f"Step 1 token usage: {result_1_response.usage()}")
+
+        save_result(result_1, "step1", PROCEDURE_TO_EXTRACT)
 
         # Stage 2: Evaluate and validate initial extraction
         prompt_2 = prompt_manager.render_prompt(
@@ -158,9 +192,13 @@ def main() -> None:
             section_name=PROCEDURE_TO_EXTRACT,
         )
 
-        result_2 = main_agent.run_sync(
+        result_2_response = main_agent.run_sync(
             user_prompt=prompt_2,
-        ).output
+        )
+        result_2 = result_2_response.output
+        logger.info(f"Step 2 token usage: {result_2_response.usage()}")
+
+        save_result(result_2, "step2", PROCEDURE_TO_EXTRACT)
 
         # Stage 3: Apply corrections based on evaluation
         prompt_3 = prompt_manager.render_prompt(
@@ -170,7 +208,11 @@ def main() -> None:
             section_name=PROCEDURE_TO_EXTRACT,
         )
 
-        result_3 = main_agent.run_sync(user_prompt=prompt_3).output
+        result_3_response = main_agent.run_sync(user_prompt=prompt_3)
+        result_3 = result_3_response.output
+        logger.info(f"Step 3 token usage: {result_3_response.usage()}")
+
+        save_result(result_3, "step3", PROCEDURE_TO_EXTRACT)
 
         # Stage 4: Enrich the corrected extraction with additional details
         # Try multiple approaches for better accuracy
@@ -189,19 +231,33 @@ def main() -> None:
         )
 
         # Execute final extraction with type validation using Graph schema
-        result_4: Graph = main_agent.run_sync(
-            user_prompt=prompt_4, output_type=Graph
-        ).output
+        result_4_response = main_agent.run_sync(user_prompt=prompt_4, output_type=Graph)
+        result_4: Graph = result_4_response.output
+        logger.info(f"Step 4 token usage (main): {result_4_response.usage()}")
+
+        save_result(result_4, "step4", PROCEDURE_TO_EXTRACT)
 
         # Execute modified approach for comparison
-        result_4_modified: Graph = main_agent.run_sync(
+        result_4_modified_response = main_agent.run_sync(
             user_prompt=prompt_4_modified, output_type=Graph
-        ).output
+        )
+        result_4_modified: Graph = result_4_modified_response.output
+        logger.info(
+            f"Step 4 token usage (modified): {result_4_modified_response.usage()}"
+        )
+
+        save_result(result_4_modified, "step4_modified", PROCEDURE_TO_EXTRACT)
 
         # Execute alternative model extraction for validation
-        result_4_alt: Graph = alt_agent.run_sync(
+        result_4_alt_response = alt_agent.run_sync(
             user_prompt=prompt_4, output_type=Graph
-        ).output
+        )
+        result_4_alt: Graph = result_4_alt_response.output
+        logger.info(
+            f"Step 4 token usage (alternative): {result_4_alt_response.usage()}"
+        )
+
+        save_result(result_4_alt, "step4_alt", PROCEDURE_TO_EXTRACT)
 
         # Step 4: Compare and validate different extraction approaches
 
