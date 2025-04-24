@@ -12,7 +12,6 @@ The module uses multiple LLM models and prompting strategies to ensure high-qual
 extraction results, comparing different approaches and selecting the most accurate one.
 """
 
-import json
 import os
 import sys
 from datetime import datetime
@@ -60,10 +59,10 @@ def save_result(
 
     # Handle different result types
     if isinstance(result, Graph):
-        # Save Graph objects as JSON
+        # Save Graph objects as JSON using model_dump_json directly
         filename = output_dir / f"{procedure_name}_{step}_{timestamp}.json"
         with open(filename, "w", encoding="utf-8") as f:
-            json.dump(result.model_dump(), f, indent=2, ensure_ascii=False)
+            f.write(result.model_dump_json(indent=2))
     else:
         # Save string results as Markdown
         filename = output_dir / f"{procedure_name}_{step}_{timestamp}.md"
@@ -177,6 +176,14 @@ def main() -> None:
             db_handler=db_handler,
         )
 
+        # Save the retrieved context
+        save_result(
+            result=f"# Context for {PROCEDURE_TO_EXTRACT}\n\n{context}",
+            step="original_context",  # More descriptive step name
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
+
         # Step 3: Execute multi-stage prompting chain for procedure extraction
         # Stage 1: Initial extraction of procedure information
 
@@ -189,7 +196,12 @@ def main() -> None:
         result_1 = result_1_response.output
         logger.info(f"Step 1 token usage: {result_1_response.usage()}")
 
-        save_result(result_1, "step1", PROCEDURE_TO_EXTRACT, run_id)
+        save_result(
+            result=result_1,
+            step="step1_initial_extraction",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Stage 2: Evaluate and validate initial extraction
         prompt_2 = prompt_manager.render_prompt(
@@ -205,7 +217,12 @@ def main() -> None:
         result_2 = result_2_response.output
         logger.info(f"Step 2 token usage: {result_2_response.usage()}")
 
-        save_result(result_2, "step2", PROCEDURE_TO_EXTRACT, run_id)
+        save_result(
+            result=result_2,
+            step="step2_evaluation",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Stage 3: Apply corrections based on evaluation
         prompt_3 = prompt_manager.render_prompt(
@@ -219,7 +236,12 @@ def main() -> None:
         result_3 = result_3_response.output
         logger.info(f"Step 3 token usage: {result_3_response.usage()}")
 
-        save_result(result_3, "step3", PROCEDURE_TO_EXTRACT, run_id)
+        save_result(
+            result=result_3,
+            step="step3_corrections",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Stage 4: Enrich the corrected extraction with additional details
         # Try multiple approaches for better accuracy
@@ -242,7 +264,12 @@ def main() -> None:
         result_4: Graph = result_4_response.output
         logger.info(f"Step 4 token usage (main): {result_4_response.usage()}")
 
-        save_result(result_4, "step4", PROCEDURE_TO_EXTRACT, run_id)
+        save_result(
+            result=result_4,
+            step="step4_main_enriched",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Execute modified approach for comparison
         result_4_modified_response = main_agent.run_sync(
@@ -253,7 +280,12 @@ def main() -> None:
             f"Step 4 token usage (modified): {result_4_modified_response.usage()}"
         )
 
-        save_result(result_4_modified, "step4_modified", PROCEDURE_TO_EXTRACT, run_id)
+        save_result(
+            result=result_4_modified,
+            step="step4_modified_enriched",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Execute alternative model extraction for validation
         result_4_alt_response = alt_agent.run_sync(
@@ -264,7 +296,12 @@ def main() -> None:
             f"Step 4 token usage (alternative): {result_4_alt_response.usage()}"
         )
 
-        save_result(result_4_alt, "step4_alt", PROCEDURE_TO_EXTRACT, run_id)
+        save_result(
+            result=result_4_alt,
+            step="step4_alternative_enriched",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Step 4: Compare and validate different extraction approaches
 
