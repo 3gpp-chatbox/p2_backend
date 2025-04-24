@@ -1,7 +1,7 @@
 # schema_validation.py
 from typing import List, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Node(BaseModel):
@@ -16,6 +16,8 @@ class Node(BaseModel):
     )
     description: str = Field(..., description="Explanation of the state or event.")
 
+    # model_config = ConfigDict(extra="forbid")
+
 
 class Edge(BaseModel):
     """Represents a Trigger or Condition connecting Nodes"""
@@ -29,8 +31,7 @@ class Edge(BaseModel):
         ..., description="Explanation of the trigger or condition."
     )
 
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(serialize_by_alias=True)
 
 
 class Graph(BaseModel):
@@ -38,3 +39,5 @@ class Graph(BaseModel):
 
     nodes: List[Node] = Field(..., description="List of all states and events.")
     edges: List[Edge] = Field(..., description="List of all triggers and conditions.")
+
+    # model_config = ConfigDict(extra="forbid")

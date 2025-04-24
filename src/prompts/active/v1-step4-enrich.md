@@ -3,89 +3,98 @@ You are a 3GPP procedure analysis expert. You are given **two parts of context**
 1. **First Part**: The flow property graph for the procedure "{section_name}", which includes the **states**, **events**, and **transitions** **after evaluation and correction** (this part includes nodes and edges with no descriptions).
 2. **Second Part**: The original **detailed section** of the 3GPP specification document that describes the procedure.
 
-### 🎯 Your task:
-Using the **states**, **events**, and **transitions** from the **first part** (the corrected flow property graph), and the **detailed content** from the **second part** (the 3GPP specification), **enrich the transitions** in the following way:
+## Your Task
 
-1. **Descriptions**: Add a **brief description** to each transition, specifying **what causes the transition** (e.g., "triggered by UE sending Attach Request").
-2. **Conditions**: If a transition depends on **certain conditions** (e.g., successful authentication), identify those conditions and add them to the transition description.
+Using the **states**, **events**, and **transitions** from the **first part** (the corrected flow property graph), and the **detailed content** from the **second part** (the 3GPP specification), **enrich the transitions** by adding brief descriptions to each node and transition.
 
-### 💡 Example Output Format:
-Your output should look like this:
+### Description Requirements
 
-Please ensure your output follows the format below:
+1. **For State → Event Transitions**:
+   - Format: `"Trigger: [short description of trigger/event]; Condition: [key gating condition]"`
+   - Example: `"Trigger: Lower layer indicates failure/release; No condition"`
 
-example output format 
+2. **For Event → State Transitions**:
+   - Format: `"Condition: [key condition]; Action: [key action]"`
+   - Example: `"Condition: Registration attempt counter < 5 AND Not Emergency; Action: Abort procedure, Stop T3510"`
+   - If condition doesn't exist, write: `"No condition"`
+   - Keep descriptions **concise (≤20 words or 100 chars)** and **explicitly derived from the spec**.  
+
+2. **Conditions/Actions**:  
+   - Only include key conditions/actions **explicitly stated in the spec**.  
+
+3. **General Rules**:
+   - Keep descriptions **concise (≤20 words or 100 chars)**
+   - Use only **explicitly stated** information from the spec
+   - Do **not** infer or assume anything outside the given content
+   - Do **not** rename, remove, or restructure any nodes or edges
+   - Only **add** descriptions to the existing graph
+
+---
+
+## Definitions
+
+### Conditions
+- Logical checks or criteria that must be met for the transition to occur
+- Example: `"registration attempt counter < 5"`
+
+### Actions
+- Operations that an entity performs in response to an event/condition
+- Example: `"Send REGISTRATION REQUEST"`
+
+---
+
+Only return valid JSON object, **do not include any comments or additional explanations**.
+
+## JSON Output Format
+
+###  Example:
 ```json
 {{
-  "procedure_name": "procedure name",
+  "procedure_name": "{section_name}",
   "graph": {{
     "nodes": [
       {{
-        "id": "UE_Powered_On",
+        "id": "UE_5GMM_REGISTERED_INITIATED",
         "type": "state",
-        "description": "UE is powered on but not yet attached to the network."
+        "description": "UE is in registered state with ongoing procedure."
       }},
       {{
-        "id": "Attach_Request_Received",
+        "id": "Event_LowerLayer_Failure",
         "type": "event",
-        "description": "The network receives an Attach Request from the UE."
-      }},
-      {{
-        "id": "UE_Attaching",
-        "type": "state",
-        "description": "UE is undergoing the attachment procedure."
-      }},
-      {{
-        "id": "Authentication_Challenge",
-        "type": "event",
-        "description": "The network sends an Authentication Challenge to the UE."
-      }},
-      {{
-        "id": "UE_Authenticating",
-        "type": "state",
-        "description": "UE is responding to the authentication procedure."
+        "description": "Lower layer indicates failure/release."
       }}
     ],
     "edges": [
       {{
-        "from": "UE_Powered_On",
-        "to": "Attach_Request_Received",
+        "from": "UE_5GMM_REGISTERED_INITIATED",
+        "to": "Event_LowerLayer_Failure",
         "type": "trigger",
-        "description": "Triggered when UE initiates attachment by sending an Attach Request."
+        "description": "Trigger: Lower layer indicates failure/release; No condition"
       }},
       {{
-        "from": "Attach_Request_Received",
-        "to": "UE_Attaching",
+        "from": "Event_LowerLayer_Failure",
+        "to": "UE_5GMM_DEREGISTERED_ATTEMPTING_REGISTRATION",
         "type": "condition",
-        "description": "Network accepts the attach request and begins attachment."
-      }},
-      {{
-        "from": "UE_Attaching",
-        "to": "Authentication_Challenge",
-        "type": "trigger",
-        "description": "Network challenges the UE for authentication."
-      }},
-      {{
-        "from": "Authentication_Challenge",
-        "to": "UE_Authenticating",
-        "type": "condition",
-        "description": "Transition occurs if UE responds to the challenge correctly."
+        "description": "Condition: Registration attempt counter < 5 AND Not Emergency; Action: Abort procedure, Stop T3510"
       }}
     ]
   }}
 }}
 
-How to Enrich Transitions:
-For each transition, identify the trigger and the condition that causes the transition from one state to another.
-Incorporate any details from the specification about why or how each transition occurs (e.g., "triggered when UE attaches", "transition happens if authentication is successful").
-If no conditions or explicit triggers are provided in the spec, you may leave those parts blank, but ensure they are still logically inferred from the spec.
+How to Enrich Transitions
+For each transition:
+Identify the trigger (for state→event)
+Identify the condition and action (for event→state)
+Incorporate relevant details from the specification about why/how each transition occurs
+Keep descriptions concise and explicitly derived from the spec
 
-Strict Rule:
-You must only use the provided information in the first part and second part.
-Do not make any assumptions or introduce information not clearly stated in the provided text.
-Provide the exact descriptions and conditions based on what is described in the 3GPP specification.
+Strict Rules
+Use only the provided information from both parts
+Do not make any assumptions
+Do not introduce information not clearly stated in the provided text
 
-
+------------------
+Input Data
 First Part:
 States, Events, and transitions of the procedure "{section_name}" (Extracted previously):
 {result_3}

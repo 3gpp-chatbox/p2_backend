@@ -14,6 +14,7 @@ extraction results, comparing different approaches and selecting the most accura
 
 import os
 import sys
+from datetime import datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -38,6 +39,40 @@ from src.lib.logger import get_logger
 logger = get_logger(__name__)
 
 
+def save_result(
+    result: str | dict | Graph, step: str, procedure_name: str, run_id: str
+) -> None:
+    """Save the extraction result to a file.
+
+    Args:
+        result: The result to save (can be string, dict or Graph)
+        step: The step name (e.g., 'step1', 'step2')
+        procedure_name: Name of the procedure being extracted
+        run_id: Unique identifier for the current execution run
+    """
+    # Create run-specific output directory if it doesn't exist
+    output_dir = Path("data/output") / run_id
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Get timestamp for file name
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    # Handle different result types
+    if isinstance(result, Graph):
+        # Save Graph objects as JSON using model_dump_json directly
+        filename = output_dir / f"{procedure_name}_{step}_{timestamp}.json"
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(result.model_dump_json(indent=2))
+    else:
+        # Save string results as Markdown
+        filename = output_dir / f"{procedure_name}_{step}_{timestamp}.md"
+        content = str(result)  # Convert to string if it's not already
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(content)
+
+    logger.info(f"Saved {step} result to {filename}")
+
+
 def main() -> None:
     """
     Execute the main procedure extraction pipeline.
@@ -60,6 +95,9 @@ def main() -> None:
         Exception: For any other unexpected errors during execution
     """
     try:
+        # Generate a unique run ID for this execution
+        run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+
         load_dotenv(override=True)
         # Load environment variables with default values where appropriate
         # --- Document Configuration ---
@@ -138,6 +176,14 @@ def main() -> None:
             db_handler=db_handler,
         )
 
+        # Save the retrieved context
+        save_result(
+            result=f"# Context for {PROCEDURE_TO_EXTRACT}\n\n{context}",
+            step="original_context",  # More descriptive step name
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
+
         # Step 3: Execute multi-stage prompting chain for procedure extraction
         # Stage 1: Initial extraction of procedure information
 
@@ -146,9 +192,16 @@ def main() -> None:
             template_name="v1-step1", section_name=PROCEDURE_TO_EXTRACT, text=context
         )
 
-        result_1 = main_agent.run_sync(
-            user_prompt=prompt_1,
-        ).output
+        result_1_response = main_agent.run_sync(user_prompt=prompt_1, output_type=Graph)
+        result_1 = result_1_response.output
+        logger.info(f"Step 1 token usage: {result_1_response.usage()}")
+
+        save_result(
+            result=result_1,
+            step="step1_initial_extraction",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Stage 2: Evaluate and validate initial extraction
         prompt_2 = prompt_manager.render_prompt(
@@ -158,9 +211,18 @@ def main() -> None:
             section_name=PROCEDURE_TO_EXTRACT,
         )
 
-        result_2 = main_agent.run_sync(
+        result_2_response = main_agent.run_sync(
             user_prompt=prompt_2,
-        ).output
+        )
+        result_2 = result_2_response.output
+        logger.info(f"Step 2 token usage: {result_2_response.usage()}")
+
+        save_result(
+            result=result_2,
+            step="step2_evaluation",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Stage 3: Apply corrections based on evaluation
         prompt_3 = prompt_manager.render_prompt(
@@ -170,7 +232,16 @@ def main() -> None:
             section_name=PROCEDURE_TO_EXTRACT,
         )
 
-        result_3 = main_agent.run_sync(user_prompt=prompt_3).output
+        result_3_response = main_agent.run_sync(user_prompt=prompt_3, output_type=Graph)
+        result_3 = result_3_response.output
+        logger.info(f"Step 3 token usage: {result_3_response.usage()}")
+
+        save_result(
+            result=result_3,
+            step="step3_corrections",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Stage 4: Enrich the corrected extraction with additional details
         # Try multiple approaches for better accuracy
@@ -189,19 +260,48 @@ def main() -> None:
         )
 
         # Execute final extraction with type validation using Graph schema
-        result_4: Graph = main_agent.run_sync(
-            user_prompt=prompt_4, output_type=Graph
-        ).output
+        result_4_response = main_agent.run_sync(user_prompt=prompt_4, output_type=Graph)
+        result_4: Graph = result_4_response.output
+        logger.info(f"Step 4 token usage (main): {result_4_response.usage()}")
+
+        save_result(
+            result=result_4,
+            step="step4_main_enriched",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Execute modified approach for comparison
-        result_4_modified: Graph = main_agent.run_sync(
+        result_4_modified_response = main_agent.run_sync(
             user_prompt=prompt_4_modified, output_type=Graph
-        ).output
+        )
+        result_4_modified: Graph = result_4_modified_response.output
+        logger.info(
+            f"Step 4 token usage (modified): {result_4_modified_response.usage()}"
+        )
+
+        save_result(
+            result=result_4_modified,
+            step="step4_modified_enriched",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Execute alternative model extraction for validation
-        result_4_alt: Graph = alt_agent.run_sync(
+        result_4_alt_response = alt_agent.run_sync(
             user_prompt=prompt_4, output_type=Graph
-        ).output
+        )
+        result_4_alt: Graph = result_4_alt_response.output
+        logger.info(
+            f"Step 4 token usage (alternative): {result_4_alt_response.usage()}"
+        )
+
+        save_result(
+            result=result_4_alt,
+            step="step4_alternative_enriched",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id=run_id,
+        )
 
         # Step 4: Compare and validate different extraction approaches
 
