@@ -284,14 +284,14 @@ if __name__ == "__main__":
         templates = manager.get_available_prompts()
         print(f"Found templates: {templates}")
 
-        # Get parameters for test_prompt
+        # Get parameters for all available prompts
         print_separator("Template Parameters")
-        template_name = "test_prompt"
-        try:
-            params = manager.list_parameters(template_name)
-            print(f"Parameters required for {template_name}: {params}")
-        except KeyError as e:
-            print(f"Error: {e}")
+        for template_name in templates:
+            try:
+                params = manager.list_parameters(template_name)
+                print(f"Parameters required for {template_name}: {params}")
+            except KeyError as e:
+                print(f"Error: {e}")
 
         # Successful prompt rendering
         print_separator("Successful Render")
