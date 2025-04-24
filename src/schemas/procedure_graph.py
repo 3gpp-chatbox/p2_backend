@@ -31,7 +31,9 @@ class Edge(BaseModel):
         ..., description="Explanation of the trigger or condition."
     )
 
-    model_config = ConfigDict(serialize_by_alias=True)
+    # model_config = ConfigDict(serialize_by_alias=True)
+
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class Graph(BaseModel):
