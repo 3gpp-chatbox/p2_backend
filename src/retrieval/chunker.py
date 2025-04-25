@@ -4,6 +4,7 @@ This module provides functionality to extract chunks from markdown documents.
 Each chunk contains a heading, its content, and the heading level.
 """
 
+import re
 import sys
 from pathlib import Path
 from typing import List, TypedDict
@@ -86,8 +87,8 @@ def extract_chunks(file_path: str | Path) -> ExtractedDocument:
 
         # Process each line
         for line in lines:
-            # Check if line is a heading
-            if line.startswith("#"):
+            # Check if line is a markdown heading using regex (# followed by space)
+            if re.match(r"^#+\s", line.strip()):
                 # If we have a previous chunk, save it
                 if current_chunk is not None:
                     current_chunk["content"] = "\n".join(current_content).strip()
@@ -120,6 +121,73 @@ def extract_chunks(file_path: str | Path) -> ExtractedDocument:
     except IOError as e:
         logger.error(f"Failed to read file {path}: {str(e)}")
         raise IOError(f"Failed to read file {path}: {str(e)}")
+
+
+def extract_chunks_from_content(content: str) -> List[Chunk]:
+    """Extract chunks from markdown content.
+
+    This function processes markdown content and extracts sections based on headings.
+    Each section includes its heading text, content, and heading level.
+
+    Args:
+        content (str): Markdown content string as returned by docx_to_markdown
+
+    Returns:
+        List[Chunk]: A list of dictionaries containing:
+            - heading (str): The cleaned heading text
+            - content (str): The aggregated text below the heading
+            - level (int): The computed heading level
+
+    Raises:
+        ValueError: If the markdown content is malformed
+    """
+    try:
+        # Log processing start
+        logger.info("Processing markdown content")
+        logger.info(f"Content size: {len(content)} characters")
+
+        # Split content into lines for processing
+        lines = content.split("\n")
+        chunks = []
+        current_chunk = None
+        current_content = []
+
+        # Process each line
+        for line in lines:
+            # Check if line is a markdown heading using regex (# followed by space)
+            if re.match(r"^#+\s", line.strip()):
+                # If we have a previous chunk, save it
+                if current_chunk is not None:
+                    current_chunk["content"] = "\n".join(current_content).strip()
+                    chunks.append(current_chunk)
+
+                # Process new heading
+                heading_match = line.strip()
+                level = len(heading_match) - len(heading_match.lstrip("#"))
+                heading_text = heading_match[level:].strip()
+
+                # Create new chunk
+                current_chunk: Chunk = {
+                    "heading": heading_text,
+                    "level": level,
+                    "content": "",
+                }
+                current_content = []
+            elif current_chunk is not None:
+                current_content.append(line)
+
+        # Add the last chunk if exists
+        if current_chunk is not None:
+            current_chunk["content"] = "\n".join(current_content).strip()
+            chunks.append(current_chunk)
+
+        logger.info(f"Extracted {len(chunks)} chunks")
+
+        return chunks
+
+    except Exception as e:
+        logger.error(f"Failed to process markdown content: {str(e)}")
+        raise ValueError(f"Failed to process markdown content: {str(e)}")
 
 
 if __name__ == "__main__":
