@@ -6,7 +6,7 @@ correction and enrichment using different models and prompting strategies.
 
 from pydantic_ai import Agent
 
-from src.extraction.extract_procedure import save_result
+from src.lib.file_utils import save_result
 from src.lib.logger import get_logger
 from src.prompts.prompt_manager import PromptManager
 from src.schemas.extraction_types import ExtractionMethod, ExtractionResult

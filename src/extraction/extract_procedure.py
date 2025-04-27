@@ -39,6 +39,7 @@ from src.db.db_handler import DatabaseHandler
 from src.db.document import get_document_by_name
 from src.extraction.prompt_chain import prompt_chain
 from src.extraction.store_graphs import store_graph
+from src.lib.file_utils import save_result
 from src.prompts.prompt_manager import PromptManager
 from src.retrieval.get_context import get_context
 from src.schemas.extraction_types import (
@@ -46,7 +47,6 @@ from src.schemas.extraction_types import (
     ExtractionResult,
     ExtractionResults,
 )
-from src.schemas.procedure_graph import Graph
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
@@ -55,40 +55,6 @@ from src.lib.logger import get_logger
 
 # Set up logging
 logger = get_logger(__name__)
-
-
-def save_result(
-    result: str | dict | Graph, step: str, procedure_name: str, run_id: str, method: str
-) -> None:
-    """Save the extraction result to a file.
-
-    Args:
-        result: The result to save (can be string, dict or Graph)
-        step: The step name (e.g., 'step1', 'step2')
-        procedure_name: Name of the procedure being extracted
-        run_id: Unique identifier for the current execution run
-    """
-    # Create run-specific output directory if it doesn't exist
-    output_dir = Path("data/output") / run_id
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Get timestamp for file name
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    # Handle different result types
-    if isinstance(result, Graph):
-        # Save Graph objects as JSON using model_dump_json directly
-        filename = output_dir / f"{procedure_name}_{step}_{method}_{timestamp}.json"
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(result.model_dump_json(indent=2))
-    else:
-        # Save string results as Markdown
-        filename = output_dir / f"{procedure_name}_{step}_{method}_{timestamp}.md"
-        content = str(result)  # Convert to string if it's not already
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(content)
-
-    logger.info(f"Saved {step} result to {filename}")
 
 
 def main() -> None:
@@ -407,6 +373,5 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-
     except Exception:
         sys.exit(1)
