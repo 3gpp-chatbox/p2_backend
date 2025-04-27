@@ -46,6 +46,7 @@ Return ONLY the corrected graph in this format:
     "edges": [...]
   }}
 }}
+```
 
 ---
 Strict Rules:
