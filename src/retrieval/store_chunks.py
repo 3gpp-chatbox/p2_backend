@@ -8,6 +8,8 @@ import sys
 from pathlib import Path
 from typing import List
 
+from dotenv import load_dotenv
+
 from src.db.db_handler import DatabaseHandler
 from src.retrieval.chunker import Chunk, extract_chunks
 
@@ -119,6 +121,7 @@ def store_extracted_sections(
 
 if __name__ == "__main__":
     # Integrated example showcasing both chunking and storing functionality
+    load_dotenv(override=True)  # Load environment variables from .env file
     try:
         # First, extract chunks from the markdown document
         file_path = Path("data/markdown/24501-filtered.md")
