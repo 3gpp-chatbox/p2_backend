@@ -25,6 +25,7 @@ def prompt_chain(
     modified_prompt: bool,
     method: ExtractionMethod,
     model_name: str,
+    entity: str,
 ) -> ExtractionResult:
     """Execute a complete chain of prompts for procedure extraction.
 
@@ -64,10 +65,14 @@ def prompt_chain(
             template_name="v1-step1-modified",
             procedure_name=procedure_name,
             context=context,
+            entity=entity,
         )
     else:
         prompt_1 = prompt_manager.render_prompt(
-            template_name="v1-step1", procedure_name=procedure_name, context=context
+            template_name="v1-step1",
+            procedure_name=procedure_name,
+            context=context,
+            entity=entity,
         )
 
     result_1_response = agent.run_sync(user_prompt=prompt_1)
@@ -88,6 +93,7 @@ def prompt_chain(
         original_context=context,
         result_1=result_1,
         section_name=procedure_name,
+        entity=entity,
     )
 
     result_2_response = agent.run_sync(
@@ -110,9 +116,10 @@ def prompt_chain(
         result_1=result_1,
         result_2=result_2,
         section_name=procedure_name,
+        entity=entity,
     )
 
-    result_3_response = agent.run_sync(user_prompt=prompt_3, output_type=Graph)
+    result_3_response = agent.run_sync(user_prompt=prompt_3)
     result_3 = result_3_response.output
     logger.info(f"Step 3 token usage for {method.value}: {result_3_response.usage()}")
 
@@ -130,6 +137,7 @@ def prompt_chain(
         original_context=context,
         result_3=result_3,
         section_name=procedure_name,
+        entity=entity,
     )
 
     # Execute final extraction with type validation using Graph schema
