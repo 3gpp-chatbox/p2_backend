@@ -7,7 +7,7 @@ from fastapi import APIRouter, HTTPException
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[3].resolve()))
-from src.API.pydantic_models import FeedbackCreate, FeedbackItem
+from src.API.pydantic_models import FeedbackCreate, FeedbackItem, FeedbackResolve
 from src.db.db_handler import DatabaseHandler
 from src.lib.logger import get_logger
 
@@ -83,4 +83,31 @@ async def get_all_feedback():
 
     except Exception as e:
         logger.error(f"Failed to fetch all feedback: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch all feedback: {str(e)}") 
+        raise HTTPException(status_code=500, detail=f"Failed to fetch all feedback: {str(e)}")
+
+@router.post("/resolve", response_model=FeedbackItem)
+async def resolve_feedback(resolution: FeedbackResolve):
+    """
+    Resolve a feedback item with a reason.
+    """
+    try:
+        with DatabaseHandler() as db:
+            query = """
+            UPDATE feedback 
+            SET status = 'resolved', resolution_reason = %s
+            WHERE id = %s
+            RETURNING id, graph_id, comment, 
+                     TO_CHAR(created_at, 'DD-MM-YYYY HH24:MI') as created_at,
+                     user_email, status, resolution_reason
+            """
+            parameters = (resolution.resolution_reason, resolution.feedback_id)
+            result = db.execute_query(query, parameters)
+            
+            if not result:
+                raise HTTPException(status_code=404, detail="Feedback not found")
+            
+            return FeedbackItem(**result[0])
+
+    except Exception as e:
+        logger.error(f"Failed to resolve feedback: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to resolve feedback: {str(e)}") 

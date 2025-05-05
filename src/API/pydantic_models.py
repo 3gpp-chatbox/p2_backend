@@ -79,3 +79,9 @@ class FeedbackItem(BaseModel):
     created_at: str
     user_email: Optional[str]
     status: str
+    resolution_reason: Optional[str] = None
+
+
+class FeedbackResolve(BaseModel):
+    feedback_id: UUID
+    resolution_reason: str
