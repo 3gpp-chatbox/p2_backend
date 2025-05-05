@@ -3,6 +3,7 @@ Defines API response/request models.
 """
 
 from typing import Optional
+from uuid import UUID
 
 from pydantic import UUID4, BaseModel
 
@@ -63,3 +64,18 @@ class EditGraph(BaseModel):
     """
 
     edited_graph: Graph
+
+
+class FeedbackCreate(BaseModel):
+    graph_id: UUID
+    comment: str
+    user_email: Optional[str] = None
+
+
+class FeedbackItem(BaseModel):
+    id: UUID
+    graph_id: UUID
+    comment: str
+    created_at: str
+    user_email: Optional[str]
+    status: str
