@@ -2,9 +2,11 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import List, Optional, TypedDict
+from typing import List
 
 from docx import Document
+
+from src.schemas.types.document import MarkdownOutput, ParaDict
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
@@ -12,14 +14,6 @@ sys.path.append(str(Path(__file__).parents[2].resolve()))
 from src.lib.logger import get_logger
 
 logger = get_logger(__name__)
-
-
-class ParaDict(TypedDict):
-    """Dictionary type for paragraph information."""
-
-    text: str
-    style: str
-    level: Optional[int]
 
 
 def _normalize_whitespace(text: str) -> str:
@@ -57,11 +51,11 @@ def _is_excluded_heading(text: str, exclude_sections: list[str]) -> bool:
     Check if a heading should be excluded based on predefined sections.
 
     Args:
-        text (str): The heading text.
-        exclude_sections (set): Set of section names to exclude.
+        text (str): The heading text to check
+        exclude_sections (list[str]): List of section names to check against
 
     Returns:
-        bool: True if the heading matches an excluded section, otherwise False.
+        bool: True if the heading matches one of the excluded sections, False otherwise
     """
     cleaned = _clean_heading(text)
     return any(cleaned.startswith(section.lower()) for section in exclude_sections)
@@ -70,6 +64,15 @@ def _is_excluded_heading(text: str, exclude_sections: list[str]) -> bool:
 def _extract_paragraphs(doc: Document) -> List[ParaDict]:
     """
     Extract paragraphs and tables from the document in their natural order.
+
+    Args:
+        doc (Document): The Word document to extract content from.
+
+    Returns:
+        List[ParaDict]: List of paragraphs where each paragraph is a dictionary containing:
+            - text (str): The paragraph text content
+            - style (str): The paragraph style name
+            - level (Optional[int]): The heading level if applicable
     """
     paragraphs = []
     inside_contents_section = False
@@ -135,6 +138,13 @@ def _extract_filtered_content(
 ) -> List[str]:
     """
     Extracts main content with tables in their natural position.
+
+    Args:
+        paragraphs (List[ParaDict]): List of paragraph dictionaries
+        exclude_sections (list[str]): List of section names to exclude
+
+    Returns:
+        List[str]: List of markdown-formatted content lines
     """
     filtered_content = []
     exclude_section = False
@@ -175,6 +185,13 @@ def _extract_excluded_content(
     """
     Extracts content from excluded sections, maintaining proper heading formatting.
     Captures all excluded content from the start of the document.
+
+    Args:
+        paragraphs (List[ParaDict]): List of paragraph dictionaries
+        exclude_sections (list[str]): List of section names to exclude
+
+    Returns:
+        List[str]: List of markdown-formatted content lines from excluded sections
     """
     excluded_content = []
     exclude_section = True
@@ -234,10 +251,13 @@ def _extract_toc(paragraphs: List[ParaDict]) -> List[str]:
     Extracts the table of contents based on headings.
 
     Args:
-        paragraphs (list): List of paragraph dictionaries.
+        paragraphs (List[ParaDict]): List of paragraph dictionaries containing:
+            - text (str): The paragraph text content
+            - style (str): The paragraph style name
+            - level (Optional[int]): The heading level if applicable
 
     Returns:
-        list: TOC content.
+        List[str]: List of markdown-formatted table of contents entries
     """
     toc_content = []
     for para in paragraphs:
@@ -258,10 +278,16 @@ def _save_markdown_files(
     Save extracted content into separate Markdown files.
 
     Args:
-        main_content (list): Filtered content.
-        excluded_content (list): Excluded content.
-        toc_content (list): Table of contents.
-        output_folder (str): Directory to save files.
+        main_content (List[str]): List of markdown-formatted main content lines
+        excluded_content (List[str]): List of markdown-formatted excluded content lines
+        toc_content (List[str]): List of markdown-formatted table of contents lines
+        output_folder (str): Directory path where markdown files will be saved
+
+    Note:
+        Creates three files in the output directory:
+        - 24501-filtered.md: Contains the main content
+        - 24501-excluded.md: Contains the excluded sections
+        - 24501-toc.md: Contains the table of contents
     """
     os.makedirs(output_folder, exist_ok=True)
 
@@ -283,7 +309,7 @@ def _save_markdown_files(
 
 def docx_to_markdown(
     file_path: str, save_markdown: bool = False, output_folder: str = "data/markdown"
-) -> str:
+) -> MarkdownOutput:
     """
     Main function to process DOCX file and extract structured content.
 
@@ -293,11 +319,18 @@ def docx_to_markdown(
         output_folder (str): Directory to save Markdown files.
 
     Returns:
-        str: Filtered markdown content.
+        MarkdownOutput: A dictionary with:
+            - content (str): Filtered markdown content
+            - toc (str): Table of contents in markdown format
+            - doc_name (str): Name/title of the document
     """
     try:
         logger.info(f"Processing file: {file_path}")
         doc = Document(file_path)
+        # Get doc name from core properties or fallback to file name without extension
+        doc_name = doc.core_properties.title
+        if not doc_name:
+            doc_name = Path(file_path).stem
         paragraphs = _extract_paragraphs(doc)
 
         exclude_sections = {
@@ -320,13 +353,19 @@ def docx_to_markdown(
                 filtered_content, excluded_content, toc_content, output_folder
             )
 
-        return "\n\n".join(filtered_content)
+        return {
+            "content": "\n\n".join(filtered_content),
+            "toc": "\n\n".join(toc_content),
+            "doc_name": doc_name,
+        }
     except Exception as e:
         logger.error(f"Error processing file {file_path}: {e}")
-        return ""
+        raise ValueError(f"Failed to convert file: {file_path} to Markdown.")
 
 
 # Example usage
 if __name__ == "__main__":
     file_path = "data/raw/24501-j11.docx"
-    markdown_text = docx_to_markdown(file_path, save_markdown=True)
+    result = docx_to_markdown(file_path, save_markdown=True)
+    print("Content length:", len(result["content"]))
+    print("Table of contents length:", len(result["toc"]))
