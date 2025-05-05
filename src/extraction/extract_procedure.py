@@ -212,6 +212,7 @@ def main() -> None:
             modified_prompt=False,
             method=ExtractionMethod.MAIN,
             model_name=MAIN_MODEL,
+            entity=str
         )
 
         # Execute alternative model extraction (used in all scenarios)
@@ -224,6 +225,7 @@ def main() -> None:
             modified_prompt=False,
             method=ExtractionMethod.ALTERNATIVE,
             model_name=ALTERNATIVE_MODEL,
+            entity=str
         )
 
         # Execute either modified extraction or alternative_2 based on configuration
@@ -240,6 +242,7 @@ def main() -> None:
                 modified_prompt=False,
                 method=ExtractionMethod.ALTERNATIVE_2,  # Maps to "alternative" in DB
                 model_name=ALTERNATIVE_MODEL_2,
+                entity=str
             )
             extraction_results = ExtractionResults(
                 main=main_extraction,
@@ -256,6 +259,7 @@ def main() -> None:
                 modified_prompt=True,
                 method=ExtractionMethod.MODIFIED,
                 model_name=MAIN_MODEL,
+                entity=str
             )
             extraction_results = ExtractionResults(
                 main=main_extraction,
