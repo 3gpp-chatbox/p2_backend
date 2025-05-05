@@ -50,7 +50,7 @@ async def get_feedback_for_graph(graph_id: UUID):
             query = """
             SELECT id, graph_id, comment, 
                    TO_CHAR(created_at, 'DD-MM-YYYY HH24:MI') as created_at,
-                   user_email, status, feedback_type
+                   user_email, status, feedback_type, resolution_reason
             FROM feedback
             WHERE graph_id = %s
             ORDER BY created_at DESC
@@ -73,7 +73,7 @@ async def get_all_feedback():
             query = """
             SELECT id, graph_id, comment, 
                    TO_CHAR(created_at, 'DD-MM-YYYY HH24:MI') as created_at,
-                   user_email, status, feedback_type
+                   user_email, status, feedback_type, resolution_reason
             FROM feedback
             ORDER BY created_at DESC
             """
