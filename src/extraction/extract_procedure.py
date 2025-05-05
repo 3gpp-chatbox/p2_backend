@@ -100,6 +100,7 @@ def main() -> None:
         # --- Document Configuration ---
         DOCUMENT_NAME = os.getenv("DOCUMENT_NAME")
         PROCEDURE_TO_EXTRACT = os.getenv("PROCEDURE_TO_EXTRACT")
+        ENTITY = os.getenv("ENTITY")
         # --- LLM Configuration ---
         MAIN_MODEL = os.getenv("MAIN_MODEL", "gemini-2.0-flash-exp")
         MAIN_MODEL_TEMPERATURE = float(os.getenv("MAIN_MODEL_TEMPERATURE", 0.0))
@@ -112,9 +113,9 @@ def main() -> None:
             os.getenv("ALTERNATIVE_MODEL_2_TEMPERATURE", 0.0)
         )
 
-        if not PROCEDURE_TO_EXTRACT or not DOCUMENT_NAME:
+        if not PROCEDURE_TO_EXTRACT or not DOCUMENT_NAME or not ENTITY:
             raise ValueError(
-                "PROCEDURE_TO_EXTRACT and DOCUMENT_NAME must be set in the environment variables."
+                "PROCEDURE_TO_EXTRACT, DOCUMENT_NAME and ENTITY must be set in the environment variables."
             )
 
         # Initialize SBERT model once at module level for reuse across comparisons
@@ -212,6 +213,7 @@ def main() -> None:
             modified_prompt=False,
             method=ExtractionMethod.MAIN,
             model_name=MAIN_MODEL,
+            entity=ENTITY,
         )
 
         # Execute alternative model extraction (used in all scenarios)
@@ -224,6 +226,7 @@ def main() -> None:
             modified_prompt=False,
             method=ExtractionMethod.ALTERNATIVE,
             model_name=ALTERNATIVE_MODEL,
+            entity=ENTITY,
         )
 
         # Execute either modified extraction or alternative_2 based on configuration
@@ -240,6 +243,7 @@ def main() -> None:
                 modified_prompt=False,
                 method=ExtractionMethod.ALTERNATIVE_2,  # Maps to "alternative" in DB
                 model_name=ALTERNATIVE_MODEL_2,
+                entity=ENTITY,
             )
             extraction_results = ExtractionResults(
                 main=main_extraction,
@@ -256,6 +260,7 @@ def main() -> None:
                 modified_prompt=True,
                 method=ExtractionMethod.MODIFIED,
                 model_name=MAIN_MODEL,
+                entity=ENTITY,
             )
             extraction_results = ExtractionResults(
                 main=main_extraction,

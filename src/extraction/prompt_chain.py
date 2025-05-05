@@ -48,6 +48,7 @@ def prompt_chain(
         modified_prompt: Whether to use the modified version of prompts (for modified extraction)
         method: Extraction method enum indicating the approach being used
         model_name: Name of the model being used for this extraction
+        entity: Name of the entity for which the procedure is being extracted
 
     Returns:
         ExtractionResult: Contains the final graph, model info, method, and initial accuracy (0.0)
@@ -62,14 +63,14 @@ def prompt_chain(
     # Call agent for prompt_1
     if modified_prompt:
         prompt_1 = prompt_manager.render_prompt(
-            template_name="v1-step1-modified",
+            template_name="v3-step1-modified",
             procedure_name=procedure_name,
             context=context,
             entity=entity,
         )
     else:
         prompt_1 = prompt_manager.render_prompt(
-            template_name="v1-step1",
+            template_name="v3-step1",
             procedure_name=procedure_name,
             context=context,
             entity=entity,
@@ -89,7 +90,7 @@ def prompt_chain(
 
     # Stage 2: Evaluate and validate initial extraction
     prompt_2 = prompt_manager.render_prompt(
-        template_name="v1-step2-evaluate",
+        template_name="v3-step2-evaluate",
         original_context=context,
         result_1=result_1,
         section_name=procedure_name,
@@ -112,7 +113,7 @@ def prompt_chain(
 
     # Stage 3: Apply corrections based on evaluation
     prompt_3 = prompt_manager.render_prompt(
-        template_name="v1-step3-correct",
+        template_name="v3-step3-correct",
         result_1=result_1,
         result_2=result_2,
         section_name=procedure_name,
@@ -133,7 +134,7 @@ def prompt_chain(
 
     # Stage 4: Enrich the corrected extraction with additional details
     prompt_4 = prompt_manager.render_prompt(
-        template_name="v1-step4-enrich",
+        template_name="v3-step4-enrich",
         original_context=context,
         result_3=result_3,
         section_name=procedure_name,
