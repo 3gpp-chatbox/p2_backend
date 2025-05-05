@@ -70,6 +70,7 @@ class FeedbackCreate(BaseModel):
     graph_id: UUID
     comment: str
     user_email: Optional[str] = None
+    feedback_type: str = 'correction'
 
 
 class FeedbackItem(BaseModel):
@@ -80,6 +81,7 @@ class FeedbackItem(BaseModel):
     user_email: Optional[str]
     status: str
     resolution_reason: Optional[str] = None
+    feedback_type: str
 
 
 class FeedbackResolve(BaseModel):

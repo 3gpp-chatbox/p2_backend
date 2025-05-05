@@ -22,13 +22,13 @@ async def create_feedback(feedback: FeedbackCreate):
     try:
         with DatabaseHandler() as db:
             query = """
-            INSERT INTO feedback (graph_id, comment, user_email)
-            VALUES (%s, %s, %s)
+            INSERT INTO feedback (graph_id, comment, user_email, feedback_type)
+            VALUES (%s, %s, %s, %s)
             RETURNING id, graph_id, comment, 
                      TO_CHAR(created_at, 'DD-MM-YYYY HH24:MI') as created_at,
-                     user_email, status
+                     user_email, status, feedback_type
             """
-            parameters = (feedback.graph_id, feedback.comment, feedback.user_email)
+            parameters = (feedback.graph_id, feedback.comment, feedback.user_email, feedback.feedback_type)
             result = db.execute_query(query, parameters)
             
             if not result:
@@ -50,7 +50,7 @@ async def get_feedback_for_graph(graph_id: UUID):
             query = """
             SELECT id, graph_id, comment, 
                    TO_CHAR(created_at, 'DD-MM-YYYY HH24:MI') as created_at,
-                   user_email, status
+                   user_email, status, feedback_type
             FROM feedback
             WHERE graph_id = %s
             ORDER BY created_at DESC
@@ -73,7 +73,7 @@ async def get_all_feedback():
             query = """
             SELECT id, graph_id, comment, 
                    TO_CHAR(created_at, 'DD-MM-YYYY HH24:MI') as created_at,
-                   user_email, status
+                   user_email, status, feedback_type
             FROM feedback
             ORDER BY created_at DESC
             """
@@ -98,7 +98,7 @@ async def resolve_feedback(resolution: FeedbackResolve):
             WHERE id = %s
             RETURNING id, graph_id, comment, 
                      TO_CHAR(created_at, 'DD-MM-YYYY HH24:MI') as created_at,
-                     user_email, status, resolution_reason
+                     user_email, status, resolution_reason, feedback_type
             """
             parameters = (resolution.resolution_reason, resolution.feedback_id)
             result = db.execute_query(query, parameters)
