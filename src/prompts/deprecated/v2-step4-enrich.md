@@ -10,19 +10,22 @@ Using the **states**, **events**, and **transitions** from the **first part** (t
 ### Description Requirements
 
 1. **For State → Event Transitions**:
+
    - Format: `"Trigger: [short description of trigger/event]; Condition: [key gating condition]"`
    - Example: `"Trigger: Lower layer indicates failure/release; No condition"`
 
 2. **For Event → State Transitions**:
+
    - Format: `"Condition: [key condition]; Action: [key action]"`
    - Example: `"Condition: Registration attempt counter < 5 AND Not Emergency; Action: Abort procedure, Stop T3510"`
    - If condition doesn't exist, write: `"No condition"`
-   - Keep descriptions **concise (≤20 words or 100 chars)** and **explicitly derived from the spec**.  
+   - Keep descriptions **concise (≤20 words or 100 chars)** and **explicitly derived from the spec**.
 
-2. **Conditions/Actions**:  
-   - Only include key conditions/actions **explicitly stated in the spec**.  
+3. **Conditions/Actions**:
 
-3. **General Rules**:
+   - Only include key conditions/actions **explicitly stated in the spec**.
+
+4. **General Rules**:
    - Keep descriptions **concise (≤20 words or 100 chars)**
    - Use only **explicitly stated** information from the spec
    - Do **not** infer or assume anything outside the given content
@@ -34,10 +37,12 @@ Using the **states**, **events**, and **transitions** from the **first part** (t
 ## Definitions
 
 ### Conditions
+
 - Logical checks or criteria that must be met for the transition to occur
 - Example: `"registration attempt counter < 5"`
 
 ### Actions
+
 - Operations that an entity performs in response to an event/condition
 - Example: `"Send REGISTRATION REQUEST"`
 
@@ -47,7 +52,8 @@ Only return valid JSON object, **do not include any comments or additional expla
 
 ## JSON Output Format
 
-###  Example:
+### Example:
+
 ```json
 {{
   "procedure_name": "{section_name}",
@@ -80,6 +86,7 @@ Only return valid JSON object, **do not include any comments or additional expla
     ]
   }}
 }}
+```
 
 How to Enrich Transitions
 For each transition:
@@ -93,13 +100,15 @@ Use only the provided information from both parts
 Do not make any assumptions
 Do not introduce information not clearly stated in the provided text
 
-------------------
+---
+
 Input Data
 First Part:
 States, Events, and transitions of the procedure "{section_name}" (Extracted previously):
 {result_3}
 
-------------------
+---
+
 Second Part:
 Original Content from the 3GPP Specification:
-{original_content}
+{original_context}
