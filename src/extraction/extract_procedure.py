@@ -165,20 +165,21 @@ def main() -> None:
             logger.error(f"Document '{DOCUMENT_NAME}' not found in the database.")
             raise ValueError(f"Document '{DOCUMENT_NAME}' not found in the database.")
 
-        # Check if the graph already exists in the database for the given document
+        # Check if the procedure already exists in the database for the given document
         check_query = """
-        SELECT id FROM graph 
-        WHERE document_id = %s AND name = %s
+        SELECT p.id 
+        FROM procedure p
+        WHERE p.document_id = %s AND p.name = %s
         """
         check_params = (document["id"], PROCEDURE_TO_EXTRACT)
-        existing_graph = db_handler.execute_query(check_query, check_params)
+        existing_procedure = db_handler.execute_query(check_query, check_params)
 
-        if existing_graph:
+        if existing_procedure:
             logger.warning(
-                f"Graph '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
+                f"Procedure '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
             )
             raise ValueError(
-                f"Graph '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
+                f"Procedure '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
             )
 
         # Step 2: Retrieve relevant context for the procedure extraction
