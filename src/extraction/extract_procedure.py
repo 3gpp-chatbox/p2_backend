@@ -8,8 +8,20 @@ It implements a multi-step extraction process:
 4. Accuracy validation of extracted procedures
 5. Storage of the best extraction result
 
+The module supports three main extraction methods:
+- Main: Primary extraction using the main model
+- Modified: Alternative approach using modified prompts with the main model
+- Alternative: Secondary extraction using an alternative model
+
+Additionally, when ALTERNATIVE_MODEL_2 is configured:
+- Instead of the modified approach, it uses ALTERNATIVE_MODEL_2 for extraction
+- Results are stored with method "alternative" for database compatibility
+- The modified prompt path is not used in this case
+
 The module uses multiple LLM models and prompting strategies to ensure high-quality
 extraction results, comparing different approaches and selecting the most accurate one.
+Each extraction result is evaluated against others to calculate accuracy scores,
+with the best result being selected based on both accuracy and method priority.
 """
 
 import os
@@ -25,10 +37,16 @@ from sentence_transformers import SentenceTransformer
 from src.accuracy.compare_datasets import compare_datasets
 from src.db.db_handler import DatabaseHandler
 from src.db.document import get_document_by_name
+from src.extraction.prompt_chain import prompt_chain
 from src.extraction.store_graphs import store_graph
+from src.lib.file_utils import save_result
 from src.prompts.prompt_manager import PromptManager
 from src.retrieval.get_context import get_context
-from src.schemas.procedure_graph import Graph
+from src.schemas.extraction_types import (
+    ExtractionMethod,
+    ExtractionResult,
+    ExtractionResults,
+)
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
@@ -39,40 +57,6 @@ from src.lib.logger import get_logger
 logger = get_logger(__name__)
 
 
-def save_result(
-    result: str | dict | Graph, step: str, procedure_name: str, run_id: str
-) -> None:
-    """Save the extraction result to a file.
-
-    Args:
-        result: The result to save (can be string, dict or Graph)
-        step: The step name (e.g., 'step1', 'step2')
-        procedure_name: Name of the procedure being extracted
-        run_id: Unique identifier for the current execution run
-    """
-    # Create run-specific output directory if it doesn't exist
-    output_dir = Path("data/output") / run_id
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Get timestamp for file name
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    # Handle different result types
-    if isinstance(result, Graph):
-        # Save Graph objects as JSON using model_dump_json directly
-        filename = output_dir / f"{procedure_name}_{step}_{timestamp}.json"
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(result.model_dump_json(indent=2))
-    else:
-        # Save string results as Markdown
-        filename = output_dir / f"{procedure_name}_{step}_{timestamp}.md"
-        content = str(result)  # Convert to string if it's not already
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(content)
-
-    logger.info(f"Saved {step} result to {filename}")
-
-
 def main() -> None:
     """
     Execute the main procedure extraction pipeline.
@@ -81,14 +65,27 @@ def main() -> None:
     1. Loads environment variables and configurations
     2. Sets up LLM models with different parameters
     3. Retrieves document and context
-    4. Runs multi-stage prompting chain
+    4. Runs multi-stage prompting chain with multiple extraction methods
     5. Validates and compares different extraction results
     6. Stores the best extraction in the database
 
-    The function uses multiple approaches for extraction:
-    - Main extraction with primary model
-    - Modified extraction with primary model
-    - Alternative extraction with secondary model
+    Extraction Methods:
+    - Main: Uses the main model with standard prompts
+    - Alternative: Uses a different model for validation
+    - Configuration dependent:
+        * If ALTERNATIVE_MODEL_2 is set:
+          - Uses this model instead of the modified approach
+          - Results are stored as "alternative" in the database
+        * If ALTERNATIVE_MODEL_2 is not set:
+          - Uses main model with modified prompts
+          - Results are stored as "modified" in the database
+
+    The function compares all extraction results to select the best one:
+    1. Calculates accuracy scores by comparing each extraction against the others
+    2. Uses ExtractionResults container to select best result based on:
+       - Accuracy scores
+       - Method priority (main > modified > alternative)
+    3. Stores the winning extraction in the database with appropriate metadata
 
     Raises:
         ValueError: If required environment variables are missing or if document is not found
@@ -103,6 +100,7 @@ def main() -> None:
         # --- Document Configuration ---
         DOCUMENT_NAME = os.getenv("DOCUMENT_NAME")
         PROCEDURE_TO_EXTRACT = os.getenv("PROCEDURE_TO_EXTRACT")
+        ENTITY = os.getenv("ENTITY")
         # --- LLM Configuration ---
         MAIN_MODEL = os.getenv("MAIN_MODEL", "gemini-2.0-flash-exp")
         MAIN_MODEL_TEMPERATURE = float(os.getenv("MAIN_MODEL_TEMPERATURE", 0.0))
@@ -110,29 +108,22 @@ def main() -> None:
         ALTERNATIVE_MODEL_TEMPERATURE = float(
             os.getenv("ALTERNATIVE_MODEL_TEMPERATURE", 0.0)
         )
+        ALTERNATIVE_MODEL_2 = os.getenv("ALTERNATIVE_MODEL_2", None)
+        ALTERNATIVE_MODEL_2_TEMPERATURE = float(
+            os.getenv("ALTERNATIVE_MODEL_2_TEMPERATURE", 0.0)
+        )
 
-        if not PROCEDURE_TO_EXTRACT or not DOCUMENT_NAME:
+        if not PROCEDURE_TO_EXTRACT or not DOCUMENT_NAME or not ENTITY:
             raise ValueError(
-                "PROCEDURE_TO_EXTRACT and DOCUMENT_NAME must be set in the environment variables."
+                "PROCEDURE_TO_EXTRACT, DOCUMENT_NAME and ENTITY must be set in the environment variables."
             )
 
         # Initialize SBERT model once at module level for reuse across comparisons
         sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
 
-        # Initialize LLM models with specified configurations
         main_model = GeminiModel(
             model_name=MAIN_MODEL, provider="google-gla"
         )  # Primary model for main extraction pipeline
-
-        alt_model = GeminiModel(
-            model_name=ALTERNATIVE_MODEL, provider="google-gla"
-        )  # Secondary model for validation
-
-        # Initialize database connection
-        db_handler = DatabaseHandler()
-
-        # Instantiate prompt manager
-        prompt_manager = PromptManager()
 
         # Initialize primary agent with main model
         main_agent: Agent = Agent(
@@ -140,11 +131,32 @@ def main() -> None:
             model_settings={"temperature": MAIN_MODEL_TEMPERATURE},
         )
 
+        alt_model = GeminiModel(
+            model_name=ALTERNATIVE_MODEL, provider="google-gla"
+        )  # Secondary model for validation
+
         # Initialize secondary agent with alternative model for validation
         alt_agent: Agent = Agent(
             model=alt_model,
             model_settings={"temperature": ALTERNATIVE_MODEL_TEMPERATURE},
         )
+
+        # Initialize alternative model 2 if specified
+        if ALTERNATIVE_MODEL_2:
+            alt_model_2 = GeminiModel(
+                model_name=ALTERNATIVE_MODEL_2, provider="google-gla"
+            )
+
+            alt_agent_2: Agent = Agent(
+                model=alt_model_2,
+                model_settings={"temperature": ALTERNATIVE_MODEL_2_TEMPERATURE},
+            )
+
+        # Initialize database connection
+        db_handler = DatabaseHandler()
+
+        # Instantiate prompt manager
+        prompt_manager = PromptManager()
 
         # Step 1: Retrieve the target document from database
         document = get_document_by_name(doc_name=DOCUMENT_NAME, db_handler=db_handler)
@@ -182,204 +194,177 @@ def main() -> None:
             step="original_context",  # More descriptive step name
             procedure_name=PROCEDURE_TO_EXTRACT,
             run_id=run_id,
+            method="context",  # Add method for context extraction
         )
 
-        # Step 3: Execute multi-stage prompting chain for procedure extraction
-        # Stage 1: Initial extraction of procedure information
+        # Step 3: Execute the multi-stage prompting chain for procedure extraction
+        # The extraction order is important:
+        # 1. Main extraction (always runs)
+        # 2. Alternative extraction (always runs)
+        # 3. Modified or Alternative_2 extraction (configuration dependent)
 
-        # Call agent for prompt_1
-        prompt_1 = prompt_manager.render_prompt(
-            template_name="v1-step1", section_name=PROCEDURE_TO_EXTRACT, text=context
-        )
-
-        result_1_response = main_agent.run_sync(user_prompt=prompt_1, output_type=Graph)
-        result_1 = result_1_response.output
-        logger.info(f"Step 1 token usage: {result_1_response.usage()}")
-
-        save_result(
-            result=result_1,
-            step="step1_initial_extraction",
+        # Execute main extraction first (baseline for comparison)
+        main_extraction: ExtractionResult = prompt_chain(
+            agent=main_agent,
+            prompt_manager=prompt_manager,
+            context=context,
             procedure_name=PROCEDURE_TO_EXTRACT,
             run_id=run_id,
+            modified_prompt=False,
+            method=ExtractionMethod.MAIN,
+            model_name=MAIN_MODEL,
+            entity=ENTITY,
         )
 
-        # Stage 2: Evaluate and validate initial extraction
-        prompt_2 = prompt_manager.render_prompt(
-            template_name="v1-step2-evaluate",
-            original_content=context,
-            result_1=result_1,
-            section_name=PROCEDURE_TO_EXTRACT,
-        )
-
-        result_2_response = main_agent.run_sync(
-            user_prompt=prompt_2,
-        )
-        result_2 = result_2_response.output
-        logger.info(f"Step 2 token usage: {result_2_response.usage()}")
-
-        save_result(
-            result=result_2,
-            step="step2_evaluation",
+        # Execute alternative model extraction (used in all scenarios)
+        alt_extraction: ExtractionResult = prompt_chain(
+            agent=alt_agent,
+            prompt_manager=prompt_manager,
+            context=context,
             procedure_name=PROCEDURE_TO_EXTRACT,
             run_id=run_id,
+            modified_prompt=False,
+            method=ExtractionMethod.ALTERNATIVE,
+            model_name=ALTERNATIVE_MODEL,
+            entity=ENTITY,
         )
 
-        # Stage 3: Apply corrections based on evaluation
-        prompt_3 = prompt_manager.render_prompt(
-            template_name="v1-step3-correct",
-            result_1=result_1,
-            result_2=result_2,
-            section_name=PROCEDURE_TO_EXTRACT,
-        )
-
-        result_3_response = main_agent.run_sync(user_prompt=prompt_3, output_type=Graph)
-        result_3 = result_3_response.output
-        logger.info(f"Step 3 token usage: {result_3_response.usage()}")
-
-        save_result(
-            result=result_3,
-            step="step3_corrections",
-            procedure_name=PROCEDURE_TO_EXTRACT,
-            run_id=run_id,
-        )
-
-        # Stage 4: Enrich the corrected extraction with additional details
-        # Try multiple approaches for better accuracy
-        prompt_4 = prompt_manager.render_prompt(
-            template_name="v1-step4-enrich",
-            original_content=context,
-            result_3=result_3,
-            section_name=PROCEDURE_TO_EXTRACT,
-        )
-
-        prompt_4_modified = prompt_manager.render_prompt(
-            template_name="v1-step4-enrich-modified",
-            original_content=context,
-            result_3=result_3,
-            section_name=PROCEDURE_TO_EXTRACT,
-        )
-
-        # Execute final extraction with type validation using Graph schema
-        result_4_response = main_agent.run_sync(user_prompt=prompt_4, output_type=Graph)
-        result_4: Graph = result_4_response.output
-        logger.info(f"Step 4 token usage (main): {result_4_response.usage()}")
-
-        save_result(
-            result=result_4,
-            step="step4_main_enriched",
-            procedure_name=PROCEDURE_TO_EXTRACT,
-            run_id=run_id,
-        )
-
-        # Execute modified approach for comparison
-        result_4_modified_response = main_agent.run_sync(
-            user_prompt=prompt_4_modified, output_type=Graph
-        )
-        result_4_modified: Graph = result_4_modified_response.output
-        logger.info(
-            f"Step 4 token usage (modified): {result_4_modified_response.usage()}"
-        )
-
-        save_result(
-            result=result_4_modified,
-            step="step4_modified_enriched",
-            procedure_name=PROCEDURE_TO_EXTRACT,
-            run_id=run_id,
-        )
-
-        # Execute alternative model extraction for validation
-        result_4_alt_response = alt_agent.run_sync(
-            user_prompt=prompt_4, output_type=Graph
-        )
-        result_4_alt: Graph = result_4_alt_response.output
-        logger.info(
-            f"Step 4 token usage (alternative): {result_4_alt_response.usage()}"
-        )
-
-        save_result(
-            result=result_4_alt,
-            step="step4_alternative_enriched",
-            procedure_name=PROCEDURE_TO_EXTRACT,
-            run_id=run_id,
-        )
+        # Execute either modified extraction or alternative_2 based on configuration
+        # When ALTERNATIVE_MODEL_2 is set, it replaces the modified approach entirely
+        # and its results are stored as "alternative" in the database
+        if ALTERNATIVE_MODEL_2:
+            # Use alternative_2 model instead of modified approach
+            alt_2_extraction: ExtractionResult = prompt_chain(
+                agent=alt_agent_2,
+                prompt_manager=prompt_manager,
+                context=context,
+                procedure_name=PROCEDURE_TO_EXTRACT,
+                run_id=run_id,
+                modified_prompt=False,
+                method=ExtractionMethod.ALTERNATIVE_2,  # Maps to "alternative" in DB
+                model_name=ALTERNATIVE_MODEL_2,
+                entity=ENTITY,
+            )
+            extraction_results = ExtractionResults(
+                main=main_extraction,
+                alternative=alt_extraction,  # Use modified_extraction as alternative when ALTERNATIVE_MODEL_2 is present
+                alternative_2=alt_2_extraction,  # Store it in alternative_2 slot as well
+            )
+        else:
+            modified_extraction: ExtractionResult = prompt_chain(
+                agent=main_agent,
+                prompt_manager=prompt_manager,
+                context=context,
+                procedure_name=PROCEDURE_TO_EXTRACT,
+                run_id=run_id,
+                modified_prompt=True,
+                method=ExtractionMethod.MODIFIED,
+                model_name=MAIN_MODEL,
+                entity=ENTITY,
+            )
+            extraction_results = ExtractionResults(
+                main=main_extraction,
+                modified=modified_extraction,
+                alternative=alt_extraction,
+            )
 
         # Step 4: Compare and validate different extraction approaches
+        # Each extraction is compared against the other two to calculate its accuracy
+        # The comparison logic differs based on whether we're using alternative_2 or modified
 
-        # Calculate accuracy scores by comparing each extraction against the others
-        result_4_accuracy: float = compare_datasets(
-            target_dataset=result_4,
-            comparison_datasets=[result_4_modified, result_4_alt],
-            procedure_name=PROCEDURE_TO_EXTRACT,
-            model=sbert_model,
-            fixed_threshold=0.8,
-        )
+        # Calculate and update accuracy scores
+        if ALTERNATIVE_MODEL_2:
+            # When using alternative_2:
+            # - modified_extraction contains the alternative_2 results
+            # - Stored as "alternative" in DB for compatibility
+            # - Compared against main and alternative extractions
+            main_extraction.accuracy = compare_datasets(
+                target_dataset=main_extraction.graph,
+                comparison_datasets=[
+                    alt_2_extraction.graph,
+                    alt_extraction.graph,
+                ],  # modified_extraction is from alt_2
+                procedure_name=PROCEDURE_TO_EXTRACT,
+                model=sbert_model,
+                fixed_threshold=0.8,
+            )
 
-        result_4_accuracy_modified: float = compare_datasets(
-            target_dataset=result_4_modified,
-            comparison_datasets=[result_4, result_4_alt],
-            procedure_name=PROCEDURE_TO_EXTRACT,
-            model=sbert_model,
-            fixed_threshold=0.8,
-        )
+            alt_extraction.accuracy = compare_datasets(
+                target_dataset=alt_extraction.graph,
+                comparison_datasets=[main_extraction.graph, alt_2_extraction.graph],
+                procedure_name=PROCEDURE_TO_EXTRACT,
+                model=sbert_model,
+                fixed_threshold=0.8,
+            )
 
-        result_4_accuracy_alt: float = compare_datasets(
-            target_dataset=result_4_alt,
-            comparison_datasets=[result_4, result_4_modified],
-            procedure_name=PROCEDURE_TO_EXTRACT,
-            model=sbert_model,
-            fixed_threshold=0.8,
-        )
+            alt_2_extraction.accuracy = compare_datasets(
+                target_dataset=alt_2_extraction.graph,
+                comparison_datasets=[main_extraction.graph, alt_extraction.graph],
+                procedure_name=PROCEDURE_TO_EXTRACT,
+                model=sbert_model,
+                fixed_threshold=0.8,
+            )
 
-        # Log combined accuracy and model information
-        logger.info(
-            f"Extraction accuracy comparison - "
-            f"Main ({MAIN_MODEL}): {result_4_accuracy:.2f}, "
-            f"Modified ({MAIN_MODEL}): {result_4_accuracy_modified:.2f}, "
-            f"Alternative ({ALTERNATIVE_MODEL}): {result_4_accuracy_alt:.2f}"
-        )
-
-        # Select the best extraction based on accuracy scores and extraction method
-        # Priority order: main -> modified -> alternative when accuracies are equal
-        best_extraction: dict | None = None
-        best_extraction_accuracy: float = 0.0
-        best_model: str
-        extraction_method: str
-
-        # If accuracies are equal, prioritize in order: main -> modified -> alt
-        if (
-            result_4_accuracy >= result_4_accuracy_modified
-            and result_4_accuracy >= result_4_accuracy_alt
-        ):
-            best_extraction = result_4
-            best_extraction_accuracy = result_4_accuracy
-            best_model = MAIN_MODEL
-            extraction_method = "main"
-        elif result_4_accuracy_modified >= result_4_accuracy_alt:
-            best_extraction = result_4_modified
-            best_extraction_accuracy = result_4_accuracy_modified
-            best_model = MAIN_MODEL
-            extraction_method = "modified"
+            # Log accuracy comparison with alternative_2
+            logger.info(
+                f"Extraction accuracy comparison - "
+                f"Main ({MAIN_MODEL}): {main_extraction.accuracy:.2f}, "
+                f"Alternative ({ALTERNATIVE_MODEL}): {alt_extraction.accuracy:.2f}"
+                f"Alternative_2 ({ALTERNATIVE_MODEL_2}): {alt_2_extraction.accuracy:.2f}, "
+            )
         else:
-            best_extraction = result_4_alt
-            best_extraction_accuracy = result_4_accuracy_alt
-            best_model = ALTERNATIVE_MODEL
-            extraction_method = "alternative"
+            # Regular comparison with modified approach
+            main_extraction.accuracy = compare_datasets(
+                target_dataset=main_extraction.graph,
+                comparison_datasets=[modified_extraction.graph, alt_extraction.graph],
+                procedure_name=PROCEDURE_TO_EXTRACT,
+                model=sbert_model,
+                fixed_threshold=0.8,
+            )
+
+            modified_extraction.accuracy = compare_datasets(
+                target_dataset=modified_extraction.graph,
+                comparison_datasets=[main_extraction.graph, alt_extraction.graph],
+                procedure_name=PROCEDURE_TO_EXTRACT,
+                model=sbert_model,
+                fixed_threshold=0.8,
+            )
+
+            alt_extraction.accuracy = compare_datasets(
+                target_dataset=alt_extraction.graph,
+                comparison_datasets=[main_extraction.graph, modified_extraction.graph],
+                procedure_name=PROCEDURE_TO_EXTRACT,
+                model=sbert_model,
+                fixed_threshold=0.8,
+            )
+
+            # Log accuracy comparison for regular approach
+            logger.info(
+                f"Extraction accuracy comparison - "
+                f"Main ({MAIN_MODEL}): {main_extraction.accuracy:.2f}, "
+                f"Alternative ({ALTERNATIVE_MODEL}): {alt_extraction.accuracy:.2f}"
+                f"Modified ({modified_extraction.model_name}): {modified_extraction.accuracy:.2f}, "
+            )
+
+            # Get the best result using the ExtractionResults container
+            # Selection is based on both accuracy scores and method priority:
+            # Priority: main > modified > alternative (when accuracies are equal)
+        best_result = extraction_results.get_best_result()
 
         # Log the best extraction result
-        logger.info(f"Best result model: {best_model}")
-        logger.info(f"Best result extraction method: {extraction_method}")
-        logger.info(f"Best result accuracy: {best_extraction_accuracy:.2f}")
+        logger.info(f"Best result model: {best_result.model_name}")
+        logger.info(f"Best result extraction method: {best_result.method.value}")
+        logger.info(f"Best result accuracy: {best_result.accuracy:.2f}")
 
         # Step 5: Store the best extraction result with its metadata in the database
-
         store_graph(
             name=PROCEDURE_TO_EXTRACT,
             document_name=DOCUMENT_NAME,
-            graph_data=best_extraction,
-            accuracy=best_extraction_accuracy,
+            graph_data=best_result.graph,
+            accuracy=best_result.accuracy,
             db=db_handler,
-            model=best_model,
-            extraction_method=extraction_method,
+            model=best_result.model_name,
+            extraction_method=best_result.method.value,
         )
 
     except Exception as e:
@@ -393,6 +378,5 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-
     except Exception:
         sys.exit(1)
