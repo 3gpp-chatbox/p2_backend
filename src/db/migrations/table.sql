@@ -1,6 +1,8 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS ltree;
 
+CREATE TYPE extraction_method AS ENUM ('main', 'modified', 'alternative');
+
 -- Helper function to encode text to hex for ltree paths
 CREATE OR REPLACE FUNCTION encode_for_ltree(text) RETURNS text AS $$
 BEGIN
@@ -21,6 +23,7 @@ EXCEPTION
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
+-- Document Table
 CREATE TABLE document (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL UNIQUE,
@@ -28,6 +31,7 @@ CREATE TABLE document (
     extracted_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Section Table
 CREATE TABLE section (
     section_id SERIAL PRIMARY KEY,
     document_id UUID REFERENCES document(id) ON DELETE CASCADE,
@@ -36,6 +40,23 @@ CREATE TABLE section (
     content TEXT NOT NULL,
     parent TEXT,
     path LTREE NOT NULL -- Will store hex-encoded paths
+);
+
+
+-- Graph Table
+
+CREATE TABLE graph (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT NOT NULL,
+    document_id UUID NOT NULL REFERENCES document(id) ON DELETE CASCADE,
+    original_graph JSONB NOT NULL,
+    edited_graph JSONB DEFAULT NULL,
+    model_name TEXT NOT NULL,
+    extraction_method extraction_method NOT NULL,
+    accuracy FLOAT NOT NULL,
+    extracted_at TIMESTAMP DEFAULT NOW(),
+    last_edit_at TIMESTAMP DEFAULT NULL,
+    edited BOOLEAN DEFAULT FALSE
 );
 
 -- Indexes for optimization

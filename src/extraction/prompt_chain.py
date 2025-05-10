@@ -48,6 +48,7 @@ def prompt_chain(
         modified_prompt: Whether to use the modified version of prompts (for modified extraction)
         method: Extraction method enum indicating the approach being used
         model_name: Name of the model being used for this extraction
+        entity: Name of the entity for which the procedure is being extracted
 
     Returns:
         ExtractionResult: Contains the final graph, model info, method, and initial accuracy (0.0)
