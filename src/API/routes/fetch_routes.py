@@ -16,6 +16,24 @@ logger = get_logger(__name__)
 router = APIRouter()
 
 
+@router.get("/", response_model=List[ProcedureListItem])
+async def get_procedure_names():
+    """
+    Get distinct procedure names.
+    Used to populate the dropdown list on the frontend.
+    """
+    try:
+        with DatabaseHandler() as db:
+            query = "SELECT id, name FROM procedure ORDER BY name"
+            results = db.execute_query(query)
+
+            return [ProcedureListItem(id=row["id"], name=row["name"]) for row in results]
+
+    except Exception as e:
+        logger.error(f"Failed to fetch procedures: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch procedure names")
+
+
 @router.get("/reference/{procedure_id}")
 def get_reference_context(procedure_id: str):
     try:
@@ -47,24 +65,6 @@ def get_reference_context(procedure_id: str):
     except Exception as e:
         logger.error(f"Error fetching reference context: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
-
-
-@router.get("/procedures", response_model=List[ProcedureListItem])
-async def get_procedure_names():
-    """
-    Get distinct procedure names.
-    Used to populate the dropdown list on the frontend.
-    """
-    try:
-        with DatabaseHandler() as db:
-            query = "SELECT id, name FROM procedure ORDER BY name"
-            results = db.execute_query(query)
-
-            return [ProcedureListItem(id=row["id"], name=row["name"]) for row in results]
-
-    except Exception as e:
-        logger.error(f"Failed to fetch procedures: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to fetch procedure names")
 
 
 @router.get("/procedures/{procedure_id}", response_model=List[EntityVersionItem])
