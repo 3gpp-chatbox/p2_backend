@@ -7,7 +7,7 @@ from fastapi import APIRouter, HTTPException
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[3].resolve()))
-from src.API.pydantic_models import ProcedureItem, ProcedureListItem
+from src.API.pydantic_models import ProcedureListItem, EntityVersionItem, ProcedureItem
 from src.db.db_handler import DatabaseHandler
 from src.lib.logger import get_logger
 
@@ -15,93 +15,136 @@ logger = get_logger(__name__)
 router = APIRouter()
 
 
-@router.get("/", response_model=List[ProcedureListItem])
-async def get_procedures():
+@router.get("/procedures", response_model=List[ProcedureListItem])
+async def get_procedure_names():
     """
-    Get list of all available procedures.
-
-    Returns:
-        List[ProcedureListItem]: List of procedures with basic information
+    Get distinct procedure names.
+    Used to populate the dropdown list on the frontend.
     """
     try:
         with DatabaseHandler() as db:
-            query = """
-            SELECT id, name 
-            FROM graph 
-            ORDER BY extracted_at DESC
-            """
+            query = "SELECT id, name FROM procedure ORDER BY name"
             results = db.execute_query(query)
 
-            if not results:
-                return []
-
-            procedures = [
-                ProcedureListItem(id=row["id"], name=row["name"]) for row in results
-            ]
-            return procedures
+            return [ProcedureListItem(id=row["id"], name=row["name"]) for row in results]
 
     except Exception as e:
         logger.error(f"Failed to fetch procedures: {str(e)}")
-        raise HTTPException(
-            status_code=500, detail=f"Failed to fetch procedures: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail="Failed to fetch procedure names")
 
 
-@router.get("/{procedure_id}", response_model=ProcedureItem)
-async def get_procedure(procedure_id: UUID):
+@router.get("/procedures/{procedure_id}", response_model=List[EntityVersionItem])
+async def get_latest_graphs_for_entities(procedure_id: UUID):
     """
-    Get detailed information about a specific procedure.
-
-    Args:
-        procedure_id: UUID of the procedure
-
-    Returns:
-        ProcedureGraph: Complete procedure information including graph data
+    Get the latest verified version of each entity type for a given procedure.
     """
     try:
         with DatabaseHandler() as db:
             query = """
-            SELECT g.id, g.name, g.document_id, d.name as document_name, g.original_graph, g.edited_graph, 
-                   g.accuracy, 
-                   TO_CHAR(g.extracted_at, 'DD-MM-YYYY HH24:MI') as extracted_at,
-                   CASE 
-                       WHEN g.last_edit_at IS NULL THEN NULL 
-                       ELSE TO_CHAR(g.last_edit_at, 'DD-MM-YYYY HH24:MI')
-                   END as last_edit_at,
-                   g.edited, g.model_name, g.extraction_method 
+            SELECT DISTINCT ON (g.entity)
+                g.id, g.entity, g.version, g.accuracy, g.model_name, g.created_at
             FROM graph g
-            JOIN document d ON g.document_id = d.id
-            WHERE g.id = %s
+            JOIN procedure p ON g.procedure_id = p.id
+            WHERE p.id = %s
+            ORDER BY g.entity, g.version::int DESC
             """
-
             results = db.execute_query(query, (procedure_id,))
 
-            if not results:
-                raise HTTPException(
-                    status_code=404,
-                    detail=f"Procedure with id {procedure_id} not found",
+            return [
+                EntityVersionItem(
+                    graph_id=row["id"],
+                    entity=row["entity"],
+                    version=row["version"],
+                    accuracy=row["accuracy"],
+                    model_name=row["model_name"],
+                    created_at=row["created_at"]
                 )
+                for row in results
+            ]
+
+    except Exception as e:
+        logger.error(f"Failed to fetch latest entity graphs: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch entity graphs")
+
+
+@router.get("/graph/{graph_id}", response_model=ProcedureItem)
+async def get_graph_by_id(graph_id: UUID):
+    """
+    Get full graph data and metadata by graph ID.
+    """
+    try:
+        with DatabaseHandler() as db:
+            query = """
+            SELECT 
+                g.id, g.entity, g.extracted_data, g.model_name, g.accuracy, g.version,
+                g.created_at, g.status, g.extraction_method, g.commit_title, g.commit_message,
+                p.name as procedure_name,
+                d.id as document_id, d.name as document_name
+            FROM graph g
+            JOIN procedure p ON g.procedure_id = p.id
+            JOIN document d ON p.document_id = d.id
+            WHERE g.id = %s
+            """
+            results = db.execute_query(query, (graph_id,))
+            if not results:
+                raise HTTPException(status_code=404, detail="Graph not found")
 
             row = results[0]
             return ProcedureItem(
                 id=row["id"],
-                name=row["name"],
+                name=row["procedure_name"],
                 document_id=row["document_id"],
                 document_name=row["document_name"],
-                original_graph=row["original_graph"],
-                edited_graph=row["edited_graph"],
+                graph=row["extracted_data"],  # Only one graph now
                 accuracy=row["accuracy"],
-                extracted_at=row["extracted_at"],
-                last_edit_at=row["last_edit_at"],
-                edited=row["edited"],
+                extracted_at=row["created_at"],
                 model_name=row["model_name"],
                 extraction_method=row["extraction_method"],
+                entity=row["entity"],
+                version=row["version"],
+                status=row["status"],
+                commit_title=row["commit_title"],
+                commit_message=row["commit_message"],
             )
 
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Failed to fetch procedure details: {str(e)}")
-        raise HTTPException(
-            status_code=500, detail=f"Failed to fetch procedure details: {str(e)}"
-        )
+        logger.error(f"Failed to fetch graph: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch graph")
+
+
+@router.get("/history/{procedure_id}/{entity}", response_model=List[EntityVersionItem])
+async def get_graph_versions(procedure_id: UUID, entity: str):
+    """
+    Get all versions of a graph for a specific procedure name and entity type.
+    """
+    try:
+        with DatabaseHandler() as db:
+            query = """
+            SELECT 
+                g.id, g.version, g.accuracy, g.model_name, g.created_at,g.commit_title,g.commit_message 
+            FROM graph g
+            JOIN procedure p ON g.procedure_id = p.id
+            WHERE p.id = %s AND g.entity = %s
+            ORDER BY g.version::int DESC
+            """
+            results = db.execute_query(query, (procedure_id, entity))
+
+            return [
+                EntityVersionItem(
+                    graph_id=row["id"],
+                    entity=entity,
+                    version=row["version"],
+                    accuracy=row["accuracy"],
+                    model_name=row["model_name"],
+                    created_at=row["created_at"],
+                    commit_title=row["commit_title"],
+                    commit_message=row["commit_message"],
+                )
+                for row in results
+            ]
+
+    except Exception as e:
+        logger.error(f"Failed to fetch graph version history: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch version history")
