@@ -4,6 +4,7 @@ from typing import List
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
+from src.retrieval.sections_content_retrieval import get_sections_content
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[3].resolve()))
@@ -13,6 +14,39 @@ from src.lib.logger import get_logger
 
 logger = get_logger(__name__)
 router = APIRouter()
+
+
+@router.get("/reference/{procedure_id}")
+def get_reference_context(procedure_id: str):
+    try:
+        with DatabaseHandler() as db_handler:
+            query = """
+                SELECT p.name AS procedure_name, d.name AS doc_name, p.retrieved_top_sections
+                FROM procedure p
+                JOIN document d ON p.document_id = d.id
+                WHERE p.id = %s
+            """
+            result = db_handler.execute_query(query, parameters=(procedure_id,), fetch=True)
+
+            if not result:
+                raise HTTPException(status_code=404, detail="Procedure not found")
+
+            row = result[0]
+            doc_name = row["doc_name"]
+            procedure_name = row["procedure_name"]
+            top_sections = row["retrieved_top_sections"]
+
+            context_md = get_sections_content(
+                db_handler=db_handler,
+                doc_name=doc_name,
+                section_list=top_sections
+            )
+
+            return {"context_markdown": context_md}
+
+    except Exception as e:
+        logger.error(f"Error fetching reference context: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/procedures", response_model=List[ProcedureListItem])
