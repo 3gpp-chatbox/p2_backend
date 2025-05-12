@@ -47,6 +47,11 @@ from src.schemas.extraction_types import (
     ExtractionResult,
     ExtractionResults,
 )
+from src.retrieval.toc_retrieval import (
+    find_procedure_section_lines,
+    get_top_level_sections,
+)
+
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
@@ -101,6 +106,11 @@ def main() -> None:
         DOCUMENT_NAME = os.getenv("DOCUMENT_NAME")
         PROCEDURE_TO_EXTRACT = os.getenv("PROCEDURE_TO_EXTRACT")
         ENTITY = os.getenv("ENTITY")
+        COMMIT_TITLE = os.getenv("COMMIT_TITLE", f"Initial extraction of '{PROCEDURE_TO_EXTRACT}'")
+        COMMIT_MESSAGE = os.getenv("COMMIT_MESSAGE", f"Auto-extracted procedure '{PROCEDURE_TO_EXTRACT}'")
+        EXTRACTION_STATUS = os.getenv("EXTRACTION_STATUS", "new")
+        GRAPH_VERSION = os.getenv("GRAPH_VERSION", "1")
+
         # --- LLM Configuration ---
         MAIN_MODEL = os.getenv("MAIN_MODEL", "gemini-2.0-flash-exp")
         MAIN_MODEL_TEMPERATURE = float(os.getenv("MAIN_MODEL_TEMPERATURE", 0.0))
@@ -165,22 +175,30 @@ def main() -> None:
             logger.error(f"Document '{DOCUMENT_NAME}' not found in the database.")
             raise ValueError(f"Document '{DOCUMENT_NAME}' not found in the database.")
 
-        # Check if the procedure already exists in the database for the given document
-        check_query = """
-        SELECT p.id 
-        FROM procedure p
-        WHERE p.document_id = %s AND p.name = %s
-        """
-        check_params = (document["id"], PROCEDURE_TO_EXTRACT)
-        existing_procedure = db_handler.execute_query(check_query, check_params)
+        toc_lines = document["toc"].splitlines()
+        section_lines = find_procedure_section_lines(toc_lines=toc_lines, procedure_name=PROCEDURE_TO_EXTRACT)
+        top_level_sections = get_top_level_sections(section_lines)
 
-        if existing_procedure:
+        if not top_level_sections:
+            raise ValueError(f"No top-level sections found in document '{DOCUMENT_NAME}'")
+
+        # Check if the graph already exists in the database for the given document
+        check_query = """
+        SELECT g.id 
+        FROM graph g
+        JOIN procedure p ON g.procedure_id = p.id
+        WHERE p.document_id = %s AND p.name = %s AND g.entity = %s
+        """
+        check_params = (document["id"], PROCEDURE_TO_EXTRACT,ENTITY)
+        existing_graph = db_handler.execute_query(check_query, check_params)
+
+        if existing_graph:
             logger.warning(
-                f"Procedure '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
+                f"Graph already exists for '{ENTITY}' side of procedure '{PROCEDURE_TO_EXTRACT}' "
             )
             raise ValueError(
-                f"Procedure '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
-            )
+                  f"Graph already exists for '{ENTITY}' side of procedure '{PROCEDURE_TO_EXTRACT}' "
+    )
 
         # Step 2: Retrieve relevant context for the procedure extraction
         context = get_context(
@@ -366,6 +384,12 @@ def main() -> None:
             db=db_handler,
             model=best_result.model_name,
             extraction_method=best_result.method.value,
+            entity=ENTITY,
+            top_level_sections=top_level_sections,
+            commit_title=COMMIT_TITLE,
+            commit_message=COMMIT_MESSAGE,
+            version=GRAPH_VERSION,
+            status=EXTRACTION_STATUS
         )
 
     except Exception as e:

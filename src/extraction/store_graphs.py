@@ -3,17 +3,15 @@ from pathlib import Path
 from typing import Optional
 from uuid import UUID
 import numpy as np
-
+import os
+from dotenv import load_dotenv
 from src.schemas.procedure_graph import Graph
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
 from src.db.db_handler import DatabaseHandler
 from src.lib.logger import get_logger
 from src.retrieval.toc_retrieval import get_top_level_sections, find_procedure_section_lines
-import os
-from dotenv import load_dotenv
+
+# Add parent directory to Python path
+sys.path.append(str(Path(__file__).parents[2].resolve()))
 
 logger = get_logger(__name__)
 
@@ -45,8 +43,6 @@ def get_document_id_by_name(db: DatabaseHandler, document_name: str) -> Optional
         logger.error(f"Error retrieving document ID: {e}")
         return None
 
-
-
 def store_graph(
     name: str,
     document_name: str,
@@ -54,6 +50,12 @@ def store_graph(
     accuracy: float,
     model: str,
     extraction_method: str,
+    entity: str,  # Now passed as a parameter
+    top_level_sections: list,  # Now passed as a parameter
+    commit_title: str ,
+    commit_message: str,  # Optional, default value can be overridden
+    version: str ,  # Optional, default value can be overridden
+    status: str,
     db: DatabaseHandler,
 ) -> Optional[UUID]:
     """
@@ -66,6 +68,11 @@ def store_graph(
         accuracy: Accuracy score of the graph
         model: Name of the model used for extraction
         extraction_method: Method used for extraction
+        entity: The entity (e.g., AMF or UE) to associate with the graph
+        top_level_sections: List of top-level sections for the procedure
+        commit_title: Title for the commit (optional, default is 'original graph')
+        commit_message: Commit message for the graph (optional, default is 'procedure graph extracted')
+        version: Version of the graph (optional, default is '1')
         db: Database handler instance for database operations
 
     Returns:
@@ -81,33 +88,12 @@ def store_graph(
             logger.error(f"Cannot store graph: Document '{document_name}' not found")
             return None
 
-        # Get document TOC to find relevant sections
-        toc_query = "SELECT toc FROM document WHERE id = %s"
-        toc_result = db.execute_query(toc_query, (document_id,))
-        if not toc_result:
-            logger.error(f"Cannot find TOC for document '{document_name}'")
-            return None
-
-        # Find relevant sections and get top-level section
-        section_lines = find_procedure_section_lines(toc_result[0]["toc"].splitlines(), name)
-
-        
-        top_level_section = get_top_level_sections(section_lines)
-        # If for some reason it's a NumPy array:
-        if isinstance(top_level_section, np.ndarray):
-          top_level_section = top_level_section.tolist()
-        
-        if len(top_level_section) == 0:
-            logger.error(f"No sections found for procedure '{name}' in document '{document_name}'")
-            return None
-
- 
-
-        # Get entity value from environment variable
-        entity = os.getenv("ENTITY", "{}")
-
         # Convert graph data to JSON
         graph_json = graph_data.model_dump_json()
+
+        # Convert top_level_sections to list if it's a numpy array
+        if isinstance(top_level_sections, np.ndarray):
+            top_level_sections = top_level_sections.tolist()
 
         with db.transaction():
             # First insert into procedure table
@@ -116,15 +102,13 @@ def store_graph(
             VALUES (%s, %s, %s, NOW())
             RETURNING id
             """
-            procedure_params = (name, document_id, top_level_section)
+            procedure_params = (name, document_id, top_level_sections)
             procedure_result = db.execute_query(procedure_query, procedure_params)
             
             if not procedure_result:
                 raise Exception("Failed to store procedure data")
             
             procedure_id = procedure_result[0]["id"]
-
-
 
             # Then insert into graph table
             graph_query = """
@@ -141,16 +125,20 @@ def store_graph(
                 commit_message,
                 version
             )
-            VALUES (%s, %s, %s, NOW(), 'new', %s, %s, %s,'original graph','procedure graph extracted','1')
+            VALUES (%s, %s, %s, NOW(), %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
             """
             graph_params = (
                 entity,
                 graph_json,
                 model,
+                status,
                 procedure_id,
                 accuracy,
-                extraction_method
+                extraction_method,
+                commit_title,
+                commit_message,
+                version
             )
             
             graph_result = db.execute_query(graph_query, graph_params)
@@ -164,8 +152,6 @@ def store_graph(
     except Exception as e:
         logger.error(f"Error storing graph: {e}")
         return None 
-  
-
 
 # Example usage
 if __name__ == "__main__":
@@ -183,6 +169,10 @@ if __name__ == "__main__":
             ],
         }
 
+        # Dummy top-level section and entity
+        top_level_section = ["Top Section 1", "Top Section 2"]
+        entity = "AMF"
+
         # Store the graph
         document_name = "Sample Document 2"  # This should be an existing document name
         graph_id = store_graph(
@@ -192,6 +182,11 @@ if __name__ == "__main__":
             accuracy=0.95,
             model="Sample Model",
             extraction_method="Sample Method",
+            entity=entity,
+            top_level_section=top_level_section,
+            commit_title="Sample Commit Title",
+            commit_message="Sample Commit Message",
+            version="1",
             db=db,
         )
 
