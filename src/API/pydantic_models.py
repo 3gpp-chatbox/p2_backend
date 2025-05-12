@@ -79,6 +79,10 @@ class Graph(Graph):
     pass
 
 
+class NewGraphInsert(BaseModel):
+    edited_graph: Graph
+    commit_title: str
+    commit_message: str
 
 
 
