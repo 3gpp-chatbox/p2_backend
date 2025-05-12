@@ -67,7 +67,7 @@ def get_reference_context(procedure_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/procedures/{procedure_id}", response_model=List[EntityVersionItem])
+@router.get("/{procedure_id}", response_model=List[EntityVersionItem])
 async def get_latest_graphs_for_entities(procedure_id: UUID):
     """
     Get the latest verified version of each entity type for a given procedure.
