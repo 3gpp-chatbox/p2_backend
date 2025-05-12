@@ -70,7 +70,7 @@ CREATE TABLE graph (
     version TEXT NOT NULL,
 
     -- Ensures version uniqueness per procedure
-    UNIQUE(procedure_id, version)
+    UNIQUE(procedure_id, entity,version)
 );
 
 -- Indexes for optimization

@@ -108,8 +108,12 @@ def main() -> None:
         ENTITY = os.getenv("ENTITY")
         COMMIT_TITLE = os.getenv("COMMIT_TITLE", f"Initial extraction of '{PROCEDURE_TO_EXTRACT}'")
         COMMIT_MESSAGE = os.getenv("COMMIT_MESSAGE", f"Auto-extracted procedure '{PROCEDURE_TO_EXTRACT}'")
-        EXTRACTION_STATUS = os.getenv("EXTRACTION_STATUS", "new")
-        GRAPH_VERSION = os.getenv("GRAPH_VERSION", "1")
+
+          # --- Set fixed values for version and status directly ---
+        # These values are determined by the application logic, not configuration
+        GRAPH_VERSION = "1"
+        EXTRACTION_STATUS = "new"
+        # -------------------------------------------------------
 
         # --- LLM Configuration ---
         MAIN_MODEL = os.getenv("MAIN_MODEL", "gemini-2.0-flash-exp")

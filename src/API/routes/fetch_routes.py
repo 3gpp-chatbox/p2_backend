@@ -11,6 +11,7 @@ sys.path.append(str(Path(__file__).parents[3].resolve()))
 from src.API.pydantic_models import ProcedureListItem, EntityVersionItem, ProcedureItem
 from src.db.db_handler import DatabaseHandler
 from src.lib.logger import get_logger
+import re
 
 logger = get_logger(__name__)
 router = APIRouter()
@@ -24,10 +25,41 @@ async def get_procedure_names():
     """
     try:
         with DatabaseHandler() as db:
-            query = "SELECT id, name FROM procedure ORDER BY name"
-            results = db.execute_query(query)
+            query = """
+            SELECT 
+                p.id as id, 
+                p.name as name, 
+                array_agg(DISTINCT g.entity) as entity
+            FROM procedure p
+            JOIN graph g ON p.id = g.procedure_id
+            GROUP BY p.id, p.name
+            ORDER BY p.name
+            """
+            results = db.execute_query(query, fetch=True) 
 
-            return [ProcedureListItem(id=row["id"], name=row["name"]) for row in results]
+            # --- START OF MODIFICATION ---
+            processed_items = []
+            for row in results:
+                entity_raw_string = row["entity"] # This will be the string like '{UE,AMF}'
+
+                parsed_entities = []
+                if entity_raw_string and entity_raw_string.startswith('{') and entity_raw_string.endswith('}'):
+                    content = entity_raw_string[1:-1] # Remove outer braces
+                    if content: # Check if there's any content inside the braces
+                        # Use regex to split by comma, handling potential quotes within elements
+                        parsed_entities = [
+                            item.strip().strip('"') for item in re.findall(r'(?:[^,"]|"(?:[^"])*")+', content)
+                        ]
+                
+                processed_items.append(
+                    ProcedureListItem(
+                        id=row["id"], 
+                        name=row["name"], 
+                        entity=parsed_entities # Pass the parsed list to the Pydantic model
+                    )
+                )
+            return processed_items
+            # --- END OF MODIFICATION ---
 
     except Exception as e:
         logger.error(f"Failed to fetch procedures: {str(e)}")
@@ -101,7 +133,7 @@ async def get_latest_graphs_for_entities(procedure_id: UUID):
         raise HTTPException(status_code=500, detail="Failed to fetch entity graphs")
 
 
-@router.get("/graph/{graph_id}", response_model=ProcedureItem)
+@router.get("/{graph_id}", response_model=ProcedureItem)
 async def get_graph_by_id(graph_id: UUID):
     """
     Get full graph data and metadata by graph ID.

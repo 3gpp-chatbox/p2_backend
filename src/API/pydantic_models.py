@@ -2,7 +2,7 @@
 Defines API response/request models.
 """
 from datetime import datetime
-from typing import Optional
+from typing import Optional,List
 from pydantic import UUID4, BaseModel
 from src.schemas.procedure_graph import Graph
 
@@ -16,6 +16,7 @@ class ProcedureListItem(BaseModel):
     """
     id: UUID4
     name: str
+    entity:List
 
 
 class ProcedureItem(BaseModel):

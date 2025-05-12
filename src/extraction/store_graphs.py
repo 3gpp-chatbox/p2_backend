@@ -96,21 +96,48 @@ def store_graph(
             top_level_sections = top_level_sections.tolist()
 
         with db.transaction():
-            # First insert into procedure table
-            procedure_query = """
-            INSERT INTO procedure (name, document_id, retrieved_top_sections, extracted_at)
-            VALUES (%s, %s, %s, NOW())
-            RETURNING id
+            # Check if the procedure already exists
+            check_procedure_query = """
+            SELECT id FROM procedure
+            WHERE name = %s AND document_id = %s
             """
-            procedure_params = (name, document_id, top_level_sections)
-            procedure_result = db.execute_query(procedure_query, procedure_params)
-            
-            if not procedure_result:
-                raise Exception("Failed to store procedure data")
-            
-            procedure_id = procedure_result[0]["id"]
+            check_procedure_params = (name, document_id)
+            existing_procedure_result = db.execute_query(check_procedure_query, check_procedure_params)
 
-            # Then insert into graph table
+            procedure_id = None
+            if existing_procedure_result:
+                procedure_id = existing_procedure_result[0]["id"]
+                logger.info(f"Found existing procedure '{name}' with ID: {procedure_id}")
+
+                # Optional: Update retrieved_top_sections if they might change or be more complete
+                # This depends on your logic. If top_level_sections can evolve, you might want to update it.
+                # update_procedure_query = """
+                # UPDATE procedure SET retrieved_top_sections = %s WHERE id = %s
+                # """
+                # db.execute_query(update_procedure_query, (top_level_sections, procedure_id), fetch=False) # fetch=False for UPDATE
+
+            else:
+                # If procedure does not exist, insert a new one
+                logger.info(f"Procedure '{name}' not found, creating new entry.")
+                procedure_insert_query = """
+                INSERT INTO procedure (name, document_id, retrieved_top_sections, extracted_at)
+                VALUES (%s, %s, %s, NOW())
+                RETURNING id
+                """
+                procedure_insert_params = (name, document_id, top_level_sections)
+                procedure_insert_result = db.execute_query(procedure_insert_query, procedure_insert_params)
+
+                if not procedure_insert_result:
+                    raise Exception("Failed to store procedure data")
+                
+                procedure_id = procedure_insert_result[0]["id"]
+                logger.info(f"Created new procedure '{name}' with ID: {procedure_id}")
+
+            # Ensure we have a procedure_id before inserting the graph
+            if not procedure_id:
+                raise Exception("Failed to obtain or create procedure ID")
+
+            # Then insert into graph table, linking to the obtained/created procedure_id
             graph_query = """
             INSERT INTO graph (
                 entity,
@@ -133,7 +160,7 @@ def store_graph(
                 graph_json,
                 model,
                 status,
-                procedure_id,
+                procedure_id, # <--- Using the existing or newly created procedure_id
                 accuracy,
                 extraction_method,
                 commit_title,
@@ -146,12 +173,13 @@ def store_graph(
                 raise Exception("Failed to store graph data")
 
             graph_id = graph_result[0]["id"]
-            logger.info(f"Stored graph '{name}' with ID: {graph_id}")
+            logger.info(f"Stored graph for entity '{entity}' with ID: {graph_id} linked to procedure ID: {procedure_id}")
             return graph_id
-        
+            
     except Exception as e:
         logger.error(f"Error storing graph: {e}")
-        return None 
+        return None
+
 
 # Example usage
 if __name__ == "__main__":
