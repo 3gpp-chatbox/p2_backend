@@ -99,40 +99,6 @@ def get_reference_context(procedure_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/{procedure_id}", response_model=List[EntityVersionItem])
-async def get_latest_graphs_for_entities(procedure_id: UUID):
-    """
-    Get the latest verified version of each entity type for a given procedure.
-    """
-    try:
-        with DatabaseHandler() as db:
-            query = """
-            SELECT DISTINCT ON (g.entity)
-                g.id, g.entity, g.version, g.accuracy, g.model_name, g.created_at
-            FROM graph g
-            JOIN procedure p ON g.procedure_id = p.id
-            WHERE p.id = %s
-            ORDER BY g.entity, g.version::int DESC
-            """
-            results = db.execute_query(query, (procedure_id,))
-
-            return [
-                EntityVersionItem(
-                    graph_id=row["id"],
-                    entity=row["entity"],
-                    version=row["version"],
-                    accuracy=row["accuracy"],
-                    model_name=row["model_name"],
-                    created_at=row["created_at"]
-                )
-                for row in results
-            ]
-
-    except Exception as e:
-        logger.error(f"Failed to fetch latest entity graphs: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to fetch entity graphs")
-
-
 @router.get("/{graph_id}", response_model=ProcedureItem)
 async def get_graph_by_id(graph_id: UUID):
     """
