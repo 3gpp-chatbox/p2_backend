@@ -6,6 +6,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Union
 
+from pydantic import BaseModel
+
 from src.lib.logger import get_logger
 from src.schemas.procedure_graph import Graph
 
@@ -37,7 +39,7 @@ def save_result(
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     # Handle different result types
-    if isinstance(result, Graph):
+    if isinstance(result, BaseModel):
         # Save Graph objects as JSON using model_dump_json directly
         filename = output_dir / f"{procedure_name}_{step}_{method}_{timestamp}.json"
         with open(filename, "w", encoding="utf-8") as f:
