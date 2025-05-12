@@ -10,7 +10,7 @@ from src.lib.file_utils import save_result
 from src.lib.logger import get_logger
 from src.prompts.prompt_manager import PromptManager
 from src.schemas.extraction_types import ExtractionMethod, ExtractionResult
-from src.schemas.procedure_graph import Graph
+from src.schemas.procedure_graph import BaseGraph, Graph
 
 # Set up logging
 logger = get_logger(__name__)
@@ -76,7 +76,11 @@ def prompt_chain(
             entity=entity,
         )
 
-    result_1_response = agent.run_sync(user_prompt=prompt_1)
+    result_1_response = agent.run_sync(
+        user_prompt=prompt_1,
+        output_type=BaseGraph,
+    )
+
     result_1 = result_1_response.output
     logger.info(f"Step 1 token usage for {method.value}: {result_1_response.usage()}")
 
@@ -92,7 +96,7 @@ def prompt_chain(
     prompt_2 = prompt_manager.render_prompt(
         template_name="v3-step2-evaluate",
         original_context=context,
-        result_1=result_1,
+        result_1=result_1.model_dump_json(indent=2),  # Format it as JSON
         section_name=procedure_name,
         entity=entity,
     )
@@ -100,6 +104,7 @@ def prompt_chain(
     result_2_response = agent.run_sync(
         user_prompt=prompt_2,
     )
+
     result_2 = result_2_response.output
     logger.info(f"Step 2 token usage for {method.value}: {result_2_response.usage()}")
 
@@ -114,13 +119,17 @@ def prompt_chain(
     # Stage 3: Apply corrections based on evaluation
     prompt_3 = prompt_manager.render_prompt(
         template_name="v3-step3-correct",
-        result_1=result_1,
+        result_1=result_1.model_dump_json(indent=2),  # Format it as JSON
         result_2=result_2,
         section_name=procedure_name,
         entity=entity,
     )
 
-    result_3_response = agent.run_sync(user_prompt=prompt_3)
+    result_3_response = agent.run_sync(
+        user_prompt=prompt_3,
+        output_type=BaseGraph,
+    )
+
     result_3 = result_3_response.output
     logger.info(f"Step 3 token usage for {method.value}: {result_3_response.usage()}")
 
@@ -136,13 +145,17 @@ def prompt_chain(
     prompt_4 = prompt_manager.render_prompt(
         template_name="v3-step4-enrich",
         original_context=context,
-        result_3=result_3,
+        result_3=result_3.model_dump_json(indent=2),
         section_name=procedure_name,
         entity=entity,
     )
 
     # Execute final extraction with type validation using Graph schema
-    result_4_response = agent.run_sync(user_prompt=prompt_4, output_type=Graph)
+    result_4_response = agent.run_sync(
+        user_prompt=prompt_4,
+        output_type=Graph,
+    )
+
     result_4_graph: Graph = result_4_response.output
     logger.info(f"Step 4 token usage for {method.value}: {result_4_response.usage()}")
 
@@ -161,3 +174,88 @@ def prompt_chain(
         model_name=model_name,
         method=method,
     )
+
+
+if __name__ == "__main__":
+    import os
+    import sys
+
+    from dotenv import load_dotenv
+    from pydantic_ai.models.gemini import GeminiModel
+
+    from src.db.db_handler import DatabaseHandler
+    from src.db.document import get_document_by_name
+    from src.retrieval.get_context import get_context
+
+    try:
+        # Generate a unique run ID for this execution
+
+        load_dotenv(override=True)
+        # Load environment variables with default values where appropriate
+        # --- Document Configuration ---
+        DOCUMENT_NAME = os.getenv("DOCUMENT_NAME")
+        PROCEDURE_TO_EXTRACT = os.getenv("PROCEDURE_TO_EXTRACT")
+        ENTITY = os.getenv("ENTITY")
+        # --- LLM Configuration ---
+        MAIN_MODEL = os.getenv("MAIN_MODEL", "gemini-2.0-flash-exp")
+        MAIN_MODEL_TEMPERATURE = float(os.getenv("MAIN_MODEL_TEMPERATURE", 0.0))
+
+        if not PROCEDURE_TO_EXTRACT or not DOCUMENT_NAME or not ENTITY:
+            raise ValueError(
+                "PROCEDURE_TO_EXTRACT, DOCUMENT_NAME and ENTITY must be set in the environment variables."
+            )
+
+        logger.info(f"Using Model: {MAIN_MODEL}")
+
+        main_model = GeminiModel(
+            model_name=MAIN_MODEL, provider="google-gla"
+        )  # Primary model for main extraction pipeline
+
+        # Initialize primary agent with main model
+        main_agent: Agent = Agent(
+            model=main_model,
+            model_settings={"temperature": MAIN_MODEL_TEMPERATURE},
+        )
+
+        # Initialize database connection
+        db_handler = DatabaseHandler()
+
+        # Instantiate prompt manager
+        prompt_manager = PromptManager()
+
+        # Step 1: Retrieve the target document from database
+        document = get_document_by_name(doc_name=DOCUMENT_NAME, db_handler=db_handler)
+
+        if not document:
+            logger.error(f"Document '{DOCUMENT_NAME}' not found in the database.")
+            raise ValueError(f"Document '{DOCUMENT_NAME}' not found in the database.")
+
+        context = get_context(
+            doc_name=DOCUMENT_NAME,
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            db_handler=db_handler,
+        )
+
+        save_result(
+            result=f"# Context for {PROCEDURE_TO_EXTRACT}\n\n{context}",
+            step="original_context",
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id="test_run",
+            method="context",
+        )
+
+        main_extraction: ExtractionResult = prompt_chain(
+            agent=main_agent,
+            prompt_manager=prompt_manager,
+            context=context,
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            run_id="test_run",
+            modified_prompt=False,
+            method=ExtractionMethod.MAIN,
+            model_name=MAIN_MODEL,
+            entity=ENTITY,
+        )
+
+    except Exception as e:
+        logger.error(f"An error occurred: {e}")
+        sys.exit(1)
