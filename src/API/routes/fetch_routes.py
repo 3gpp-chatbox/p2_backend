@@ -156,7 +156,8 @@ async def get_graph_versions(procedure_id: UUID, entity: str):
         with DatabaseHandler() as db:
             query = """
             SELECT 
-            g.id as graph_id, g.version, g.accuracy, g.model_name, g.created_at,g.commit_title,g.commit_message 
+            g.id as graph_id, g.version, g.accuracy, g.model_name, g.created_at,g.commit_title,g.commit_message,
+            p.name as procedure_name
             FROM graph g
             JOIN procedure p ON g.procedure_id = p.id
             WHERE p.id = %s AND g.entity = %s
@@ -168,6 +169,8 @@ async def get_graph_versions(procedure_id: UUID, entity: str):
                 EntityVersionItem(
                     graph_id=row["graph_id"],
                     entity=entity,
+                    procedure_id=procedure_id,
+                    procedure_name=row["procedure_name"],
                     version=row["version"],
                     accuracy=row["accuracy"],
                     model_name=row["model_name"],

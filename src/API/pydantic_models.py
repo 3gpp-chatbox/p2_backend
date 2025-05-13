@@ -69,6 +69,8 @@ class EntityVersionItem(BaseModel):
         commit_message: Description of the associated commit
     """
     graph_id: UUID4
+    procedure_id: UUID4
+    procedure_name: str
     entity: str
     version: str
     accuracy: float
