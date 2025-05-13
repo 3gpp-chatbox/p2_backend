@@ -5,7 +5,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
 
-from src.API.pydantic_models import EditGraph,NewGraphInsert
+from src.API.pydantic_models import NewProcedureItemInfo,NewGraphInsert
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[3].resolve()))
@@ -17,8 +17,8 @@ logger = get_logger(__name__)
 router = APIRouter()
 
 
-@router.post("/{procedure_id}", response_model=ProcedureItem)
-async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
+@router.post("/{procedure_id}/{entity}", response_model=NewProcedureItemInfo)
+async def insert_edited_graph(procedure_id: UUID, entity: str, request: NewGraphInsert):
     """
     Insert a new graph version with user-edited extracted data.
 
@@ -27,7 +27,7 @@ async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
         request: Contains the edited `extracted_data` and commit info
 
     Returns:
-        ProcedureItem: Newly inserted graph row
+        NewProcedureItemInfo: Newly inserted graph row
     """
     try:
         with DatabaseHandler() as db:
@@ -36,7 +36,7 @@ async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
             SELECT p.name, d.id AS document_id, d.name AS document_name
             FROM procedure p
             JOIN document d ON p.document_id = d.id
-            WHERE p.id = %s
+            WHERE p.id = %s 
             """
             proc_result = db.execute_query(proc_query, (procedure_id,))
             if not proc_result:
@@ -45,14 +45,14 @@ async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
 
             # Get latest graph for metadata reuse
             latest_query = """
-            SELECT entity, model_name, accuracy, extraction_method, COALESCE(MAX(version::int), 0) as latest_version
+            SELECT model_name, accuracy, extraction_method, COALESCE(MAX(version::int), 0) as latest_version
             FROM graph
-            WHERE procedure_id = %s
-            GROUP BY entity, model_name, accuracy, extraction_method
+            WHERE procedure_id = %s AND entity = %s
+            GROUP BY model_name, accuracy, extraction_method
             ORDER BY latest_version DESC
             LIMIT 1
             """
-            latest_result = db.execute_query(latest_query, (procedure_id,))
+            latest_result = db.execute_query(latest_query, (procedure_id,entity))
             if not latest_result:
                 raise HTTPException(status_code=400, detail="No existing graph to copy metadata from")
 
@@ -72,7 +72,7 @@ async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
             RETURNING id, created_at
             """
             insert_params = (
-                latest["entity"],
+                entity,
                 edited_graph_json,
                 latest["model_name"],
                 latest["accuracy"],
@@ -90,7 +90,7 @@ async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
 
             new_graph = insert_result[0]
 
-            return ProcedureItem(
+            return NewProcedureItemInfo(
                 graph_id=new_graph["id"],
                 procedure_name=proc["name"],
                 procedure_id=procedure_id,
@@ -101,7 +101,7 @@ async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
                 extracted_at=new_graph["created_at"],
                 extraction_method=latest["extraction_method"],  # reused, not overridden with 'modified'
                 model_name=latest["model_name"],
-                entity=latest["entity"],
+                entity=entity,
                 version=next_version,
                 status=status, 
                 commit_title=request.commit_title,

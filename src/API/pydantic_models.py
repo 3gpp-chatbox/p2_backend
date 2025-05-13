@@ -19,6 +19,9 @@ class ProcedureListItem(BaseModel):
     entity:List
 
 
+class Reference(BaseModel):
+    context_markdown: str
+
 class ProcedureItem(BaseModel):
     """Procedure graph with metadata and accuracy.
 
@@ -52,6 +55,7 @@ class ProcedureItem(BaseModel):
     status: str
     commit_title: str
     commit_message: str
+    reference: Reference
 
 
 
@@ -69,12 +73,7 @@ class EntityVersionItem(BaseModel):
         commit_message: Description of the associated commit
     """
     graph_id: UUID4
-    procedure_id: UUID4
-    procedure_name: str
-    entity: str
     version: str
-    accuracy: float
-    model_name: str
     created_at: datetime
     commit_title: Optional[str] = None
     commit_message: Optional[str] = None
@@ -88,13 +87,25 @@ class NewGraphInsert(BaseModel):
     commit_title: str
     commit_message: str
 
+class NewProcedureItemInfo(BaseModel):
+    graph_id: UUID4
+    procedure_name: str
+    procedure_id: UUID4
+    document_id: UUID4
+    document_name: str
+    graph: Graph
+    accuracy: float
+    extracted_at: datetime
+    extraction_method: str
+    model_name: str
+    entity: str
+    version: str
+    status: str
+    commit_title: str
+    commit_message: str
 
 
-class EditGraph(BaseModel):
-    """model for edited graph.
 
-    Attributes:
-        edited_graph: The edited graph data in JSON format
-    """
 
-    edited_graph: Graph
+class OneHistoryVersionItem(BaseModel):
+    graph: Graph
