@@ -1,6 +1,6 @@
 # Flow Property Graph Correction
 
-## Input Requirements
+## Input
 
 You are given the following inputs:
 
@@ -14,6 +14,7 @@ You are given the following inputs:
 ## Correction Instructions
 
 ### Basic Updates
+
 Using the evaluation report, update the FPG:
 
 - **Add missing nodes or edges** from {entity}'s perspective that are explicitly described in the text.
@@ -21,6 +22,7 @@ Using the evaluation report, update the FPG:
 - **Ensure consistency** between all `from`/`to` values in edges and `id`s in the node list.
 
 ### Component Requirements
+
 - **Edge Types**:
   - State→event must be `"trigger"`
   - Event→state must be `"condition"` (note: these transitions always represent actions in the actual procedure)
@@ -31,16 +33,19 @@ Using the evaluation report, update the FPG:
 ## Graph Connectivity Requirements
 
 ### 1. Unified Structure
+
 - All nodes must be part of one coherent graph
 - No isolated nodes or disconnected subgraphs allowed
 - Every node must be reachable from every other node through some path
 
 ### 2. Node Integration
+
 - Each state must connect to at least one event
 - Each event must have both incoming and outgoing edges (except for terminal events)
 - All paths must be properly integrated into the main flow
 
 ### 3. Handling Isolated Components
+
 - If isolated nodes are identified in the evaluation report, integrate them into the main graph
 - If disconnected subgraphs exist, merge them appropriately with the main flow
 - Ensure any new connections are supported by the specification text
@@ -52,6 +57,7 @@ Using the evaluation report, update the FPG:
 Return a single corrected FPG JSON object with the same structure as the input.
 
 ### Requirements
+
 - Do not include the evaluation report.
 - Do not include comments or explanations.
 - Use only data supported by the original text.
@@ -61,15 +67,13 @@ Return a single corrected FPG JSON object with the same structure as the input.
 - Do **not** make assumptions or corrections not supported by the evaluation.
 
 ### Output Format (JSON)
+
 Return ONLY the corrected graph in this format:
 
 ```json
 {{
-  "procedure_name": "{section_name}",
-  "graph": {{
     "nodes": [...],
     "edges": [...]
-  }}
 }}
 ```
 
@@ -83,10 +87,12 @@ Return ONLY the corrected graph in this format:
 
 ---
 
-## Input Data
+# **INPUT 1: PROCEDURE FLOW PROPERTY GRAPH INFO:**
 
-### Extracted procedure flow property graph info:  
 {result_1}
 
-### Evaluation Report:  
+---
+
+# **INPUT 2: EVALUATION REPORT:**
+
 {result_2}

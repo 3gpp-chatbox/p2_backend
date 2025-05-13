@@ -152,41 +152,44 @@ def main() -> None:
                 model_settings={"temperature": ALTERNATIVE_MODEL_2_TEMPERATURE},
             )
 
-        # Initialize database connection
-        db_handler = DatabaseHandler()
-
         # Instantiate prompt manager
         prompt_manager = PromptManager()
 
-        # Step 1: Retrieve the target document from database
-        document = get_document_by_name(doc_name=DOCUMENT_NAME, db_handler=db_handler)
-
-        if not document:
-            logger.error(f"Document '{DOCUMENT_NAME}' not found in the database.")
-            raise ValueError(f"Document '{DOCUMENT_NAME}' not found in the database.")
-
-        # Check if the graph already exists in the database for the given document
-        check_query = """
-        SELECT id FROM graph 
-        WHERE document_id = %s AND name = %s
-        """
-        check_params = (document["id"], PROCEDURE_TO_EXTRACT)
-        existing_graph = db_handler.execute_query(check_query, check_params)
-
-        if existing_graph:
-            logger.warning(
-                f"Graph '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
-            )
-            raise ValueError(
-                f"Graph '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
+        # Initialize database connection
+        with DatabaseHandler() as db_handler:
+            # Step 1: Retrieve the target document from database
+            document = get_document_by_name(
+                doc_name=DOCUMENT_NAME, db_handler=db_handler
             )
 
-        # Step 2: Retrieve relevant context for the procedure extraction
-        context = get_context(
-            doc_name=DOCUMENT_NAME,
-            procedure_name=PROCEDURE_TO_EXTRACT,
-            db_handler=db_handler,
-        )
+            if not document:
+                logger.error(f"Document '{DOCUMENT_NAME}' not found in the database.")
+                raise ValueError(
+                    f"Document '{DOCUMENT_NAME}' not found in the database."
+                )
+
+            # Check if the graph already exists in the database for the given document
+            check_query = """
+            SELECT id FROM graph 
+            WHERE document_id = %s AND name = %s
+            """
+            check_params = (document["id"], PROCEDURE_TO_EXTRACT)
+            existing_graph = db_handler.execute_query(check_query, check_params)
+
+            if existing_graph:
+                logger.warning(
+                    f"Graph '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
+                )
+                raise ValueError(
+                    f"Graph '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
+                )
+
+            # Step 2: Retrieve relevant context for the procedure extraction
+            context = get_context(
+                doc_name=DOCUMENT_NAME,
+                procedure_name=PROCEDURE_TO_EXTRACT,
+                db_handler=db_handler,
+            )
 
         # Save the retrieved context
         save_result(
@@ -357,15 +360,16 @@ def main() -> None:
         logger.info(f"Best result accuracy: {best_result.accuracy:.2f}")
 
         # Step 5: Store the best extraction result with its metadata in the database
-        store_graph(
-            name=PROCEDURE_TO_EXTRACT,
-            document_name=DOCUMENT_NAME,
-            graph_data=best_result.graph,
-            accuracy=best_result.accuracy,
-            db=db_handler,
-            model=best_result.model_name,
-            extraction_method=best_result.method.value,
-        )
+        with DatabaseHandler() as db_handler:
+            store_graph(
+                name=PROCEDURE_TO_EXTRACT,
+                document_name=DOCUMENT_NAME,
+                graph_data=best_result.graph,
+                accuracy=best_result.accuracy,
+                db=db_handler,
+                model=best_result.model_name,
+                extraction_method=best_result.method.value,
+            )
 
     except Exception as e:
         logger.error(

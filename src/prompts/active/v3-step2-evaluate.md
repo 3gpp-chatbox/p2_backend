@@ -1,11 +1,11 @@
 # Flow Property Graph Evaluation
 
-## Input Requirements
+## Input
 
 You are given two inputs:
 
-1. The original content from a 3GPP specification section describing the procedure: "{section_name}".
-2. A Flow Property Graph (FPG) generated from this text focusing on the {entity} perspective, represented as a JSON object.
+1. A Flow Property Graph (FPG) generated from this text focusing on the {entity} perspective, represented as a JSON object.
+2. The original content from a 3GPP specification section describing the procedure: "{section_name}".
 
 > **Important**: Your task is to **evaluate and validate** the FPG based only on the original content, specifically focusing on the {entity} side. **Do not return a corrected FPG. Instead, return a detailed evaluation report.**
 
@@ -14,7 +14,9 @@ You are given two inputs:
 ## Evaluation Objectives
 
 ### Primary Goals
+
 Assess whether the provided FPG is:
+
 - An accurate, complete, and explicit representation of the {entity}'s perspective in the procedure
 - A unified graph where all nodes are properly connected with no isolated parts
 - A coherent representation where every node is reachable from every other node through some path
@@ -78,7 +80,6 @@ Return a JSON object in the following format:
     "unified_graph": true/false,
     "missing_nodes": [{{"id": "...", "reason": "...","suggested_correction": "..."}}, ...],
     "invalid_nodes": [{{"id": "...", "reason": "...","suggested_correction": "..."}}, ...],
-    "extra_nodes": [{{"id": "...", "reason": "...","suggested_correction": "..."}}, ...],
     "missing_edges": [{{"from": "...", "to": "...", "type": "...", "reason": "...","suggested_correction": "..."}}, ...],
     "invalid_edges": [{{"from": "...", "to": "...", "type": "...", "reason": "...","suggested_correction": "..."}}, ...],
     "isolated_nodes": [{{"id": "...", "reason": "...","suggested_correction": "..."}}, ...],
@@ -100,8 +101,14 @@ Return a JSON object in the following format:
 - **Format**: Maintain valid JSON structure for all responses
 - **Output**: Return ONLY the valid JSON object
 
-Input FPG:
+---
+
+# **INPUT 1: FPG:**
+
 {result_1}
 
-Original Text:
+---
+
+# **INPUT 2: ORIGINAL CONTENT FROM 3GPP SPECIFICATION:**
+
 {original_context}
