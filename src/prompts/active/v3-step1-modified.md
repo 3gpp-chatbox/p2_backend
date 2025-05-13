@@ -1,4 +1,4 @@
-# 3GPP Flow Property Graph Analysis
+# 3GPP Flow Property Graph Extraction
 
 You are a 3GPP specification analyzer tasked with processing the procedure "{procedure_name}" from the {entity}'s perspective. Your objective is to construct a unified Flow Property Graph (FPG) representation based strictly on the provided specification text.
 
@@ -11,6 +11,7 @@ Original 3GPP specification section detailing the procedure "{procedure_name}".
 ## Task Objective
 
 ### Primary Goal
+
 Extract and structure the procedure's flow from the {entity}'s perspective into a formal unified graph representation capturing states, events, and transitions between them. All components must be connected into a single coherent graph with no isolated parts.
 
 ### Graph Components
@@ -21,7 +22,7 @@ Extract and structure the procedure's flow from the {entity}'s perspective into 
 
      - Explicitly defined states of {entity}
      - Format: "[ENTITY]\_[STATE_NAME]"
-     - Example: "{entity}_5GMM_REGISTERED"
+     - Example: "{entity}\_5GMM_REGISTERED"
      - Must be connected to at least one event
 
    - **Events**:
@@ -62,26 +63,42 @@ Extract and structure the procedure's flow from the {entity}'s perspective into 
 
 ```json
 {{
-  "procedure_name": "{procedure_name}",
-  "graph": {{
     "nodes": [
-      {{"id": "{entity}_5GMM_REGISTERED_INITIATED", "type": "state"}},
-      {{"id": "Event_LowerLayer_Failure", "type": "event"}},
-      {{"id": "{entity}_5GMM_DEREGISTERED_ATTEMPTING_REGISTRATION", "type": "state"}}
+        {{
+            "id": "{entity}_5GMM_REGISTERED_INITIATED",
+            "type": "state",
+            "section_reference": "5.5.1.2.7 Abnormal cases in the UE",
+            "text_reference": "If the UE receives a DEREGISTRATION REQUEST message from the network in state 5GMM-REGISTERED-INITIATED"
+        }},
+        {{
+            "id": "Event_LowerLayer_Failure",
+            "type": "event",
+            "section_reference": "5.5.1.2.7 Abnormal cases in the UE",
+            "text_reference": "Lower layer failure or release of the NAS signalling connection received from lower layers"
+        }},
+        {{
+            "id": "{entity}_5GMM_DEREGISTERED_ATTEMPTING_REGISTRATION",
+            "type": "state",
+            "section_reference": "5.5.1.2.5 Initial registration not accepted by the network",
+            "text_reference": "Cause #22 (Congestion). ... enter state 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION."
+        }}
     ],
     "edges": [
-      {{
-        "from": "{entity}_5GMM_REGISTERED_INITIATED",
-        "to": "Event_LowerLayer_Failure",
-        "type": "trigger"
-      }},
-      {{
-        "from": "Event_LowerLayer_Failure",
-        "to": "{entity}_5GMM_DEREGISTERED_ATTEMPTING_REGISTRATION",
-        "type": "condition"
-      }}
+        {{
+            "from": "{entity}_5GMM_REGISTERED_INITIATED",
+            "to": "Event_LowerLayer_Failure",
+            "type": "trigger",
+            "section_reference": "5.5.1.2.7 Abnormal cases in the UE",
+            "text_reference": "Lower layer failure or release of the NAS signalling connection received from lower layers"
+        }},
+        {{
+            "from": "Event_LowerLayer_Failure",
+            "to": "{entity}_5GMM_DEREGISTERED_ATTEMPTING_REGISTRATION",
+            "type": "condition",
+            "section_reference": "5.5.1.2.7 Abnormal cases in the UE",
+            "text_reference": "If the registration attempt counter is less than 5: ... timer T3511 is started and the state is changed to 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION."
+        }}
     ]
-  }}
 }}
 ```
 
@@ -110,6 +127,8 @@ Extract and structure the procedure's flow from the {entity}'s perspective into 
 
 Only return a valid JSON object matching the specified format. No additional explanations or comments.
 
-Input Text:
+---
+
+# **INPUT: CONTEXT FROM 3GPP SPECIFICATION:**
 
 {context}
