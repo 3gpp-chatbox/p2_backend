@@ -58,6 +58,7 @@ async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
 
             latest = latest_result[0]
             next_version = str(int(latest["latest_version"]) + 1)
+            status = "verified"
 
             # Serialize edited graph to JSON string
             edited_graph_json = request.edited_graph.model_dump_json()
@@ -67,7 +68,7 @@ async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
                 entity, extracted_data, model_name, accuracy,
                 status, extraction_method, commit_title, commit_message,
                 version, procedure_id
-            ) VALUES (%s, %s::jsonb, %s, %s, 'verified', %s, %s, %s, %s, %s)
+            ) VALUES (%s, %s::jsonb, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id, created_at
             """
             insert_params = (
@@ -75,6 +76,7 @@ async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
                 edited_graph_json,
                 latest["model_name"],
                 latest["accuracy"],
+                status,
                 latest["extraction_method"],
                 request.commit_title,
                 request.commit_message,
@@ -89,8 +91,9 @@ async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
             new_graph = insert_result[0]
 
             return ProcedureItem(
-                id=new_graph["id"],
-                name=proc["name"],
+                graph_id=new_graph["id"],
+                procedure_name=proc["name"],
+                procedure_id=procedure_id,
                 document_id=proc["document_id"],
                 document_name=proc["document_name"],
                 graph=request.edited_graph,
@@ -100,7 +103,7 @@ async def insert_edited_graph(procedure_id: UUID, request: NewGraphInsert):
                 model_name=latest["model_name"],
                 entity=latest["entity"],
                 version=next_version,
-                status="verified",
+                status=status, 
                 commit_title=request.commit_title,
                 commit_message=request.commit_message
             )

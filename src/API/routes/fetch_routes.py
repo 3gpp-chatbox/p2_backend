@@ -123,7 +123,7 @@ async def get_graph_by_id(graph_id: UUID):
 
             row = results[0]
             return ProcedureItem(
-                graph_id=row["graph_id"],
+                graph_id=graph_id,
                 procedure_name=row["procedure_name"],
                 procedure_id=row["procedure_id"],
                 document_id=row["document_id"],
