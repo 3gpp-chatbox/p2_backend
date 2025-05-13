@@ -120,8 +120,8 @@ def store_graph(
                 # If procedure does not exist, insert a new one
                 logger.info(f"Procedure '{name}' not found, creating new entry.")
                 procedure_insert_query = """
-                INSERT INTO procedure (name, document_id, retrieved_top_sections, extracted_at)
-                VALUES (%s, %s, %s, NOW())
+                INSERT INTO procedure (name, document_id, retrieved_top_sections)
+                VALUES (%s, %s, %s)
                 RETURNING id
                 """
                 procedure_insert_params = (name, document_id, top_level_sections)
@@ -143,7 +143,6 @@ def store_graph(
                 entity,
                 extracted_data,
                 model_name,
-                created_at,
                 status,
                 procedure_id,
                 accuracy,
@@ -152,7 +151,7 @@ def store_graph(
                 commit_message,
                 version
             )
-            VALUES (%s, %s, %s, NOW(), %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
             """
             graph_params = (

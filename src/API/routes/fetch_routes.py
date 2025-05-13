@@ -27,9 +27,9 @@ async def get_procedure_names():
         with DatabaseHandler() as db:
             query = """
             SELECT 
-                p.id as id, 
-                p.name as name, 
-                array_agg(DISTINCT g.entity) as entity
+                p.id as procedure_id, 
+                p.name as procedure_name, 
+                array_agg(DISTINCT g.entity) as entities
             FROM procedure p
             JOIN graph g ON p.id = g.procedure_id
             GROUP BY p.id, p.name
@@ -40,7 +40,7 @@ async def get_procedure_names():
             # --- START OF MODIFICATION ---
             processed_items = []
             for row in results:
-                entity_raw_string = row["entity"] # This will be the string like '{UE,AMF}'
+                entity_raw_string = row["entities"] # This will be the string like '{UE,AMF}'
 
                 parsed_entities = []
                 if entity_raw_string and entity_raw_string.startswith('{') and entity_raw_string.endswith('}'):
@@ -53,8 +53,8 @@ async def get_procedure_names():
                 
                 processed_items.append(
                     ProcedureListItem(
-                        id=row["id"], 
-                        name=row["name"], 
+                        procedure_id=row["procedure_id"], 
+                        procedure_name=row["procedure_name"], 
                         entity=parsed_entities # Pass the parsed list to the Pydantic model
                     )
                 )
@@ -108,9 +108,9 @@ async def get_graph_by_id(graph_id: UUID):
         with DatabaseHandler() as db:
             query = """
             SELECT 
-                g.id, g.entity, g.extracted_data, g.model_name, g.accuracy, g.version,
+                g.id as graph_id, g.entity, g.extracted_data, g.model_name, g.accuracy, g.version,
                 g.created_at, g.status, g.extraction_method, g.commit_title, g.commit_message,
-                p.name as procedure_name,
+                p.name as procedure_name,p.id as procedure_id,
                 d.id as document_id, d.name as document_name
             FROM graph g
             JOIN procedure p ON g.procedure_id = p.id
@@ -123,8 +123,9 @@ async def get_graph_by_id(graph_id: UUID):
 
             row = results[0]
             return ProcedureItem(
-                id=row["id"],
-                name=row["procedure_name"],
+                graph_id=row["graph_id"],
+                procedure_name=row["procedure_name"],
+                procedure_id=row["procedure_id"],
                 document_id=row["document_id"],
                 document_name=row["document_name"],
                 graph=row["extracted_data"],  # Only one graph now
@@ -155,7 +156,7 @@ async def get_graph_versions(procedure_id: UUID, entity: str):
         with DatabaseHandler() as db:
             query = """
             SELECT 
-                g.id, g.version, g.accuracy, g.model_name, g.created_at,g.commit_title,g.commit_message 
+            g.id as graph_id, g.version, g.accuracy, g.model_name, g.created_at,g.commit_title,g.commit_message 
             FROM graph g
             JOIN procedure p ON g.procedure_id = p.id
             WHERE p.id = %s AND g.entity = %s
@@ -165,7 +166,7 @@ async def get_graph_versions(procedure_id: UUID, entity: str):
 
             return [
                 EntityVersionItem(
-                    graph_id=row["id"],
+                    graph_id=row["graph_id"],
                     entity=entity,
                     version=row["version"],
                     accuracy=row["accuracy"],

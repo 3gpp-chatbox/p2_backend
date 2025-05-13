@@ -14,8 +14,8 @@ class ProcedureListItem(BaseModel):
         id: UUID of the procedure
         name: Name of the procedure
     """
-    id: UUID4
-    name: str
+    procedure_id: UUID4
+    procedure_name: str
     entity:List
 
 
@@ -37,8 +37,9 @@ class ProcedureItem(BaseModel):
         status: Status of the graph (e.g., new, verified)
 
     """
-    id: UUID4
-    name: str
+    graph_id: UUID4
+    procedure_name: str
+    procedure_id: UUID4
     document_id: UUID4
     document_name: str
     graph: Graph
