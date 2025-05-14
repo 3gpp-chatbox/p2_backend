@@ -1,15 +1,13 @@
-
 import sys
 from pathlib import Path
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
 
-from src.API.pydantic_models import NewProcedureItemInfo,NewGraphInsert
+from src.API.pydantic_models import NewGraphInsert, NewProcedureItemInfo
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[3].resolve()))
-from src.API.pydantic_models import ProcedureItem
 from src.db.db_handler import DatabaseHandler
 from src.lib.logger import get_logger
 
@@ -47,14 +45,14 @@ async def insert_edited_graph(procedure_id: UUID, entity: str, request: NewGraph
             latest_query = """
             SELECT model_name, accuracy, extraction_method, COALESCE(MAX(version::int), 0) as latest_version
             FROM graph
-            WHERE procedure_id = %s AND entity = %s
+            WHERE procedure_id = %s AND LOWER(entity) = LOWER(%s)
             GROUP BY model_name, accuracy, extraction_method
             ORDER BY latest_version DESC
             LIMIT 1
             """
-            latest_result = db.execute_query(latest_query, (procedure_id,entity))
+            latest_result = db.execute_query(latest_query, (procedure_id, entity))
             if not latest_result:
-                raise HTTPException(status_code=400, detail="No existing graph to copy metadata from")
+                raise HTTPException(status_code=404, detail="Graph not found")
 
             latest = latest_result[0]
             next_version = str(int(latest["latest_version"]) + 1)
@@ -72,7 +70,7 @@ async def insert_edited_graph(procedure_id: UUID, entity: str, request: NewGraph
             RETURNING id, created_at
             """
             insert_params = (
-                entity,
+                entity.upper(),
                 edited_graph_json,
                 latest["model_name"],
                 latest["accuracy"],
@@ -81,12 +79,14 @@ async def insert_edited_graph(procedure_id: UUID, entity: str, request: NewGraph
                 request.commit_title,
                 request.commit_message,
                 next_version,
-                procedure_id
+                procedure_id,
             )
 
             insert_result = db.execute_query(insert_query, insert_params)
             if not insert_result:
-                raise HTTPException(status_code=500, detail="Failed to insert edited graph")
+                raise HTTPException(
+                    status_code=500, detail="Failed to insert edited graph"
+                )
 
             new_graph = insert_result[0]
 
@@ -99,13 +99,15 @@ async def insert_edited_graph(procedure_id: UUID, entity: str, request: NewGraph
                 graph=request.edited_graph,
                 accuracy=latest["accuracy"],
                 extracted_at=new_graph["created_at"],
-                extraction_method=latest["extraction_method"],  # reused, not overridden with 'modified'
+                extraction_method=latest[
+                    "extraction_method"
+                ],  # reused, not overridden with 'modified'
                 model_name=latest["model_name"],
                 entity=entity,
                 version=next_version,
-                status=status, 
+                status=status,
                 commit_title=request.commit_title,
-                commit_message=request.commit_message
+                commit_message=request.commit_message,
             )
 
     except HTTPException:
