@@ -11,7 +11,6 @@ DROP FUNCTION IF EXISTS decode_from_ltree(text);
 -- Drop types
 DROP TYPE IF EXISTS extraction_method;
 DROP TYPE IF EXISTS graph_status;
-DROP TYPE IF EXISTS entity_type;
 
 -- Drop extensions
 DROP EXTENSION IF EXISTS ltree;

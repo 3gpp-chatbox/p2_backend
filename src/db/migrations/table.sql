@@ -3,7 +3,6 @@ CREATE EXTENSION IF NOT EXISTS ltree;
 
 CREATE TYPE extraction_method AS ENUM ('main', 'modified', 'alternative');
 CREATE TYPE graph_status AS ENUM ('new', 'verified');
-CREATE TYPE entity_type AS ENUM ('UE', 'AMF', 'SMF', 'gNB');
 
 -- Helper function to encode text to hex for ltree paths
 CREATE OR REPLACE FUNCTION encode_for_ltree(text) RETURNS text AS $$
@@ -57,7 +56,7 @@ CREATE TABLE procedure (
 -- Graph Table
 CREATE TABLE graph (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    entity entity_type NOT NULL,
+    entity TEXT NOT NULL,
     extracted_data JSONB NOT NULL,
     model_name TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
