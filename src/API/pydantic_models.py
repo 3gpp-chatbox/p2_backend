@@ -1,9 +1,12 @@
 """
 Defines API response/request models.
 """
+
 from datetime import datetime
-from typing import Optional,List
+from typing import List, Optional
+
 from pydantic import UUID4, BaseModel
+
 from src.schemas.procedure_graph import Graph
 
 
@@ -14,13 +17,15 @@ class ProcedureListItem(BaseModel):
         id: UUID of the procedure
         name: Name of the procedure
     """
+
     procedure_id: UUID4
     procedure_name: str
-    entity:List
+    entity: List
 
 
 class Reference(BaseModel):
     context_markdown: str
+
 
 class ProcedureItem(BaseModel):
     """Procedure graph with metadata and accuracy.
@@ -40,6 +45,7 @@ class ProcedureItem(BaseModel):
         status: Status of the graph (e.g., new, verified)
 
     """
+
     graph_id: UUID4
     procedure_name: str
     procedure_id: UUID4
@@ -58,7 +64,6 @@ class ProcedureItem(BaseModel):
     reference: Reference
 
 
-
 class EntityVersionItem(BaseModel):
     """Represents a version of a graph for a specific network entity.
 
@@ -72,11 +77,13 @@ class EntityVersionItem(BaseModel):
         commit_title: Title of the associated commit
         commit_message: Description of the associated commit
     """
+
     graph_id: UUID4
     version: str
     created_at: datetime
     commit_title: Optional[str] = None
     commit_message: Optional[str] = None
+
 
 class Graph(Graph):
     pass
@@ -86,6 +93,7 @@ class NewGraphInsert(BaseModel):
     edited_graph: Graph
     commit_title: str
     commit_message: str
+
 
 class NewProcedureItemInfo(BaseModel):
     graph_id: UUID4
@@ -103,8 +111,6 @@ class NewProcedureItemInfo(BaseModel):
     status: str
     commit_title: str
     commit_message: str
-
-
 
 
 class OneHistoryVersionItem(BaseModel):

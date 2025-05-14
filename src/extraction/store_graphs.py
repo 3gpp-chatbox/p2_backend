@@ -2,21 +2,18 @@ import sys
 from pathlib import Path
 from typing import Optional
 from uuid import UUID
+
 import numpy as np
-import os
-from dotenv import load_dotenv
-from src.schemas.procedure_graph import Graph
+
 from src.db.db_handler import DatabaseHandler
 from src.lib.logger import get_logger
-from src.retrieval.toc_retrieval import get_top_level_sections, find_procedure_section_lines
+from src.schemas.procedure_graph import Graph
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
 
 logger = get_logger(__name__)
 
-# Load environment variables
-load_dotenv()
 
 def get_document_id_by_name(db: DatabaseHandler, document_name: str) -> Optional[UUID]:
     """
@@ -43,6 +40,7 @@ def get_document_id_by_name(db: DatabaseHandler, document_name: str) -> Optional
         logger.error(f"Error retrieving document ID: {e}")
         return None
 
+
 def store_graph(
     name: str,
     document_name: str,
@@ -52,9 +50,9 @@ def store_graph(
     extraction_method: str,
     entity: str,  # Now passed as a parameter
     top_level_sections: list,  # Now passed as a parameter
-    commit_title: str ,
+    commit_title: str,
     commit_message: str,  # Optional, default value can be overridden
-    version: str ,  # Optional, default value can be overridden
+    version: str,  # Optional, default value can be overridden
     status: str,
     db: DatabaseHandler,
 ) -> Optional[UUID]:
@@ -102,12 +100,16 @@ def store_graph(
             WHERE name = %s AND document_id = %s
             """
             check_procedure_params = (name, document_id)
-            existing_procedure_result = db.execute_query(check_procedure_query, check_procedure_params)
+            existing_procedure_result = db.execute_query(
+                check_procedure_query, check_procedure_params
+            )
 
             procedure_id = None
             if existing_procedure_result:
                 procedure_id = existing_procedure_result[0]["id"]
-                logger.info(f"Found existing procedure '{name}' with ID: {procedure_id}")
+                logger.info(
+                    f"Found existing procedure '{name}' with ID: {procedure_id}"
+                )
 
                 # Optional: Update retrieved_top_sections if they might change or be more complete
                 # This depends on your logic. If top_level_sections can evolve, you might want to update it.
@@ -125,11 +127,13 @@ def store_graph(
                 RETURNING id
                 """
                 procedure_insert_params = (name, document_id, top_level_sections)
-                procedure_insert_result = db.execute_query(procedure_insert_query, procedure_insert_params)
+                procedure_insert_result = db.execute_query(
+                    procedure_insert_query, procedure_insert_params
+                )
 
                 if not procedure_insert_result:
                     raise Exception("Failed to store procedure data")
-                
+
                 procedure_id = procedure_insert_result[0]["id"]
                 logger.info(f"Created new procedure '{name}' with ID: {procedure_id}")
 
@@ -159,22 +163,24 @@ def store_graph(
                 graph_json,
                 model,
                 status,
-                procedure_id, # <--- Using the existing or newly created procedure_id
+                procedure_id,  # <--- Using the existing or newly created procedure_id
                 accuracy,
                 extraction_method,
                 commit_title,
                 commit_message,
-                version
+                version,
             )
-            
+
             graph_result = db.execute_query(graph_query, graph_params)
             if not graph_result:
                 raise Exception("Failed to store graph data")
 
             graph_id = graph_result[0]["id"]
-            logger.info(f"Stored graph for entity '{entity}' with ID: {graph_id} linked to procedure ID: {procedure_id}")
+            logger.info(
+                f"Stored graph for entity '{entity}' with ID: {graph_id} linked to procedure ID: {procedure_id}"
+            )
             return graph_id
-            
+
     except Exception as e:
         logger.error(f"Error storing graph: {e}")
         return None
@@ -208,7 +214,7 @@ if __name__ == "__main__":
             graph_data=sample_graph,
             accuracy=0.95,
             model="Sample Model",
-            extraction_method="Sample Method",
+            extraction_method="main",
             entity=entity,
             top_level_section=top_level_section,
             commit_title="Sample Commit Title",
