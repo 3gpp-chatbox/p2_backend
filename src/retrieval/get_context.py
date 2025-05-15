@@ -8,6 +8,7 @@ from src.retrieval.toc_retrieval import (
     find_procedure_section_lines,
     get_top_level_sections,
 )
+from src.schemas.types.context import DocumentContext
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
@@ -18,7 +19,25 @@ from src.lib.logger import get_logger
 logger = get_logger(__name__)
 
 
-def get_context(doc_name: str, procedure_name: str, db_handler: DatabaseHandler) -> str:
+def get_context(
+    doc_name: str, procedure_name: str, db_handler: DatabaseHandler
+) -> DocumentContext:
+    """Retrieves context and top-level sections for a specific procedure from a document.
+
+    Args:
+        doc_name (str): Name of the document to search in.
+        procedure_name (str): Name of the procedure to find sections for.
+        db_handler (DatabaseHandler): Database connection handler instance.
+
+    Returns:
+        DocumentContext: A Pydantic model containing:
+            - context (str): The retrieved content of the sections.
+            - top_level_sections (List[str]): List of top-level sections found for the procedure.
+
+    Raises:
+        ValueError: If the document is not found, no matching sections are found,
+            or no top-level sections are found for the procedure.
+    """
     try:
         # Get document
         doc = get_document_by_name(doc_name, db_handler)
@@ -47,7 +66,7 @@ def get_context(doc_name: str, procedure_name: str, db_handler: DatabaseHandler)
 
         if top_level_sections.size == 0:
             logger.error(
-                f"No top lkevel sections found for '{procedure_name}' in document '{doc_name}'."
+                f"No top level sections found for '{procedure_name}' in document '{doc_name}'."
             )
             raise ValueError(
                 f"Required top level sections for '{procedure_name}' not found in document '{doc_name}'."
@@ -61,10 +80,12 @@ def get_context(doc_name: str, procedure_name: str, db_handler: DatabaseHandler)
         context = get_sections_content(
             db_handler=db_handler,
             doc_name=doc_name,
-            section_list=list(top_level_sections),
+            section_list=top_level_sections.tolist(),
         )
 
-        return context
+        return DocumentContext(
+            context=context, top_level_sections=top_level_sections.tolist()
+        )
 
     except Exception as e:
         logger.error(

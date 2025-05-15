@@ -2,6 +2,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS ltree;
 
 CREATE TYPE extraction_method AS ENUM ('main', 'modified', 'alternative');
+CREATE TYPE graph_status AS ENUM ('new', 'verified');
 
 -- Helper function to encode text to hex for ltree paths
 CREATE OR REPLACE FUNCTION encode_for_ltree(text) RETURNS text AS $$
@@ -43,23 +44,37 @@ CREATE TABLE section (
 );
 
 
--- Graph Table
-
-CREATE TABLE graph (
+-- Procedure Table
+CREATE TABLE procedure (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
     document_id UUID NOT NULL REFERENCES document(id) ON DELETE CASCADE,
-    original_graph JSONB NOT NULL,
-    edited_graph JSONB DEFAULT NULL,
+    retrieved_top_sections TEXT[] NOT NULL,  -- stores array of top-level section identifiers
+    extracted_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Graph Table
+CREATE TABLE graph (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    entity TEXT NOT NULL,
+    extracted_data JSONB NOT NULL,
     model_name TEXT NOT NULL,
-    extraction_method extraction_method NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    status graph_status NOT NULL,
+    procedure_id UUID NOT NULL REFERENCES procedure(id) ON DELETE CASCADE,
     accuracy FLOAT NOT NULL,
-    extracted_at TIMESTAMP DEFAULT NOW(),
-    last_edit_at TIMESTAMP DEFAULT NULL,
-    edited BOOLEAN DEFAULT FALSE
+    extraction_method extraction_method NOT NULL,
+    commit_title TEXT NOT NULL,
+    commit_message TEXT NOT NULL,
+    version TEXT NOT NULL,
+
+    -- Ensures version uniqueness per procedure
+    UNIQUE(procedure_id, entity,version)
 );
 
 -- Indexes for optimization
 CREATE INDEX idx_section_document_id ON section(document_id);
 CREATE INDEX idx_section_path ON section USING GIST (path);
-
+CREATE INDEX idx_procedure_document_id ON procedure(document_id);
+CREATE INDEX idx_graph_procedure_id ON graph(procedure_id);
+CREATE INDEX idx_graph_status ON graph(status);

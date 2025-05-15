@@ -101,22 +101,28 @@ def main() -> None:
         DOCUMENT_NAME = os.getenv("DOCUMENT_NAME")
         PROCEDURE_TO_EXTRACT = os.getenv("PROCEDURE_TO_EXTRACT")
         ENTITY = os.getenv("ENTITY")
-        # --- LLM Configuration ---
-        MAIN_MODEL = os.getenv("MAIN_MODEL", "gemini-2.0-flash-exp")
-        MAIN_MODEL_TEMPERATURE = float(os.getenv("MAIN_MODEL_TEMPERATURE", 0.0))
-        ALTERNATIVE_MODEL = os.getenv("ALTERNATIVE_MODEL", MAIN_MODEL)
-        ALTERNATIVE_MODEL_TEMPERATURE = float(
-            os.getenv("ALTERNATIVE_MODEL_TEMPERATURE", 0.0)
-        )
-        ALTERNATIVE_MODEL_2 = os.getenv("ALTERNATIVE_MODEL_2", None)
-        ALTERNATIVE_MODEL_2_TEMPERATURE = float(
-            os.getenv("ALTERNATIVE_MODEL_2_TEMPERATURE", 0.0)
-        )
 
         if not PROCEDURE_TO_EXTRACT or not DOCUMENT_NAME or not ENTITY:
             raise ValueError(
                 "PROCEDURE_TO_EXTRACT, DOCUMENT_NAME and ENTITY must be set in the environment variables."
             )
+
+        ENTITY = ENTITY.upper()  # Ensure ENTITY is uppercase
+
+        # -------------------------------------------------------
+
+        # --- LLM Configuration ---
+        MAIN_MODEL = os.getenv("MAIN_MODEL", "gemini-2.0-flash-exp")
+        ALTERNATIVE_MODEL = os.getenv("ALTERNATIVE_MODEL", MAIN_MODEL)
+        ALTERNATIVE_MODEL_2 = os.getenv("ALTERNATIVE_MODEL_2", None)
+
+        MODEL_TEMPERATURE = float(os.getenv("MODEL_TEMPERATURE", 0.0))
+
+        # --- Set fixed values for version, status and commit directly ---
+        GRAPH_VERSION = "1"
+        EXTRACTION_STATUS = "new"
+        COMMIT_TITLE = "Initial extraction"
+        COMMIT_MESSAGE = "Auto-generated from LLM"
 
         # Initialize SBERT model once at module level for reuse across comparisons
         sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -128,7 +134,7 @@ def main() -> None:
         # Initialize primary agent with main model
         main_agent: Agent = Agent(
             model=main_model,
-            model_settings={"temperature": MAIN_MODEL_TEMPERATURE},
+            model_settings={"temperature": MODEL_TEMPERATURE},
         )
 
         alt_model = GeminiModel(
@@ -138,7 +144,7 @@ def main() -> None:
         # Initialize secondary agent with alternative model for validation
         alt_agent: Agent = Agent(
             model=alt_model,
-            model_settings={"temperature": ALTERNATIVE_MODEL_TEMPERATURE},
+            model_settings={"temperature": MODEL_TEMPERATURE},
         )
 
         # Initialize alternative model 2 if specified
@@ -149,7 +155,7 @@ def main() -> None:
 
             alt_agent_2: Agent = Agent(
                 model=alt_model_2,
-                model_settings={"temperature": ALTERNATIVE_MODEL_2_TEMPERATURE},
+                model_settings={"temperature": MODEL_TEMPERATURE},
             )
 
         # Instantiate prompt manager
@@ -162,34 +168,37 @@ def main() -> None:
                 doc_name=DOCUMENT_NAME, db_handler=db_handler
             )
 
-            if not document:
-                logger.error(f"Document '{DOCUMENT_NAME}' not found in the database.")
-                raise ValueError(
-                    f"Document '{DOCUMENT_NAME}' not found in the database."
-                )
+        if not document:
+            logger.error(f"Document '{DOCUMENT_NAME}' not found in the database.")
+            raise ValueError(f"Document '{DOCUMENT_NAME}' not found in the database.")
 
-            # Check if the graph already exists in the database for the given document
-            check_query = """
-            SELECT id FROM graph 
-            WHERE document_id = %s AND name = %s
-            """
-            check_params = (document["id"], PROCEDURE_TO_EXTRACT)
-            existing_graph = db_handler.execute_query(check_query, check_params)
+        # Check if the graph already exists in the database for the given document
+        check_query = """
+        SELECT g.id 
+        FROM graph g
+        JOIN procedure p ON g.procedure_id = p.id
+        WHERE p.document_id = %s AND p.name = %s AND g.entity = %s
+        """
+        check_params = (document["id"], PROCEDURE_TO_EXTRACT, ENTITY)
+        existing_graph = db_handler.execute_query(check_query, check_params)
 
-            if existing_graph:
-                logger.warning(
-                    f"Graph '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
-                )
-                raise ValueError(
-                    f"Graph '{PROCEDURE_TO_EXTRACT}' already exists for document '{DOCUMENT_NAME}'"
-                )
-
-            # Step 2: Retrieve relevant context for the procedure extraction
-            context = get_context(
-                doc_name=DOCUMENT_NAME,
-                procedure_name=PROCEDURE_TO_EXTRACT,
-                db_handler=db_handler,
+        if existing_graph:
+            logger.warning(
+                f"Graph already exists for '{ENTITY}' side of procedure '{PROCEDURE_TO_EXTRACT}' "
             )
+            raise ValueError(
+                f"Graph already exists for '{ENTITY}' side of procedure '{PROCEDURE_TO_EXTRACT}' "
+            )
+
+        # Step 2: Retrieve relevant context for the procedure extraction
+        document_context = get_context(
+            doc_name=DOCUMENT_NAME,
+            procedure_name=PROCEDURE_TO_EXTRACT,
+            db_handler=db_handler,
+        )
+
+        context = document_context.context
+        top_level_sections = document_context.top_level_sections
 
         # Save the retrieved context
         save_result(
@@ -369,6 +378,12 @@ def main() -> None:
                 db=db_handler,
                 model=best_result.model_name,
                 extraction_method=best_result.method.value,
+                entity=ENTITY,
+                top_level_sections=top_level_sections,
+                commit_title=COMMIT_TITLE,
+                commit_message=COMMIT_MESSAGE,
+                version=GRAPH_VERSION,
+                status=EXTRACTION_STATUS,
             )
 
     except Exception as e:
