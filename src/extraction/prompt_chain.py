@@ -16,7 +16,7 @@ from src.schemas.procedure_graph import BaseGraph, Graph
 logger = get_logger(__name__)
 
 
-def prompt_chain(
+async def prompt_chain(
     agent: Agent,
     prompt_manager: PromptManager,
     context: str,
@@ -76,7 +76,7 @@ def prompt_chain(
             entity=entity,
         )
 
-    result_1_response = agent.run_sync(
+    result_1_response = await agent.run(
         user_prompt=prompt_1,
         output_type=BaseGraph,
     )
@@ -101,7 +101,7 @@ def prompt_chain(
         entity=entity,
     )
 
-    result_2_response = agent.run_sync(
+    result_2_response = await agent.run(
         user_prompt=prompt_2,
     )
 
@@ -125,7 +125,7 @@ def prompt_chain(
         entity=entity,
     )
 
-    result_3_response = agent.run_sync(
+    result_3_response = await agent.run(
         user_prompt=prompt_3,
         output_type=BaseGraph,
     )
@@ -151,7 +151,7 @@ def prompt_chain(
     )
 
     # Execute final extraction with type validation using Graph schema
-    result_4_response = agent.run_sync(
+    result_4_response = await agent.run(
         user_prompt=prompt_4,
         output_type=Graph,
     )
@@ -177,85 +177,99 @@ def prompt_chain(
 
 
 if __name__ == "__main__":
+    import asyncio
     import os
     import sys
 
     from dotenv import load_dotenv
     from pydantic_ai.models.gemini import GeminiModel
 
-    from src.db.db_handler import DatabaseHandler
+    from src.db.db_ahandler import AsyncDatabaseHandler
     from src.db.document import get_document_by_name
     from src.retrieval.get_context import get_context
 
-    try:
-        # Generate a unique run ID for this execution
+    if sys.platform == "win32":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-        load_dotenv(override=True)
-        # Load environment variables with default values where appropriate
-        # --- Document Configuration ---
-        DOCUMENT_NAME = os.getenv("DOCUMENT_NAME")
-        PROCEDURE_TO_EXTRACT = os.getenv("PROCEDURE_TO_EXTRACT")
-        ENTITY = os.getenv("ENTITY")
-        # --- LLM Configuration ---
-        MAIN_MODEL = os.getenv("MAIN_MODEL", "gemini-2.0-flash-exp")
-        MAIN_MODEL_TEMPERATURE = float(os.getenv("MAIN_MODEL_TEMPERATURE", 0.0))
+    async def main() -> None:
+        try:
+            # Generate a unique run ID for this execution
 
-        if not PROCEDURE_TO_EXTRACT or not DOCUMENT_NAME or not ENTITY:
-            raise ValueError(
-                "PROCEDURE_TO_EXTRACT, DOCUMENT_NAME and ENTITY must be set in the environment variables."
+            load_dotenv(override=True)
+            # Load environment variables with default values where appropriate
+            # --- Document Configuration ---
+            DOCUMENT_NAME = os.getenv("DOCUMENT_NAME")
+            PROCEDURE_TO_EXTRACT = os.getenv("PROCEDURE_TO_EXTRACT")
+            ENTITY = os.getenv("ENTITY")
+            # --- LLM Configuration ---
+            MAIN_MODEL = os.getenv("MAIN_MODEL", "gemini-2.0-flash-exp")
+            MAIN_MODEL_TEMPERATURE = float(os.getenv("MAIN_MODEL_TEMPERATURE", 0.0))
+
+            if not PROCEDURE_TO_EXTRACT or not DOCUMENT_NAME or not ENTITY:
+                raise ValueError(
+                    "PROCEDURE_TO_EXTRACT, DOCUMENT_NAME and ENTITY must be set in the environment variables."
+                )
+
+            logger.info(f"Using Model: {MAIN_MODEL}")
+
+            main_model = GeminiModel(
+                model_name=MAIN_MODEL, provider="google-gla"
+            )  # Primary model for main extraction pipeline
+
+            # Initialize primary agent with main model
+            main_agent: Agent = Agent(
+                model=main_model,
+                model_settings={"temperature": MAIN_MODEL_TEMPERATURE},
             )
 
-        logger.info(f"Using Model: {MAIN_MODEL}")
+            # Initialize database connection
+            async with AsyncDatabaseHandler() as db_handler:
+                async with db_handler.get_connection() as conn:
+                    # Instantiate prompt manager
+                    prompt_manager = PromptManager()
 
-        main_model = GeminiModel(
-            model_name=MAIN_MODEL, provider="google-gla"
-        )  # Primary model for main extraction pipeline
+                    # Step 1: Retrieve the target document from database
+                    document = await get_document_by_name(
+                        doc_name=DOCUMENT_NAME,
+                        db_conn=conn,
+                    )
 
-        # Initialize primary agent with main model
-        main_agent: Agent = Agent(
-            model=main_model,
-            model_settings={"temperature": MAIN_MODEL_TEMPERATURE},
-        )
+                    if not document:
+                        logger.error(
+                            f"Document '{DOCUMENT_NAME}' not found in the database."
+                        )
+                        raise ValueError(
+                            f"Document '{DOCUMENT_NAME}' not found in the database."
+                        )
 
-        # Initialize database connection
-        db_handler = DatabaseHandler()
+                    context = await get_context(
+                        doc_name=DOCUMENT_NAME,
+                        procedure_name=PROCEDURE_TO_EXTRACT,
+                        db_conn=conn,
+                    )
 
-        # Instantiate prompt manager
-        prompt_manager = PromptManager()
+                    save_result(
+                        result=f"# Context for {PROCEDURE_TO_EXTRACT}\n\n{context}",
+                        step="original_context",
+                        procedure_name=PROCEDURE_TO_EXTRACT,
+                        run_id="test_run",
+                        method="context",
+                    )
 
-        # Step 1: Retrieve the target document from database
-        document = get_document_by_name(doc_name=DOCUMENT_NAME, db_handler=db_handler)
+                    _main_extraction: ExtractionResult = await prompt_chain(
+                        agent=main_agent,
+                        prompt_manager=prompt_manager,
+                        context=context,
+                        procedure_name=PROCEDURE_TO_EXTRACT,
+                        run_id="test_run",
+                        modified_prompt=True,
+                        method=ExtractionMethod.MAIN,
+                        model_name=MAIN_MODEL,
+                        entity=ENTITY,
+                    )
 
-        if not document:
-            logger.error(f"Document '{DOCUMENT_NAME}' not found in the database.")
-            raise ValueError(f"Document '{DOCUMENT_NAME}' not found in the database.")
+        except Exception as e:
+            logger.error(f"An error occurred: {e}")
+            raise
 
-        context = get_context(
-            doc_name=DOCUMENT_NAME,
-            procedure_name=PROCEDURE_TO_EXTRACT,
-            db_handler=db_handler,
-        )
-
-        save_result(
-            result=f"# Context for {PROCEDURE_TO_EXTRACT}\n\n{context}",
-            step="original_context",
-            procedure_name=PROCEDURE_TO_EXTRACT,
-            run_id="test_run",
-            method="context",
-        )
-
-        main_extraction: ExtractionResult = prompt_chain(
-            agent=main_agent,
-            prompt_manager=prompt_manager,
-            context=context,
-            procedure_name=PROCEDURE_TO_EXTRACT,
-            run_id="test_run",
-            modified_prompt=False,
-            method=ExtractionMethod.MAIN,
-            model_name=MAIN_MODEL,
-            entity=ENTITY,
-        )
-
-    except Exception as e:
-        logger.error(f"An error occurred: {e}")
-        sys.exit(1)
+    asyncio.run(main())

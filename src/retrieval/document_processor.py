@@ -32,13 +32,14 @@ Raises:
     RuntimeError: If an unexpected error occurs during processing
 """
 
+import asyncio
 import os
 import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
 
-from src.db.db_handler import DatabaseHandler
+from src.db.db_ahandler import AsyncDatabaseHandler
 from src.retrieval.chunker import extract_chunks_from_content
 from src.retrieval.pre_processor import docx_to_markdown
 from src.retrieval.store_chunks import store_extracted_sections
@@ -52,7 +53,7 @@ from src.lib.logger import get_logger
 logger = get_logger(__name__)
 
 
-def main() -> None:
+async def main() -> None:
     """Process a DOCX document through the conversion and storage pipeline.
 
     This function orchestrates the document processing pipeline:
@@ -105,13 +106,14 @@ def main() -> None:
             raise ValueError("No chunks extracted from the markdown content.")
 
         # Store processed chunks and document structure in the database
-        with DatabaseHandler() as db_handler:
-            store_extracted_sections(
-                db_handler=db_handler,
-                doc_name=doc_name,
-                toc=toc,
-                chunks=chunks,
-            )
+        async with AsyncDatabaseHandler() as db_handler:
+            async with db_handler.get_connection() as conn:
+                await store_extracted_sections(
+                    db_conn=conn,
+                    doc_name=doc_name,
+                    toc=toc,
+                    chunks=chunks,
+                )
 
     except (ValueError, FileNotFoundError) as e:
         logger.error(f"Validation error: {e}")
@@ -122,7 +124,17 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    # Set the event loop policy for Windows to support async PostgreSQL
+    if sys.platform == "win32":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
     try:
-        main()
+        # count how long it took to run the script
+        import time
+
+        start_time = time.time()
+        asyncio.run(main())
+        end_time = time.time()
+        logger.info(f"Main function executed in {end_time - start_time} seconds")
     except Exception:
         sys.exit(1)
