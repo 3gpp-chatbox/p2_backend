@@ -42,7 +42,7 @@ async def get_procedure_names_and_entities():
                 GROUP BY p.id, p.name
                 ORDER BY p.name
                 """
-                cur = await conn.execute_query(query=query)
+                cur = await conn.execute(query=query)
                 results = await cur.fetchall()
 
                 # --- START OF MODIFICATION ---
@@ -196,7 +196,7 @@ async def get_one_graph_version_detail(
                 FROM graph g
                 WHERE g.procedure_id = %s AND g.entity = %s AND g.id = %s
                 """
-                cur = await conn.execute_query(
+                cur = await conn.execute(
                     query=query, params=(procedure_id, entity, graph_id)
                 )
 
