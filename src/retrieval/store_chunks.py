@@ -1,16 +1,33 @@
 """Document storage module for managing extracted document chunks.
 
 This module provides functionality to store document chunks in a database
-with hierarchical relationships using LTREE paths.
+with hierarchical relationships using LTREE paths. Document sections are stored
+with paths that represent their hierarchical structure, where each section's
+heading is hex-encoded to ensure LTREE compatibility (since LTREE paths only
+support alphanumeric characters and underscores).
+
+For example, a document structure like:
+    Chapter 1
+        Section 1.1
+            Subsection 1.1.1
+Would be stored with paths like:
+    4368617074657231 (hex for "Chapter1")
+    4368617074657231.53656374696f6e312e31 (hex for "Chapter1.Section1.1")
+    4368617074657231.53656374696f6e312e31.537562736563746f6e312e312e31
+
+This encoding strategy allows for efficient hierarchical queries while preserving
+the original document structure, regardless of special characters in headings.
 """
 
+import asyncio
 import sys
 from pathlib import Path
 from typing import List
 
 from dotenv import load_dotenv
+from psycopg import AsyncConnection
 
-from src.db.db_handler import DatabaseHandler
+from src.db.db_ahandler import AsyncDatabaseHandler
 from src.retrieval.chunker import Chunk, extract_chunks
 
 # Add parent directory to Python path
@@ -20,8 +37,8 @@ from src.lib.logger import get_logger
 logger = get_logger(__name__)
 
 
-def store_extracted_sections(
-    db_handler: DatabaseHandler, doc_name: str, toc: str, chunks: List[Chunk]
+async def store_extracted_sections(
+    db_conn: AsyncConnection, doc_name: str, toc: str, chunks: List[Chunk]
 ) -> None:
     """Store extracted document sections in the database.
 
@@ -30,8 +47,18 @@ def store_extracted_sections(
     2. Processes chunks to establish parent-child relationships
     3. Stores sections with LTREE paths for hierarchical querying
 
+    Each section's path in the LTREE structure is built by:
+    1. Converting each ancestor section's heading to hex encoding
+    2. Joining the hex-encoded headings with dots
+    This ensures LTREE compatibility while preserving the exact heading text,
+    as LTREE paths are restricted to alphanumeric chars and underscores.
+    The hex encoding allows for:
+    - Special character preservation
+    - Case sensitivity
+    - Efficient hierarchical queries using LTREE operators
+
     Args:
-        db_handler (DatabaseHandler): Database handler for performing database operations
+        db_conn (AsyncConnection): Database connection for performing database operations
         doc_name (str): Name of the document
         toc (str): Table of Contents in text format
         chunks (List[Chunk]): List of parsed sections, each containing:
@@ -48,69 +75,69 @@ def store_extracted_sections(
         return
 
     try:
-        with db_handler.transaction():
-            # Insert document and get its ID
-            doc_insert_query = """
-                INSERT INTO document (name, toc)
-                VALUES (%s, %s)
-                RETURNING id;
-            """
-            result = db_handler.execute_query(
-                doc_insert_query, (doc_name, toc), fetch=True
-            )
-            doc_id = result[0]["id"] if result else None
-            if not doc_id:
-                raise ValueError("Failed to get document ID after insertion")
-            logger.info(f"Created document record with ID: {doc_id}")
+        async with db_conn.transaction():
+            async with db_conn.cursor() as cur:
+                # Insert document and get its ID
+                doc_insert_query = """
+                    INSERT INTO document (name, toc)
+                    VALUES (%s, %s)
+                    RETURNING id;
+                """
 
-            # Process chunks to establish hierarchy
-            section_stack = []  # Stack to track nested sections, stores tuples of (heading, level)
+                await cur.execute(doc_insert_query, (doc_name, toc))
+                result = await cur.fetchone()
+                doc_id = result["id"] if result else None
 
-            for chunk in chunks:
-                current_level = chunk["level"]
+                # Check if document ID was retrieved
+                if not doc_id:
+                    raise ValueError("Failed to get document ID after insertion")
+                logger.info(f"Created document record with ID: {doc_id}")
 
-                # Remove sections from stack that are at same or deeper level
-                while section_stack and section_stack[-1][1] >= current_level:
-                    section_stack.pop()
+                # Process chunks to establish hierarchy
+                section_stack = []  # Stack to track nested sections, stores tuples of (heading, level)
 
-                # Add current section to stack
-                section_stack.append((chunk["heading"], current_level))
+                sections_data = []  # List to store section data for batch insertion
+                for chunk in chunks:
+                    current_level = chunk["level"]
 
-                # Build the path string from current stack
-                # First encode each heading with encode_for_ltree
-                encode_heading_query = "SELECT encode_for_ltree(%s) as encoded;"
-                path_parts = []
-                for section in section_stack:
-                    result = db_handler.execute_query(
-                        encode_heading_query, (section[0],), fetch=True
+                    # Remove sections from stack that are at same or deeper level
+                    while section_stack and section_stack[-1][1] >= current_level:
+                        section_stack.pop()
+
+                    # Add current section to stack
+                    section_stack.append((chunk["heading"], current_level))
+
+                    # Build the path string from current stack
+                    # First encode each heading to hex
+                    path_parts = []
+                    for section in section_stack:
+                        encoded = section[0].encode("utf-8").hex()
+                        path_parts.append(encoded)
+                    path = ".".join(path_parts)
+
+                    # Determine parent (if any)
+                    parent = None
+                    if current_level > 1 and len(section_stack) > 1:
+                        # Parent will be the previous section in the stack
+                        parent = section_stack[-2][0]
+
+                    sections_data.append(
+                        (
+                            doc_id,
+                            chunk["heading"],
+                            chunk["level"],
+                            chunk["content"],
+                            parent,
+                            path,
+                        ),
                     )
-                    encoded = result[0]["encoded"]
-                    path_parts.append(encoded)
-                path = ".".join(path_parts)
-
-                # Determine parent (if any)
-                parent = None
-                if current_level > 1 and len(section_stack) > 1:
-                    # Parent will be the previous section in the stack
-                    parent = section_stack[-2][0]
-
                 # Insert section record
                 section_insert_query = """
                     INSERT INTO section (document_id, heading, level, content, parent, path)
                     VALUES (%s, %s, %s, %s, %s, %s);
                 """
-                db_handler.execute_query(
-                    section_insert_query,
-                    (
-                        doc_id,
-                        chunk["heading"],
-                        chunk["level"],
-                        chunk["content"],
-                        parent,
-                        path,
-                    ),
-                    fetch=False,
-                )
+
+                await cur.executemany(section_insert_query, sections_data)
 
             logger.info(f"Successfully stored {len(chunks)} sections")
 
@@ -120,22 +147,25 @@ def store_extracted_sections(
 
 
 if __name__ == "__main__":
-    # Integrated example showcasing both chunking and storing functionality
     load_dotenv(override=True)  # Load environment variables from .env file
-    try:
-        # First, extract chunks from the markdown document
-        file_path = Path("data/markdown/24501-filtered.md")
-        result = extract_chunks(file_path)
 
-        # Read TOC from the TOC file
-        toc_path = Path("data/markdown/24501-toc.md")
-        toc = toc_path.read_text(encoding="utf-8")
+    async def main():
+        try:
+            # First, extract chunks from the markdown document
+            file_path = Path("data/markdown/24501-filtered.md")
+            result = extract_chunks(file_path)
 
-        # Initialize database handler and store chunks
-        with DatabaseHandler() as db_handler:
-            store_extracted_sections(
-                db_handler, result["doc_name"], toc, result["chunks"]
-            )
+            # Read TOC from the TOC file
+            toc_path = Path("data/markdown/24501-toc.md")
+            toc = toc_path.read_text(encoding="utf-8")
 
-    except Exception as e:
-        logger.error(f"Error in document processing pipeline: {e}")
+            # Initialize database handler and store chunks
+            async with AsyncDatabaseHandler() as db_handler:
+                await store_extracted_sections(
+                    db_handler, result["doc_name"], toc, result["chunks"]
+                )
+
+        except Exception as e:
+            logger.error(f"Error in document processing pipeline: {e}")
+
+    asyncio.run(main())

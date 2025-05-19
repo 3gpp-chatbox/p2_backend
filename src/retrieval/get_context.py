@@ -1,7 +1,8 @@
 import sys
 from pathlib import Path
 
-from src.db.db_handler import DatabaseHandler
+from psycopg import AsyncConnection
+
 from src.db.document import get_document_by_name
 from src.retrieval.sections_content_retrieval import get_sections_content
 from src.retrieval.toc_retrieval import (
@@ -19,8 +20,8 @@ from src.lib.logger import get_logger
 logger = get_logger(__name__)
 
 
-def get_context(
-    doc_name: str, procedure_name: str, db_handler: DatabaseHandler
+async def get_context(
+    doc_name: str, procedure_name: str, db_conn: AsyncConnection
 ) -> DocumentContext:
     """Retrieves context and top-level sections for a specific procedure from a document.
 
@@ -40,7 +41,8 @@ def get_context(
     """
     try:
         # Get document
-        doc = get_document_by_name(doc_name, db_handler)
+        doc = await get_document_by_name(doc_name=doc_name, db_conn=db_conn)
+
         if not doc:
             logger.error(f"Document '{doc_name}' not found in the database.")
             raise ValueError(f"Document '{doc_name}' not found in the database.")
@@ -77,8 +79,8 @@ def get_context(
         )
 
         # Get sections content
-        context = get_sections_content(
-            db_handler=db_handler,
+        context = await get_sections_content(
+            db_conn=db_conn,
             doc_name=doc_name,
             section_list=top_level_sections.tolist(),
         )
@@ -93,3 +95,37 @@ def get_context(
             exc_info=True,
         )
         raise ValueError(f"Error retrieving context: {e}")
+
+
+if __name__ == "__main__":
+    import asyncio
+
+    from src.db.db_ahandler import AsyncDatabaseHandler
+
+    if sys.platform == "win32":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+    async def main() -> None:
+        """Main function to demonstrate the usage of get_context."""
+        # Sample parameters for demonstration
+
+        doc_name = "3GPP TS 24.501"
+        procedure_name = "Initial Registration"
+
+        try:
+            async with AsyncDatabaseHandler() as db_handler:
+                async with db_handler.get_connection() as conn:
+                    context_data = await get_context(
+                        doc_name=doc_name,
+                        procedure_name=procedure_name,
+                        db_conn=conn,
+                    )
+
+                    print("Retrieved DocumentContext:")
+                    print(context_data.context)
+                    print("Top Level Sections:")
+                    print(context_data.top_level_sections)
+        except Exception as e:
+            print(f"Error occurred: {e}")
+
+    asyncio.run(main())
