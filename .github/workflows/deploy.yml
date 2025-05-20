@@ -21,6 +21,7 @@ jobs:
           script: |
             cd ~/3gpp_app/p2_backend
             git pull
+            echo "hello" > hello.text
             source ~/.barshrc
 
 
