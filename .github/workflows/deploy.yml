@@ -21,5 +21,8 @@ jobs:
           script: |
             cd ~/3gpp_app/p2_backend
             git pull
+            source ~/.barshrc
+
+
             uv sync --frozen --no-cache
             sudo systemctl restart api.service
