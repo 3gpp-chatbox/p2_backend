@@ -1,8 +1,13 @@
+import asyncio
 import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
+
+# Configure Windows-compatible event loop policy for async PostgreSQL
+if sys.platform.startswith("win"):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
