@@ -77,7 +77,7 @@ async def get_latest_graph_by_procedure_id_and_entity(procedure_id: UUID, entity
                 SELECT 
                     g.id as graph_id, g.entity, g.extracted_data, g.model_name, g.accuracy, g.version,
                     g.created_at, g.status, g.extraction_method, g.commit_title, g.commit_message, g.entity,
-                    p.name as procedure_name,p.id as procedure_id, p.retrieved_top_sections,
+                    p.name as procedure_name,p.id as procedure_id, p.retrieved_top_sections, p.extracted_at,
                     d.id as document_id, d.name as document_name
                 FROM graph g
                 JOIN procedure p ON g.procedure_id = p.id
@@ -111,9 +111,10 @@ async def get_latest_graph_by_procedure_id_and_entity(procedure_id: UUID, entity
                     procedure_id=procedure_id,
                     document_id=result["document_id"],
                     document_name=result["document_name"],
-                    graph=result["extracted_data"],  # Only one graph now
+                    graph=result["extracted_data"],
+                    created_at=result["created_at"],
                     accuracy=result["accuracy"],
-                    extracted_at=result["created_at"],
+                    extracted_at=result["extracted_at"],
                     model_name=result["model_name"],
                     extraction_method=result["extraction_method"],
                     entity=result["entity"],

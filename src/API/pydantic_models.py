@@ -36,8 +36,9 @@ class ProcedureItem(BaseModel):
         document_id: UUID of the source document
         document_name: Name of the source document
         graph: JSON representation of the procedure graph
+        created_at: Timestamp of graph creation
         accuracy: Confidence score of the procedure
-        extracted_at: Timestamp of extraction
+        extracted_at: Timestamp of procedure extraction
         extraction_method: Method used to extract the graph
         model_name: Name of the model used
         entity: Type of network entity (e.g., UE, AMF)
@@ -54,6 +55,7 @@ class ProcedureItem(BaseModel):
     graph: Graph
     accuracy: float
     extracted_at: datetime
+    created_at: datetime
     extraction_method: str
     model_name: str
     entity: str
