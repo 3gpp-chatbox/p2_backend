@@ -42,3 +42,4 @@ logs/
 .coverage
 
 data/output
+data/markdown
