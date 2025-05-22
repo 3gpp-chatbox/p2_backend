@@ -123,4 +123,48 @@ data/               # Generated data and output files
 └── raw/           # Original source documents
 ```
 
+## Extraction Control
+
+The system now supports two extraction modes:
+
+1. **Simple Extraction** (Default):
+   - Uses single model extraction
+   - No accuracy checking
+   - Faster execution
+   - Set `USE_ACCURACY_CHECKING=0` in .env
+
+2. **Accuracy-Checked Extraction**:
+   - Uses multiple models
+   - Performs accuracy checking
+   - More thorough but slower
+   - Set `USE_ACCURACY_CHECKING=1` in .env
+
+### Environment Variables
+
+```env
+# Required for all cases
+DOCUMENT_NAME=your_document
+PROCEDURE_TO_EXTRACT=your_procedure
+ENTITY=AMF
+MAIN_MODEL=gemini-pro
+MODEL_TEMPERATURE=0.0
+
+# Control which extraction method to use
+USE_ACCURACY_CHECKING=0  # 0: Simple extraction, 1: Accuracy-checked extraction
+
+# Required only if USE_ACCURACY_CHECKING=1
+ALTERNATIVE_MODEL=gemini-pro
+ALTERNATIVE_MODEL_2=gemini-pro  # Optional
+```
+
+### Running Extraction
+
+To run the extraction, use the wrapper script:
+
+```bash
+python -m src.extraction.run_extraction
+```
+
+The script will automatically choose the appropriate extraction method based on the `USE_ACCURACY_CHECKING` environment variable.
+
 
