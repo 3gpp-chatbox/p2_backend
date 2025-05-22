@@ -96,12 +96,12 @@ async def get_latest_graph_by_procedure_id_and_entity(procedure_id: UUID, entity
                 if not result:
                     raise HTTPException(status_code=404, detail="Graph not found")
 
-                document_name = result["document_name"]
+                document_id = result["document_id"]
                 top_sections = result["retrieved_top_sections"]
 
                 context_md = await get_sections_content(
                     db_conn=conn,
-                    doc_name=document_name,
+                    doc_id=document_id,
                     section_list=top_sections,
                 )
 
