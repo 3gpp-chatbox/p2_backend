@@ -393,7 +393,7 @@ async def main() -> None:
             async with db_handler.get_connection() as conn:
                 await store_graph(
                     name=PROCEDURE_TO_EXTRACT,
-                    document_name=DOCUMENT_NAME,
+                    document_id=document["id"],
                     graph_data=best_result.graph,
                     accuracy=best_result.accuracy,
                     db_conn=conn,

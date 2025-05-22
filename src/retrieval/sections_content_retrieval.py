@@ -2,6 +2,9 @@ import sys
 from pathlib import Path
 
 from psycopg import AsyncConnection
+from pydantic.types import UUID4
+
+from src.db.document import get_document_by_id
 
 # Add parent directory to Python path
 sys.path.append(str(Path(__file__).parents[2].resolve()))
@@ -12,12 +15,12 @@ logger = get_logger(__name__)
 
 
 async def get_sections_content(
-    db_conn: AsyncConnection, doc_name: str, section_list: list[str]
+    db_conn: AsyncConnection, doc_id: UUID4, section_list: list[str]
 ) -> str:
     """Fetch and format section contents from a document based on section identifiers.
     Args:
         db_conn (AsyncConnection): Database connection instance.
-        doc_name (str): Name of the document to fetch sections from.
+        doc_id (UUID4): ID of the document to fetch sections from.
         section_list (list[str]): List of section identifiers to fetch.
 
     Returns:
@@ -27,8 +30,8 @@ async def get_sections_content(
         ValueError: If document is not found or sections cannot be retrieved.
         Exception: For any other database or processing errors.
     """
-    if not doc_name:
-        raise ValueError("Missing required argument: doc_name")
+    if not doc_id:
+        raise ValueError("Missing required argument: doc_id")
     if not section_list:
         raise ValueError("Missing required argument: section_list")
     if not all(isinstance(section, str) for section in section_list):
@@ -36,26 +39,12 @@ async def get_sections_content(
 
     try:
         async with db_conn.cursor() as cur:
-            # Retrieve document ID by its name to verify document exists
-            doc_fetch_query = """
-            SELECT 
-                id,
-                name 
-            FROM document 
-            WHERE name = %s
-            """
+            document = await get_document_by_id(doc_id=doc_id, db_conn=db_conn)
 
-            # Step 1. Check if document exists
-            await cur.execute(
-                query=doc_fetch_query,
-                params=(doc_name,),
-            )
-
-            result = await cur.fetchone()
-
-            doc_id = result["id"] if result else None
-            if not doc_id:
-                raise ValueError(f"Document '{doc_name}' not found in the database.")
+            if not document:
+                raise ValueError(
+                    f"Document with ID '{doc_id}' not found in the database."
+                )
 
             # Step 2: Fetch the path for every section in the section_list
             # Find all sections whose headings match the given patterns
@@ -75,25 +64,25 @@ async def get_sections_content(
 
             await cur.execute(
                 query=path_fetch_query,
-                params=(doc_id, section_list),
+                params=(document.id, section_list),
             )
 
             sections = await cur.fetchall()
 
             if not sections:
                 raise ValueError(
-                    f"No sections found for document '{doc_name}' with the given parameter: {section_list}"
+                    f"No sections found for document '{document.spec} {document.version}' with the given parameter: {section_list}"
                 )
 
             logger.info(
-                f"Found {len(sections)} matching sections for document '{doc_name}'"
+                f"Found {len(sections)} matching sections for document '{document.spec} {document.version}'"
             )
 
             sections_path = [section["path"] for section in sections]
             sections_heading = [section["heading"] for section in sections]
 
             logger.debug(
-                f"Matched sections for document '{doc_name}': {', '.join(sections_heading)}"
+                f"Matched sections for document '{document.spec} {document.version}': {', '.join(sections_heading)}"
             )
 
             # Step 3: Fetch the contents for every section hirearchaly in the sections_path
@@ -112,23 +101,23 @@ async def get_sections_content(
 
             await cur.execute(
                 query=content_fetch_query,
-                params=(doc_id, sections_path),
+                params=(document.id, sections_path),
             )
 
             sections_content = await cur.fetchall()
 
             if not sections_content:
                 raise ValueError(
-                    f"Failed to perform hierarchical search for document '{doc_name}' with the given parameter: {section_list}"
+                    f"Failed to perform hierarchical search for document '{document.spec} {document.version}' with the given parameter: {section_list}"
                 )
 
             logger.debug(
                 f"Retrieved {len(sections_content)} sections (including subsections) "
-                f"for document '{doc_name}' under paths: {', '.join(sections_path)}"
+                f"for document '{document.spec} {document.version}' under paths: {', '.join(sections_path)}"
             )
 
             # Step 4 generate markdown
-            markdown = _generate_markdown(doc_name, sections_content)
+            markdown = _generate_markdown(document.spec, sections_content)
 
             return markdown
 
