@@ -1,6 +1,5 @@
 import asyncio
 import sys
-from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -9,17 +8,19 @@ from fastapi import FastAPI
 if sys.platform.startswith("win"):
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.API.routes.fetch_routes import router as fetch_router
 from src.API.routes.insert_routes import router as insert_router
+from src.lib.logger import setup_logger
 from src.API.routes.delete_routes import router as delete_router
 
 app = FastAPI()
 
 load_dotenv(override=True)
+
+# Set up the logger
+setup_logger()
 
 # Add CORS middleware
 app.add_middleware(
