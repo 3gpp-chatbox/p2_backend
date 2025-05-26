@@ -35,7 +35,6 @@ import sys
 from datetime import datetime
 from typing import List
 
-from lib.agents import AgentCollection, AgentManager
 from sentence_transformers import SentenceTransformer
 
 from src.accuracy.compare_datasets import compare_datasets
@@ -43,6 +42,7 @@ from src.db.db_ahandler import AsyncDatabaseHandler
 from src.db.document import get_documents
 from src.extraction.prompt_chain import prompt_chain
 from src.extraction.store_graphs import store_graph
+from src.lib.agents import AgentManager
 from src.lib.cli_utils import (
     choose_document,
     get_entity_from_user,
@@ -60,6 +60,7 @@ from src.schemas.extraction_types import (
     ExtractionResult,
     ExtractionResults,
 )
+from src.schemas.models.agent import AgentCollection
 from src.schemas.models.document import SQLDocument
 
 
