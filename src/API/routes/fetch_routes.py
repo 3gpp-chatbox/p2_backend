@@ -1,14 +1,8 @@
-import sys
-from pathlib import Path
 from typing import List
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
 
-from src.retrieval.sections_content_retrieval import get_sections_content
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[3].resolve()))
 from src.API.pydantic_models import (
     EntityVersionItem,
     OneHistoryVersionItem,
@@ -17,9 +11,9 @@ from src.API.pydantic_models import (
     Reference,
 )
 from src.db.db_ahandler import AsyncDatabaseHandler
-from src.lib.logger import get_logger
+from src.lib.logger import logger
+from src.retrieval.sections_content_retrieval import get_sections_content
 
-logger = get_logger(__name__)
 router = APIRouter()
 
 

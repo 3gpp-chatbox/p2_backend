@@ -1,17 +1,11 @@
-import sys
-from pathlib import Path
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
 
 from src.API.pydantic_models import NewGraphInsert, NewProcedureItemInfo
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[3].resolve()))
 from src.db.db_ahandler import AsyncDatabaseHandler
-from src.lib.logger import get_logger
+from src.lib.logger import logger
 
-logger = get_logger(__name__)
 router = APIRouter()
 
 
