@@ -1,24 +1,16 @@
 import sys
-from pathlib import Path
 
 from psycopg import AsyncConnection
 from pydantic.types import UUID4
 
 from src.db.document import get_document_by_id
+from src.lib.logger import logger
 from src.retrieval.sections_content_retrieval import get_sections_content
 from src.retrieval.toc_retrieval import (
     find_procedure_section_lines,
     get_top_level_sections,
 )
 from src.schemas.types.context import DocumentContext
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-# Set up logging
-logger = get_logger(__name__)
 
 
 async def get_context(

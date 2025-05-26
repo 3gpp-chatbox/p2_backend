@@ -8,11 +8,8 @@ from typing import Union
 
 from pydantic import BaseModel
 
-from src.lib.logger import get_logger
+from src.lib.logger import logger
 from src.schemas.procedure_graph import Graph
-
-# Set up logging
-logger = get_logger(__name__)
 
 
 def save_result(

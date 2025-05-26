@@ -40,17 +40,10 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from src.db.db_ahandler import AsyncDatabaseHandler
+from src.lib.logger import logger, setup_logger
 from src.retrieval.chunker import extract_chunks_from_content
 from src.retrieval.pre_processor import docx_to_markdown
 from src.retrieval.store_chunks import store_extracted_sections
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-# Set up logging
-logger = get_logger(__name__)
 
 
 async def main() -> None:
@@ -75,6 +68,7 @@ async def main() -> None:
         FileNotFoundError: If the document specified in DOCUMENT_PATH doesn't exist
     """
     load_dotenv(override=True)
+    setup_logger()  # Initialize logging configuration
     try:
         # Get document path from environment variables
         DOCUMENT_PATH = os.getenv("DOCUMENT_PATH")

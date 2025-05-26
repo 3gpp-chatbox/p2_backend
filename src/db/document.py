@@ -1,19 +1,10 @@
-import sys
-from pathlib import Path
 from typing import Any, List, Optional
 
 from psycopg import AsyncConnection
 from pydantic.types import UUID4
 
+from src.lib.logger import logger
 from src.schemas.models.document import SQLDocument
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-# Set up logging
-logger = get_logger(__name__)
 
 
 async def get_document_by_name(
@@ -126,7 +117,7 @@ async def get_document_id_by_name(
         return result["id"]
     except Exception as e:
         logger.error(f"Error retrieving document ID: {e}")
-        return None
+        raise ValueError(f"Error retrieving document: {e}")
 
 
 async def get_documents(
