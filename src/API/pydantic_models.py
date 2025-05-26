@@ -3,7 +3,7 @@ Defines API response/request models.
 """
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import UUID4, BaseModel
 
@@ -20,14 +20,32 @@ class ProcedureListItem(BaseModel):
 
     procedure_id: UUID4
     procedure_name: str
-    entity: List
+    entity: list[str]
+
+
+class ProceduresByDocument(BaseModel):
+    """Document metadata with associated procedures.
+
+    Attributes:
+        document_id: UUID of the document.
+        document_spec: Specification string of the document.
+        document_version: Version string of the document.
+        document_release: Release number of the document.
+        document_procedures: List of associated procedures (may be empty).
+    """
+
+    document_id: UUID4
+    document_spec: str
+    document_version: str
+    document_release: int
+    document_procedures: list[ProcedureListItem] = []
 
 
 class Reference(BaseModel):
     context_markdown: str
 
 
-class ProcedureItem(BaseModel):
+class ProcedureListItem(BaseModel):
     """Procedure graph with metadata and accuracy.
 
     Attributes:
