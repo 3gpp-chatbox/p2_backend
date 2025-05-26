@@ -5,9 +5,7 @@ transactions, and CRUD operations with proper resource management and error hand
 """
 
 import os
-import sys
 from contextlib import contextmanager
-from pathlib import Path
 from typing import Any, Dict, Generator, List, Optional
 
 import psycopg
@@ -17,12 +15,7 @@ from psycopg.connection import Connection
 from psycopg.cursor import Cursor
 from psycopg.rows import dict_row
 
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-logger = get_logger(__name__)
+from src.lib.logger import logger
 
 
 class DatabaseHandler:

@@ -1,19 +1,12 @@
 import os
 import re
-import sys
 from pathlib import Path
 from typing import List
 
 from docx import Document
 
+from src.lib.logger import logger
 from src.schemas.models.document import BaseDocument, MarkdownDocument, Paragraph
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-logger = get_logger(__name__)
 
 
 def _normalize_whitespace(text: str) -> str:

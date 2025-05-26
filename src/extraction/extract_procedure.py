@@ -28,7 +28,6 @@ import asyncio
 import os
 import sys
 from datetime import datetime
-from pathlib import Path
 
 from dotenv import load_dotenv
 from pydantic_ai import Agent
@@ -41,6 +40,7 @@ from src.db.document import get_document_by_name
 from src.extraction.prompt_chain import prompt_chain
 from src.extraction.store_graphs import store_graph
 from src.lib.file_utils import save_result
+from src.lib.logger import logger, setup_logger
 from src.prompts.prompt_manager import PromptManager
 from src.retrieval.get_context import get_context
 from src.schemas.extraction_types import (
@@ -48,14 +48,6 @@ from src.schemas.extraction_types import (
     ExtractionResult,
     ExtractionResults,
 )
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-# Set up logging
-logger = get_logger(__name__)
 
 
 async def main() -> None:
@@ -92,11 +84,13 @@ async def main() -> None:
         ValueError: If required environment variables are missing or if document is not found
         Exception: For any other unexpected errors during execution
     """
+
+    setup_logger()
+    load_dotenv(override=True)
     try:
         # Generate a unique run ID for this execution
         run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-        load_dotenv(override=True)
         # Load environment variables with default values where appropriate
         # --- Document Configuration ---
         DOCUMENT_NAME = os.getenv("DOCUMENT_NAME")

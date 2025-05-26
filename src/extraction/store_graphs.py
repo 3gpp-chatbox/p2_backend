@@ -1,18 +1,11 @@
-import sys
-from pathlib import Path
 from uuid import UUID
 
 import numpy as np
 from psycopg import AsyncConnection
 from pydantic.types import UUID4
 
-from src.lib.logger import get_logger
+from src.lib.logger import logger
 from src.schemas.procedure_graph import Graph
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-logger = get_logger(__name__)
 
 
 async def store_graph(

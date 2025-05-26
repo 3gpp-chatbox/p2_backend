@@ -20,7 +20,6 @@ the original document structure, regardless of special characters in headings.
 """
 
 import asyncio
-import sys
 from pathlib import Path
 from typing import List
 
@@ -28,13 +27,8 @@ from dotenv import load_dotenv
 from psycopg import AsyncConnection
 
 from src.db.db_ahandler import AsyncDatabaseHandler
+from src.lib.logger import logger
 from src.retrieval.chunker import Chunk, extract_chunks
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-from src.lib.logger import get_logger
-
-logger = get_logger(__name__)
 
 
 async def store_extracted_sections(

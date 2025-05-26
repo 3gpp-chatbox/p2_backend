@@ -5,13 +5,7 @@ from psycopg import AsyncConnection
 from pydantic.types import UUID4
 
 from src.db.document import get_document_by_id
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-logger = get_logger(__name__)
+from src.lib.logger import logger
 
 
 async def get_sections_content(

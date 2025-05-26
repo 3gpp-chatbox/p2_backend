@@ -7,13 +7,10 @@ correction and enrichment using different models and prompting strategies.
 from pydantic_ai import Agent
 
 from src.lib.file_utils import save_result
-from src.lib.logger import get_logger
+from src.lib.logger import logger
 from src.prompts.prompt_manager import PromptManager
 from src.schemas.extraction_types import ExtractionMethod, ExtractionResult
 from src.schemas.procedure_graph import BaseGraph, Graph
-
-# Set up logging
-logger = get_logger(__name__)
 
 
 async def prompt_chain(
