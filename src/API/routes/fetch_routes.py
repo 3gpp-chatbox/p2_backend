@@ -1,4 +1,3 @@
-from typing import List
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
@@ -8,6 +7,7 @@ from src.API.pydantic_models import (
     OneHistoryVersionItem,
     ProcedureItem,
     ProcedureListItem,
+    ProceduresByDocument,
     Reference,
 )
 from src.db.db_ahandler import AsyncDatabaseHandler
@@ -17,10 +17,10 @@ from src.retrieval.sections_content_retrieval import get_sections_content
 router = APIRouter()
 
 
-@router.get("/", response_model=List[ProcedureListItem])
+@router.get("/", response_model=list[ProceduresByDocument])
 async def get_procedure_names_and_entities():
     """
-    Get distinct procedure names and entities.
+    Get distinct procedure names and entities grouped by document.
     Used to populate the dropdown list on the frontend.
     """
     try:
@@ -28,31 +28,57 @@ async def get_procedure_names_and_entities():
             async with db.get_connection() as conn:
                 query = """
                 SELECT 
-                    p.id as procedure_id, 
-                    p.name as procedure_name, 
+                    d.id as document_id,
+                    d.spec as document_spec,
+                    d.version as document_version,
+                    d.release as document_release,
+                    p.id as procedure_id,
+                    p.name as procedure_name,
                     array_agg(DISTINCT g.entity) as entities
-                FROM procedure p
+                FROM document d
+                JOIN procedure p ON d.id = p.document_id
                 JOIN graph g ON p.id = g.procedure_id
-                GROUP BY p.id, p.name
-                ORDER BY p.name
+                GROUP BY d.id, d.spec, d.version, d.release, p.id, p.name
+                ORDER BY d.release, d.spec, d.version, p.name
                 """
                 cur = await conn.execute(query=query)
                 results = await cur.fetchall()
 
-                # --- START OF MODIFICATION ---
-                available_procedures = []
+                # Group procedures by document
+                doc_map = {}
                 for row in results:
-                    available_procedures.append(
+                    doc_key = (
+                        row["document_id"],
+                        row["document_spec"],
+                        row["document_version"],
+                        row["document_release"],
+                    )
+                    if doc_key not in doc_map:
+                        doc_map[doc_key] = []
+                    doc_map[doc_key].append(
                         ProcedureListItem(
                             procedure_id=row["procedure_id"],
                             procedure_name=row["procedure_name"],
-                            entity=row[
-                                "entities"
-                            ],  # Pass the parsed list to the Pydantic model
+                            entity=row["entities"],
                         )
                     )
-                return available_procedures
-                # --- END OF MODIFICATION ---
+                response = []
+                for (
+                    document_id,
+                    document_spec,
+                    document_version,
+                    document_release,
+                ), procedures in doc_map.items():
+                    response.append(
+                        ProceduresByDocument(
+                            document_id=document_id,
+                            document_spec=document_spec,
+                            document_version=document_version,
+                            document_release=document_release,
+                            document_procedures=procedures,
+                        )
+                    )
+                return response
 
     except Exception as e:
         logger.error(f"Failed to fetch procedures: {str(e)}")
@@ -126,7 +152,7 @@ async def get_latest_graph_by_procedure_id_and_entity(procedure_id: UUID, entity
         raise HTTPException(status_code=500, detail="Failed to fetch graph")
 
 
-@router.get("/{procedure_id}/{entity}/history", response_model=List[EntityVersionItem])
+@router.get("/{procedure_id}/{entity}/history", response_model=list[EntityVersionItem])
 async def get_graph_versions(procedure_id: UUID, entity: str):
     """
     Get brief info of all versions of a graph for a specific procedure name and entity type.
