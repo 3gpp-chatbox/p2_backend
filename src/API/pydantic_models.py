@@ -23,7 +23,23 @@ class ProcedureListItem(BaseModel):
     entity: list[str]
 
 
-class ProceduresByDocument(BaseModel):
+class BaseDocument(BaseModel):
+    """Base document metadata.
+
+    Attributes:
+        document_id: UUID of the document.
+        document_spec: Specification string of the document.
+        document_version: Version string of the document.
+        document_release: Release number of the document.
+    """
+
+    document_id: UUID4
+    document_spec: str
+    document_version: str
+    document_release: int
+
+
+class ProceduresByDocument(BaseDocument):
     """Document metadata with associated procedures.
 
     Attributes:
@@ -34,10 +50,6 @@ class ProceduresByDocument(BaseModel):
         document_procedures: List of associated procedures (may be empty).
     """
 
-    document_id: UUID4
-    document_spec: str
-    document_version: str
-    document_release: int
     document_procedures: list[ProcedureListItem] = []
 
 
@@ -45,7 +57,7 @@ class Reference(BaseModel):
     context_markdown: str
 
 
-class ProcedureListItem(BaseModel):
+class ProcedureItem(BaseDocument):
     """Procedure graph with metadata and accuracy.
 
     Attributes:
@@ -65,23 +77,21 @@ class ProcedureListItem(BaseModel):
 
     """
 
-    graph_id: UUID4
-    procedure_name: str
     procedure_id: UUID4
-    document_id: UUID4
-    document_name: str
-    graph: Graph
+    procedure_name: str
     accuracy: float
-    extracted_at: datetime
-    created_at: datetime
     extraction_method: str
+    extracted_at: datetime
     model_name: str
+    reference: Reference
+    graph_id: UUID4
+    graph: Graph
     entity: str
-    version: str
     status: str
+    version: str
     commit_title: str
     commit_message: str
-    reference: Reference
+    created_at: datetime
 
 
 class EntityVersionItem(BaseModel):
@@ -111,24 +121,6 @@ class Graph(Graph):
 
 class NewGraphInsert(BaseModel):
     edited_graph: Graph
-    commit_title: str
-    commit_message: str
-
-
-class NewProcedureItemInfo(BaseModel):
-    graph_id: UUID4
-    procedure_name: str
-    procedure_id: UUID4
-    document_id: UUID4
-    document_name: str
-    graph: Graph
-    accuracy: float
-    extracted_at: datetime
-    extraction_method: str
-    model_name: str
-    entity: str
-    version: str
-    status: str
     commit_title: str
     commit_message: str
 

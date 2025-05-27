@@ -2,14 +2,15 @@ from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
 
-from src.API.pydantic_models import NewGraphInsert, NewProcedureItemInfo
+from src.API.pydantic_models import NewGraphInsert, ProcedureItem, Reference
 from src.db.db_ahandler import AsyncDatabaseHandler
 from src.lib.logger import logger
+from src.retrieval.sections_content_retrieval import get_sections_content
 
 router = APIRouter()
 
 
-@router.post("/{procedure_id}/{entity}", response_model=NewProcedureItemInfo)
+@router.post("/{procedure_id}/{entity}", response_model=ProcedureItem)
 async def insert_edited_graph(procedure_id: UUID, entity: str, request: NewGraphInsert):
     """
     Insert a new graph version with user-edited extracted data.
@@ -27,7 +28,8 @@ async def insert_edited_graph(procedure_id: UUID, entity: str, request: NewGraph
                 async with conn.cursor() as cur:
                     # Get procedure and document info
                     proc_query = """
-                    SELECT p.name, d.id AS document_id, d.name AS document_name
+                    SELECT p.name, p.retrieved_top_sections, p.extracted_at, d.id AS document_id, d.spec AS document_spec,
+                        d.version AS document_version, d.release AS document_release
                     FROM procedure p
                     JOIN document d ON p.document_id = d.id
                     WHERE p.id = %s 
@@ -105,20 +107,30 @@ async def insert_edited_graph(procedure_id: UUID, entity: str, request: NewGraph
 
                     new_graph = insert_result
 
-                    return NewProcedureItemInfo(
-                        graph_id=new_graph["id"],
-                        procedure_name=proc["name"],
-                        procedure_id=procedure_id,
+                    context_md = await get_sections_content(
+                        db_conn=conn,
+                        doc_id=proc["document_id"],
+                        section_list=proc["retrieved_top_sections"],
+                    )
+
+                    return ProcedureItem(
                         document_id=proc["document_id"],
-                        document_name=proc["document_name"],
+                        document_spec=proc["document_spec"],
+                        document_version=proc["document_version"],
+                        document_release=proc["document_release"],
+                        procedure_id=procedure_id,
+                        procedure_name=proc["name"],
+                        extracted_at=proc["extracted_at"],
+                        reference=Reference(context_md),
+                        graph_id=new_graph["id"],
+                        entity=entity,
                         graph=request.edited_graph,
                         accuracy=latest["accuracy"],
-                        extracted_at=new_graph["created_at"],
+                        created_at=new_graph["created_at"],
                         extraction_method=latest[
                             "extraction_method"
                         ],  # reused, not overridden with 'modified'
                         model_name=latest["model_name"],
-                        entity=entity,
                         version=next_version,
                         status=status,
                         commit_title=request.commit_title,
