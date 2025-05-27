@@ -31,6 +31,7 @@ Note:
 """
 
 import asyncio
+import os
 import sys
 from datetime import datetime
 from typing import List
@@ -115,7 +116,16 @@ async def main() -> None:
 
         agent_manager = AgentManager()
 
-        agents: AgentCollection = agent_manager.get_gemini_agents()
+        MODEL_TYPE = os.getenv("MODEL_TYPE")
+        if not MODEL_TYPE or MODEL_TYPE not in ["openai", "gemini"]:
+            raise ValueError(
+                "MODEL_TYPE environment variable must be set to 'openai' or 'gemini'."
+            )
+
+        if MODEL_TYPE == "openai":
+            agents: AgentCollection = agent_manager.get_openai_agents()
+        elif MODEL_TYPE == "gemini":
+            agents: AgentCollection = agent_manager.get_gemini_agents()
 
         main_agent = agents.main_agent
 
