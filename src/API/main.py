@@ -15,6 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.API.routes.fetch_routes import router as fetch_router
 from src.API.routes.insert_routes import router as insert_router
+from src.API.routes.delete_routes import router as delete_router
 
 app = FastAPI()
 
@@ -32,3 +33,4 @@ app.add_middleware(
 # Include the routers
 app.include_router(fetch_router, prefix="/procedures")
 app.include_router(insert_router, prefix="/procedures")
+app.include_router(delete_router, prefix="/procedures")

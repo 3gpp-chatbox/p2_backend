@@ -75,7 +75,7 @@ async def store_graph(
             # Check if the procedure already exists
             check_procedure_query = """
             SELECT id FROM procedure
-            WHERE name = %s AND document_id = %s
+            WHERE LOWER(name) = LOWER(%s) AND document_id = %s
             """
             check_procedure_params = (name, document_id)
 
