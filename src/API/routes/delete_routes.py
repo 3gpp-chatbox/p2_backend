@@ -4,8 +4,6 @@ from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
 
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[3].resolve()))
 from src.db.db_ahandler import AsyncDatabaseHandler
 from src.lib.logger import get_logger
 
