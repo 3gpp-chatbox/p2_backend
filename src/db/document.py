@@ -1,17 +1,10 @@
-import sys
-from pathlib import Path
-from typing import Any, Optional
-from uuid import UUID
+from typing import Any, List, Optional
 
 from psycopg import AsyncConnection
+from pydantic.types import UUID4
 
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-# Set up logging
-logger = get_logger(__name__)
+from src.lib.logger import logger
+from src.schemas.models.document import SQLDocument
 
 
 async def get_document_by_name(
@@ -28,13 +21,6 @@ async def get_document_by_name(
 
     Raises:
         ValueError: If an error occurs during database operation.
-
-    Example:
-        >>> handler = DatabaseHandler()
-        >>> if doc := get_document_by_name("example_doc", handler):
-        ...     print(f"Found document: {doc}")
-        ... else:
-        ...     print("Document not found")
     """
     try:
         # Check if the document exists in the database
@@ -54,8 +40,47 @@ async def get_document_by_name(
 
     except Exception as e:
         logger.error(
-            f"Error in `get_document_by_name`: Exception encountered while retrieving document '{doc_name}'. Error: {e}",
-            exc_info=True,
+            f"Error in `get_document_by_name`: Exception encountered while retrieving document '{doc_name}'. Error: {e}"
+        )
+        raise ValueError(f"Error retrieving document: {e}")
+
+
+async def get_document_by_id(
+    doc_id: UUID4, db_conn: AsyncConnection
+) -> SQLDocument | None:
+    """Retrieve a document from the database by its id.
+
+    Args:
+        doc_id: The unique ID of the document to retrieve.
+        db_conn: Database connection instance.
+
+    Returns:
+        SQLDocument containing document data if found, None if no document exists.
+
+    Raises:
+        ValueError: If an error occurs during database operation.
+
+    """
+    try:
+        # Check if the document exists in the database
+        query = "SELECT * FROM document WHERE id = %s"
+        cur = await db_conn.execute(
+            query=query,
+            params=(doc_id,),
+        )
+
+        result = await cur.fetchone()
+
+        doc = result if result else None
+
+        if not doc:
+            return None
+
+        return SQLDocument(**doc)
+
+    except Exception as e:
+        logger.error(
+            f"Error in `get_document_by_id`: Exception encountered while retrieving document '{doc_id}'. Error: {e}"
         )
         raise ValueError(f"Error retrieving document: {e}")
 
@@ -63,7 +88,7 @@ async def get_document_by_name(
 async def get_document_id_by_name(
     db_conn: AsyncConnection,
     document_name: str,
-) -> Optional[UUID]:
+) -> Optional[UUID4]:
     """
     Get document ID from the database by document name.
 
@@ -92,4 +117,40 @@ async def get_document_id_by_name(
         return result["id"]
     except Exception as e:
         logger.error(f"Error retrieving document ID: {e}")
-        return None
+        raise ValueError(f"Error retrieving document: {e}")
+
+
+async def get_documents(
+    db_conn: AsyncConnection,
+) -> List[SQLDocument]:
+    """Retrieve all documents from the database.
+
+    Args:
+        db_conn: Database connection instance.
+
+    Returns:
+        List of SQLDocument containing document data. Empty list if no documents exist.
+
+    Raises:
+        ValueError: If an error occurs during database operation.
+    """
+    try:
+        # Fetch all documents from the database
+        query = "SELECT * FROM document"
+        cur = await db_conn.execute(
+            query=query,
+        )
+
+        result = await cur.fetchall()
+
+        if not result:
+            logger.info("No documents found in the database")
+            return []
+
+        return [SQLDocument(**doc) for doc in result]
+    except Exception as e:
+        logger.error(
+            f"Error in `get_documents`: Exception encountered while retrieving documents. Error: {e}",
+            exc_info=True,
+        )
+        raise ValueError(f"Error retrieving documents: {e}")

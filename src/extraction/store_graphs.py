@@ -1,23 +1,16 @@
-import sys
-from pathlib import Path
 from uuid import UUID
 
 import numpy as np
 from psycopg import AsyncConnection
+from pydantic.types import UUID4
 
-from src.db.document import get_document_id_by_name
-from src.lib.logger import get_logger
+from src.lib.logger import logger
 from src.schemas.procedure_graph import Graph
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-logger = get_logger(__name__)
 
 
 async def store_graph(
     name: str,
-    document_name: str,
+    document_id: UUID4,
     graph_data: Graph,
     accuracy: float,
     model: str,
@@ -35,7 +28,7 @@ async def store_graph(
 
     Args:
         name: Name of the graph
-        document_name: Name of the document this graph belongs to
+        document_id: ID of the document this graph belongs to
         graph_data: Graph data as a dictionary
         accuracy: Accuracy score of the graph
         model: Name of the model used for extraction
@@ -54,16 +47,6 @@ async def store_graph(
         Exception: If database operation fails
     """
     try:
-        # Get document_id from document name
-        document_id = await get_document_id_by_name(
-            db_conn=db_conn,
-            document_name=document_name,
-        )
-
-        if not document_id:
-            logger.error(f"Cannot store graph: Document '{document_name}' not found")
-            return None
-
         # Convert graph data to JSON
         graph_json = graph_data.model_dump_json()
 

@@ -19,15 +19,10 @@ Example:
 """
 
 import re
-import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-from src.lib.logger import get_logger
-
-logger = get_logger(__name__)
+from src.lib.logger import logger
 
 
 class PromptManager:
@@ -124,6 +119,7 @@ class PromptManager:
             - Template files must be UTF-8 encoded
             - Template names are derived from filenames without extension
         """
+
         try:
             template_files = list(self.templates_dir.glob("*.md"))
             logger.info(f"Found {len(template_files)} template files in directory")

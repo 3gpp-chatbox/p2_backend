@@ -5,16 +5,10 @@ Each chunk contains a heading, its content, and the heading level.
 """
 
 import re
-import sys
 from pathlib import Path
 from typing import List, TypedDict
 
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-logger = get_logger(__name__)
+from src.lib.logger import logger
 
 
 class Chunk(TypedDict):

@@ -20,7 +20,6 @@ the original document structure, regardless of special characters in headings.
 """
 
 import asyncio
-import sys
 from pathlib import Path
 from typing import List
 
@@ -28,17 +27,17 @@ from dotenv import load_dotenv
 from psycopg import AsyncConnection
 
 from src.db.db_ahandler import AsyncDatabaseHandler
+from src.lib.logger import logger
 from src.retrieval.chunker import Chunk, extract_chunks
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-from src.lib.logger import get_logger
-
-logger = get_logger(__name__)
 
 
 async def store_extracted_sections(
-    db_conn: AsyncConnection, doc_name: str, toc: str, chunks: List[Chunk]
+    db_conn: AsyncConnection,
+    doc_spec: str,
+    doc_version: str,
+    doc_release: int,
+    doc_toc: str,
+    chunks: List[Chunk],
 ) -> None:
     """Store extracted document sections in the database.
 
@@ -79,12 +78,15 @@ async def store_extracted_sections(
             async with db_conn.cursor() as cur:
                 # Insert document and get its ID
                 doc_insert_query = """
-                    INSERT INTO document (name, toc)
-                    VALUES (%s, %s)
+                    INSERT INTO document (spec, toc, release, version)
+                    VALUES (%s, %s, %s, %s)
                     RETURNING id;
                 """
 
-                await cur.execute(doc_insert_query, (doc_name, toc))
+                await cur.execute(
+                    doc_insert_query, (doc_spec, doc_toc, doc_release, doc_version)
+                )
+
                 result = await cur.fetchone()
                 doc_id = result["id"] if result else None
 

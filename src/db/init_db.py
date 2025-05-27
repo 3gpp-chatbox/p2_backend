@@ -10,10 +10,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from src.db.db_handler import DatabaseHandler
-from src.lib.logger import get_logger
-
-# Set up logging
-logger = get_logger(__name__)
+from src.lib.logger import logger, setup_logger
 
 
 def read_sql_file(file_path: Path) -> str:
@@ -78,6 +75,7 @@ def initialize_database(db_handler: DatabaseHandler, migrations_path: Path) -> N
 def main() -> None:
     """Main function to initialize the database."""
     load_dotenv(override=True)
+    setup_logger()  # Set up logging configuration
 
     # Get the migrations directory path
     migrations_path = Path(__file__).parent / "migrations"

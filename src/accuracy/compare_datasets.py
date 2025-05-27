@@ -1,18 +1,7 @@
-import sys
-from pathlib import Path
-
 from sentence_transformers import SentenceTransformer
 
 from src.accuracy.sbert_simple import compare_two_datasets
 from src.schemas.procedure_graph import Graph
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-# Set up logging
-logger = get_logger(__name__)
 
 
 def compare_datasets(

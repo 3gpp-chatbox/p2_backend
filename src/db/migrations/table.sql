@@ -24,12 +24,14 @@ EXCEPTION
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
--- Document Table
 CREATE TABLE document (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name TEXT NOT NULL UNIQUE,
+    spec TEXT NOT NULL,
+    version TEXT NOT NULL,
+    release SMALLINT NOT NULL,
     toc TEXT NOT NULL,
-    extracted_at TIMESTAMP DEFAULT NOW()
+    extracted_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT unique_spec_version UNIQUE (spec, version)
 );
 
 -- Section Table
@@ -50,7 +52,8 @@ CREATE TABLE procedure (
     name TEXT NOT NULL,
     document_id UUID NOT NULL REFERENCES document(id) ON DELETE CASCADE,
     retrieved_top_sections TEXT[] NOT NULL,  -- stores array of top-level section identifiers
-    extracted_at TIMESTAMP DEFAULT NOW()
+    extracted_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT unique_procedure_name_per_document UNIQUE (document_id, name)
 );
 
 -- Graph Table

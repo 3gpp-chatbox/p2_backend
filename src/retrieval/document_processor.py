@@ -40,17 +40,10 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from src.db.db_ahandler import AsyncDatabaseHandler
+from src.lib.logger import logger, setup_logger
 from src.retrieval.chunker import extract_chunks_from_content
 from src.retrieval.pre_processor import docx_to_markdown
 from src.retrieval.store_chunks import store_extracted_sections
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-# Set up logging
-logger = get_logger(__name__)
 
 
 async def main() -> None:
@@ -75,6 +68,7 @@ async def main() -> None:
         FileNotFoundError: If the document specified in DOCUMENT_PATH doesn't exist
     """
     load_dotenv(override=True)
+    setup_logger()  # Initialize logging configuration
     try:
         # Get document path from environment variables
         DOCUMENT_PATH = os.getenv("DOCUMENT_PATH")
@@ -89,14 +83,16 @@ async def main() -> None:
         # Convert DOCX to Markdown format and extract document structure
         markdown_output = docx_to_markdown(file_path=doc_path, save_markdown=True)
 
-        md_content = markdown_output["content"]
-        toc = markdown_output["toc"]
-        doc_name = markdown_output["doc_name"]
+        md_content = markdown_output.content
+        toc = markdown_output.toc
+        spec = markdown_output.spec
+        version = markdown_output.version
+        release = markdown_output.release
 
         # Validate that all required components were extracted successfully
-        if not md_content or not toc or not doc_name:
+        if not md_content or not toc or not spec:
             raise ValueError(
-                "Markdown conversion failed: Missing content, toc, or doc_name."
+                "Markdown conversion failed: Missing content, toc, or spec."
             )
 
         # Split markdown content into manageable chunks for processing
@@ -110,17 +106,15 @@ async def main() -> None:
             async with db_handler.get_connection() as conn:
                 await store_extracted_sections(
                     db_conn=conn,
-                    doc_name=doc_name,
-                    toc=toc,
+                    doc_spec=spec,
+                    doc_toc=toc,
+                    doc_version=version,
+                    doc_release=release,
                     chunks=chunks,
                 )
-
-    except (ValueError, FileNotFoundError) as e:
-        logger.error(f"Validation error: {e}")
-        raise
     except Exception as e:
         logger.error(f"Unexpected document processing error: {e}", exc_info=True)
-        raise RuntimeError(f"Error in document processing pipeline: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
@@ -128,13 +122,12 @@ if __name__ == "__main__":
     if sys.platform == "win32":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-    try:
-        # count how long it took to run the script
-        import time
+    # count how long it took to run the script
+    import time
 
-        start_time = time.time()
-        asyncio.run(main())
-        end_time = time.time()
-        logger.info(f"Main function executed in {end_time - start_time} seconds")
-    except Exception:
-        sys.exit(1)
+    start_time = time.time()
+    asyncio.run(main())
+    end_time = time.time()
+    logger.info(
+        f"Main document_processor function executed in {end_time - start_time} seconds"
+    )

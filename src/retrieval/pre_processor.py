@@ -1,19 +1,12 @@
 import os
 import re
-import sys
 from pathlib import Path
 from typing import List
 
 from docx import Document
 
-from src.schemas.types.document import MarkdownOutput, ParaDict
-
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-logger = get_logger(__name__)
+from src.lib.logger import logger
+from src.schemas.models.document import BaseDocument, MarkdownDocument, Paragraph
 
 
 def _normalize_whitespace(text: str) -> str:
@@ -61,7 +54,7 @@ def _is_excluded_heading(text: str, exclude_sections: list[str]) -> bool:
     return any(cleaned.startswith(section.lower()) for section in exclude_sections)
 
 
-def _extract_paragraphs(doc: Document) -> List[ParaDict]:
+def _extract_paragraphs(doc: Document) -> List[Paragraph]:
     """
     Extract paragraphs and tables from the document in their natural order.
 
@@ -69,12 +62,12 @@ def _extract_paragraphs(doc: Document) -> List[ParaDict]:
         doc (Document): The Word document to extract content from.
 
     Returns:
-        List[ParaDict]: List of paragraphs where each paragraph is a dictionary containing:
+        List[Paragraph]: List of paragraphs where each paragraph is a Pydantic model containing:
             - text (str): The paragraph text content
             - style (str): The paragraph style name
             - level (Optional[int]): The heading level if applicable
     """
-    paragraphs = []
+    paragraphs: List[Paragraph] = []
     inside_contents_section = False
 
     for para in doc.paragraphs:
@@ -119,28 +112,28 @@ def _extract_paragraphs(doc: Document) -> List[ParaDict]:
 
                 # Add paragraph if not empty
                 if text:
-                    paragraphs.append({"text": text, "style": style, "level": level})
+                    paragraphs.append(Paragraph(text=text, style=style, level=level))
                 # Add table
                 paragraphs.append(
-                    {"text": "\n".join(markdown_table), "style": "Table", "level": None}
+                    Paragraph(text="\n".join(markdown_table), style="Table", level=None)
                 )
                 continue
 
         # Add regular paragraph if not empty
         if text:
-            paragraphs.append({"text": text, "style": style, "level": level})
+            paragraphs.append(Paragraph(text=text, style=style, level=level))
 
     return paragraphs
 
 
 def _extract_filtered_content(
-    paragraphs: List[ParaDict], exclude_sections: list[str]
+    paragraphs: List[Paragraph], exclude_sections: list[str]
 ) -> List[str]:
     """
     Extracts main content with tables in their natural position.
 
     Args:
-        paragraphs (List[ParaDict]): List of paragraph dictionaries
+        paragraphs (List[Paragraph]): List of paragraph dictionaries
         exclude_sections (list[str]): List of section names to exclude
 
     Returns:
@@ -151,8 +144,8 @@ def _extract_filtered_content(
     found_first_heading = False
 
     for para in paragraphs:
-        text = para["text"]
-        is_heading = para["style"].startswith("Heading")
+        text = para.text
+        is_heading = para.style.startswith("Heading")
 
         # Mark first heading found
         if is_heading:
@@ -171,7 +164,7 @@ def _extract_filtered_content(
 
         if not exclude_section:
             if is_heading:
-                level = para["level"] or 2
+                level = para.level or 2
                 filtered_content.append(f"{'#' * level} {text}")
             else:
                 filtered_content.append(text)
@@ -180,14 +173,14 @@ def _extract_filtered_content(
 
 
 def _extract_excluded_content(
-    paragraphs: List[ParaDict], exclude_sections: list[str]
+    paragraphs: List[Paragraph], exclude_sections: list[str]
 ) -> List[str]:
     """
     Extracts content from excluded sections, maintaining proper heading formatting.
     Captures all excluded content from the start of the document.
 
     Args:
-        paragraphs (List[ParaDict]): List of paragraph dictionaries
+        paragraphs (List[Paragraph]): List of paragraph dictionaries
         exclude_sections (list[str]): List of section names to exclude
 
     Returns:
@@ -199,8 +192,8 @@ def _extract_excluded_content(
     found_first_heading = False
 
     for para in paragraphs:
-        text = para["text"]
-        is_heading = para["style"].startswith("Heading")
+        text = para.text
+        is_heading = para.style.startswith("Heading")
 
         # Handle first heading case
         if is_heading and not found_first_heading:
@@ -220,7 +213,7 @@ def _extract_excluded_content(
                 excluded_content.extend(current_section)
             exclude_section = True
             # Format heading with proper level
-            level = para["level"] or 2
+            level = para.level or 2
             current_section = [f"{'#' * level} {text}"]
             continue
 
@@ -234,7 +227,7 @@ def _extract_excluded_content(
 
         # Collect content while in excluded section
         if exclude_section:
-            if para["style"] == "Table":
+            if para.style == "Table":
                 current_section.append(text)  # Tables are already formatted
             else:
                 current_section.append(text)
@@ -246,24 +239,27 @@ def _extract_excluded_content(
     return excluded_content
 
 
-def _extract_toc(paragraphs: List[ParaDict]) -> List[str]:
+def _extract_toc(paragraphs: List[Paragraph], exclude_sections: list[str]) -> List[str]:
     """
-    Extracts the table of contents based on headings.
+    Extracts the table of contents based on non-excluded headings.
 
     Args:
-        paragraphs (List[ParaDict]): List of paragraph dictionaries containing:
+        paragraphs (List[Paragraph]): List of paragraph models containing:
             - text (str): The paragraph text content
             - style (str): The paragraph style name
             - level (Optional[int]): The heading level if applicable
+        exclude_sections (list[str]): List of section names to exclude from TOC
 
     Returns:
         List[str]: List of markdown-formatted table of contents entries
     """
     toc_content = []
     for para in paragraphs:
-        if para["style"].startswith("Heading"):
-            level = para["level"] or 2
-            toc_content.append(f"{'  ' * (level - 1)}- {para['text']}")
+        if para.style.startswith("Heading") and not _is_excluded_heading(
+            para.text, exclude_sections
+        ):
+            level = para.level or 2
+            toc_content.append(f"{'  ' * (level - 1)}- {para.text}")
 
     return toc_content
 
@@ -307,9 +303,88 @@ def _save_markdown_files(
             logger.error(f"Error saving {filename}: {e}")
 
 
+def _get_doc_name_and_version(file_path: Path) -> BaseDocument:
+    """
+    Extract document metadata from a 3GPP specification file path.
+
+    The 3GPP specification files follow a strict naming convention where:
+    1. The spec number is written without a dot after the second digit
+       (e.g., "24501" for spec "24.501")
+    2. Followed by a hyphen
+    3. Followed by exactly three characters representing the version in base-36
+       (where digits 0-9 represent themselves and letters A-Z represent 10-35)
+
+    For example:
+        "24501-j11.docx" -> DocumentBase(
+            spec="24.501",
+            version="19.1.1",
+            release="19"
+        )
+        Where:
+        - "24501" becomes "24.501" (inserting dot after second digit)
+        - "j11" becomes "19.1.1" (j=19 in base-36, 1=1, 1=1)
+        - First component (19) becomes the release number
+
+    Args:
+        file_path (Path): The path to the 3GPP specification file.
+
+    Returns:
+        DocumentBase: A Pydantic model containing:
+            - spec (str): The specification number with a dot after the second digit
+            - version (str): The version string with each base-36 digit converted to decimal
+                           and joined with dots
+            - release (str): The release number (first component of the version)
+
+    Raises:
+        ValueError: If the filename doesn't meet the specification naming convention.
+    """
+    stem = file_path.stem  # e.g. "24501-j11"
+    try:
+        spec_part, ver_part = stem.split("-")
+    except ValueError:
+        raise ValueError(
+            f"Filename '{stem}' does not meet specification naming convention."
+        )
+
+    # Validate spec_part length (should be at least 3 digits to insert a dot after the second digit)
+    if len(spec_part) < 3:
+        raise ValueError(
+            f"Filename '{stem}' does not meet specification naming convention."
+        )
+
+    # Insert a decimal point after the second digit and convert to float.
+    spec = spec_part[:2] + "." + spec_part[2:]
+
+    # Process version part: convert each character using base-36
+    if len(ver_part) != 3:
+        raise ValueError(
+            f"Filename '{stem}' does not meet specification naming convention."
+        )
+
+    version_components = []
+    for char in ver_part:
+        try:
+            # Convert each character from base-36 to decimal
+            value = int(char, 36)
+            version_components.append(str(value))
+        except ValueError:
+            raise ValueError(f"Invalid character in version part: '{char}'")
+
+    release = version_components[0]
+    version_str = ".".join(version_components)
+
+    document_data = BaseDocument(
+        spec=spec,
+        version=version_str,
+        release=release,
+    )
+
+    return document_data
+
+
 def docx_to_markdown(
-    file_path: str, save_markdown: bool = False, output_folder: str = "data/markdown"
-) -> MarkdownOutput:
+    file_path: Path, save_markdown: bool = False, output_folder: str = "data/markdown"
+) -> MarkdownDocument:
     """
     Main function to process DOCX file and extract structured content.
 
@@ -327,10 +402,10 @@ def docx_to_markdown(
     try:
         logger.info(f"Processing file: {file_path}")
         doc = Document(file_path)
-        # Get doc name from core properties or fallback to file name without extension
-        doc_name = doc.core_properties.title
-        if not doc_name:
-            doc_name = Path(file_path).stem
+
+        # Get doc spec, version and release
+        doc_metadata = _get_doc_name_and_version(file_path)
+
         paragraphs = _extract_paragraphs(doc)
 
         exclude_sections = {
@@ -346,18 +421,23 @@ def docx_to_markdown(
 
         filtered_content = _extract_filtered_content(paragraphs, exclude_sections)
         excluded_content = _extract_excluded_content(paragraphs, exclude_sections)
-        toc_content = _extract_toc(paragraphs)
+        toc_content = _extract_toc(
+            paragraphs=paragraphs, exclude_sections=exclude_sections
+        )
 
         if save_markdown:
             _save_markdown_files(
                 filtered_content, excluded_content, toc_content, output_folder
             )
 
-        return {
-            "content": "\n\n".join(filtered_content),
-            "toc": "\n\n".join(toc_content),
-            "doc_name": doc_name,
-        }
+        return MarkdownDocument(
+            content="\n\n".join(filtered_content),
+            toc="\n\n".join(toc_content),
+            spec=doc_metadata.spec,
+            version=doc_metadata.version,
+            release=doc_metadata.release,
+        )
+
     except Exception as e:
         logger.error(f"Error processing file {file_path}: {e}")
         raise ValueError(f"Failed to convert file: {file_path} to Markdown.")
@@ -365,7 +445,7 @@ def docx_to_markdown(
 
 # Example usage
 if __name__ == "__main__":
-    file_path = "data/raw/24501-j11.docx"
+    file_path = Path("data/raw/24501-j11.docx")
     result = docx_to_markdown(file_path, save_markdown=True)
-    print("Content length:", len(result["content"]))
-    print("Table of contents length:", len(result["toc"]))
+    print("Content length:", len(result.content))
+    print("Table of contents length:", len(result.toc))
