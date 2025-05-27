@@ -82,7 +82,9 @@ async def get_procedure_names_and_entities():
 
     except Exception as e:
         logger.error(f"Failed to fetch procedures: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to fetch procedures")
+        raise HTTPException(
+            status_code=500, detail="Internal server error while fetching procedures"
+        )
 
 
 @router.get("/{procedure_id}/{entity}", response_model=ProcedureItem)
@@ -98,7 +100,7 @@ async def get_latest_graph_by_procedure_id_and_entity(procedure_id: UUID, entity
                     g.id as graph_id, g.entity, g.extracted_data, g.model_name, g.accuracy, g.version,
                     g.created_at, g.status, g.extraction_method, g.commit_title, g.commit_message, g.entity,
                     p.name as procedure_name,p.id as procedure_id, p.retrieved_top_sections, p.extracted_at,
-                    d.id as document_id, d.name as document_name
+                    d.id as document_id, d.spec as document_spec, d.version as document_version, d.release as document_release
                 FROM graph g
                 JOIN procedure p ON g.procedure_id = p.id
                 JOIN document d ON p.document_id = d.id
@@ -126,17 +128,19 @@ async def get_latest_graph_by_procedure_id_and_entity(procedure_id: UUID, entity
                 )
 
                 return ProcedureItem(
-                    graph_id=result["graph_id"],
+                    document_id=result["document_id"],
+                    document_spec=result["document_spec"],
+                    document_version=result["document_version"],
+                    document_release=result["document_release"],
                     procedure_name=result["procedure_name"],
                     procedure_id=procedure_id,
-                    document_id=result["document_id"],
-                    document_name=result["document_name"],
-                    graph=result["extracted_data"],
-                    created_at=result["created_at"],
-                    accuracy=result["accuracy"],
-                    extracted_at=result["extracted_at"],
-                    model_name=result["model_name"],
                     extraction_method=result["extraction_method"],
+                    extracted_at=result["extracted_at"],
+                    graph_id=result["graph_id"],
+                    graph=result["extracted_data"],
+                    model_name=result["model_name"],
+                    accuracy=result["accuracy"],
+                    created_at=result["created_at"],
                     entity=result["entity"],
                     version=result["version"],
                     status=result["status"],
@@ -149,7 +153,9 @@ async def get_latest_graph_by_procedure_id_and_entity(procedure_id: UUID, entity
         raise
     except Exception as e:
         logger.error(f"Failed to fetch graph: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to fetch graph")
+        raise HTTPException(
+            status_code=500, detail="Internal server error while fetching graph"
+        )
 
 
 @router.get("/{procedure_id}/{entity}/history", response_model=list[EntityVersionItem])
@@ -215,7 +221,7 @@ async def get_one_graph_version_detail(
                 SELECT 
                 g.extracted_data
                 FROM graph g
-                WHERE g.procedure_id = %s AND g.entity = %s AND g.id = %s
+                WHERE g.procedure_id = %s AND LOWER(g.entity) = LOWER(%s) AND g.id = %s
                 """
                 cur = await conn.execute(
                     query=query, params=(procedure_id, entity, graph_id)
