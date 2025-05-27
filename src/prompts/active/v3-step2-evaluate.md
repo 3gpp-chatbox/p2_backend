@@ -67,6 +67,11 @@ Assess whether the provided FPG is:
   - Events must have both incoming and outgoing edges (except for terminal events)
   - All paths must be properly integrated into the main flow
 
+
+### 5. Section and Text Reference Validation
+
+  IMPORTANT: Do not validate or modify any section_reference or text_reference values. These references should be preserved exactly as they are in the input graph. 
+
 ---
 
 ## Output Format

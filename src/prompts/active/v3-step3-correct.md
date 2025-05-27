@@ -50,6 +50,11 @@ Using the evaluation report, update the FPG:
 - If disconnected subgraphs exist, merge them appropriately with the main flow
 - Ensure any new connections are supported by the specification text
 
+### 4. Section and Text Reference Preservation
+
+  IMPORTANT: When correcting the graph, you must preserve all existing section_reference and text_reference values exactly as they are. Do not modify, remove, or add any references. These references are considered immutable and should be carried forward unchanged in the corrected graph.
+  Note: References are considered part of their parent node or edge. If a node or edge is required to be removed, its associated references must be removed together.
+
 ---
 
 ## Output Instructions
