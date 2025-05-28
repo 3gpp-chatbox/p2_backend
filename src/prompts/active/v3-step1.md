@@ -72,6 +72,22 @@ Build a unified Flow Property Graph focusing on the {entity} perspective where:
 - You may identify conditions and actions during analysis, but only include them as edge types in the final JSON
 - Do not include condition/action details in the final output
 
+### 6. Section and Text Reference Extraction Instructions
+
+  For every node and edge, you must include:
+
+- **Section Reference**: 
+  - Use the exact section number and heading from the provided 3GPP spec content.
+  - Format: "5.5.1.2.7 Abnormal cases in the UE"
+  - No paraphrasing or abbreviation — copy it exactly as written.
+  - If a state appears in multiple sections, choose the section where the transitions into that state due to a specific condition or event.
+
+- **Text Reference**: 
+  - Quote the exact sentence or key part of a sentence from the provided 3GPP spec content that supports the node or edge.
+  - If the sentence is long, include the part that describes the state, event, or transition.
+  - No paraphrasing or abbreviation — copy it exactly as written.
+
+  When extracting the section reference for a quoted text, always ensure the section corresponds exactly to where the quoted text is located in the specification document. Do not assign a section based on conceptual relation or general topic coverage.
 ---
 
 ## JSON Output Format
@@ -89,13 +105,13 @@ Build a unified Flow Property Graph focusing on the {entity} perspective where:
             "id": "Event_LowerLayer_Failure",
             "type": "event",
             "section_reference": "5.5.1.2.7 Abnormal cases in the UE",
-            "text_reference": "Lower layer failure or release of the NAS signalling connection received from lower layers"
+            "text_reference": "Lower layer failure or release of the NAS signalling connection received from lower layers."
         }},
         {{
             "id": "{entity}_5GMM_DEREGISTERED_ATTEMPTING_REGISTRATION",
             "type": "state",
-            "section_reference": "5.5.1.2.5 Initial registration not accepted by the network",
-            "text_reference": "Cause #22 (Congestion). ... enter state 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION."
+            "section_reference": "5.5.1.2.7 Abnormal cases in the UE",
+            "text_reference": "timer T3511 is started and the state is changed to 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION."
         }}
     ],
     "edges": [
@@ -104,14 +120,14 @@ Build a unified Flow Property Graph focusing on the {entity} perspective where:
             "to": "Event_LowerLayer_Failure",
             "type": "trigger",
             "section_reference": "5.5.1.2.7 Abnormal cases in the UE",
-            "text_reference": "Lower layer failure or release of the NAS signalling connection received from lower layers"
+            "text_reference": "Lower layer failure or release of the NAS signalling connection received from lower layers."
         }},
         {{
             "from": "Event_LowerLayer_Failure",
             "to": "{entity}_5GMM_DEREGISTERED_ATTEMPTING_REGISTRATION",
             "type": "condition",
             "section_reference": "5.5.1.2.7 Abnormal cases in the UE",
-            "text_reference": "If the registration attempt counter is less than 5: ... timer T3511 is started and the state is changed to 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION."
+            "text_reference": "If the registration attempt counter is less than 5: - if the initial registration request is not for emergency services, timer T3511 is started and the state is changed to 5GMM-DEREGISTERED.ATTEMPTING-REGISTRATION."
         }}
     ]
 }}

@@ -59,6 +59,25 @@ Extract and structure the procedure's flow from the {entity}'s perspective into 
    - Every node must be reachable from every other node through some path
    - All seemingly disconnected states or events must be properly integrated into the main flow
 
+
+
+### Section and Text Reference Extraction Instructions
+
+  For every node and edge, you must include:
+
+- **Section Reference**: 
+  - Use the exact section number and heading from the provided 3GPP spec content.
+  - Format: "5.5.1.2.7 Abnormal cases in the UE"
+  - No paraphrasing or abbreviation — copy it exactly as written.
+  - If a state appears in multiple sections, choose the section where the transitions into that state due to a specific condition or event.
+
+- **Text Reference**: 
+  - Quote the exact sentence or key part of a sentence from the provided 3GPP spec content that supports the node or edge.
+  - If the sentence is long, include the part that describes the state, event, or transition.
+  - No paraphrasing or abbreviation — copy it exactly as written.
+
+  When extracting the section reference for a quoted text, always ensure the section corresponds exactly to where the quoted text is located in the specification document. Do not assign a section based on conceptual relation or general topic coverage.
+
 ## Output Format
 
 ```json
