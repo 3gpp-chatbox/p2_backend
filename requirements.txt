@@ -16,4 +16,5 @@ pydantic-ai # AI agent framework
 langgraph # For orchestration of AI agents
 fastapi # For API
 uvicorn # For running the server
+inquirerpy # For interactive command line prompts
 

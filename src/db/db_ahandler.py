@@ -8,9 +8,7 @@ for better performance under load.
 
 import asyncio
 import os
-import sys
 from contextlib import asynccontextmanager
-from pathlib import Path
 from typing import AsyncGenerator, Optional
 
 from dotenv import load_dotenv
@@ -18,12 +16,7 @@ from psycopg import AsyncConnection, Error, OperationalError
 from psycopg.rows import dict_row
 from psycopg_pool import AsyncConnectionPool
 
-# Add parent directory to Python path
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-
-from src.lib.logger import get_logger
-
-logger = get_logger(__name__)
+from src.lib.logger import logger
 
 
 class AsyncDatabaseHandler:

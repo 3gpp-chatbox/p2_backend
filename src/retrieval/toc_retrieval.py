@@ -1,16 +1,11 @@
 import re
-import sys
-from pathlib import Path
 from typing import List
 
 import numpy as np
 from docx import Document
 
-sys.path.append(str(Path(__file__).parents[2].resolve()))
-from src.lib.logger import get_logger
+from src.lib.logger import logger
 from src.retrieval.pre_processor import _extract_paragraphs, _extract_toc
-
-logger = get_logger(__name__)
 
 
 def is_descendant(section: str, potential_parent: str) -> bool:
