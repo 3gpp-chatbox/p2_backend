@@ -1,3 +1,32 @@
+[project]
+name = "p2-backend"
+version = "0.1.0"
+description = "Document processing and procedure extraction for 3GPP specifications"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "inquirerpy>=0.3.4",
+    "numpy>=2.2.6",
+    "psycopg[binary,pool]>=3.2.9",
+    "pydantic>=2.11.5",
+    "pydantic-ai>=0.2.11",
+    "python-docx>=1.1.2",
+    "python-dotenv>=1.1.0",
+    "sentence-transformers>=4.1.0",
+]
+[build-system]
+requires = ["uv_build>=0.7.8,<0.8.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.2.0",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
+    "pytest-mock>=3.14.1",
+    "ruff>=0.11.11",
+]
+
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 exclude = [
@@ -76,3 +105,6 @@ docstring-code-format = false
 # This only has an effect when the `docstring-code-format` setting is
 # enabled.
 docstring-code-line-length = "dynamic"
+
+
+
