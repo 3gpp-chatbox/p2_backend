@@ -36,6 +36,7 @@ import sys
 from datetime import datetime
 from typing import List
 
+from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 
 from src.accuracy.compare_datasets import compare_datasets
@@ -99,6 +100,8 @@ async def main() -> None:
         - MODEL_TEMPERATURE
     """
     try:
+        # Load environment variables from .env file
+        load_dotenv(override=True)
         # Generate a unique run ID for this execution
         run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 
