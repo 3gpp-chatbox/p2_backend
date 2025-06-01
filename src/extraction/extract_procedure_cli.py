@@ -36,6 +36,7 @@ import sys
 from datetime import datetime
 from typing import List
 
+from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 
 from src.accuracy.compare_datasets import compare_datasets
@@ -53,7 +54,7 @@ from src.lib.cli_utils import (
     print_results,
 )
 from src.lib.file_utils import save_result
-from src.lib.logger import logger
+from src.lib.logger import logger, setup_logger
 from src.prompts.prompt_manager import PromptManager
 from src.retrieval.get_context import get_context
 from src.schemas.extraction_types import (
@@ -99,6 +100,9 @@ async def main() -> None:
         - MODEL_TEMPERATURE
     """
     try:
+        setup_logger()
+        # Load environment variables from .env file
+        load_dotenv(override=True)
         # Generate a unique run ID for this execution
         run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 

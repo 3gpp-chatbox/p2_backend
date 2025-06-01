@@ -1,6 +1,6 @@
 # 3GPP Document Processor
 
-A backend application for processing and analyzing 3GPP specification documents. This tool can ingest .docx specification files, extract procedures state machines, and store structured data in PostgreSQL for further analysis.
+A backend application for processing and analyzing 3GPP specification documents. This tool can ingest .docx specification files, extract procedures state machines, and store structured data in PostgreSQL.
 
 ## Project Overview
 
@@ -9,22 +9,21 @@ The application consists of several key components:
 - **Document ingestion and preprocessing**: Handles the initial parsing of .docx files
 - **Procedure state machine extraction**: Analyzes document content to identify and extract state machines
 - **Database storage and retrieval**: Manages persistent storage of extracted data
-- **API endpoints**: Provides RESTful access to the processed data
 
 ## Requirements
 
-- Python 3.8 or higher
+- Python 3.12
+- uv
 - PostgreSQL database
-- Required Python packages (listed in `requirements.txt`)
 - 3GPP specification documents in .docx format
-- Google Gemini API key
+- Google Gemini or OpenAI API key
 
 ## Installation
 
 1. Clone the repository
 2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   uv sync
    ```
 3. Copy `.env.example` to `.env`:
    ```bash
@@ -32,15 +31,15 @@ The application consists of several key components:
    ```
 4. Configure the `.env` file with your settings:
    - Database connection details
-   - Google Gemini API credentials
+   - Google Gemini/OpenAI API credentials
    - Document processing paths
 
 ## Database Setup
 
-Initialize the database schema:
+Initialize the database schema (⚠️This is only done once running it again will reset the tables!):
 
 ```bash
-python -m src.db.init_db
+uv run python -m src.db.init_db
 ```
 
 ## Usage
@@ -53,74 +52,100 @@ To process a 3GPP document:
 2. Update the document path in `.env`
 3. Run the document processor:
    ```bash
-   python -m src.retrieval.document_processor
+   uv run python -m src.retrieval.document_processor
    ```
 
-#### Document Processing Output
+#### Document Processing Pipeline
 
-The document processor generates several markdown files in `data/markdown/` for debugging and review:
+The document processor performs a sophisticated multi-stage pipeline:
 
-- **doc-excluded.md**: Contains document content that is filtered out and not stored in the database
-- **doc-filtered.md**: Contains the processed content that will be stored in the database
-- **doc-toc.md**: Contains the extracted table of contents that will be used for document structure
+1. **DOCX to Markdown Conversion:**
+
+   - Processes the DOCX file to extract structured content
+   - Normalizes whitespace and cleans headings
+   - Preserves tables and their formatting
+   - Extracts document metadata (spec number, version, release)
+
+2. **Content Filtering and Organization:**
+
+   - Filters out excluded sections (e.g., annexes, forewords, abbreviations)
+   - Maintains document hierarchy and heading levels
+   - Generates three output files in `data/markdown/`:
+     - **doc-filtered.md**: Main content for database storage
+     - **doc-excluded.md**: Filtered-out content for review
+     - **doc-toc.md**: Extracted table of contents structure
+
+3. **Content Chunking:**
+
+   - Splits content into manageable chunks based on headings
+   - Preserves hierarchical relationships between sections
+   - Extracts metadata for each chunk (heading, level, content)
+   - Maintains document structure integrity
+
+4. **Database Storage:**
+   - Stores document metadata (spec, version, release)
+   - Creates hierarchical section relationships using LTREE paths
+   - Encodes section headings to ensure database compatibility
+   - Preserves parent-child relationships between sections
 
 ### 2. Procedure Extraction
 
 Extract procedures from the processed document:
 
 ```bash
-python -m src.extraction.extract_procedure
+uv run python -m src.extraction.extract_procedure_cli
 ```
 
 #### Extraction Output
 
-The extraction process stores detailed information in `data/output/`:
-- Complete prompt contexts used for extraction
-- Results from each extraction step
-- Intermediate processing data
-- Validation and accuracy metrics
+The extraction process follows a sophisticated multi-stage workflow:
 
-### 3. API Server
+1. **Context Retrieval:**
 
-Start the API server with:
+   - Fetches relevant context for the specified procedure from the chosen document
+   - Saves the retrieved context for debugging and validation
 
-```bash
-uvicorn src.API.main:app --reload
-```
+2. **Prompt Chain Execution:**
+   The process uses a 4-stage prompting chain:
 
-#### API Endpoints
+   - **Initial Extraction:** Generates the base procedure graph
+   - **Evaluation:** Validates the initial extraction against the original context
+   - **Correction:** Applies fixes based on the evaluation feedback
+   - **Enrichment:** Enhances the graph with additional details and metadata
 
-Base URL: `/procedures`
+3. **Multi-Model Extraction:**
+   The prompt chain is executed three times:
 
-##### Available Endpoints
+   - **Main Extraction:** Using the primary model
+   - **Alternative Extraction:** Using a secondary model
+   - **Modified/Alternative_2 Extraction:** Either uses a modified prompt with the main model or a third alternative model
 
-1. `GET /procedures/`
-   - Lists all available procedures with their IDs and names
+4. **Accuracy Comparison:**
 
-2. `GET /procedures/{procedure_id}`
-   - Returns detailed procedure information including graphs, metrics, and metadata
+   - Uses SBERT (Sentence-BERT) embeddings to compute semantic similarity
+   - Performs node-by-node and edge-by-edge matching using cosine similarity
+   - Applies a fixed threshold (0.8) for valid matches
+   - Calculates match percentages for nodes and edges separately
+   - Determines overall graph similarity scores
+   - Logs detailed accuracy metrics for each extraction method
 
-3. `PUT /procedures/{procedure_id}`
-   - Updates a procedure's graph data and metadata
+5. **Result Selection and Storage:**
+   - Selects the best result using `get_best_result()` based on accuracy scores and method priority
+   - Stores the selected result in the database with comprehensive metadata:
+     - Extraction method
+     - Model name
+     - Accuracy score
+     - Graph version and status
 
 ## Project Structure
 
 ```
 src/
-├── API/            # REST API implementation and routes
-├── db/             # Database models and migrations
-├── extraction/     # Procedure extraction algorithms
-├── retrieval/      # Document processing and content extraction
-├── lib/            # Shared utilities and helpers
-└── schemas/        # Data models and validation
-
-tests/              # Comprehensive test suite
-docs/               # Additional documentation
-
-data/               # Generated data and output files
-├── markdown/       # Processed document content
-├── output/         # Extraction results and metrics
-└── raw/           # Original source documents
+├── accuracy/     # Accuracy validation and comparison scripts
+├── db/           # Database models, handlers, migrations, and dummy data
+├── extraction/   # Procedure extraction algorithms and CLI tools
+├── lib/          # Shared utilities and helper modules
+├── prompts/      # Prompt templates for LLM-based extraction
+├── retrieval/    # Document processing, chunking, and content extraction
+└── schemas/      # Data models and validation
 ```
-
-
