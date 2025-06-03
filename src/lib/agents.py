@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import os
-from typing import Optional
 
 from dotenv import load_dotenv
+from openai import AsyncAzureOpenAI
 from pydantic_ai import Agent
 from pydantic_ai.models.gemini import GeminiModel
 from pydantic_ai.models.openai import OpenAIModel
+from pydantic_ai.providers.openai import OpenAIProvider
 
 from src.lib.logger import logger
 from src.schemas.models.agent import AgentCollection
@@ -25,6 +26,7 @@ class AgentManager:
         """
         logger.info("Initializing AgentProvider...")
         self.main_model_name = os.getenv("MAIN_MODEL")
+        self.user_id = os.getenv("USER_ID")
         self.alt_model_name = os.getenv(
             "ALTERNATIVE_MODEL", None
         )  # Ensure None if not set
@@ -52,14 +54,17 @@ class AgentManager:
         Returns:
             An Agent instance.
         """
+        settings = {"temperature": temperature}
+
+        # Add X-User-Id header if user_id is set
+        if self.user_id:
+            settings["extra_headers"] = {"X-User-Id": self.user_id}
         return Agent(
             model=model_instance,
-            model_settings={"temperature": temperature},
+            model_settings=settings,
         )
 
-    def get_gemini_agents(
-        self,
-    ) -> AgentCollection:
+    def get_gemini_agents(self) -> AgentCollection:
         """
         Retrieves Gemini agents based on the environment configuration.
 
@@ -83,7 +88,7 @@ class AgentManager:
         main_agent = self._create_agent(main_model, self.temperature)
         logger.info("Main Gemini agent created.")
 
-        alt_agent_instance: Optional[Agent] = None
+        alt_agent_instance: Agent | None = None
         if self.alt_model_name:
             if self.main_model_name == self.alt_model_name:
                 logger.error(
@@ -101,7 +106,7 @@ class AgentManager:
             alt_agent_instance = self._create_agent(alt_model, self.temperature)
             logger.info("Alternative Gemini agent created.")
 
-        alt_agent_2_instance: Optional[Agent] = None
+        alt_agent_2_instance: Agent | None = None
         if self.alt_model_2_name:
             if self.alt_model_2_name == self.main_model_name:
                 logger.error(
@@ -133,9 +138,7 @@ class AgentManager:
             alt_agent_2=alt_agent_2_instance,
         )
 
-    def get_openai_agents(
-        self,
-    ) -> AgentCollection:
+    def get_openai_agents(self) -> AgentCollection:
         """
         Retrieves OpenAI agents based on the environment configuration.
         Assumes MAIN_MODEL, ALTERNATIVE_MODEL, and ALTERNATIVE_MODEL_2 (optional)
@@ -148,21 +151,29 @@ class AgentManager:
             ValueError: If model configurations are invalid or OPENAI_API_KEY is not set.
         """
         logger.info("Attempting to retrieve OpenAI agents...")
-        if not os.getenv("OPENAI_API_KEY"):
+        if not os.getenv("AZURE_OPENAI_API_KEY"):
             logger.error(
-                "OPENAI_API_KEY environment variable not set for OpenAI models."
+                "AZURE_OPENAI_API_KEY environment variable not set for OpenAI models."
             )
             raise ValueError(
-                "OPENAI_API_KEY environment variable must be set to use OpenAI models."
+                "AZURE_OPENAI_API_KEY environment variable must be set to use OpenAI models."
             )
-        logger.info("OPENAI_API_KEY found.")
+
+        client = AsyncAzureOpenAI(
+            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+            api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+            api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+        )
 
         logger.info(f"Creating main OpenAI agent with model: {self.main_model_name}")
-        main_model = OpenAIModel(model_name=self.main_model_name)
+        main_model = OpenAIModel(
+            model_name=self.main_model_name,
+            provider=OpenAIProvider(openai_client=client),
+        )
         main_agent = self._create_agent(main_model, self.temperature)
         logger.info("Main OpenAI agent created.")
 
-        alt_agent_instance: Optional[Agent] = None
+        alt_agent_instance: Agent | None = None
         if self.alt_model_name:
             if self.main_model_name == self.alt_model_name:
                 logger.error(
@@ -174,11 +185,14 @@ class AgentManager:
             logger.info(
                 f"Creating alternative OpenAI agent with model: {self.alt_model_name}"
             )
-            alt_model = OpenAIModel(model_name=self.alt_model_name)
+            alt_model = OpenAIModel(
+                model_name=self.alt_model_name,
+                provider=OpenAIProvider(openai_client=client),
+            )
             alt_agent_instance = self._create_agent(alt_model, self.temperature)
             logger.info("Alternative OpenAI agent created.")
 
-        alt_agent_2_instance: Optional[Agent] = None
+        alt_agent_2_instance: Agent | None = None
         if self.alt_model_2_name:
             if self.alt_model_2_name == self.main_model_name:
                 logger.error(
@@ -197,7 +211,10 @@ class AgentManager:
             logger.info(
                 f"Creating second alternative OpenAI agent with model: {self.alt_model_2_name}"
             )
-            alt_model_2 = OpenAIModel(model_name=self.alt_model_2_name)
+            alt_model_2 = OpenAIModel(
+                model_name=self.alt_model_2_name,
+                provider=OpenAIProvider(openai_client=client),
+            )
             alt_agent_2_instance = self._create_agent(alt_model_2, self.temperature)
             logger.info("Second alternative OpenAI agent created.")
 
@@ -221,7 +238,9 @@ if __name__ == "__main__":
 
         print("\n--- Getting Gemini Agents ---")
         try:
-            gemini_agents_collection = agent_provider.get_gemini_agents()
+            gemini_agents_collection = (
+                agent_provider.get_gemini_agents()
+            )  # No headers needed anymore
             print(
                 f"Successfully retrieved Gemini agents. Main: {gemini_agents_collection.main_agent.model.model_name}"
             )
@@ -240,7 +259,9 @@ if __name__ == "__main__":
 
         print("\n--- Getting OpenAI Agents ---")
         try:
-            openai_agents_collection = agent_provider.get_openai_agents()
+            openai_agents_collection = (
+                agent_provider.get_openai_agents()
+            )  # No headers needed anymore
             print(
                 f"Successfully retrieved OpenAI agents. Main: {openai_agents_collection.main_agent.model.model_name}"
             )
